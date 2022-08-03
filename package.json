@@ -1,8 +1,8 @@
 {
-  "name": "kol-js-starter",
-  "version": "1.0.0",
+  "name": "loop-cs",
+  "version": "0.1.0",
   "description": "Example package for KoLmafia TypeScript scripts.",
-  "main": "KoLmafia/scripts/kol-js-starter/main-script-name.js",
+  "main": "KoLmafia/scripts/loop-cs/loopcs.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "yarn run build:types && yarn run build:js",
@@ -23,7 +23,7 @@
     "babel-loader": "^8.2.2",
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.3.0",
-    "eslint-plugin-libram": "^0.1.9",
+    "eslint-plugin-libram": "^0.2.14",
     "prettier": "^2.3.2",
     "typescript": "^4.4.2",
     "webpack": "^5.61.0",
@@ -31,11 +31,12 @@
   },
   "dependencies": {
     "core-js": "^3.16.4",
+    "grimoire-kolmafia": "^0.2.5",
     "kolmafia": ">=1.2.0",
-    "libram": ">=0.3.0"
+    "libram": "^0.6.23"
   },
-  "author": "Captain Scotch",
-  "license": "ISC",
+  "author": "MrFizzyBubbs",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/docrostov/kol-js-starter.git"

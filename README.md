@@ -1,39 +1,106 @@
-# DEVELOPING FOR MAFIA IN JS
+# loop-cs
 
-Hey all. This is a brief explainer on how to get to a usable JS development environment for KoLMafia. Ideally, this will cover everything you need to make a sample JavaScript mafia script. This was written by a JS novice, so hopefully it properly enumerates everything you need to do to get an environment up and running!
+`loop-cs` is a softcore Community Service script for looping in Kingdom of Loathing designed to work if you are me, [Baden (#2460823)](https://cheesellc.com/kol/profile.php?u=Baden).
 
-## PART ONE - BABY'S FIRST TS COMPILATION
+## Installation
 
-- **STEP 1:** Download Node.js / NPM. This will allow you to install babel/webpack and set up a compiler. To download, visit [the latest node.js build](https://nodejs.org/en/). Then install the package manager, `yarn`, by opening a [terminal](https://www.ionos.com/help/email/troubleshooting-mail-basicmail-business/access-the-command-prompt-or-terminal/) and typing: `npm install -g yarn`. Think of this like immediately installing Chrome or Firefox on a new computer instead of using Internet Explorer.
-- **STEP 2:** Let's set up a sample repository. You can do that using this starter repository right here! To do so, use the terminal to navigate to where you want the repo saved, and call `git clone https://github.com/docrostov/kol-ts-starter` 
-  - *NOTE:* if this command does not work, you probably do not have Git installed on your computer, and will also need to install Git. Please find information on how to do that [here](https://github.com/git-guides/install-git).
-  - *NOTE 2:* just doing a straight `git clone` like this is not recommended in a development context. Please follow the excellent [KoL Scripting Resources Guide](https://loathing-associates-scripting-society.github.io/KoL-Scripting-Resources/PR-Overview.html) which covers stuff like forking and pull requests.
-- **STEP 3:** Run `yarn install` while inside your new directory to install the necessary dependencies, like the Loathing Scripting Society's JS toolkit (LIBRAM) & other KoLMafia JS toolkits. You will need to do this for every project you have, `yarn` essentially creates an isolated virtual environment for you to work in. This is rather convenient, as you get to avoid version conflicts between your packages!
-  - *NOTE:* It is highly recommended to run `yarn upgrade kolmafia@latest`, `yarn upgrade libram@latest`, and `yarn upgrade eslint-plugin-libram@latest` after running `yarn install`. This is due to the fact that all three of these tools are upgraded very frequently, and this kol-ts-starter repo is not updated quite as frequently, so the "default" version may be a bit backdated from the most recent version of each package. After running these upgrade commands, if you are coding in VSCode, press `Ctrl+Shift+P` and then reload your window (the first option that pops up) to make sure the upgraded packages have been applied.
-- **STEP 4:** Let's build the code! Run `yarn run build`, and you'll see that your folder now has a folder called KoLMafia in it, which in turn has a scripts subfolder. This should look familiar, as that's how the KoLMafia directory is structured. The scripts folder has a kol-js-starter subfolder, and there you'll find a `main-script-name.js` file. Copy it into the scripts directory of your KoLMafia installation.
-- **STEP 5:** From the KoLMafia GCLI, run `main-script-name.js` -- this should generate your MP statement. Congrats, you did the thing!
+This script is unlikely to run for most users out of the box. Thus, it cannot yet be checked out through the mafia GUI. To use the script, do the following:
 
-## PART TWO - DIPPING TOES INTO MORE COMPLEX MATTER
+1. Compile the script, following instructions in the kol-ts-starter.
+2. Copy loopcs.ccs from KoLmafia/ccs to your Mafia css directory.
+3. Copy loopcs.js and loopcs-combat.js from KoLmafia/scripts/loop-cs to your Mafia scripts directory.
 
-- Since you've successfully gotten the code to compile, now we can mess around with some stuff. It is recommended you use [VSCode](https://code.visualstudio.com/download) for editing due to its excellent TypeScript support. Once you install VSCode, open it and select the folder with the repository in it. You can also open a terminal within VSCode to save clicks by pressing `ctrl+shift+\`. For extra credit, you can install some very helpful VS Code extensions: [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) and [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode). If you install the latter, your code will auto-format on save!
-- A helpful command within `yarn` is `yarn init`. This is useful for changing details about the package without needing to manually muck around `packages.json` and hoping you changed everything correctly. Call `yarn init` now, and provide a cool name for your package (without any spaces). You will be then asked further questions like what version of the package this is, a description of said package and so on. You can skip any you don't feel like answering by pressing enter.
-- Rather than be stuck running `yarn run build` every time you make an edit, you can instead call `yarn watch` before you begin working on your code. This process will keep running, and automatically build your code for you whenever you save your file. Convenient!
-- Let's modify the code a little bit. The TS code that created the JS file you just ran lives in `src/main.ts` within the repository. At build, all this code does is tell you how much MP you have relative to the number 200; let's change the print statement to add your name in here. Modify `main.ts` to include the following, changing ``"[NAME]"`` to your name.:
+<sub><sup>Adapted from [loop-casual](https://github.com/Kasekopf/loop-casual)</sub></sup>
 
-```js
-import { myMp, print } from "kolmafia";
+## Usage
 
-export function checkMP(): string {
-  if (myMp() < 200) {
-    return "Your MP is less than 200, buddy.";
-  } else {
-    return "Your MP is greater than or equal to 200. Congratulations, [NAME]";
-  }
-}
+For those who are interested in using `loop-cs` as is, the following sections detail the prerequisites, choices in Valhalla, and required resources.
 
-export function main(): void {
-  print(checkMP());
-}
-```
-- Rather than manually copying the files every time you build your package, you can create a symlink that will let KoLMafia see the files in your repository folder. Keep in mind that you cannot do `./` completion with symlinks; you need to explicitly list out the entire file path. My symlink command on Mac OS was the following: `ln -s "$PWD/KoLmafia/scripts/PACKAGE_NAME ~/Library/Application\ Support/KoLmafia/scripts/` -- Windows and Linux users may need a different approach.
-- Once you make the symlink, you can call `PACKAGE_NAME/main-script-name.js` from the KoLMafia GCLI. Neat!
+### Before Ascending
+
+- [Mother Slime](https://kol.coldfront.net/thekolwiki/index.php/Showdown) ready in the side clan Slimetube
+- Access to a fully stocked clan [VIP Lounge](https://kol.coldfront.net/thekolwiki/index.php/VIP_Lounge)
+- All 11 beach heads unlocked for the [Beach Comb](https://kol.coldfront.net/thekolwiki/index.php/Beach_Comb)
+- [Chateau Mantegna](https://kol.coldfront.net/thekolwiki/index.php/Chateau_Mantegna) containing:
+  - ceiling fan
+  - foreign language tapes
+  - continental juice bar
+- [Gold detective badge](https://kol.coldfront.net/thekolwiki/index.php/Gold_detective_badge) purchased from the [11th Precinct](https://kol.coldfront.net/thekolwiki/index.php/The_Precinct)
+- [Your cowboy boots](https://kol.coldfront.net/thekolwiki/index.php/Your_cowboy_boots) modified with [nicksilver spurs](https://kol.coldfront.net/thekolwiki/index.php/Nicksilver_spurs) and [frontwinder skin](https://kol.coldfront.net/thekolwiki/index.php/Frontwinder_skin) (items drop and mysticality)
+- [Peppermint patch](https://kol.coldfront.net/thekolwiki/index.php/A_Peppermint_Patch) growing in your garden
+- [Source Terminal](https://kol.coldfront.net/thekolwiki/index.php/Source_Terminal) fully upgraded
+- [Spacegate Vaccination Machine](https://kol.coldfront.net/thekolwiki/index.php/Spacegate_Vaccination_Machine) with the [Broad-Spectrum Vaccine](https://kol.coldfront.net/thekolwiki/index.php/Broad-Spectrum_Vaccine) unlocked
+- All 150 [Witchess puzzles](https://kol.coldfront.net/thekolwiki/index.php/Witchess_Puzzles) completed
+- Eudora set to [Our Daily Candles™ order form](https://kol.coldfront.net/thekolwiki/index.php/Our_Daily_Candles%E2%84%A2_order_form)
+- An [ungulith](https://kol.coldfront.net/thekolwiki/index.php/Ungulith) in your [combat lover's locket](https://kol.coldfront.net/thekolwiki/index.php/Combat_lover%27s_locket)
+
+<sub><sup>Adapted from [seventy-hccs](https://github.com/s-k-z/seventy-hccs)</sub></sup>
+
+### In Valhalla
+
+- astral six-pack from The Deli Lama
+- astral chapeau from Pet Heaven
+- Pastamancer class
+- Wallaby moon sign
+
+### Required Resources
+
+| Resource                                                                                                                      | Type       |
+| ----------------------------------------------------------------------------------------------------------------------------- | ---------- |
+| [Beach Comb](https://kol.coldfront.net/thekolwiki/index.php/Beach_Comb)                                                       | Accessory  |
+| [combat lover's locket](https://kol.coldfront.net/thekolwiki/index.php/Combat_lover%27s_locket)                               | Accessory  |
+| [hewn moon-rune spoon](https://kol.coldfront.net/thekolwiki/index.php/Hewn_moon-rune_spoon)                                   | Accessory  |
+| [Kremlin's Greatest Briefcase](https://kol.coldfront.net/thekolwiki/index.php/Kremlin%27s_Greatest_Briefcase)                 | Accessory  |
+| [protonic accelerator pack](https://kol.coldfront.net/thekolwiki/index.php/Protonic_accelerator_pack)                         | Back       |
+| [vampyric cloake](https://kol.coldfront.net/thekolwiki/index.php/Vampyric_cloake)                                             | Back       |
+| [Peppermint Pip Packet](https://kol.coldfront.net/thekolwiki/index.php/Peppermint_Pip_Packet)                                 | Campground |
+| [Source Terminal](https://kol.coldfront.net/thekolwiki/index.php/Source_Terminal)                                             | Campground |
+| [Witchess Set](https://kol.coldfront.net/thekolwiki/index.php/Witchess_Set)                                                   | Campground |
+| [Clan VIP Lounge invitation](https://kol.coldfront.net/thekolwiki/index.php/Clan_VIP_Lounge_invitation)                       | Clan       |
+| [Our Daily Candles™ order form](https://kol.coldfront.net/thekolwiki/index.php/Our_Daily_Candles%E2%84%A2_order_form)         | Eudora     |
+| [MayDay™ contract](https://kol.coldfront.net/thekolwiki/index.php/MayDay%E2%84%A2_contract)                                   | Eudora-ish |
+| [Crimbo Shrub](https://kol.coldfront.net/thekolwiki/index.php/Crimbo_Shrub)                                                   | Familiar   |
+| [Disgeist](<https://kol.coldfront.net/thekolwiki/index.php/Disgeist_(familiar)>)                                              | Familiar   |
+| [Exotic Parrot](https://kol.coldfront.net/thekolwiki/index.php/Exotic_Parrot)                                                 | Familiar   |
+| [Ghost of Crimbo Carols](https://kol.coldfront.net/thekolwiki/index.php/Ghost_of_Crimbo_Carols)                               | Familiar   |
+| [God Lobster](https://kol.coldfront.net/thekolwiki/index.php/God_Lobster)                                                     | Familiar   |
+| [Left-Hand Man](https://kol.coldfront.net/thekolwiki/index.php/Left-Hand_Man)                                                 | Familiar   |
+| [Machine Elf](https://kol.coldfront.net/thekolwiki/index.php/Machine_Elf)                                                     | Familiar   |
+| [Melodramedary](https://kol.coldfront.net/thekolwiki/index.php/Melodramedary)                                                 | Familiar   |
+| [Nanorhino](https://kol.coldfront.net/thekolwiki/index.php/Nanorhino)                                                         | Familiar   |
+| [Pair of Stomping Boots](https://kol.coldfront.net/thekolwiki/index.php/Pair_of_Stomping_Boots)                               | Familiar   |
+| [Stocking Mimic](https://kol.coldfront.net/thekolwiki/index.php/Stocking_Mimic)                                               | Familiar   |
+| [Trick-or-Treating Tot](https://kol.coldfront.net/thekolwiki/index.php/Trick-or-Treating_Tot)                                 | Familiar   |
+| [Daylight Shavings Helment](https://kol.coldfront.net/thekolwiki/index.php/Daylight_Shavings_Helmet)                          | Hat        |
+| [Deck of Every Card](https://kol.coldfront.net/thekolwiki/index.php/Deck_of_Every_Card)                                       | Item       |
+| [January's Garbage Tote](https://kol.coldfront.net/thekolwiki/index.php/January%27s_Garbage_Tote)                             | Item       |
+| [mumming trunk](https://kol.coldfront.net/thekolwiki/index.php/Mumming_trunk)                                                 | Item       |
+| [portable pantogram](https://kol.coldfront.net/thekolwiki/index.php/Portable_pantogram)                                       | Item       |
+| [SongBoom™ BoomBox](https://kol.coldfront.net/thekolwiki/index.php/SongBoom%E2%84%A2_BoomBox)                                 | Item       |
+| [SpinMaster™ lathe](https://kol.coldfront.net/thekolwiki/index.php/SpinMaster%E2%84%A2_lathe)                                 | Item       |
+| [Kramco Sausage-o-Matic™](https://kol.coldfront.net/thekolwiki/index.php/Kramco_Sausage-o-Matic%E2%84%A2)                     | Off-hand   |
+| [industrial fire extinguisher](https://kol.coldfront.net/thekolwiki/index.php/Industrial_fire_extinguisher)                   | Off-hand   |
+| [unbreakable umbrella](https://kol.coldfront.net/thekolwiki/index.php/Unbreakable_umbrella)                                   | Off-hand   |
+| [Bird-a-Day calendar](https://kol.coldfront.net/thekolwiki/index.php/Bird-a-Day_calendar)                                     | Skill      |
+| [Comprehensive Cartographic Compendium](https://kol.coldfront.net/thekolwiki/index.php/Comprehensive_Cartographic_Compendium) | Skill      |
+| [emotion chip](https://kol.coldfront.net/thekolwiki/index.php/Emotion_chip)                                                   | Skill      |
+| [Manual of Numberology](https://kol.coldfront.net/thekolwiki/index.php/Manual_of_Numberology)                                 | Skill      |
+| [Pocket Meteor Guide](https://kol.coldfront.net/thekolwiki/index.php/Pocket_Meteor_Guide)                                     | Skill      |
+| [Rethinking Candy](https://kol.coldfront.net/thekolwiki/index.php/Rethinking_Candy)                                           | Skill      |
+| [Tome of Clip Art](https://kol.coldfront.net/thekolwiki/index.php/Tome_of_Clip_Art)                                           | Skill      |
+| [Fourth of May Cosplay Saber](https://kol.coldfront.net/thekolwiki/index.php/Fourth_of_May_Cosplay_Saber)                     | Weapon     |
+| [airplane charter: Dinseylandfill](https://kol.coldfront.net/thekolwiki/index.php/Airplane_charter:_Dinseylandfill)           | Zone       |
+| [airplane charter: That 70s Volcano](https://kol.coldfront.net/thekolwiki/index.php/Airplane_charter:_That_70s_Volcano)       | Zone       |
+| [Bastille Battalion control rig](https://kol.coldfront.net/thekolwiki/index.php/Bastille_Battalion_control_rig)               | Zone       |
+| [Boxing Day care package](https://kol.coldfront.net/thekolwiki/index.php/Boxing_Day_care_package)                             | Zone       |
+| [Chateau Mantegna room key](https://kol.coldfront.net/thekolwiki/index.php/Chateau_Mantegna_room_key)                         | Zone       |
+| [Detective school application](https://kol.coldfront.net/thekolwiki/index.php/Detective_school_application)                   | Zone       |
+| [Distant Woods Getaway Brochure](https://kol.coldfront.net/thekolwiki/index.php/Distant_Woods_Getaway_Brochure)               | Zone       |
+| [heart-shaped crate](https://kol.coldfront.net/thekolwiki/index.php/Heart-shaped_crate)                                       | Zone       |
+| [Horsery contract](https://kol.coldfront.net/thekolwiki/index.php/Horsery_contract)                                           | Zone       |
+| [LT&T telegraph office deed](https://kol.coldfront.net/thekolwiki/index.php/LT%26T_telegraph_office_deed)                     | Zone       |
+| [Neverending Party invitation envelope](https://kol.coldfront.net/thekolwiki/index.php/Neverending_Party_invitation_envelope) | Zone       |
+| [shrine to the Barrel god](https://kol.coldfront.net/thekolwiki/index.php/Shrine_to_the_Barrel_god)                           | Zone       |
+| [Spacegate access badge](https://kol.coldfront.net/thekolwiki/index.php/Spacegate_access_badge)                               | Zone       |
+| [voter registration form](https://kol.coldfront.net/thekolwiki/index.php/Voter_registration_form)                             | Zone       |
+| [X-32-F snowman crate](https://kol.coldfront.net/thekolwiki/index.php/X-32-F_snowman_crate)                                   | Zone       |
