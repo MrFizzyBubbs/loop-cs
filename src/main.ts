@@ -9,9 +9,19 @@ import {
 } from "kolmafia";
 import { convertMilliseconds } from "./lib";
 import { get, set } from "libram";
-import { allTasks } from "./tasks/all";
 import { Engine } from "./engine/engine";
-import { Args } from "grimoire-kolmafia";
+import { Args, getTasks } from "grimoire-kolmafia";
+import { BoozeDropQuest } from "./tasks/boozedrop";
+import { CoilWireQuest } from "./tasks/coilwire";
+import { DonateQuest } from "./tasks/donate";
+import { FamiliarWeightQuest } from "./tasks/familiarweight";
+import { HotResQuest } from "./tasks/hotres";
+import { LevelingQuest } from "./tasks/leveling";
+import { NoncombatQuest } from "./tasks/noncombat";
+import { RunStartQuest } from "./tasks/runstart";
+import { SpellDamageQuest } from "./tasks/spelldamage";
+import { HPQuest, MoxieQuest, MuscleQuest, MysticalityQuest } from "./tasks/stat";
+import { WeaponDamageQuest } from "./tasks/weapondamage";
 
 const timeProperty = "fullday_elapsedTime";
 
@@ -37,7 +47,22 @@ export function main(command?: string): void {
   const setTimeNow = get(timeProperty, -1) === -1;
   if (setTimeNow) set(timeProperty, gametimeToInt());
 
-  const tasks = allTasks();
+  const tasks = getTasks([
+    RunStartQuest,
+    CoilWireQuest,
+    LevelingQuest,
+    MoxieQuest,
+    MuscleQuest,
+    HPQuest,
+    MysticalityQuest,
+    HotResQuest,
+    NoncombatQuest,
+    FamiliarWeightQuest,
+    WeaponDamageQuest,
+    SpellDamageQuest,
+    BoozeDropQuest,
+    DonateQuest,
+  ]);
   const engine = new Engine(tasks);
   setAutoAttack(0);
   cliExecute("ccs loopcs");
