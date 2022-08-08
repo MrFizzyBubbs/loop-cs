@@ -341,7 +341,7 @@ export const LevelingQuest: Quest = {
       completed: () => get("_sausageFights") > 1,
       ready: () => getKramcoWandererChance() >= 1.0 && have($item`cosmic bowling ball`),
       do: $location`The Neverending Party`,
-      choices: { 1322: 2 },
+      choices: { 1322: 1 },
       combat: new CombatStrategy().macro(
         Macro.if_($monster`sausage goblin`, Macro.skill($skill`Bowl Sideways`).default()).abort()
       ),
