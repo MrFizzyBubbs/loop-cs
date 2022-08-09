@@ -69,6 +69,7 @@ export const CoilWireQuest: Quest = {
         back: $item`protonic accelerator pack`,
         offhand: $item`weeping willow wand`,
         familiar: $familiar`Stocking Mimic`,
+        famequip: $item`none`,
       },
       limit: { tries: 1 },
     },

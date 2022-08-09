@@ -1,7 +1,9 @@
+import { CombatStrategy } from "grimoire-kolmafia";
 import {
   cliExecute,
   elementalResistance,
   myHp,
+  myLevel,
   myMaxhp,
   numericModifier,
   useSkill,
@@ -12,12 +14,14 @@ import {
   $element,
   $familiar,
   $item,
+  $location,
   $skill,
   CommunityService,
   ensureEffect,
   get,
   have,
 } from "libram";
+import Macro from "../combat";
 import { Quest } from "../engine/task";
 import { innerElfTask, meteorShowerTask } from "./common";
 
@@ -25,6 +29,16 @@ export const SpellDamageQuest: Quest = {
   name: "Spell Damage",
   completed: () => CommunityService.SpellDamage.isDone(),
   tasks: [
+    {
+      name: "Saucefingers",
+      ready: () => myLevel() >= 15,
+      completed: () => have($effect`Saucefingers`),
+      do: $location`The Dire Warren`,
+      outfit: { familiar: $familiar`Mini-Adventurer` },
+      choices: { 768: 4 },
+      combat: new CombatStrategy().macro(Macro.skill($skill`Feel Hatred`)),
+      limit: { tries: 2 },
+    },
     {
       name: "Simmer",
       completed: () => have($effect`Simmering`),
