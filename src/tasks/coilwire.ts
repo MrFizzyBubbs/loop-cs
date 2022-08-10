@@ -14,13 +14,13 @@ import {
 } from "libram";
 import Macro from "../combat";
 import { Quest } from "../engine/task";
-import { holidayRunawayTask } from "./common";
+import { holidayRunaway } from "./common";
 
 export const CoilWireQuest: Quest = {
   name: "Coil Wire",
   completed: () => CommunityService.CoilWire.isDone(),
   tasks: [
-    { ...holidayRunawayTask },
+    holidayRunaway(),
     {
       name: "Shrub Meat",
       ready: () => have($item`cosmic bowling ball`),

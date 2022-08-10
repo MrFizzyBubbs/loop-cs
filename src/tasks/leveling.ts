@@ -35,7 +35,7 @@ import {
 import Macro from "../combat";
 import { Quest } from "../engine/task";
 import { crimboCarols, mapMonster, tryUse } from "../lib";
-import { holidayRunawayTask, innerElfTask } from "./common";
+import { holidayRunaway, innerElf } from "./common";
 
 const levelingBuffs = [
   // Skill
@@ -144,7 +144,7 @@ export const LevelingQuest: Quest = {
       outfit: { offhand: $item`familiar scrapbook` },
       limit: { tries: 1 },
     },
-    { ...holidayRunawayTask },
+    holidayRunaway(),
     {
       name: "Ninja Costume",
       ready: () => get("_monstersMapped") < 3 && get("_chestXRayUsed") < 3,
@@ -335,7 +335,7 @@ export const LevelingQuest: Quest = {
       acquire: [{ item: $item`makeshift garbage shirt` }],
       limit: { tries: 5 },
     },
-    { ...innerElfTask },
+    innerElf(),
     {
       name: "Sausage Goblin",
       completed: () => get("_sausageFights") > 1,

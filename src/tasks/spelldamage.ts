@@ -23,7 +23,7 @@ import {
 } from "libram";
 import Macro from "../combat";
 import { Quest } from "../engine/task";
-import { innerElfTask, meteorShowerTask } from "./common";
+import { innerElf, meteorShower } from "./common";
 
 export const SpellDamageQuest: Quest = {
   name: "Spell Damage",
@@ -45,8 +45,8 @@ export const SpellDamageQuest: Quest = {
       do: () => ensureEffect($effect`Simmering`),
       limit: { tries: 1 },
     },
-    { ...innerElfTask },
-    { ...meteorShowerTask },
+    innerElf(),
+    meteorShower(),
     {
       name: "KGB",
       completed: () =>

@@ -23,12 +23,20 @@ import { SpellDamageQuest } from "./tasks/spelldamage";
 import { HPQuest, MoxieQuest, MuscleQuest, MysticalityQuest } from "./tasks/stat";
 import { WeaponDamageQuest } from "./tasks/weapondamage";
 
-const timeProperty = "fullday_elapsedTime";
+const timeProperty = "loopcs_elapsedTime";
 
-export const args = Args.create("loopcs", "A full-day wrapper script.", {
+export const args = Args.create("loopcs", "A script to complete community service runs.", {
   confirm: Args.boolean({
     help: "If the user must confirm execution of each task.",
     default: false,
+  }),
+  vipclan: Args.string({
+    help: "Name of clan that has a fully stocked VIP lounge.",
+    default: "Margaretting Tye",
+  }),
+  slimeclan: Args.string({
+    help: "Name of clan that has Mother Slime ready in The Slime Tube.",
+    default: "Hobopolis Vacation Home",
   }),
 });
 

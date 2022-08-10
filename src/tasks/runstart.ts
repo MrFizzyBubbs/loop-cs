@@ -1,5 +1,6 @@
 import {
   cliExecute,
+  getClanName,
   pullsRemaining,
   retrieveItem,
   reverseNumberology,
@@ -8,16 +9,24 @@ import {
   use,
   visitUrl,
 } from "kolmafia";
-import { $familiar, $item, $skill, get, have, Pantogram, SongBoom } from "libram";
+import { $familiar, $item, $skill, Clan, get, have, Pantogram, SongBoom } from "libram";
 import { Quest } from "../engine/task";
+import { args } from "../main";
 
 export const RunStartQuest: Quest = {
   name: "Run Start",
   tasks: [
     {
+      name: "Clan",
+      completed: () => getClanName() === args.vipclan,
+      do: () => Clan.join(args.vipclan),
+      limit: { tries: 1 },
+    },
+    {
       name: "Council",
       completed: () => get("lastCouncilVisit") > 0,
       do: () => visitUrl("council.php"),
+      limit: { tries: 1 },
     },
     {
       name: "Toot",

@@ -14,7 +14,7 @@ import {
 } from "libram";
 import { Quest } from "../engine/task";
 import { crimboCarols } from "../lib";
-import { innerElfTask } from "./common";
+import { innerElf } from "./common";
 
 export const WeaponDamageQuest: Quest = {
   name: "Weapon Damage",
@@ -29,7 +29,7 @@ export const WeaponDamageQuest: Quest = {
       outfit: { acc1: $item`Lil' Doctor™ bag`, familiar: $familiar`Ghost of Crimbo Carols` },
       limit: { tries: 1 },
     },
-    { ...innerElfTask },
+    innerElf(),
     {
       name: "Ungulith",
       ready: () =>

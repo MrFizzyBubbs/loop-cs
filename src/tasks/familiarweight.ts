@@ -1,13 +1,13 @@
 import { cliExecute, mySign, visitUrl } from "kolmafia";
 import { $effect, $familiar, $item, CommunityService, get, have } from "libram";
 import { Quest } from "../engine/task";
-import { meteorShowerTask } from "./common";
+import { meteorShower } from "./common";
 
 export const FamiliarWeightQuest: Quest = {
   name: "Familiar Weight",
   completed: () => CommunityService.FamiliarWeight.isDone(),
   tasks: [
-    { ...meteorShowerTask },
+    meteorShower(),
     {
       name: "Anticheese",
       completed: () => get("lastAnticheeseDay") === 1,
