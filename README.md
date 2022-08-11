@@ -1,25 +1,35 @@
 # loop-cs
 
-`loop-cs` is a softcore Community Service script for looping in Kingdom of Loathing designed to work if you are me, [Baden (#2460823)](https://cheesellc.com/kol/profile.php?u=Baden).
+`loop-cs` is a script for looping softcore Community Service runs designed to work if you are me, [Baden (#2460823)](https://cheesellc.com/kol/profile.php?u=Baden). It is built using the task-based engine from [grimoire](https://github.com/Loathing-Associates-Scripting-Society/grimoire) and achieves a 105-turn run with 0/4/2 organ use. This script is a greatly improved version of my previous Community Service script, [fizz-sccs](https://github.com/MrFizzyBubbs/fizz-sccs).
 
 ## Installation
 
-This script is unlikely to run for most users out of the box. Thus, it cannot yet be checked out through the mafia GUI. To use the script, do the following:
+Run this command in the graphical CLI:
 
-1. Compile the script, following instructions in the kol-ts-starter.
-2. Copy loopcs.ccs from KoLmafia/ccs to your Mafia css directory.
-3. Copy loopcs.js and loopcs-combat.js from KoLmafia/scripts/loop-cs to your Mafia scripts directory.
+```text
+git checkout https://github.com/MrFizzyBubbs/loop-cs.git
+```
 
-<sub><sup>Adapted from [loop-casual](https://github.com/Kasekopf/loop-casual)</sub></sup>
+Will require [a recent build of KoLMafia](http://builds.kolmafia.us/job/Kolmafia/lastSuccessfulBuild/).
 
 ## Usage
 
-For those who are interested in using `loop-cs` as is, the following sections detail the prerequisites, choices in Valhalla, and required resources.
+Be in a softcore Community Service run that meets the [requirements](#requirements) and either type `loopcs` in the graphical CLI or select it from the Scripts menu. There are several optional arguments:
+
+1. `confirm` BOOLEAN - If the user must confirm execution of each task. _[default: false]_ _[setting: loopcs_confirm]_
+2. `vipclan` TEXT - Name of clan that has a fully stocked VIP lounge. _[default: Margaretting Tye]_ _[setting: loopcs_vipclan]_
+3. `slimeclan` TEXT - Name of clan that has Mother Slime ready in The Slime Tube. _[default: Hobopolis Vacation Home]_ _[setting: loopcs_slimeclan]_
+
+These arguments be specified in the CLI when running the script (e.g., `loopcs confirm=true`) or as a preference (e.g., `set loopcs_vipclan="Bonus Adventures from Hell"`).
+
+## Requirements
+
+If you meet the requirements in the following sections, there is a good chance that this script will work for you. However, the requirements are not exhaustive and assume you have quite a few skills permed to help with combat, among other things.
 
 ### Before Ascending
 
-- [Mother Slime](https://kol.coldfront.net/thekolwiki/index.php/Showdown) ready in the side clan Slimetube
 - Access to a fully stocked clan [VIP Lounge](https://kol.coldfront.net/thekolwiki/index.php/VIP_Lounge)
+- Access to a clan Slime Tube with [Mother Slime](https://kol.coldfront.net/thekolwiki/index.php/Showdown) ready
 - All 11 beach heads unlocked for the [Beach Comb](https://kol.coldfront.net/thekolwiki/index.php/Beach_Comb)
 - [Chateau Mantegna](https://kol.coldfront.net/thekolwiki/index.php/Chateau_Mantegna) containing:
   - ceiling fan
@@ -34,8 +44,6 @@ For those who are interested in using `loop-cs` as is, the following sections de
 - Eudora set to [Our Daily Candles™ order form](https://kol.coldfront.net/thekolwiki/index.php/Our_Daily_Candles%E2%84%A2_order_form)
 - An [ungulith](https://kol.coldfront.net/thekolwiki/index.php/Ungulith) in your [combat lover's locket](https://kol.coldfront.net/thekolwiki/index.php/Combat_lover%27s_locket)
 
-<sub><sup>Adapted from [seventy-hccs](https://github.com/s-k-z/seventy-hccs)</sub></sup>
-
 ### In Valhalla
 
 - astral six-pack from The Deli Lama
@@ -43,7 +51,7 @@ For those who are interested in using `loop-cs` as is, the following sections de
 - Pastamancer class
 - Wallaby moon sign
 
-### Required Resources
+### Resources
 
 | Resource                                                                                                                      | Type       |
 | ----------------------------------------------------------------------------------------------------------------------------- | ---------- |
@@ -78,6 +86,7 @@ For those who are interested in using `loop-cs` as is, the following sections de
 | [portable pantogram](https://kol.coldfront.net/thekolwiki/index.php/Portable_pantogram)                                       | Item       |
 | [SongBoom™ BoomBox](https://kol.coldfront.net/thekolwiki/index.php/SongBoom%E2%84%A2_BoomBox)                                 | Item       |
 | [SpinMaster™ lathe](https://kol.coldfront.net/thekolwiki/index.php/SpinMaster%E2%84%A2_lathe)                                 | Item       |
+| [Time-Spinner](https://kol.coldfront.net/thekolwiki/index.php/Time-Spinner)                                                   | Item       |
 | [Kramco Sausage-o-Matic™](https://kol.coldfront.net/thekolwiki/index.php/Kramco_Sausage-o-Matic%E2%84%A2)                     | Off-hand   |
 | [industrial fire extinguisher](https://kol.coldfront.net/thekolwiki/index.php/Industrial_fire_extinguisher)                   | Off-hand   |
 | [unbreakable umbrella](https://kol.coldfront.net/thekolwiki/index.php/Unbreakable_umbrella)                                   | Off-hand   |
