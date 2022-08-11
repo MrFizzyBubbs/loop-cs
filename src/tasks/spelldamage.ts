@@ -31,12 +31,12 @@ export const SpellDamageQuest: Quest = {
   tasks: [
     {
       name: "Saucefingers",
-      ready: () => myLevel() >= 15,
+      ready: () => myLevel() >= 15 && get("_reflexHammerUsed") < 3,
       completed: () => have($effect`Saucefingers`),
       do: $location`The Dire Warren`,
-      outfit: { familiar: $familiar`Mini-Adventurer` },
+      outfit: { acc1: $item`Lil' Doctor™ bag`, familiar: $familiar`Mini-Adventurer` },
       choices: { 768: 4 },
-      combat: new CombatStrategy().macro(Macro.skill($skill`Feel Hatred`)),
+      combat: new CombatStrategy().macro(Macro.skill($skill`Reflex Hammer`)),
       limit: { tries: 2 },
     },
     {
