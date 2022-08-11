@@ -1,7 +1,6 @@
 import { Task } from "./task";
 import { Engine as BaseEngine, Outfit } from "grimoire-kolmafia";
 import { $effect, $skill, have, PropertiesManager } from "libram";
-import { debug } from "../lib";
 import { myHp, myMaxhp, useSkill } from "kolmafia";
 import { equipDefaults } from "./outfit";
 
@@ -11,16 +10,8 @@ export class Engine extends BaseEngine {
   }
 
   public execute(task: Task): void {
-    debug(``);
-    debug(`Executing ${task.name}`, "blue");
-    this.checkLimits(task);
     super.execute(task);
     if (have($effect`Beaten Up`)) throw "Fight was lost; stop.";
-    if (task.completed()) {
-      debug(`${task.name} completed!`, "blue");
-    } else {
-      debug(`${task.name} not completed!`, "blue");
-    }
   }
 
   dress(task: Task, outfit: Outfit): void {
