@@ -1,23 +1,5 @@
-import {
-  Item,
-  Location,
-  Monster,
-  print,
-  runChoice,
-  toUrl,
-  use,
-  useSkill,
-  visitUrl,
-} from "kolmafia";
+import { Item, Location, Monster, runChoice, toUrl, use, useSkill, visitUrl } from "kolmafia";
 import { $effects, $skill, get, have } from "libram";
-
-export function debug(message: string, color?: string): void {
-  if (color) {
-    print(message, color);
-  } else {
-    print(message);
-  }
-}
 
 // From phccs
 export function convertMilliseconds(milliseconds: number): string {

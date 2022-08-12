@@ -39,7 +39,3 @@ export default class Macro extends StrictMacro {
     return new Macro().default();
   }
 }
-
-export function main(): void {
-  Macro.load().submit();
-}

@@ -33,6 +33,7 @@ export const FamiliarWeightQuest: Quest = {
       completed: () => have($item`sombrero-mounted sparkler`),
       prepare: () => visitUrl("clan_viplounge.php?action=fwshop&whichfloor=2", false),
       do: () => visitUrl("shop.php?whichshop=fwshop&action=buyitem&quantity=1&whichrow=1248&pwd"),
+      limit: { tries: 1 },
     },
     {
       name: "Test",

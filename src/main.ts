@@ -1,12 +1,4 @@
-import {
-  cliExecute,
-  gametimeToInt,
-  myAdventures,
-  print,
-  setAutoAttack,
-  turnsPlayed,
-  userConfirm,
-} from "kolmafia";
+import { gametimeToInt, myAdventures, print, turnsPlayed } from "kolmafia";
 import { convertMilliseconds } from "./lib";
 import { get, set } from "libram";
 import { Engine } from "./engine/engine";
@@ -22,8 +14,6 @@ import { RunStartQuest } from "./tasks/runstart";
 import { SpellDamageQuest } from "./tasks/spelldamage";
 import { HPQuest, MoxieQuest, MuscleQuest, MysticalityQuest } from "./tasks/stat";
 import { WeaponDamageQuest } from "./tasks/weapondamage";
-
-const timeProperty = "loopcs_elapsedTime";
 
 export const args = Args.create("loopcs", "A script to complete community service runs.", {
   confirm: Args.boolean({
@@ -52,37 +42,52 @@ export function main(command?: string): void {
     return;
   }
 
+  const timeProperty = "loopcs_elapsedTime";
   const setTimeNow = get(timeProperty, -1) === -1;
   if (setTimeNow) set(timeProperty, gametimeToInt());
 
-  const tasks = getTasks([
-    RunStartQuest,
-    CoilWireQuest,
-    LevelingQuest,
-    MoxieQuest,
-    MuscleQuest,
-    HPQuest,
-    MysticalityQuest,
-    HotResQuest,
-    NoncombatQuest,
-    FamiliarWeightQuest,
-    WeaponDamageQuest,
-    SpellDamageQuest,
-    BoozeDropQuest,
-    DonateQuest,
-  ]);
-  const engine = new Engine(tasks);
-  setAutoAttack(0);
-  cliExecute("ccs loopcs");
+  const tasks = getTasks(
+    [
+      RunStartQuest,
+      CoilWireQuest,
+      LevelingQuest,
+      MoxieQuest,
+      MuscleQuest,
+      HPQuest,
+      MysticalityQuest,
+      HotResQuest,
+      NoncombatQuest,
+      FamiliarWeightQuest,
+      WeaponDamageQuest,
+      SpellDamageQuest,
+      BoozeDropQuest,
+      DonateQuest,
+    ],
+    true
+  );
 
-  while (!runComplete()) {
+  const engine = new Engine(tasks);
+  try {
+    engine.run(undefined, args.confirm);
+
+    // Print the next task that will be executed, if it exists
     const task = engine.getNextTask();
-    if (task === undefined) throw "Unable to find available task, but the run is not complete";
-    if (args.confirm && !userConfirm(`Executing task ${task.name}, should we continue?`)) {
-      throw `User rejected execution of task ${task.name}`;
+    if (task) {
+      print(`Next: ${task.name}`, "blue");
     }
-    if (task.ready !== undefined && !task.ready()) throw `Task ${task.name} is not ready`;
-    engine.execute(task);
+
+    // If the engine ran to completion, the run should be complete.
+    // Print any tasks that are not complete.
+    if (!runComplete()) {
+      const uncompletedTasks = engine.tasks.filter((t) => !t.completed());
+      if (uncompletedTasks.length > 0) {
+        print("Uncompleted Tasks:");
+        for (const t of uncompletedTasks) print(t.name);
+      }
+      throw `Unable to find available task, but the run is not complete.`;
+    }
+  } finally {
+    engine.destruct();
   }
 
   print("Community Service complete!", "purple");
