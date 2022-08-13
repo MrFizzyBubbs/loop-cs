@@ -6905,6 +6905,7 @@ function engine_classCallCheck(instance, Constructor) { if (!(instance instanceo
 var EngineOptions = function EngineOptions() {
   engine_classCallCheck(this, EngineOptions);
 };
+var grimoireCCS = "grimoire_macro";
 var Engine = /*#__PURE__*/function () {
   /**
    * Create the engine.
@@ -7030,6 +7031,13 @@ var Engine = /*#__PURE__*/function () {
 
       var macro = task_combat.compile(task_resources, (_c = this.options) === null || _c === void 0 ? void 0 : _c.combat_defaults, task.do instanceof external_kolmafia_namespaceObject.Location ? task.do : undefined);
       macro.save();
+
+      if (!this.options.ccs) {
+        // Use the macro through a CCS file
+        (0,external_kolmafia_namespaceObject.writeCcs)("[ default ]\n\"".concat(macro.toString(), ";\""), grimoireCCS);
+        (0,external_kolmafia_namespaceObject.cliExecute)("ccs ".concat(grimoireCCS)); // force Mafia to reparse the ccs
+      }
+
       this.setChoices(task, this.propertyManager); // Actually perform the task
 
       var _iterator3 = engine_createForOfIteratorHelper(task_resources.all()),
@@ -7069,7 +7077,9 @@ var Engine = /*#__PURE__*/function () {
     value: function acquireItems(task) {
       var _a;
 
-      var _iterator4 = engine_createForOfIteratorHelper(task.acquire || []),
+      var acquire = task.acquire instanceof Function ? task.acquire() : task.acquire;
+
+      var _iterator4 = engine_createForOfIteratorHelper(acquire || []),
           _step4;
 
       try {
@@ -7343,7 +7353,9 @@ var Engine = /*#__PURE__*/function () {
   }, {
     key: "initPropertiesManager",
     value: function initPropertiesManager(manager) {
-      // Properties adapted from garbo
+      var _a; // Properties adapted from garbo
+
+
       manager.set({
         logPreferenceChange: true,
         logPreferenceChangeFilter: engine_toConsumableArray(new Set([].concat(engine_toConsumableArray(property_get("logPreferenceChangeFilter").split(",")), ["libram_savedMacro", "maximizerMRUList", "testudinalTeachings", "_lastCombatStarted"]))).sort().filter(a => a).join(","),
@@ -7354,9 +7366,9 @@ var Engine = /*#__PURE__*/function () {
         autoSatisfyWithStash: false,
         dontStopForCounters: true,
         maximizerFoldables: true,
-        hpAutoRecovery: "0.0",
+        hpAutoRecovery: "-0.05",
         hpAutoRecoveryTarget: "0.0",
-        mpAutoRecovery: "0.0",
+        mpAutoRecovery: "-0.05",
         mpAutoRecoveryTarget: "0.0",
         afterAdventureScript: "",
         betweenBattleScript: "",
@@ -7370,6 +7382,17 @@ var Engine = /*#__PURE__*/function () {
         allowSummonBurning: true,
         libramSkillsSoftcore: "none"
       });
+
+      if (this.options.ccs !== "") {
+        if (this.options.ccs === undefined && (0,external_kolmafia_namespaceObject.readCcs)(grimoireCCS) === "") {
+          // Write a simple CCS so we can switch to it
+          (0,external_kolmafia_namespaceObject.writeCcs)("[ default ]\nabort", grimoireCCS);
+        }
+
+        manager.set({
+          customCombatScript: (_a = this.options.ccs) !== null && _a !== void 0 ? _a : grimoireCCS
+        });
+      }
     }
   }]);
 
@@ -7594,7 +7617,6 @@ function engine_getPrototypeOf(o) { engine_getPrototypeOf = Object.setPrototypeO
 
 
 
-var grimoireCCS = "grimoire_macro";
 var engine_Engine = /*#__PURE__*/function (_BaseEngine) {
   engine_inherits(Engine, _BaseEngine);
 
@@ -7626,10 +7648,6 @@ var engine_Engine = /*#__PURE__*/function (_BaseEngine) {
   }, {
     key: "prepare",
     value: function prepare(task) {
-      // Use the macro through a CCS file
-      (0,external_kolmafia_namespaceObject.writeCcs)("[ default ]\n\"".concat(Macro.load().toString(), ";\""), grimoireCCS);
-      (0,external_kolmafia_namespaceObject.cliExecute)("ccs ".concat(grimoireCCS)); // force Mafia to reparse the ccs
-
       engine_get(engine_getPrototypeOf(Engine.prototype), "prepare", this).call(this, task);
 
       if (task.combat !== undefined && (0,external_kolmafia_namespaceObject.myHp)() < (0,external_kolmafia_namespaceObject.myMaxhp)() * 0.9) (0,external_kolmafia_namespaceObject.useSkill)(template_string_$skill(engine_engine_templateObject || (engine_engine_templateObject = engine_engine_taggedTemplateLiteral(["Cannelloni Cocoon"]))));

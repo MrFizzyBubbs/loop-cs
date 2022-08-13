@@ -1,10 +1,8 @@
 import { Task } from "./task";
 import { Engine as BaseEngine, Outfit } from "grimoire-kolmafia";
-import { $effect, $skill, have, Macro, PropertiesManager } from "libram";
-import { cliExecute, myHp, myMaxhp, userConfirm, useSkill, writeCcs } from "kolmafia";
+import { $effect, $skill, have, PropertiesManager } from "libram";
+import { myHp, myMaxhp, userConfirm, useSkill } from "kolmafia";
 import { equipDefaults } from "./outfit";
-
-const grimoireCCS = "grimoire_macro";
 
 export class Engine extends BaseEngine<never, Task> {
   public run(actions?: number, confirm?: boolean): void {
@@ -22,9 +20,6 @@ export class Engine extends BaseEngine<never, Task> {
   }
 
   prepare(task: Task): void {
-    // Use the macro through a CCS file
-    writeCcs(`[ default ]\n"${Macro.load().toString()};"`, grimoireCCS);
-    cliExecute(`ccs ${grimoireCCS}`); // force Mafia to reparse the ccs
     super.prepare(task);
     if (task.combat !== undefined && myHp() < myMaxhp() * 0.9) useSkill($skill`Cannelloni Cocoon`);
   }
