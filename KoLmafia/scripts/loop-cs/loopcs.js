@@ -9386,7 +9386,7 @@ function fightPiece(piece) {
   return (0,external_kolmafia_namespaceObject.runCombat)();
 }
 ;// CONCATENATED MODULE: ./src/tasks/leveling.ts
-var leveling_templateObject, leveling_templateObject2, leveling_templateObject3, leveling_templateObject4, leveling_templateObject5, leveling_templateObject6, leveling_templateObject7, leveling_templateObject8, leveling_templateObject9, leveling_templateObject10, leveling_templateObject11, leveling_templateObject12, leveling_templateObject13, leveling_templateObject14, leveling_templateObject15, leveling_templateObject16, leveling_templateObject17, leveling_templateObject18, leveling_templateObject19, leveling_templateObject20, leveling_templateObject21, leveling_templateObject22, leveling_templateObject23, leveling_templateObject24, leveling_templateObject25, leveling_templateObject26, leveling_templateObject27, leveling_templateObject28, leveling_templateObject29, leveling_templateObject30, leveling_templateObject31, leveling_templateObject32, leveling_templateObject33, leveling_templateObject34, leveling_templateObject35, leveling_templateObject36, leveling_templateObject37, leveling_templateObject38, leveling_templateObject39, leveling_templateObject40, leveling_templateObject41, leveling_templateObject42, leveling_templateObject43, leveling_templateObject44, _templateObject45, _templateObject46, _templateObject47, _templateObject48, _templateObject49, _templateObject50, _templateObject51, _templateObject52, _templateObject53, _templateObject54, _templateObject55, _templateObject56, _templateObject57, _templateObject58, _templateObject59, _templateObject60, _templateObject61, _templateObject62, _templateObject63, _templateObject64, _templateObject65, _templateObject66, _templateObject67, _templateObject68, _templateObject69, _templateObject70, _templateObject71, _templateObject72, _templateObject73, _templateObject74, _templateObject75, _templateObject76, _templateObject77, _templateObject78, _templateObject79, _templateObject80, _templateObject81, _templateObject82, _templateObject83, _templateObject84, _templateObject85, _templateObject86, _templateObject87, _templateObject88, _templateObject89, _templateObject90, _templateObject91, _templateObject92, _templateObject93, _templateObject94, _templateObject95, _templateObject96, _templateObject97, _templateObject98, _templateObject99, _templateObject100, _templateObject101, _templateObject102, _templateObject103, _templateObject104, _templateObject105, _templateObject106, _templateObject107, _templateObject108, _templateObject109, _templateObject110, _templateObject111, _templateObject112, _templateObject113, _templateObject114, _templateObject115, _templateObject116, _templateObject117, _templateObject118, _templateObject119, _templateObject120, _templateObject121, _templateObject122, _templateObject123, _templateObject124, _templateObject125, _templateObject126, _templateObject127, _templateObject128, _templateObject129, _templateObject130, _templateObject131, _templateObject132, _templateObject133, _templateObject134, _templateObject135, _templateObject136, _templateObject137, _templateObject138, _templateObject139, _templateObject140, _templateObject141, _templateObject142, _templateObject143;
+var leveling_templateObject, leveling_templateObject2, leveling_templateObject3, leveling_templateObject4, leveling_templateObject5, leveling_templateObject6, leveling_templateObject7, leveling_templateObject8, leveling_templateObject9, leveling_templateObject10, leveling_templateObject11, leveling_templateObject12, leveling_templateObject13, leveling_templateObject14, leveling_templateObject15, leveling_templateObject16, leveling_templateObject17, leveling_templateObject18, leveling_templateObject19, leveling_templateObject20, leveling_templateObject21, leveling_templateObject22, leveling_templateObject23, leveling_templateObject24, leveling_templateObject25, leveling_templateObject26, leveling_templateObject27, leveling_templateObject28, leveling_templateObject29, leveling_templateObject30, leveling_templateObject31, leveling_templateObject32, leveling_templateObject33, leveling_templateObject34, leveling_templateObject35, leveling_templateObject36, leveling_templateObject37, leveling_templateObject38, leveling_templateObject39, leveling_templateObject40, leveling_templateObject41, leveling_templateObject42, leveling_templateObject43, leveling_templateObject44, _templateObject45, _templateObject46, _templateObject47, _templateObject48, _templateObject49, _templateObject50, _templateObject51, _templateObject52, _templateObject53, _templateObject54, _templateObject55, _templateObject56, _templateObject57, _templateObject58, _templateObject59, _templateObject60, _templateObject61, _templateObject62, _templateObject63, _templateObject64, _templateObject65, _templateObject66, _templateObject67, _templateObject68, _templateObject69, _templateObject70, _templateObject71, _templateObject72, _templateObject73, _templateObject74, _templateObject75, _templateObject76, _templateObject77, _templateObject78, _templateObject79, _templateObject80, _templateObject81, _templateObject82, _templateObject83, _templateObject84, _templateObject85, _templateObject86, _templateObject87, _templateObject88, _templateObject89, _templateObject90, _templateObject91, _templateObject92, _templateObject93, _templateObject94, _templateObject95, _templateObject96, _templateObject97, _templateObject98, _templateObject99, _templateObject100, _templateObject101, _templateObject102, _templateObject103, _templateObject104, _templateObject105, _templateObject106, _templateObject107, _templateObject108, _templateObject109, _templateObject110, _templateObject111, _templateObject112, _templateObject113, _templateObject114, _templateObject115, _templateObject116, _templateObject117, _templateObject118, _templateObject119, _templateObject120, _templateObject121, _templateObject122, _templateObject123, _templateObject124, _templateObject125, _templateObject126, _templateObject127, _templateObject128, _templateObject129, _templateObject130, _templateObject131, _templateObject132, _templateObject133, _templateObject134, _templateObject135, _templateObject136, _templateObject137, _templateObject138, _templateObject139, _templateObject140, _templateObject141, _templateObject142, _templateObject143, _templateObject144;
 
 function leveling_taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(0); } return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
 
@@ -9692,42 +9692,51 @@ var LevelingQuest = {
       tries: 5
     }
   }, innerElf(), {
+    name: "Party Fair",
+    completed: () => property_get("_questPartyFair") !== "unstarted",
+    do: () => {
+      (0,external_kolmafia_namespaceObject.visitUrl)((0,external_kolmafia_namespaceObject.toUrl)($location(_templateObject127 || (_templateObject127 = leveling_taggedTemplateLiteral(["The Neverending Party"])))));
+      if (["food", "booze"].includes(property_get("_questPartyFairQuest"))) (0,external_kolmafia_namespaceObject.runChoice)(1);else (0,external_kolmafia_namespaceObject.runChoice)(2);
+    },
+    limit: {
+      tries: 1
+    }
+  }, {
     name: "Sausage Goblin",
     completed: () => property_get("_sausageFights") > 1,
-    ready: () => getKramcoWandererChance() >= 1.0 && have(template_string_$item(_templateObject127 || (_templateObject127 = leveling_taggedTemplateLiteral(["cosmic bowling ball"])))),
-    do: $location(_templateObject128 || (_templateObject128 = leveling_taggedTemplateLiteral(["The Neverending Party"]))),
+    ready: () => getKramcoWandererChance() >= 1.0 && have(template_string_$item(_templateObject128 || (_templateObject128 = leveling_taggedTemplateLiteral(["cosmic bowling ball"])))),
+    do: $location(_templateObject129 || (_templateObject129 = leveling_taggedTemplateLiteral(["The Neverending Party"]))),
     choices: {
       1322: 1
     },
-    combat: new CombatStrategy().macro(combat_Macro.if_($monster(_templateObject129 || (_templateObject129 = leveling_taggedTemplateLiteral(["sausage goblin"]))), combat_Macro.skill(template_string_$skill(_templateObject130 || (_templateObject130 = leveling_taggedTemplateLiteral(["Bowl Sideways"])))).default()).abort()),
+    combat: new CombatStrategy().macro(combat_Macro.if_($monster(_templateObject130 || (_templateObject130 = leveling_taggedTemplateLiteral(["sausage goblin"]))), combat_Macro.skill(template_string_$skill(_templateObject131 || (_templateObject131 = leveling_taggedTemplateLiteral(["Bowl Sideways"])))).default()).abort()),
     outfit: {
-      offhand: template_string_$item(_templateObject131 || (_templateObject131 = leveling_taggedTemplateLiteral(["Kramco Sausage-o-Matic\u2122"]))),
-      shirt: template_string_$item(_templateObject132 || (_templateObject132 = leveling_taggedTemplateLiteral(["makeshift garbage shirt"]))),
-      acc1: template_string_$item(_templateObject133 || (_templateObject133 = leveling_taggedTemplateLiteral(["backup camera"])))
+      offhand: template_string_$item(_templateObject132 || (_templateObject132 = leveling_taggedTemplateLiteral(["Kramco Sausage-o-Matic\u2122"]))),
+      shirt: template_string_$item(_templateObject133 || (_templateObject133 = leveling_taggedTemplateLiteral(["makeshift garbage shirt"]))),
+      acc1: template_string_$item(_templateObject134 || (_templateObject134 = leveling_taggedTemplateLiteral(["backup camera"])))
     },
     acquire: [{
-      item: template_string_$item(_templateObject134 || (_templateObject134 = leveling_taggedTemplateLiteral(["makeshift garbage shirt"])))
+      item: template_string_$item(_templateObject135 || (_templateObject135 = leveling_taggedTemplateLiteral(["makeshift garbage shirt"])))
     }],
     limit: {
-      tries: 2
-    } // NEP zone intro NC
-
+      tries: 1
+    }
   }, {
     name: "Neverending Party",
     prepare: () => (0,external_kolmafia_namespaceObject.cliExecute)("umbrella ml"),
     completed: () => property_get("_neverendingPartyFreeTurns") >= 10,
-    do: $location(_templateObject135 || (_templateObject135 = leveling_taggedTemplateLiteral(["The Neverending Party"]))),
+    do: $location(_templateObject136 || (_templateObject136 = leveling_taggedTemplateLiteral(["The Neverending Party"]))),
     choices: {
       1324: 5
     },
-    combat: new CombatStrategy().macro(combat_Macro.trySkill(template_string_$skill(_templateObject136 || (_templateObject136 = leveling_taggedTemplateLiteral(["Feel Pride"])))).default()),
+    combat: new CombatStrategy().macro(combat_Macro.trySkill(template_string_$skill(_templateObject137 || (_templateObject137 = leveling_taggedTemplateLiteral(["Feel Pride"])))).default()),
     outfit: {
-      offhand: template_string_$item(_templateObject137 || (_templateObject137 = leveling_taggedTemplateLiteral(["unbreakable umbrella"]))),
-      shirt: template_string_$item(_templateObject138 || (_templateObject138 = leveling_taggedTemplateLiteral(["makeshift garbage shirt"]))),
-      acc1: template_string_$item(_templateObject139 || (_templateObject139 = leveling_taggedTemplateLiteral(["backup camera"])))
+      offhand: template_string_$item(_templateObject138 || (_templateObject138 = leveling_taggedTemplateLiteral(["unbreakable umbrella"]))),
+      shirt: template_string_$item(_templateObject139 || (_templateObject139 = leveling_taggedTemplateLiteral(["makeshift garbage shirt"]))),
+      acc1: template_string_$item(_templateObject140 || (_templateObject140 = leveling_taggedTemplateLiteral(["backup camera"])))
     },
     acquire: [{
-      item: template_string_$item(_templateObject140 || (_templateObject140 = leveling_taggedTemplateLiteral(["makeshift garbage shirt"])))
+      item: template_string_$item(_templateObject141 || (_templateObject141 = leveling_taggedTemplateLiteral(["makeshift garbage shirt"])))
     }],
     limit: {
       tries: 10
@@ -9735,10 +9744,10 @@ var LevelingQuest = {
   }, {
     name: "Pilsners",
     ready: () => (0,external_kolmafia_namespaceObject.myLevel)() >= 11,
-    prepare: () => tryUse(template_string_$item(_templateObject141 || (_templateObject141 = leveling_taggedTemplateLiteral(["astral six-pack"])))),
+    prepare: () => tryUse(template_string_$item(_templateObject142 || (_templateObject142 = leveling_taggedTemplateLiteral(["astral six-pack"])))),
     completed: () => (0,external_kolmafia_namespaceObject.myInebriety)() >= 4,
-    do: () => (0,external_kolmafia_namespaceObject.drink)(4 - (0,external_kolmafia_namespaceObject.myInebriety)(), template_string_$item(_templateObject142 || (_templateObject142 = leveling_taggedTemplateLiteral(["astral pilsner"])))),
-    effects: $effects(_templateObject143 || (_templateObject143 = leveling_taggedTemplateLiteral(["Ode to Booze"]))),
+    do: () => (0,external_kolmafia_namespaceObject.drink)(4 - (0,external_kolmafia_namespaceObject.myInebriety)(), template_string_$item(_templateObject143 || (_templateObject143 = leveling_taggedTemplateLiteral(["astral pilsner"])))),
+    effects: $effects(_templateObject144 || (_templateObject144 = leveling_taggedTemplateLiteral(["Ode to Booze"]))),
     limit: {
       tries: 1
     }

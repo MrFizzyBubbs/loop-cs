@@ -10,6 +10,7 @@ import {
   runChoice,
   sweetSynthesis,
   totalFreeRests,
+  toUrl,
   use,
   useSkill,
   visitUrl,
@@ -337,6 +338,16 @@ export const LevelingQuest: Quest = {
     },
     innerElf(),
     {
+      name: "Party Fair",
+      completed: () => get("_questPartyFair") !== "unstarted",
+      do: (): void => {
+        visitUrl(toUrl($location`The Neverending Party`));
+        if (["food", "booze"].includes(get("_questPartyFairQuest"))) runChoice(1);
+        else runChoice(2);
+      },
+      limit: { tries: 1 },
+    },
+    {
       name: "Sausage Goblin",
       completed: () => get("_sausageFights") > 1,
       ready: () => getKramcoWandererChance() >= 1.0 && have($item`cosmic bowling ball`),
@@ -351,7 +362,7 @@ export const LevelingQuest: Quest = {
         acc1: $item`backup camera`,
       },
       acquire: [{ item: $item`makeshift garbage shirt` }],
-      limit: { tries: 2 }, // NEP zone intro NC
+      limit: { tries: 1 },
     },
     {
       name: "Neverending Party",
