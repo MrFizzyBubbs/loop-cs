@@ -7634,6 +7634,7 @@ var engine_Engine = /*#__PURE__*/function (_BaseEngine) {
       for (var i = 0; i < (actions !== null && actions !== void 0 ? actions : Infinity); i++) {
         var task = this.getNextTask();
         if (!task) return;
+        if (task.ready && !task.ready()) throw "Task ".concat(task.name, " is not ready");
         if (confirm && !(0,external_kolmafia_namespaceObject.userConfirm)("Executing ".concat(task.name, ", continue?"))) throw "Abort requested";
         this.execute(task);
       }
@@ -7658,16 +7659,6 @@ var engine_Engine = /*#__PURE__*/function (_BaseEngine) {
       engine_get(engine_getPrototypeOf(Engine.prototype), "post", this).call(this, task);
 
       if (have($effect(engine_engine_templateObject2 || (engine_engine_templateObject2 = engine_engine_taggedTemplateLiteral(["Beaten Up"]))))) throw "Fight was lost; stop.";
-    }
-  }, {
-    key: "initPropertiesManager",
-    value: function initPropertiesManager(manager) {
-      engine_get(engine_getPrototypeOf(Engine.prototype), "initPropertiesManager", this).call(this, manager);
-
-      manager.set({
-        hpAutoRecovery: -0.05,
-        mpAutoRecovery: -0.05
-      });
     }
   }]);
 
@@ -10585,7 +10576,7 @@ function main(command) {
   var timeProperty = "loopcs_elapsedTime";
   var setTimeNow = property_get(timeProperty, -1) === -1;
   if (setTimeNow) _set(timeProperty, (0,external_kolmafia_namespaceObject.gametimeToInt)());
-  var tasks = getTasks([RunStartQuest, CoilWireQuest, LevelingQuest, MoxieQuest, MuscleQuest, HPQuest, MysticalityQuest, HotResQuest, NoncombatQuest, FamiliarWeightQuest, WeaponDamageQuest, SpellDamageQuest, BoozeDropQuest, DonateQuest], true);
+  var tasks = getTasks([RunStartQuest, CoilWireQuest, LevelingQuest, MoxieQuest, MuscleQuest, HPQuest, MysticalityQuest, HotResQuest, NoncombatQuest, FamiliarWeightQuest, WeaponDamageQuest, SpellDamageQuest, BoozeDropQuest, DonateQuest]);
   var engine = new engine_Engine(tasks);
 
   try {

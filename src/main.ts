@@ -46,25 +46,22 @@ export function main(command?: string): void {
   const setTimeNow = get(timeProperty, -1) === -1;
   if (setTimeNow) set(timeProperty, gametimeToInt());
 
-  const tasks = getTasks(
-    [
-      RunStartQuest,
-      CoilWireQuest,
-      LevelingQuest,
-      MoxieQuest,
-      MuscleQuest,
-      HPQuest,
-      MysticalityQuest,
-      HotResQuest,
-      NoncombatQuest,
-      FamiliarWeightQuest,
-      WeaponDamageQuest,
-      SpellDamageQuest,
-      BoozeDropQuest,
-      DonateQuest,
-    ],
-    true
-  );
+  const tasks = getTasks([
+    RunStartQuest,
+    CoilWireQuest,
+    LevelingQuest,
+    MoxieQuest,
+    MuscleQuest,
+    HPQuest,
+    MysticalityQuest,
+    HotResQuest,
+    NoncombatQuest,
+    FamiliarWeightQuest,
+    WeaponDamageQuest,
+    SpellDamageQuest,
+    BoozeDropQuest,
+    DonateQuest,
+  ]);
 
   const engine = new Engine(tasks);
   try {

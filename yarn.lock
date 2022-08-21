@@ -2604,15 +2604,10 @@ kind-of@^6.0.0, kind-of@^6.0.2:
   resolved "https://registry.yarnpkg.com/kind-of/-/kind-of-6.0.3.tgz#07c05034a6c349fa06e24fa35aa76db4580ce4dd"
   integrity sha512-dcS1ul+9tmeD95T+x28/ehLgd9mENa3LsvDTtzm3vyBEO7RPptvAD+t44WVXaUjTBRcrpFeFlC8WCruUR456hw==
 
-kolmafia@>=1.2.0:
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/kolmafia/-/kolmafia-3.1.0.tgz#84d06e8959b34d8350ad11572c51c8cbd74cd71a"
-  integrity sha512-RKwywL5Xb1RBitt5vXR/HA8KShxVPcpKyJk0g0jec8uFRKZFi3rfqEKJiJTqkD0uIBUo06ZDFXXMKanJTRsxnA==
-
-kolmafia@^3.0.3, kolmafia@^3.2.0:
-  version "3.2.0"
-  resolved "https://registry.yarnpkg.com/kolmafia/-/kolmafia-3.2.0.tgz#2178d202ee521016fc396ea41bb4025ab3c1638a"
-  integrity sha512-CogD/3pKMFvbZ+IPDEE6yJrYcJKLrY6M8evgTbLExjyb6SwxlbtTIsNykL0iH6wvec1fD7sztPvL1hDeGsUEFA==
+kolmafia@>=1.2.0, kolmafia@^3.0.3, kolmafia@^3.2.0:
+  version "3.4.0"
+  resolved "https://registry.yarnpkg.com/kolmafia/-/kolmafia-3.4.0.tgz#133d2863075f7e8fb1b91a5e1fd06a022b385245"
+  integrity sha512-FuzhCdFIw/rkeofEWL7j7B28TxGqxxb0OxtgZ+PdmXmqePLOIMs1bSUQlW7zTu+BF/Su1KkPKFqWjBIvAvAlXQ==
 
 levn@^0.4.1:
   version "0.4.1"
