@@ -29,14 +29,16 @@ import {
   ensureEffect,
   get,
   getKramcoWandererChance,
+  getTodaysHolidayWanderers,
   have,
+  StompingBoots,
   TunnelOfLove,
   Witchess,
 } from "libram";
 import Macro from "../combat";
 import { Quest } from "../engine/task";
 import { crimboCarols, mapMonster, tryUse } from "../lib";
-import { holidayRunaway, innerElf } from "./common";
+import { innerElf } from "./common";
 
 const levelingBuffs = [
   // Skill
@@ -145,7 +147,15 @@ export const LevelingQuest: Quest = {
       outfit: { offhand: $item`familiar scrapbook` },
       limit: { tries: 1 },
     },
-    holidayRunaway(),
+    {
+      name: "Holiday Runaway",
+      ready: () => StompingBoots.couldRunaway(),
+      completed: () => getTodaysHolidayWanderers().length === 0 || get("_banderRunaways") >= 2,
+      do: $location`Noob Cave`,
+      combat: new CombatStrategy().macro(Macro.ifHolidayWanderer(Macro.runaway()).abort()),
+      outfit: { familiar: $familiar`Pair of Stomping Boots` },
+      limit: { tries: 1 },
+    },
     {
       name: "Ninja Costume",
       ready: () => get("_monstersMapped") < 3 && get("_chestXRayUsed") < 3,

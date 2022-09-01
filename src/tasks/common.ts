@@ -1,32 +1,9 @@
 import { CombatStrategy } from "grimoire-kolmafia";
 import { myLevel } from "kolmafia";
-import {
-  $effect,
-  $familiar,
-  $item,
-  $location,
-  $skill,
-  Clan,
-  Counter,
-  get,
-  have,
-  StompingBoots,
-} from "libram";
+import { $effect, $familiar, $item, $location, $skill, Clan, get, have } from "libram";
 import Macro from "../combat";
 import { Task } from "../engine/task";
 import { args } from "../main";
-
-export function holidayRunaway(): Task {
-  return {
-    name: "Holiday Runaway",
-    ready: () => StompingBoots.couldRunaway(),
-    completed: () => (Counter.get("Holiday Monster window begin") ?? Infinity) > 0,
-    do: $location`Noob Cave`,
-    combat: new CombatStrategy().macro(Macro.ifHolidayWanderer(Macro.runaway()).abort()),
-    outfit: { familiar: $familiar`Pair of Stomping Boots` },
-    limit: { tries: 1 },
-  };
-}
 
 export function innerElf(): Task {
   return {

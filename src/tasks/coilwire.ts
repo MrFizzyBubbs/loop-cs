@@ -10,17 +10,26 @@ import {
   CrimboShrub,
   get,
   getKramcoWandererChance,
+  getTodaysHolidayWanderers,
   have,
+  StompingBoots,
 } from "libram";
 import Macro from "../combat";
 import { Quest } from "../engine/task";
-import { holidayRunaway } from "./common";
 
 export const CoilWireQuest: Quest = {
   name: "Coil Wire",
   completed: () => CommunityService.CoilWire.isDone(),
   tasks: [
-    holidayRunaway(),
+    {
+      name: "Holiday Runaway",
+      ready: () => StompingBoots.couldRunaway(),
+      completed: () => getTodaysHolidayWanderers().length === 0 || get("_banderRunaways") >= 1,
+      do: $location`Noob Cave`,
+      combat: new CombatStrategy().macro(Macro.ifHolidayWanderer(Macro.runaway()).abort()),
+      outfit: { familiar: $familiar`Pair of Stomping Boots` },
+      limit: { tries: 1 },
+    },
     {
       name: "Shrub Meat",
       ready: () => have($item`cosmic bowling ball`),
