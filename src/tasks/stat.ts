@@ -27,6 +27,7 @@ export const MuscleQuest: Quest = {
       do: () => CommunityService.Muscle.run(() => undefined, 1),
       outfit: { modifier: "Muscle" },
       effects: [
+        $effect`Ham-Fisted`,
         $effect`Quiet Determination`,
         $effect`Power Ballad of the Arrowsmith`,
         $effect`Rage of the Reindeer`,

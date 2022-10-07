@@ -10247,7 +10247,7 @@ var SpellDamageQuest = {
   }]
 };
 ;// CONCATENATED MODULE: ./src/tasks/stat.ts
-var stat_templateObject, stat_templateObject2, stat_templateObject3, stat_templateObject4, stat_templateObject5, stat_templateObject6, stat_templateObject7, stat_templateObject8, stat_templateObject9, stat_templateObject10, stat_templateObject11, stat_templateObject12, stat_templateObject13;
+var stat_templateObject, stat_templateObject2, stat_templateObject3, stat_templateObject4, stat_templateObject5, stat_templateObject6, stat_templateObject7, stat_templateObject8, stat_templateObject9, stat_templateObject10, stat_templateObject11, stat_templateObject12, stat_templateObject13, stat_templateObject14;
 
 function stat_taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(0); } return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
 
@@ -10279,7 +10279,7 @@ var MuscleQuest = {
     outfit: {
       modifier: "Muscle"
     },
-    effects: [$effect(stat_templateObject4 || (stat_templateObject4 = stat_taggedTemplateLiteral(["Quiet Determination"]))), $effect(stat_templateObject5 || (stat_templateObject5 = stat_taggedTemplateLiteral(["Power Ballad of the Arrowsmith"]))), $effect(stat_templateObject6 || (stat_templateObject6 = stat_taggedTemplateLiteral(["Rage of the Reindeer"])))],
+    effects: [$effect(stat_templateObject4 || (stat_templateObject4 = stat_taggedTemplateLiteral(["Ham-Fisted"]))), $effect(stat_templateObject5 || (stat_templateObject5 = stat_taggedTemplateLiteral(["Quiet Determination"]))), $effect(stat_templateObject6 || (stat_templateObject6 = stat_taggedTemplateLiteral(["Power Ballad of the Arrowsmith"]))), $effect(stat_templateObject7 || (stat_templateObject7 = stat_taggedTemplateLiteral(["Rage of the Reindeer"])))],
     limit: {
       tries: 1
     }
@@ -10289,13 +10289,13 @@ var HPQuest = {
   name: "HP",
   tasks: [{
     name: "Test",
-    prepare: () => (0,external_kolmafia_namespaceObject.useSkill)(template_string_$skill(stat_templateObject7 || (stat_templateObject7 = stat_taggedTemplateLiteral(["Bind Undead Elbow Macaroni"])))),
+    prepare: () => (0,external_kolmafia_namespaceObject.useSkill)(template_string_$skill(stat_templateObject8 || (stat_templateObject8 = stat_taggedTemplateLiteral(["Bind Undead Elbow Macaroni"])))),
     completed: () => CommunityService.HP.isDone(),
     do: () => CommunityService.HP.run(() => undefined, 1),
     outfit: {
       modifier: "HP"
     },
-    effects: [$effect(stat_templateObject8 || (stat_templateObject8 = stat_taggedTemplateLiteral(["A Few Extra Pounds"]))), $effect(stat_templateObject9 || (stat_templateObject9 = stat_taggedTemplateLiteral(["Power Ballad of the Arrowsmith"]))), $effect(stat_templateObject10 || (stat_templateObject10 = stat_taggedTemplateLiteral(["Quiet Determination"]))), $effect(stat_templateObject11 || (stat_templateObject11 = stat_taggedTemplateLiteral(["Reptilian Fortitude"]))), $effect(stat_templateObject12 || (stat_templateObject12 = stat_taggedTemplateLiteral(["Song of Starch"])))],
+    effects: [$effect(stat_templateObject9 || (stat_templateObject9 = stat_taggedTemplateLiteral(["A Few Extra Pounds"]))), $effect(stat_templateObject10 || (stat_templateObject10 = stat_taggedTemplateLiteral(["Power Ballad of the Arrowsmith"]))), $effect(stat_templateObject11 || (stat_templateObject11 = stat_taggedTemplateLiteral(["Quiet Determination"]))), $effect(stat_templateObject12 || (stat_templateObject12 = stat_taggedTemplateLiteral(["Reptilian Fortitude"]))), $effect(stat_templateObject13 || (stat_templateObject13 = stat_taggedTemplateLiteral(["Song of Starch"])))],
     limit: {
       tries: 1
     }
@@ -10310,7 +10310,7 @@ var MysticalityQuest = {
     outfit: {
       modifier: "Mysticality"
     },
-    effects: $effects(stat_templateObject13 || (stat_templateObject13 = stat_taggedTemplateLiteral(["Quiet Judgement"]))),
+    effects: $effects(stat_templateObject14 || (stat_templateObject14 = stat_taggedTemplateLiteral(["Quiet Judgement"]))),
     limit: {
       tries: 1
     }
