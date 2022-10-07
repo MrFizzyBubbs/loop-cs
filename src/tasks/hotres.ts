@@ -26,13 +26,17 @@ export const HotResQuest: Quest = {
     },
     {
       name: "Test",
-      prepare: () => cliExecute("retrocape vampire hold"),
+      prepare: (): void => {
+        cliExecute("retrocape vampire hold");
+        cliExecute("parka pterodactyl");
+      },
       completed: () => CommunityService.HotRes.isDone(),
       do: () => CommunityService.HotRes.run(() => undefined, 1),
       outfit: {
         back: $item`unwrapped knock-off retro superhero cape`,
         weapon: $item`Fourth of May Cosplay Saber`,
         offhand: $item`industrial fire extinguisher`,
+        shirt: $item`Jurassic Parka`,
         pants: $item`pantogram pants`,
         acc1: $item`Brutal brogues`,
         acc2: $item`hewn moon-rune spoon`,

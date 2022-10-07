@@ -14,13 +14,17 @@ export const NoncombatQuest: Quest = {
     },
     {
       name: "Test",
-      prepare: () => cliExecute("umbrella nc"),
+      prepare: (): void => {
+        cliExecute("umbrella nc");
+        cliExecute("parka pterodactyl");
+      },
       completed: () => CommunityService.Noncombat.isDone(),
       do: () => CommunityService.Noncombat.run(() => undefined, 1),
       outfit: {
         hat: $item`very pointy crown`,
         back: $item`protonic accelerator pack`,
         offhand: $item`unbreakable umbrella`,
+        shirt: $item`Jurassic Parka`,
         pants: $item`pantogram pants`,
         familiar: $familiar`Disgeist`,
       },
