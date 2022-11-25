@@ -26,7 +26,7 @@ export const CoilWireQuest: Quest = {
       ready: () => StompingBoots.couldRunaway(),
       completed: () => getTodaysHolidayWanderers().length === 0 || get("_banderRunaways") >= 1,
       do: $location`Noob Cave`,
-      combat: new CombatStrategy().macro(Macro.ifHolidayWanderer(Macro.runaway()).abort()),
+      combat: new CombatStrategy().macro(Macro.runaway()),
       outfit: { familiar: $familiar`Pair of Stomping Boots` },
       limit: { tries: 1 },
     },

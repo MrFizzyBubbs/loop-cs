@@ -8824,7 +8824,7 @@ var CoilWireQuest = {
     ready: () => couldRunaway(),
     completed: () => getTodaysHolidayWanderers().length === 0 || property_get("_banderRunaways") >= 1,
     do: $location(coilwire_templateObject || (coilwire_templateObject = coilwire_taggedTemplateLiteral(["Noob Cave"]))),
-    combat: new CombatStrategy().macro(combat_Macro.ifHolidayWanderer(combat_Macro.runaway()).abort()),
+    combat: new CombatStrategy().macro(combat_Macro.runaway()),
     outfit: {
       familiar: template_string_$familiar(coilwire_templateObject2 || (coilwire_templateObject2 = coilwire_taggedTemplateLiteral(["Pair of Stomping Boots"])))
     },
@@ -9801,7 +9801,7 @@ var LevelingQuest = {
     ready: () => couldRunaway(),
     completed: () => getTodaysHolidayWanderers().length === 0 || property_get("_banderRunaways") >= 2,
     do: $location(_templateObject55 || (_templateObject55 = leveling_taggedTemplateLiteral(["Noob Cave"]))),
-    combat: new CombatStrategy().macro(combat_Macro.ifHolidayWanderer(combat_Macro.runaway()).abort()),
+    combat: new CombatStrategy().macro(combat_Macro.runaway()),
     outfit: {
       familiar: template_string_$familiar(_templateObject56 || (_templateObject56 = leveling_taggedTemplateLiteral(["Pair of Stomping Boots"])))
     },
