@@ -10395,10 +10395,10 @@ var RunStartQuest = {
   }, {
     name: "Numberology",
     ready: () => Object.keys((0,external_kolmafia_namespaceObject.reverseNumberology)()).includes("69"),
-    completed: () => property_get("_universeCalculated") >= property_get("skillLevel144"),
+    completed: () => property_get("_universeCalculated") >= Math.min(property_get("skillLevel144"), 3),
     do: () => (0,external_kolmafia_namespaceObject.cliExecute)("numberology 69"),
     limit: {
-      tries: 4
+      tries: 3
     }
   }, {
     name: "Borrowed Time",
