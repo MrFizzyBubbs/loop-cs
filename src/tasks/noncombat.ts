@@ -14,10 +14,6 @@ export const NoncombatQuest: Quest = {
     },
     {
       name: "Test",
-      prepare: (): void => {
-        cliExecute("umbrella nc");
-        cliExecute("parka pterodactyl");
-      },
       completed: () => CommunityService.Noncombat.isDone(),
       do: () => CommunityService.Noncombat.run(() => undefined, 1),
       outfit: {
@@ -27,6 +23,7 @@ export const NoncombatQuest: Quest = {
         shirt: $item`Jurassic Parka`,
         pants: $item`pantogram pants`,
         familiar: $familiar`Disgeist`,
+        modes: { umbrella: "cocoon", parka: "pterodactyl" },
       },
       effects: [
         $effect`Blessing of the Bird`,

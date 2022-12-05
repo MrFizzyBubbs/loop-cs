@@ -1,4 +1,3 @@
-import { cliExecute } from "kolmafia";
 import {
   $effect,
   $familiar,
@@ -6,14 +5,13 @@ import {
   $location,
   $skill,
   CommunityService,
-  ensureEffect,
   get,
   have,
   Macro,
 } from "libram";
-import { tryUse } from "../lib";
 import { Quest } from "../engine/task";
 import { CombatStrategy } from "grimoire-kolmafia";
+import { use } from "kolmafia";
 
 export const BoozeDropQuest: Quest = {
   name: "Booze Drop",
@@ -40,12 +38,13 @@ export const BoozeDropQuest: Quest = {
       limit: { tries: 1 },
     },
     {
+      name: "MayDay",
+      completed: () => !have($item`MayDay™ supply package`),
+      do: () => use($item`MayDay™ supply package`),
+      limit: { tries: 1 },
+    },
+    {
       name: "Test",
-      prepare: (): void => {
-        cliExecute("umbrella item");
-        tryUse($item`MayDay™ supply package`);
-        ensureEffect($effect`Glowing Hands`);
-      },
       completed: () => CommunityService.BoozeDrop.isDone(),
       do: () => CommunityService.BoozeDrop.run(() => undefined, 1),
       outfit: {
@@ -57,10 +56,12 @@ export const BoozeDropQuest: Quest = {
         acc3: $item`your cowboy boots`,
         famequip: $item`li'l ninja costume`,
         familiar: $familiar`Trick-or-Treating Tot`,
+        modes: { umbrella: "bucket style" },
       },
       effects: [
         $effect`Fat Leon's Phat Loot Lyric`,
         $effect`Feeling Lost`,
+        $effect`Glowing Hands`,
         $effect`Hustlin'`,
         $effect`items.enh`,
         $effect`I See Everything Thrice!`,

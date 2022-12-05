@@ -185,11 +185,5 @@ export const RunStartQuest: Quest = {
       do: () => retrieveItem($item`weeping willow wand`),
       limit: { tries: 1 },
     },
-    {
-      name: "Backup Camera",
-      completed: () => get("backupCameraMode") === "ml",
-      do: () => cliExecute("backupcamera ml"),
-      limit: { tries: 1 },
-    },
   ],
 };

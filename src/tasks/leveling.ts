@@ -279,7 +279,6 @@ export const LevelingQuest: Quest = {
     },
     {
       name: "Witchess Witch",
-      prepare: () => cliExecute("umbrella ml"),
       completed: () => have($item`battle broom`),
       do: () => Witchess.fightPiece($monster`Witchess Witch`),
       combat: new CombatStrategy().macro(
@@ -287,16 +286,17 @@ export const LevelingQuest: Quest = {
           .attack()
           .repeat()
       ),
-      outfit: { offhand: $item`unbreakable umbrella`, shirt: $item`makeshift garbage shirt` },
+      outfit: {
+        offhand: $item`unbreakable umbrella`,
+        shirt: $item`makeshift garbage shirt`,
+        modes: { umbrella: "broken" },
+      },
       acquire: [{ item: $item`makeshift garbage shirt` }],
       limit: { tries: 1 },
     },
     {
       name: "Witchess King",
-      prepare: (): void => {
-        cliExecute("umbrella ml");
-        cliExecute("terminal educate portscan");
-      },
+      prepare: () => cliExecute("terminal educate portscan"),
       completed: () => have($item`dented scepter`),
       do: () => Witchess.fightPiece($monster`Witchess King`),
       combat: new CombatStrategy().macro(
@@ -308,13 +308,13 @@ export const LevelingQuest: Quest = {
       outfit: {
         offhand: $item`unbreakable umbrella`,
         shirt: $item`makeshift garbage shirt`,
+        modes: { umbrella: "broken" },
       },
       acquire: [{ item: $item`makeshift garbage shirt` }],
       limit: { tries: 1 },
     },
     {
       name: "Witchess Queen",
-      prepare: () => cliExecute("umbrella ml"),
       completed: () => Witchess.fightsDone() >= 5,
       do: () => Witchess.fightPiece($monster`Witchess Queen`),
       combat: new CombatStrategy().macro(
@@ -325,13 +325,13 @@ export const LevelingQuest: Quest = {
       outfit: {
         offhand: $item`unbreakable umbrella`,
         shirt: $item`makeshift garbage shirt`,
+        modes: { umbrella: "broken" },
       },
       acquire: [{ item: $item`makeshift garbage shirt` }],
       limit: { tries: 3 },
     },
     {
       name: "DMT",
-      prepare: () => cliExecute("umbrella ml"),
       completed: () => get("_machineTunnelsAdv") >= 5,
       do: $location`The Deep Machine Tunnels`,
       combat: new CombatStrategy().macro(
@@ -342,6 +342,7 @@ export const LevelingQuest: Quest = {
         shirt: $item`makeshift garbage shirt`,
         acc1: $item`backup camera`,
         familiar: $familiar`Machine Elf`,
+        modes: { umbrella: "broken", backupcamera: "ml" },
       },
       acquire: [{ item: $item`makeshift garbage shirt` }],
       limit: { tries: 5 },
@@ -370,13 +371,13 @@ export const LevelingQuest: Quest = {
         offhand: $item`Kramco Sausage-o-Matic™`,
         shirt: $item`makeshift garbage shirt`,
         acc1: $item`backup camera`,
+        modes: { backupcamera: "ml" },
       },
       acquire: [{ item: $item`makeshift garbage shirt` }],
       limit: { tries: 1 },
     },
     {
       name: "Neverending Party",
-      prepare: () => cliExecute("umbrella ml"),
       completed: () => get("_neverendingPartyFreeTurns") >= 10,
       do: $location`The Neverending Party`,
       choices: { 1324: 5 },
@@ -385,6 +386,7 @@ export const LevelingQuest: Quest = {
         offhand: $item`unbreakable umbrella`,
         shirt: $item`makeshift garbage shirt`,
         acc1: $item`backup camera`,
+        modes: { umbrella: "broken", backupcamera: "ml" },
       },
       acquire: [{ item: $item`makeshift garbage shirt` }],
       limit: { tries: 10 },

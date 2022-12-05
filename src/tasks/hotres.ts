@@ -1,5 +1,4 @@
 import { CombatStrategy } from "grimoire-kolmafia";
-import { cliExecute } from "kolmafia";
 import { $effect, $familiar, $item, $location, $skill, CommunityService, get, have } from "libram";
 import Macro from "../combat";
 import { Quest } from "../engine/task";
@@ -26,10 +25,6 @@ export const HotResQuest: Quest = {
     },
     {
       name: "Test",
-      prepare: (): void => {
-        cliExecute("retrocape vampire hold");
-        cliExecute("parka pterodactyl");
-      },
       completed: () => CommunityService.HotRes.isDone(),
       do: () => CommunityService.HotRes.run(() => undefined, 1),
       outfit: {
@@ -43,6 +38,7 @@ export const HotResQuest: Quest = {
         acc3: $item`Beach Comb`,
         famequip: $item`Snow Suit`,
         familiar: $familiar`Exotic Parrot`,
+        modes: { retrocape: ["vampire", "hold"], parka: "pterodactyl" },
       },
       effects: [
         $effect`Astral Shell`,
