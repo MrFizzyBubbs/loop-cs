@@ -4,6 +4,7 @@ import {
   $item,
   $location,
   $skill,
+  AsdonMartin,
   CommunityService,
   get,
   have,
@@ -38,9 +39,16 @@ export const BoozeDropQuest: Quest = {
       limit: { tries: 1 },
     },
     {
-      name: "MayDay",
+      name: "Open MayDay",
       completed: () => !have($item`MayDay™ supply package`),
       do: () => use($item`MayDay™ supply package`),
+      limit: { tries: 1 },
+    },
+    {
+      name: "Driving Observantly",
+      completed: () => have($effect`Driving Observantly`),
+      prepare: () => AsdonMartin.insertFuel($item`20-lb can of rice and beans`),
+      do: () => AsdonMartin.drive($effect`Driving Observantly`),
       limit: { tries: 1 },
     },
     {
@@ -67,7 +75,6 @@ export const BoozeDropQuest: Quest = {
         $effect`I See Everything Thrice!`,
         $effect`Nearly All-Natural`,
         $effect`Pork Barrel`,
-        $effect`There's No N in Love`,
         $effect`Singer's Faithful Ocelot`,
         $effect`Steely-Eyed Squint`,
         $effect`The Spirit of Taking`,

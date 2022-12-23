@@ -9222,8 +9222,252 @@ CommunityService_defineProperty(CommunityService, "donate", () => {
 });
 
 
+;// CONCATENATED MODULE: ./node_modules/libram/dist/resources/2017/AsdonMartin.js
+var AsdonMartin_templateObject, AsdonMartin_templateObject2, AsdonMartin_templateObject3, AsdonMartin_templateObject4, AsdonMartin_templateObject5, AsdonMartin_templateObject6, AsdonMartin_templateObject7, AsdonMartin_templateObject8, AsdonMartin_templateObject9, AsdonMartin_templateObject10, AsdonMartin_templateObject11, AsdonMartin_templateObject12, AsdonMartin_templateObject13;
+
+function AsdonMartin_slicedToArray(arr, i) { return AsdonMartin_arrayWithHoles(arr) || AsdonMartin_iterableToArrayLimit(arr, i) || AsdonMartin_unsupportedIterableToArray(arr, i) || AsdonMartin_nonIterableRest(); }
+
+function AsdonMartin_nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function AsdonMartin_unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return AsdonMartin_arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return AsdonMartin_arrayLikeToArray(o, minLen); }
+
+function AsdonMartin_arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function AsdonMartin_iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"]; if (_i == null) return; var _arr = []; var _n = true; var _d = false; var _s, _e; try { for (_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function AsdonMartin_arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+function AsdonMartin_taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(0); } return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
+
+
+
+
+
+
+var PriceAge;
+
+(function (PriceAge) {
+  PriceAge[PriceAge["HISTORICAL"] = 0] = "HISTORICAL";
+  PriceAge[PriceAge["RECENT"] = 1] = "RECENT";
+  PriceAge[PriceAge["TODAY"] = 2] = "TODAY";
+})(PriceAge || (PriceAge = {}));
+/**
+ * Returns whether or not we have the Asdon installed in the workshed at present.
+ */
+
+
+function installed() {
+  return (0,external_kolmafia_namespaceObject.getWorkshed)() === template_string_$item(AsdonMartin_templateObject || (AsdonMartin_templateObject = AsdonMartin_taggedTemplateLiteral(["Asdon Martin keyfob"])));
+}
+/**
+ * Returns true if we have the Asdon or if it's installed.
+ */
+
+function AsdonMartin_have() {
+  return installed() || haveItem($item(AsdonMartin_templateObject2 || (AsdonMartin_templateObject2 = AsdonMartin_taggedTemplateLiteral(["Asdon Martin keyfob"]))));
+}
+var fuelSkiplist = template_string_$items(AsdonMartin_templateObject3 || (AsdonMartin_templateObject3 = AsdonMartin_taggedTemplateLiteral(["cup of \"tea\", thermos of \"whiskey\", Lucky Lindy, Bee's Knees, Sockdollager, Ish Kabibble, Hot Socks, Phonus Balonus, Flivver, Sloppy Jalopy, glass of \"milk\""])));
+
+function priceTooOld(item) {
+  return (0,external_kolmafia_namespaceObject.historicalPrice)(item) === 0 || (0,external_kolmafia_namespaceObject.historicalAge)(item) >= 7;
+} // Return mall max if historicalPrice returns -1.
+
+
+function historicalPriceOrMax(item) {
+  var historical = (0,external_kolmafia_namespaceObject.historicalPrice)(item);
+  return historical < 0 ? 999999999 : historical;
+} // Return mall max if mallPrice returns -1.
+
+
+function mallPriceOrMax(item) {
+  var mall = (0,external_kolmafia_namespaceObject.mallPrice)(item);
+  return mall < 0 ? 999999999 : mall;
+}
+
+function price(item, priceAge) {
+  switch (priceAge) {
+    case PriceAge.HISTORICAL:
+      {
+        var historical = historicalPriceOrMax(item);
+        return historical === 0 ? mallPriceOrMax(item) : historical;
+      }
+
+    case PriceAge.RECENT:
+      return priceTooOld(item) ? mallPriceOrMax(item) : historicalPriceOrMax(item);
+
+    case PriceAge.TODAY:
+      return mallPriceOrMax(item);
+  }
+}
+
+function inventoryItems() {
+  return external_kolmafia_namespaceObject.Item.all().filter(isFuelItem).filter(item => have(item) && [100, (0,external_kolmafia_namespaceObject.autosellPrice)(item)].includes(price(item, PriceAge.RECENT)));
+} // Efficiency in meat per fuel.
+
+
+function calculateFuelUnitCost(it) {
+  var priceAge = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : PriceAge.RECENT;
+  var units = getAverageAdventures(it);
+  return price(it, priceAge) / units;
+}
+
+function isFuelItem(it) {
+  return !(0,external_kolmafia_namespaceObject.isNpcItem)(it) && it.fullness + it.inebriety > 0 && getAverageAdventures(it) > 0 && it.tradeable && it.discardable && !fuelSkiplist.includes(it);
+}
+
+function getBestFuels() {
+  // Three stages.
+  // 1. Filter to reasonable items using historical cost (within 5x of historical best).
+  var allFuel = external_kolmafia_namespaceObject.Item.all().filter(isFuelItem);
+
+  if (allFuel.filter(item => (0,external_kolmafia_namespaceObject.historicalPrice)(item) === 0).length > 100) {
+    (0,external_kolmafia_namespaceObject.mallPrices)("food");
+    (0,external_kolmafia_namespaceObject.mallPrices)("booze");
+  }
+
+  var keyHistorical = item => calculateFuelUnitCost(item, PriceAge.HISTORICAL);
+
+  allFuel.sort((x, y) => keyHistorical(x) - keyHistorical(y));
+  var bestUnitCost = keyHistorical(allFuel[0]);
+  var firstBadIndex = allFuel.findIndex(item => keyHistorical(item) > 5 * bestUnitCost);
+  var potentialFuel = firstBadIndex > 0 ? allFuel.slice(0, firstBadIndex) : allFuel; // 2. Filter to top 10 candidates using prices at most a week old.
+
+  if (potentialFuel.filter(item => priceTooOld(item)).length > 100) {
+    (0,external_kolmafia_namespaceObject.mallPrices)("food");
+    (0,external_kolmafia_namespaceObject.mallPrices)("booze");
+  }
+
+  var key1 = item => -getAverageAdventures(item);
+
+  var key2 = item => calculateFuelUnitCost(item, PriceAge.RECENT);
+
+  potentialFuel.sort((x, y) => key1(x) - key1(y));
+  potentialFuel.sort((x, y) => key2(x) - key2(y)); // 3. Find result using precise price for those top candidates.
+
+  var candidates = potentialFuel.slice(0, 10);
+
+  var key3 = item => calculateFuelUnitCost(item, PriceAge.TODAY);
+
+  candidates.sort((x, y) => key3(x) - key3(y));
+
+  if (calculateFuelUnitCost(candidates[0], PriceAge.TODAY) > 100) {
+    throw new Error("Could not identify any fuel with efficiency better than 100 meat per fuel. " + "This means something went wrong.");
+  }
+
+  return candidates;
+}
+/**
+ * Fuel your Asdon Martin with a given quantity of a given item
+ * @param it Item to fuel with.
+ * @param quantity Number of items to fuel with.
+ * @returns Whether we succeeded at fueling with the given items.
+ */
+
+
+function insertFuel(it) {
+  var quantity = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1;
+  var result = (0,external_kolmafia_namespaceObject.visitUrl)("campground.php?action=fuelconvertor&pwd&qty=".concat(quantity, "&iid=").concat((0,external_kolmafia_namespaceObject.toInt)(it), "&go=Convert%21"));
+  return result.includes("The display updates with a");
+}
+/**
+ * Fill your Asdon Martin to the given fuel level in the cheapest way possible
+ * @param targetUnits Fuel level to attempt to reach.
+ * @returns Whether we succeeded at filling to the target fuel level.
+ */
+
+function fillTo(targetUnits) {
+  if (!installed()) return false;
+
+  while ((0,external_kolmafia_namespaceObject.getFuel)() < targetUnits) {
+    // if in Hardcore/ronin, skip the price calculation and just use soda bread
+    var _ref = (0,external_kolmafia_namespaceObject.canInteract)() ? getBestFuels() : [template_string_$item(AsdonMartin_templateObject4 || (AsdonMartin_templateObject4 = AsdonMartin_taggedTemplateLiteral(["loaf of soda bread"]))), undefined],
+        _ref2 = AsdonMartin_slicedToArray(_ref, 2),
+        bestFuel = _ref2[0],
+        secondBest = _ref2[1];
+
+    var count = Math.ceil(targetUnits / getAverageAdventures(bestFuel));
+    var ceiling = undefined;
+
+    if (secondBest) {
+      var efficiencyOfSecondBest = (0,external_kolmafia_namespaceObject.mallPrice)(secondBest) / getAverageAdventures(secondBest);
+      ceiling = Math.ceil(efficiencyOfSecondBest * getAverageAdventures(bestFuel));
+    }
+
+    if (!(0,external_kolmafia_namespaceObject.canInteract)()) (0,external_kolmafia_namespaceObject.retrieveItem)(count, bestFuel);else ceiling ? (0,external_kolmafia_namespaceObject.buy)(count, bestFuel, ceiling) : (0,external_kolmafia_namespaceObject.buy)(count, bestFuel);
+
+    if (!insertFuel(bestFuel, Math.min((0,external_kolmafia_namespaceObject.itemAmount)(bestFuel), count))) {
+      throw new Error("Failed to fuel Asdon Martin.");
+    }
+  }
+
+  return (0,external_kolmafia_namespaceObject.getFuel)() >= targetUnits;
+}
+
+function fillWithBestInventoryItem(targetUnits) {
+  var options = inventoryItems().sort((a, b) => getAverageAdventures(b) / (0,external_kolmafia_namespaceObject.autosellPrice)(b) - getAverageAdventures(a) / (0,external_kolmafia_namespaceObject.autosellPrice)(a));
+  if (options.length === 0) return false;
+  var best = options[0];
+  if ((0,external_kolmafia_namespaceObject.autosellPrice)(best) / getAverageAdventures(best) > 100) return false;
+  var amountToUse = clamp(Math.ceil(targetUnits / getAverageAdventures(best)), 0, (0,external_kolmafia_namespaceObject.itemAmount)(best));
+  return insertFuel(best, amountToUse);
+}
+/**
+ * Fill your Asdon Martin by prioritizing mallmin items in your inventory. Default to the behavior of fillTo.
+ * @param targetUnits Fuel level to attempt to reach.
+ * @returns Whether we succeeded at filling to the target fuel level.
+ */
+
+
+function fillWithInventoryTo(targetUnits) {
+  if (!installed()) return false;
+  var continueFuelingFromInventory = true;
+
+  while ((0,external_kolmafia_namespaceObject.getFuel)() < targetUnits && continueFuelingFromInventory) {
+    continueFuelingFromInventory && (continueFuelingFromInventory = fillWithBestInventoryItem(targetUnits));
+  }
+
+  return fillTo(targetUnits);
+}
+/**
+ * Object consisting of the various Asdon driving styles
+ */
+
+var Driving = {
+  Obnoxiously: $effect(AsdonMartin_templateObject5 || (AsdonMartin_templateObject5 = AsdonMartin_taggedTemplateLiteral(["Driving Obnoxiously"]))),
+  Stealthily: $effect(AsdonMartin_templateObject6 || (AsdonMartin_templateObject6 = AsdonMartin_taggedTemplateLiteral(["Driving Stealthily"]))),
+  Wastefully: $effect(AsdonMartin_templateObject7 || (AsdonMartin_templateObject7 = AsdonMartin_taggedTemplateLiteral(["Driving Wastefully"]))),
+  Safely: $effect(AsdonMartin_templateObject8 || (AsdonMartin_templateObject8 = AsdonMartin_taggedTemplateLiteral(["Driving Safely"]))),
+  Recklessly: $effect(AsdonMartin_templateObject9 || (AsdonMartin_templateObject9 = AsdonMartin_taggedTemplateLiteral(["Driving Recklessly"]))),
+  Intimidatingly: $effect(AsdonMartin_templateObject10 || (AsdonMartin_templateObject10 = AsdonMartin_taggedTemplateLiteral(["Driving Intimidatingly"]))),
+  Quickly: $effect(AsdonMartin_templateObject11 || (AsdonMartin_templateObject11 = AsdonMartin_taggedTemplateLiteral(["Driving Quickly"]))),
+  Observantly: $effect(AsdonMartin_templateObject12 || (AsdonMartin_templateObject12 = AsdonMartin_taggedTemplateLiteral(["Driving Observantly"]))),
+  Waterproofly: $effect(AsdonMartin_templateObject13 || (AsdonMartin_templateObject13 = AsdonMartin_taggedTemplateLiteral(["Driving Waterproofly"])))
+};
+/**
+ * Attempt to drive with a particular style for a particular number of turns.
+ * @param style The driving style to use.
+ * @param turns The number of turns to attempt to get.
+ * @param preferInventory Whether we should preferentially value items currently in our inventory.
+ * @returns Whether we have at least as many turns as requested of said driving style.
+ */
+
+function drive(style) {
+  var turns = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1;
+  var preferInventory = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
+  if (!Object.values(Driving).includes(style)) return false;
+  if (!installed()) return false;
+  if ((0,external_kolmafia_namespaceObject.haveEffect)(style) >= turns) return true;
+  var fuelNeeded = 37 * Math.ceil((turns - (0,external_kolmafia_namespaceObject.haveEffect)(style)) / 30);
+  (preferInventory ? fillWithInventoryTo : fillTo)(fuelNeeded);
+
+  while ((0,external_kolmafia_namespaceObject.getFuel)() >= 37 && (0,external_kolmafia_namespaceObject.haveEffect)(style) < turns) {
+    (0,external_kolmafia_namespaceObject.cliExecute)("asdonmartin drive ".concat(style.name.replace("Driving ", "")));
+  }
+
+  return (0,external_kolmafia_namespaceObject.haveEffect)(style) >= turns;
+}
 ;// CONCATENATED MODULE: ./src/tasks/boozedrop.ts
-var boozedrop_templateObject, boozedrop_templateObject2, boozedrop_templateObject3, boozedrop_templateObject4, boozedrop_templateObject5, boozedrop_templateObject6, boozedrop_templateObject7, boozedrop_templateObject8, boozedrop_templateObject9, boozedrop_templateObject10, boozedrop_templateObject11, boozedrop_templateObject12, boozedrop_templateObject13, boozedrop_templateObject14, boozedrop_templateObject15, boozedrop_templateObject16, boozedrop_templateObject17, boozedrop_templateObject18, boozedrop_templateObject19, boozedrop_templateObject20, boozedrop_templateObject21, boozedrop_templateObject22, boozedrop_templateObject23, boozedrop_templateObject24, boozedrop_templateObject25, boozedrop_templateObject26, boozedrop_templateObject27, boozedrop_templateObject28, boozedrop_templateObject29, boozedrop_templateObject30, boozedrop_templateObject31, boozedrop_templateObject32, boozedrop_templateObject33;
+var boozedrop_templateObject, boozedrop_templateObject2, boozedrop_templateObject3, boozedrop_templateObject4, boozedrop_templateObject5, boozedrop_templateObject6, boozedrop_templateObject7, boozedrop_templateObject8, boozedrop_templateObject9, boozedrop_templateObject10, boozedrop_templateObject11, boozedrop_templateObject12, boozedrop_templateObject13, boozedrop_templateObject14, boozedrop_templateObject15, boozedrop_templateObject16, boozedrop_templateObject17, boozedrop_templateObject18, boozedrop_templateObject19, boozedrop_templateObject20, boozedrop_templateObject21, boozedrop_templateObject22, boozedrop_templateObject23, boozedrop_templateObject24, boozedrop_templateObject25, boozedrop_templateObject26, boozedrop_templateObject27, boozedrop_templateObject28, boozedrop_templateObject29, boozedrop_templateObject30, boozedrop_templateObject31, boozedrop_templateObject32, boozedrop_templateObject33, boozedrop_templateObject34, boozedrop_templateObject35;
 
 function boozedrop_taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(0); } return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
 
@@ -9248,9 +9492,17 @@ var BoozeDropQuest = {
       tries: 1
     }
   }, {
-    name: "MayDay",
+    name: "Open MayDay",
     completed: () => !have(template_string_$item(boozedrop_templateObject11 || (boozedrop_templateObject11 = boozedrop_taggedTemplateLiteral(["MayDay\u2122 supply package"])))),
     do: () => (0,external_kolmafia_namespaceObject.use)(template_string_$item(boozedrop_templateObject12 || (boozedrop_templateObject12 = boozedrop_taggedTemplateLiteral(["MayDay\u2122 supply package"])))),
+    limit: {
+      tries: 1
+    }
+  }, {
+    name: "Driving Observantly",
+    completed: () => have($effect(boozedrop_templateObject13 || (boozedrop_templateObject13 = boozedrop_taggedTemplateLiteral(["Driving Observantly"])))),
+    prepare: () => insertFuel(template_string_$item(boozedrop_templateObject14 || (boozedrop_templateObject14 = boozedrop_taggedTemplateLiteral(["20-lb can of rice and beans"])))),
+    do: () => drive($effect(boozedrop_templateObject15 || (boozedrop_templateObject15 = boozedrop_taggedTemplateLiteral(["Driving Observantly"])))),
     limit: {
       tries: 1
     }
@@ -9259,21 +9511,21 @@ var BoozeDropQuest = {
     completed: () => CommunityService.BoozeDrop.isDone(),
     do: () => CommunityService.BoozeDrop.run(() => undefined, 1),
     outfit: {
-      hat: template_string_$item(boozedrop_templateObject13 || (boozedrop_templateObject13 = boozedrop_taggedTemplateLiteral(["wad of used tape"]))),
-      back: template_string_$item(boozedrop_templateObject14 || (boozedrop_templateObject14 = boozedrop_taggedTemplateLiteral(["vampyric cloake"]))),
-      offhand: template_string_$item(boozedrop_templateObject15 || (boozedrop_templateObject15 = boozedrop_taggedTemplateLiteral(["unbreakable umbrella"]))),
-      acc1: template_string_$item(boozedrop_templateObject16 || (boozedrop_templateObject16 = boozedrop_taggedTemplateLiteral(["Guzzlr tablet"]))),
-      acc2: template_string_$item(boozedrop_templateObject17 || (boozedrop_templateObject17 = boozedrop_taggedTemplateLiteral(["gold detective badge"]))),
-      acc3: template_string_$item(boozedrop_templateObject18 || (boozedrop_templateObject18 = boozedrop_taggedTemplateLiteral(["your cowboy boots"]))),
-      famequip: template_string_$item(boozedrop_templateObject19 || (boozedrop_templateObject19 = boozedrop_taggedTemplateLiteral(["li'l ninja costume"]))),
-      familiar: template_string_$familiar(boozedrop_templateObject20 || (boozedrop_templateObject20 = boozedrop_taggedTemplateLiteral(["Trick-or-Treating Tot"]))),
+      hat: template_string_$item(boozedrop_templateObject16 || (boozedrop_templateObject16 = boozedrop_taggedTemplateLiteral(["wad of used tape"]))),
+      back: template_string_$item(boozedrop_templateObject17 || (boozedrop_templateObject17 = boozedrop_taggedTemplateLiteral(["vampyric cloake"]))),
+      offhand: template_string_$item(boozedrop_templateObject18 || (boozedrop_templateObject18 = boozedrop_taggedTemplateLiteral(["unbreakable umbrella"]))),
+      acc1: template_string_$item(boozedrop_templateObject19 || (boozedrop_templateObject19 = boozedrop_taggedTemplateLiteral(["Guzzlr tablet"]))),
+      acc2: template_string_$item(boozedrop_templateObject20 || (boozedrop_templateObject20 = boozedrop_taggedTemplateLiteral(["gold detective badge"]))),
+      acc3: template_string_$item(boozedrop_templateObject21 || (boozedrop_templateObject21 = boozedrop_taggedTemplateLiteral(["your cowboy boots"]))),
+      famequip: template_string_$item(boozedrop_templateObject22 || (boozedrop_templateObject22 = boozedrop_taggedTemplateLiteral(["li'l ninja costume"]))),
+      familiar: template_string_$familiar(boozedrop_templateObject23 || (boozedrop_templateObject23 = boozedrop_taggedTemplateLiteral(["Trick-or-Treating Tot"]))),
       modes: {
         umbrella: "bucket style"
       }
     },
-    effects: [$effect(boozedrop_templateObject21 || (boozedrop_templateObject21 = boozedrop_taggedTemplateLiteral(["Fat Leon's Phat Loot Lyric"]))), $effect(boozedrop_templateObject22 || (boozedrop_templateObject22 = boozedrop_taggedTemplateLiteral(["Feeling Lost"]))), $effect(boozedrop_templateObject23 || (boozedrop_templateObject23 = boozedrop_taggedTemplateLiteral(["Glowing Hands"]))), $effect(boozedrop_templateObject24 || (boozedrop_templateObject24 = boozedrop_taggedTemplateLiteral(["Hustlin'"]))), $effect(boozedrop_templateObject25 || (boozedrop_templateObject25 = boozedrop_taggedTemplateLiteral(["items.enh"]))), $effect(boozedrop_templateObject26 || (boozedrop_templateObject26 = boozedrop_taggedTemplateLiteral(["I See Everything Thrice!"]))), $effect(boozedrop_templateObject27 || (boozedrop_templateObject27 = boozedrop_taggedTemplateLiteral(["Nearly All-Natural"]))), $effect(boozedrop_templateObject28 || (boozedrop_templateObject28 = boozedrop_taggedTemplateLiteral(["Pork Barrel"]))), $effect(boozedrop_templateObject29 || (boozedrop_templateObject29 = boozedrop_taggedTemplateLiteral(["There's No N in Love"]))), $effect(boozedrop_templateObject30 || (boozedrop_templateObject30 = boozedrop_taggedTemplateLiteral(["Singer's Faithful Ocelot"]))), $effect(boozedrop_templateObject31 || (boozedrop_templateObject31 = boozedrop_taggedTemplateLiteral(["Steely-Eyed Squint"]))), $effect(boozedrop_templateObject32 || (boozedrop_templateObject32 = boozedrop_taggedTemplateLiteral(["The Spirit of Taking"])))],
+    effects: [$effect(boozedrop_templateObject24 || (boozedrop_templateObject24 = boozedrop_taggedTemplateLiteral(["Fat Leon's Phat Loot Lyric"]))), $effect(boozedrop_templateObject25 || (boozedrop_templateObject25 = boozedrop_taggedTemplateLiteral(["Feeling Lost"]))), $effect(boozedrop_templateObject26 || (boozedrop_templateObject26 = boozedrop_taggedTemplateLiteral(["Glowing Hands"]))), $effect(boozedrop_templateObject27 || (boozedrop_templateObject27 = boozedrop_taggedTemplateLiteral(["Hustlin'"]))), $effect(boozedrop_templateObject28 || (boozedrop_templateObject28 = boozedrop_taggedTemplateLiteral(["items.enh"]))), $effect(boozedrop_templateObject29 || (boozedrop_templateObject29 = boozedrop_taggedTemplateLiteral(["I See Everything Thrice!"]))), $effect(boozedrop_templateObject30 || (boozedrop_templateObject30 = boozedrop_taggedTemplateLiteral(["Nearly All-Natural"]))), $effect(boozedrop_templateObject31 || (boozedrop_templateObject31 = boozedrop_taggedTemplateLiteral(["Pork Barrel"]))), $effect(boozedrop_templateObject32 || (boozedrop_templateObject32 = boozedrop_taggedTemplateLiteral(["Singer's Faithful Ocelot"]))), $effect(boozedrop_templateObject33 || (boozedrop_templateObject33 = boozedrop_taggedTemplateLiteral(["Steely-Eyed Squint"]))), $effect(boozedrop_templateObject34 || (boozedrop_templateObject34 = boozedrop_taggedTemplateLiteral(["The Spirit of Taking"])))],
     acquire: [{
-      item: template_string_$item(boozedrop_templateObject33 || (boozedrop_templateObject33 = boozedrop_taggedTemplateLiteral(["wad of used tape"])))
+      item: template_string_$item(boozedrop_templateObject35 || (boozedrop_templateObject35 = boozedrop_taggedTemplateLiteral(["wad of used tape"])))
     }],
     limit: {
       tries: 1
@@ -11049,7 +11301,7 @@ function dropProgress() {
   return get("_boomBoxFights");
 }
 ;// CONCATENATED MODULE: ./src/tasks/runstart.ts
-var runstart_templateObject, runstart_templateObject2, runstart_templateObject3, runstart_templateObject4, runstart_templateObject5, runstart_templateObject6, runstart_templateObject7, runstart_templateObject8, runstart_templateObject9, runstart_templateObject10, runstart_templateObject11, runstart_templateObject12, runstart_templateObject13, runstart_templateObject14, runstart_templateObject15, runstart_templateObject16, runstart_templateObject17;
+var runstart_templateObject, runstart_templateObject2, runstart_templateObject3, runstart_templateObject4, runstart_templateObject5, runstart_templateObject6, runstart_templateObject7, runstart_templateObject8, runstart_templateObject9, runstart_templateObject10, runstart_templateObject11, runstart_templateObject12, runstart_templateObject13, runstart_templateObject14, runstart_templateObject15, runstart_templateObject16, runstart_templateObject17, runstart_templateObject18, runstart_templateObject19;
 
 function runstart_taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(0); } return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
 
@@ -11234,6 +11486,13 @@ var RunStartQuest = {
     prepare: () => (0,external_kolmafia_namespaceObject.visitUrl)("shop.php?whichshop=lathe"),
     completed: () => have(template_string_$item(runstart_templateObject16 || (runstart_templateObject16 = runstart_taggedTemplateLiteral(["weeping willow wand"])))),
     do: () => (0,external_kolmafia_namespaceObject.retrieveItem)(template_string_$item(runstart_templateObject17 || (runstart_templateObject17 = runstart_taggedTemplateLiteral(["weeping willow wand"])))),
+    limit: {
+      tries: 1
+    }
+  }, {
+    name: "Workshed",
+    completed: () => (0,external_kolmafia_namespaceObject.getWorkshed)() === template_string_$item(runstart_templateObject18 || (runstart_templateObject18 = runstart_taggedTemplateLiteral(["Asdon Martin keyfob"]))),
+    do: () => (0,external_kolmafia_namespaceObject.use)(template_string_$item(runstart_templateObject19 || (runstart_templateObject19 = runstart_taggedTemplateLiteral(["Asdon Martin keyfob"])))),
     limit: {
       tries: 1
     }

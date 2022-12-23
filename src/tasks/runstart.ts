@@ -1,6 +1,7 @@
 import {
   cliExecute,
   getClanName,
+  getWorkshed,
   pullsRemaining,
   retrieveItem,
   reverseNumberology,
@@ -183,6 +184,12 @@ export const RunStartQuest: Quest = {
       prepare: () => visitUrl("shop.php?whichshop=lathe"),
       completed: () => have($item`weeping willow wand`),
       do: () => retrieveItem($item`weeping willow wand`),
+      limit: { tries: 1 },
+    },
+    {
+      name: "Workshed",
+      completed: () => getWorkshed() === $item`Asdon Martin keyfob`,
+      do: () => use($item`Asdon Martin keyfob`),
       limit: { tries: 1 },
     },
   ],
