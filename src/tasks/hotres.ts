@@ -36,7 +36,6 @@ export const HotResQuest: Quest = {
         acc1: $item`Brutal brogues`,
         acc2: $item`hewn moon-rune spoon`,
         acc3: $item`Beach Comb`,
-        famequip: $item`Snow Suit`,
         familiar: $familiar`Exotic Parrot`,
         modes: { retrocape: ["vampire", "hold"], parka: "pterodactyl" },
       },

@@ -1,4 +1,4 @@
-import { cliExecute, mySign, visitUrl } from "kolmafia";
+import { cliExecute, mySign, use, visitUrl } from "kolmafia";
 import { $effect, $familiar, $item, CommunityService, get, have } from "libram";
 import { Quest } from "../engine/task";
 import { meteorShower } from "./common";
@@ -36,6 +36,16 @@ export const FamiliarWeightQuest: Quest = {
       limit: { tries: 1 },
     },
     {
+      name: "Yule battery",
+      // eslint-disable-next-line libram/verify-constants
+      completed: () => have($item`overloaded Yule battery`),
+      do: () => use($item`box of Familiar Jacks`),
+      // eslint-disable-next-line libram/verify-constants
+      outfit: { familiar: $familiar`Mini-Trainbot` },
+      acquire: [{ item: $item`borrowed time` }],
+      limit: { tries: 1 },
+    },
+    {
       name: "Test",
       completed: () => CommunityService.FamiliarWeight.isDone(),
       do: () => CommunityService.FamiliarWeight.run(() => undefined, 21),
@@ -47,8 +57,10 @@ export const FamiliarWeightQuest: Quest = {
         acc1: $item`Brutal brogues`,
         acc2: $item`hewn moon-rune spoon`,
         acc3: $item`Beach Comb`,
-        famequip: $item`Snow Suit`,
-        familiar: $familiar`Melodramedary`,
+        // eslint-disable-next-line libram/verify-constants
+        famequip: $item`overloaded Yule battery`,
+        // eslint-disable-next-line libram/verify-constants
+        familiar: $familiar`Mini-Trainbot`,
       },
       effects: [
         $effect`Billiards Belligerence`,

@@ -80,13 +80,12 @@ export const RunStartQuest: Quest = {
     },
     {
       name: "Pulls",
-      completed: () => pullsRemaining() <= 1,
+      completed: () => pullsRemaining() <= 2,
       do: () =>
         [
           $item`Great Wolf's beastly trousers`,
           $item`Stick-Knife of Loathing`,
           $item`Staff of the Roaring Hearth`,
-          $item`Snow Suit`,
         ]
           .filter((item) => !have(item))
           .forEach((item) => takeStorage(1, item)),
