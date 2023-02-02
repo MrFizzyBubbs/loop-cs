@@ -121,13 +121,6 @@ export const LevelingQuest: Quest = {
       limit: { tries: 1 },
     },
     {
-      name: "Synth Smart",
-      completed: () => have($effect`Synthesis: Smart`),
-      prepare: () => useSkill($skill`Chubby and Plump`),
-      do: () => sweetSynthesis($item`Chubby and Plump bar`, $item`bag of many confections`),
-      limit: { tries: 1 },
-    },
-    {
       name: "Garden",
       completed: () => getCampground()[$item`peppermint sprout`.name] === 0,
       do: () => cliExecute("garden pick"),
@@ -159,10 +152,12 @@ export const LevelingQuest: Quest = {
     {
       name: "Ninja Costume",
       ready: () => get("_monstersMapped") < 3 && get("_chestXRayUsed") < 3,
-      completed: () => have($item`li'l ninja costume`),
+      completed: () => have($item`li'l ninja costume`) && have($effect`Giant Growth`),
       do: () => mapMonster($location`The Haiku Dungeon`, $monster`amateur ninja`),
       post: () => visitUrl("questlog.php?which=1"), // Check quest log for protonic ghost location
-      combat: new CombatStrategy().macro(Macro.skill($skill`Chest X-Ray`)),
+      combat: new CombatStrategy().macro(
+        Macro.skill($skill`Giant Growth`).skill($skill`Chest X-Ray`)
+      ),
       outfit: {
         back: $item`protonic accelerator pack`,
         offhand: $item`weeping willow wand`,

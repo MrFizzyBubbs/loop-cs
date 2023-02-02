@@ -99,9 +99,8 @@ export const RunStartQuest: Quest = {
     },
     {
       name: "Deck",
-      ready: () => get("_deckCardsDrawn") <= 10,
-      completed: () => have($item`rope`),
-      do: () => cliExecute("cheat Rope"),
+      completed: () => get("_deckCardsDrawn") >= 10,
+      do: () => cliExecute("cheat rope; cheat forest"),
       limit: { tries: 1 },
     },
     {
