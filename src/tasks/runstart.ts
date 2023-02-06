@@ -2,7 +2,7 @@ import {
   cliExecute,
   getClanName,
   getWorkshed,
-  pullsRemaining,
+  myPrimestat,
   retrieveItem,
   reverseNumberology,
   runChoice,
@@ -14,9 +14,21 @@ import { $familiar, $item, $skill, Clan, get, have, Pantogram, SongBoom } from "
 import { Quest } from "../engine/task";
 import { args } from "../main";
 
+const PULLS = [
+  $item`Great Wolf's beastly trousers`,
+  $item`Stick-Knife of Loathing`,
+  $item`Staff of the Roaring Hearth`,
+];
+
 export const RunStartQuest: Quest = {
   name: "Run Start",
   tasks: [
+    {
+      name: "Workshed",
+      completed: () => getWorkshed() === $item`Asdon Martin keyfob`,
+      do: () => use($item`Asdon Martin keyfob`),
+      limit: { tries: 1 },
+    },
     {
       name: "Clan",
       completed: () => getClanName() === args.vipclan,
@@ -80,15 +92,8 @@ export const RunStartQuest: Quest = {
     },
     {
       name: "Pulls",
-      completed: () => pullsRemaining() <= 2,
-      do: () =>
-        [
-          $item`Great Wolf's beastly trousers`,
-          $item`Stick-Knife of Loathing`,
-          $item`Staff of the Roaring Hearth`,
-        ]
-          .filter((item) => !have(item))
-          .forEach((item) => takeStorage(1, item)),
+      completed: () => PULLS.every((item) => have(item)),
+      do: () => PULLS.filter((item) => !have(item)).forEach((item) => takeStorage(1, item)),
       limit: { tries: 1 },
     },
     {
@@ -131,8 +136,8 @@ export const RunStartQuest: Quest = {
     },
     {
       name: "Mummery",
-      completed: () => get("_mummeryMods").includes("Experience (Mysticality)"),
-      do: () => cliExecute("mummery myst"),
+      completed: () => get("_mummeryMods").includes(myPrimestat().toString()),
+      do: () => cliExecute(`mummery ${myPrimestat().toString()}`),
       outfit: { familiar: $familiar`Melodramedary` },
       limit: { tries: 1 },
     },
@@ -171,7 +176,7 @@ export const RunStartQuest: Quest = {
       limit: { tries: 1 },
     },
     {
-      name: "Bird Calendar",
+      name: "Unlock Bird",
       completed: () => have($skill`Seek out a Bird`),
       do: () => use($item`Bird-a-Day calendar`),
       limit: { tries: 1 },
@@ -182,12 +187,6 @@ export const RunStartQuest: Quest = {
       prepare: () => visitUrl("shop.php?whichshop=lathe"),
       completed: () => have($item`weeping willow wand`),
       do: () => retrieveItem($item`weeping willow wand`),
-      limit: { tries: 1 },
-    },
-    {
-      name: "Workshed",
-      completed: () => getWorkshed() === $item`Asdon Martin keyfob`,
-      do: () => use($item`Asdon Martin keyfob`),
       limit: { tries: 1 },
     },
   ],

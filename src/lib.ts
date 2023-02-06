@@ -1,5 +1,5 @@
-import { Item, Location, Monster, runChoice, toUrl, use, useSkill, visitUrl } from "kolmafia";
-import { $effects, $skill, get, have } from "libram";
+import { Class, Item, myClass, myPrimestat, StatType, use } from "kolmafia";
+import { $effects, have } from "libram";
 
 // From phccs
 export function convertMilliseconds(milliseconds: number): string {
@@ -15,21 +15,22 @@ export function convertMilliseconds(milliseconds: number): string {
   );
 }
 
-// From phccs
-export function mapMonster(location: Location, monster: Monster): void {
-  useSkill($skill`Map the Monsters`);
-  if (!get("mappingMonsters")) throw new Error(`I am not actually mapping anything. Weird!`);
-  else {
-    while (get("mappingMonsters")) {
-      visitUrl(toUrl(location));
-      runChoice(1, `heyscriptswhatsupwinkwink=${monster.id}`);
-    }
-  }
-}
-
 export function tryUse(item: Item): void {
   if (have(item)) use(item);
 }
 
 export const crimboCarols = $effects`Do You Crush What I Crush?, Holiday Yoked, Let It Snow/Boil/Stink/Frighten/Grease, All I Want For Crimbo Is Stuff, Crimbo Wrapping`;
 export const shavingsBuffs = $effects`Barbell Moustache, Cowboy Stache, Friendly Chops, Grizzly Beard, Gull-Wing Moustache, Musician's Musician's Moustache, Pointy Wizard Beard, Space Warlord's Beard, Spectacle Moustache, Surrealist's Moustache, Toiletbrush Moustache`;
+
+type StatSwitch<T> = Record<StatType, T> | (Partial<{ [x in StatType]: T }> & { default: T });
+type ClassSwitch<T> = { options: Map<Class, T>; default: T };
+export function byClass<T>(thing: ClassSwitch<T>): T {
+  return thing.options.get(myClass()) ?? thing.default;
+}
+export function byStat<T>(thing: StatSwitch<T>): T {
+  const stat = myPrimestat().toString();
+  if ("default" in thing) {
+    return thing[stat] ?? thing.default;
+  }
+  return thing[stat];
+}

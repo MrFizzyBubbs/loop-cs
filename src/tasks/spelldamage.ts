@@ -9,6 +9,7 @@ import {
   useSkill,
 } from "kolmafia";
 import {
+  $classes,
   $effect,
   $effects,
   $element,
@@ -31,6 +32,7 @@ export const SpellDamageQuest: Quest = {
   tasks: [
     {
       name: "Saucefingers",
+      class: $classes`Pastamancer`,
       ready: () => myLevel() >= 15 && get("_reflexHammerUsed") < 3,
       completed: () => have($effect`Saucefingers`),
       do: $location`The Dire Warren`,

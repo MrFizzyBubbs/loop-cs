@@ -1,11 +1,15 @@
 import { CombatStrategy } from "grimoire-kolmafia";
-import { adv1, cliExecute, myHp, myMaxhp } from "kolmafia";
+import { adv1, cliExecute, myHp, myMaxhp, myPrimestat } from "kolmafia";
 import {
+  $classes,
   $effect,
   $familiar,
   $item,
   $location,
+  $monster,
   $skill,
+  Cartography,
+  CombatLoversLocket,
   CommunityService,
   CrimboShrub,
   get,
@@ -34,7 +38,7 @@ export const CoilWireQuest: Quest = {
       name: "Shrub Meat",
       ready: () => have($item`cosmic bowling ball`),
       prepare: (): void => {
-        CrimboShrub.decorate("Mysticality", "Spooky Damage", "Blocking", "Red Ray");
+        CrimboShrub.decorate(myPrimestat().toString(), "Spooky Damage", "Blocking", "Red Ray");
         if (myHp() < myMaxhp()) cliExecute("hottub");
       },
       completed: () => have($effect`Everything Looks Red`),
@@ -81,6 +85,27 @@ export const CoilWireQuest: Quest = {
         famequip: $item`none`,
       },
       limit: { tries: 1 },
+    },
+    {
+      name: "Fruity Skeleton",
+      class: $classes`Sauceror, Seal Clubber, Turtle Tamer`,
+      ready: () => !have($effect`Everything Looks Yellow`),
+      completed: () => have($item`cherry`),
+      do: (): void => {
+        Cartography.mapMonster($location`The Skeleton Store`, $monster`novelty tropical skeleton`);
+      },
+      outfit: { shirt: $item`Jurassic Parka`, modes: { parka: "dilophosaur" } },
+      combat: new CombatStrategy().macro(Macro.skill($skill`Spit jurassic acid`)),
+    },
+    {
+      name: "Evil Olive",
+      class: $classes`Disco Bandit, Accordion Thief`,
+      ready: () => !have($effect`Everything Looks Yellow`),
+      completed: () => have($item`jumbo olive`),
+
+      do: () => CombatLoversLocket.reminisce($monster`Evil Olive`),
+      outfit: { shirt: $item`Jurassic Parka`, modes: { parka: "dilophosaur" } },
+      combat: new CombatStrategy().macro(Macro.skill($skill`Spit jurassic acid`)),
     },
     {
       name: "Test",

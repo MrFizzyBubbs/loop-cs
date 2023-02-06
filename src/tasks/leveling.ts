@@ -6,6 +6,7 @@ import {
   getCampground,
   myInebriety,
   myLevel,
+  myPrimestat,
   retrieveItem,
   runChoice,
   sweetSynthesis,
@@ -24,7 +25,7 @@ import {
   $location,
   $monster,
   $skill,
-  $skills,
+  Cartography,
   ChateauMantegna,
   ensureEffect,
   get,
@@ -37,8 +38,26 @@ import {
 } from "libram";
 import Macro from "../combat";
 import { Quest } from "../engine/task";
-import { crimboCarols, mapMonster, tryUse } from "../lib";
+import { byStat, crimboCarols, tryUse } from "../lib";
 import { innerElf } from "./common";
+
+const { saucePotion, sauceFruit, sauceEffect } = byStat({
+  Mysticality: {
+    sauceFruit: $item`grapefruit`,
+    saucePotion: $item`ointment of the occult`,
+    sauceEffect: $effect`Mystically Oiled`,
+  },
+  Muscle: {
+    sauceFruit: $item`lemon`,
+    saucePotion: $item`philter of phorce`,
+    sauceEffect: $effect`Phorcefullness`,
+  },
+  Moxie: {
+    sauceFruit: $item`olive`,
+    saucePotion: $item`serum of sarcasm`,
+    sauceEffect: $effect`Superhuman Sarcasm`,
+  },
+});
 
 const levelingBuffs = [
   // Skill
@@ -78,10 +97,38 @@ const levelingBuffs = [
   $effect`Favored by Lyle`,
   $effect`Puzzle Champ`,
   $effect`Starry-Eyed`,
-  $effect`Thaumodynamic`,
   $effect`Total Protonic Reversal`,
   $effect`Uncucumbered`,
 ];
+
+const synthEffect = byStat({
+  Mysticality: $effect`Synthesis: Learning`,
+  Moxie: $effect`Synthesis: Style`,
+  Muscle: $effect`Synthesis: Movement`,
+});
+
+const synthPairs = byStat({
+  Mysticality: [
+    [$item`Crimbo fudge`, $item`Crimbo fudge`],
+    [$item`Crimbo fudge`, $item`bag of many confections`],
+    [$item`Crimbo peppermint bark`, $item`Crimbo candied pecan`],
+    [$item`Crimbo peppermint bark`, $item`peppermint sprout`],
+    [$item`Crimbo candied pecan`, $item`peppermint crook`],
+  ],
+  Muscle: [
+    [$item`Crimbo fudge`, $item`Crimbo peppermint bark`],
+    [$item`bag of many confections`, $item`Crimbo peppermint bark`],
+    [$item`Crimbo candied pecan`, $item`peppermint patty`],
+    [$item`peppermint sprout`, $item`peppermint twist`],
+  ],
+  Moxie: [
+    [$item`Crimbo fudge`, $item`Crimbo candied pecan`],
+    [$item`Crimbo fudge`, $item`peppermint sprout`],
+    [$item`bag of many confections`, $item`Crimbo candied pecan`],
+    [$item`bag of many confections`, $item`peppermint sprout`],
+    [$item`Crimbo peppermint bark`, $item`peppermint twist`],
+  ],
+});
 
 export const LevelingQuest: Quest = {
   name: "Leveling",
@@ -96,22 +143,19 @@ export const LevelingQuest: Quest = {
       limit: { tries: 1 },
     },
     {
-      name: "Range",
+      name: "Get Range",
       completed: () => get("hasRange"),
       do: () => use($item`Dramatic™ range`),
       acquire: [{ item: $item`Dramatic™ range` }],
       limit: { tries: 1 },
     },
     {
+      // TODO cast Advanced Saucecrafting, Prevent Scurvy and Sobriety
+      // TODO create cordial of concentration?
       name: "Saucecraft",
-      prepare: () =>
-        $skills`Advanced Saucecrafting, Prevent Scurvy and Sobriety`.forEach((s) => useSkill(s)),
-      completed: () => have($effect`Mystically Oiled`),
-      do: () =>
-        $items`ointment of the occult, cordial of concentration`.forEach((item) =>
-          retrieveItem(item)
-        ),
-      post: () => use($item`ointment of the occult`),
+      completed: () => have(sauceEffect),
+      do: () => use(saucePotion),
+      acquire: [{ item: saucePotion }],
       limit: { tries: 1 },
     },
     {
@@ -121,17 +165,23 @@ export const LevelingQuest: Quest = {
       limit: { tries: 1 },
     },
     {
-      name: "Garden",
-      completed: () => getCampground()[$item`peppermint sprout`.name] === 0,
-      do: () => cliExecute("garden pick"),
+      name: synthEffect.name,
+      completed: () => have(synthEffect),
+      prepare: () => cliExecute("garden pick"),
+      do: (): void => {
+        for (const [candy1, candy2] of synthPairs) {
+          const enough = candy1 === candy2 ? have(candy1, 2) : have(candy1) && retrieveItem(candy2);
+          if (enough) {
+            if (sweetSynthesis(candy1, candy2)) return;
+          }
+        }
+      },
       limit: { tries: 1 },
     },
     {
-      name: "Synth Learning",
-      completed: () => have($effect`Synthesis: Learning`),
-      do: () => sweetSynthesis($item`peppermint twist`, $item`peppermint patty`),
-      acquire: [{ item: $item`peppermint twist` }, { item: $item`peppermint patty` }],
-      limit: { tries: 1 },
+      name: "April Shower",
+      completed: () => get("_aprilShower"),
+      do: () => cliExecute(`shower ${myPrimestat()}`),
     },
     {
       name: "Bastille",
@@ -153,7 +203,7 @@ export const LevelingQuest: Quest = {
       name: "Ninja Costume",
       ready: () => get("_monstersMapped") < 3 && get("_chestXRayUsed") < 3,
       completed: () => have($item`li'l ninja costume`) && have($effect`Giant Growth`),
-      do: () => mapMonster($location`The Haiku Dungeon`, $monster`amateur ninja`),
+      do: () => Cartography.mapMonster($location`The Haiku Dungeon`, $monster`amateur ninja`),
       post: () => visitUrl("questlog.php?which=1"), // Check quest log for protonic ghost location
       combat: new CombatStrategy().macro(
         Macro.skill($skill`Giant Growth`).skill($skill`Chest X-Ray`)
@@ -171,7 +221,7 @@ export const LevelingQuest: Quest = {
       completed: () => have($effect`Nanobrainy`),
       do: () => adv1(get("ghostLocation", $location`none`), 0, ""),
       combat: new CombatStrategy().macro(
-        Macro.skill($skill`Entangling Noodles`) // Myst skill to trigger nanorhino buff
+        Macro.skill($skill`Entangling Noodles`) // Myst skill triggers nanorhino buff
           .delevel()
           .skill($skill`Shoot Ghost`)
           .skill($skill`Shoot Ghost`)
@@ -186,7 +236,7 @@ export const LevelingQuest: Quest = {
       limit: { tries: 1 },
     },
     {
-      name: "Carol",
+      name: "Holiday Yoked",
       ready: () =>
         crimboCarols.every((ef) => !have(ef)) && get("cosmicBowlingBallReturnCombats") < 1,
       completed: () => have($effect`Holiday Yoked`),
@@ -200,7 +250,11 @@ export const LevelingQuest: Quest = {
       completed: () => get("_loveTunnelUsed"),
       do: () =>
         TunnelOfLove.fightAll(
-          "LOV Epaulettes",
+          byStat({
+            Mysticality: "LOV Epaulettes",
+            Muscle: "LOV Eardigan",
+            Moxie: "LOV Earring",
+          }),
           "Open Heart Surgery",
           "LOV Extraterrestrial Chocolate"
         ),
@@ -217,7 +271,8 @@ export const LevelingQuest: Quest = {
       name: "Ten-Percent Bonus",
       completed: () => !have($item`a ten-percent bonus`),
       do: () => use($item`a ten-percent bonus`),
-      outfit: { back: $item`LOV Epaulettes`, offhand: $item`familiar scrapbook` },
+      outfit: { offhand: $item`familiar scrapbook` },
+      effects: byStat({ Mysticality: $effects`Inscrutable Gaze`, default: [] }), // TODO do we need to do this here or is it handled prior?
       limit: { tries: 1 },
     },
     {
@@ -225,7 +280,7 @@ export const LevelingQuest: Quest = {
       prepare: () => ChateauMantegna.changeNightstand("foreign language tapes"),
       completed: () => get("timesRested") >= totalFreeRests(),
       do: () => visitUrl("place.php?whichplace=chateau&action=chateau_restbox"),
-      outfit: { back: $item`LOV Epaulettes`, offhand: $item`familiar scrapbook` },
+      outfit: { offhand: $item`familiar scrapbook` },
       limit: { tries: 40 },
     },
     {
@@ -233,7 +288,7 @@ export const LevelingQuest: Quest = {
       prepare: (): void => {
         if (get("snojoSetting") === null) {
           visitUrl("place.php?whichplace=snojo&action=snojo_controller");
-          runChoice(1);
+          runChoice(3);
         }
       },
       completed: () => get("_snojoFreeFights") >= 10,

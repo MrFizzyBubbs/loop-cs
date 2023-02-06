@@ -1,4 +1,5 @@
 import {
+  $classes,
   $effect,
   $familiar,
   $item,
@@ -12,7 +13,7 @@ import {
 } from "libram";
 import { Quest } from "../engine/task";
 import { CombatStrategy } from "grimoire-kolmafia";
-import { use } from "kolmafia";
+import { cliExecute, use } from "kolmafia";
 
 export const BoozeDropQuest: Quest = {
   name: "Booze Drop",
@@ -37,6 +38,12 @@ export const BoozeDropQuest: Quest = {
         familiar: $familiar`none`,
       },
       limit: { tries: 1 },
+    },
+    {
+      name: "Pray",
+      class: $classes`Pastamancer`,
+      completed: () => get("_barrelPrayer"),
+      do: () => cliExecute("barrelprayer buff"),
     },
     {
       name: "Open MayDay",
@@ -74,7 +81,6 @@ export const BoozeDropQuest: Quest = {
         $effect`items.enh`,
         $effect`I See Everything Thrice!`,
         $effect`Nearly All-Natural`,
-        $effect`Pork Barrel`,
         $effect`Singer's Faithful Ocelot`,
         $effect`Steely-Eyed Squint`,
         $effect`The Spirit of Taking`,
