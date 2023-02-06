@@ -36,11 +36,9 @@ export const FamiliarWeightQuest: Quest = {
       limit: { tries: 1 },
     },
     {
-      name: "Yule battery",
-      // eslint-disable-next-line libram/verify-constants
+      name: "Yule Battery",
       completed: () => have($item`overloaded Yule battery`),
       do: () => use($item`box of Familiar Jacks`),
-      // eslint-disable-next-line libram/verify-constants
       outfit: { familiar: $familiar`Mini-Trainbot` },
       acquire: [{ item: $item`borrowed time` }],
       limit: { tries: 1 },
@@ -57,10 +55,8 @@ export const FamiliarWeightQuest: Quest = {
         acc1: $item`Brutal brogues`,
         acc2: $item`hewn moon-rune spoon`,
         acc3: $item`Beach Comb`,
-        // eslint-disable-next-line libram/verify-constants
-        famequip: $item`overloaded Yule battery`,
-        // eslint-disable-next-line libram/verify-constants
         familiar: $familiar`Mini-Trainbot`,
+        famequip: $item`overloaded Yule battery`,
       },
       effects: [
         $effect`Billiards Belligerence`,

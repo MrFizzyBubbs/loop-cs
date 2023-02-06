@@ -10,7 +10,7 @@ import {
   use,
   visitUrl,
 } from "kolmafia";
-import { $familiar, $item, $skill, Clan, get, have, Pantogram, SongBoom } from "libram";
+import { $classes, $familiar, $item, $skill, Clan, get, have, Pantogram, SongBoom } from "libram";
 import { Quest } from "../engine/task";
 import { args } from "../main";
 
@@ -107,6 +107,12 @@ export const RunStartQuest: Quest = {
       completed: () => get("_deckCardsDrawn") >= 10,
       do: () => cliExecute("cheat rope; cheat forest"),
       limit: { tries: 1 },
+    },
+    {
+      name: "Barrel Hoop Earring",
+      completed: () => get("_barrelPrayer"),
+      class: $classes`Seal Clubber, Disco Bandit`,
+      do: () => cliExecute("barrelprayer earring"),
     },
     {
       name: "Cowboy Boots",

@@ -31,6 +31,12 @@ export const SpellDamageQuest: Quest = {
   completed: () => CommunityService.SpellDamage.isDone(),
   tasks: [
     {
+      name: "Simmer",
+      completed: () => have($effect`Simmering`),
+      do: () => ensureEffect($effect`Simmering`),
+      limit: { tries: 1 },
+    },
+    {
       name: "Saucefingers",
       class: $classes`Pastamancer`,
       ready: () => myLevel() >= 15 && get("_reflexHammerUsed") < 3,
@@ -42,10 +48,10 @@ export const SpellDamageQuest: Quest = {
       limit: { tries: 2 },
     },
     {
-      name: "Simmer",
-      completed: () => have($effect`Simmering`),
-      do: () => ensureEffect($effect`Simmering`),
-      limit: { tries: 1 },
+      name: "Barrel Prayer",
+      class: $classes`Sauceror`,
+      completed: () => get("_barrelPrayer"),
+      do: () => cliExecute("barrelprayer buff"),
     },
     innerElf(),
     meteorShower(),

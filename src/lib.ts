@@ -1,5 +1,5 @@
-import { Class, Item, myClass, myPrimestat, StatType, use } from "kolmafia";
-import { $effects, have } from "libram";
+import { Class, myClass, myPrimestat, StatType } from "kolmafia";
+import { $effects } from "libram";
 
 // From phccs
 export function convertMilliseconds(milliseconds: number): string {
@@ -13,10 +13,6 @@ export function convertMilliseconds(milliseconds: number): string {
     (minutesLeft !== 0 ? `${minutesLeft} minutes, ` : "") +
     (secondsLeft !== 0 ? `${secondsLeft} seconds` : "")
   );
-}
-
-export function tryUse(item: Item): void {
-  if (have(item)) use(item);
 }
 
 export const crimboCarols = $effects`Do You Crush What I Crush?, Holiday Yoked, Let It Snow/Boil/Stink/Frighten/Grease, All I Want For Crimbo Is Stuff, Crimbo Wrapping`;

@@ -14,6 +14,7 @@ import { RunStartQuest } from "./tasks/runstart";
 import { SpellDamageQuest } from "./tasks/spelldamage";
 import { HPQuest, MoxieQuest, MuscleQuest, MysticalityQuest } from "./tasks/stat";
 import { WeaponDamageQuest } from "./tasks/weapondamage";
+import { DietQuest } from "./tasks/diet";
 
 export const args = Args.create("loopcs", "A script to complete community service runs.", {
   confirm: Args.boolean({
@@ -50,6 +51,7 @@ export function main(command?: string): void {
     RunStartQuest,
     CoilWireQuest,
     LevelingQuest,
+    DietQuest,
     MoxieQuest,
     MuscleQuest,
     HPQuest,

@@ -2,13 +2,11 @@ import { CombatStrategy } from "grimoire-kolmafia";
 import {
   adv1,
   cliExecute,
-  drink,
-  getCampground,
-  myInebriety,
-  myLevel,
+  myClass,
   myPrimestat,
   retrieveItem,
   runChoice,
+  Skill,
   sweetSynthesis,
   totalFreeRests,
   toUrl,
@@ -38,7 +36,7 @@ import {
 } from "libram";
 import Macro from "../combat";
 import { Quest } from "../engine/task";
-import { byStat, crimboCarols, tryUse } from "../lib";
+import { byStat, crimboCarols } from "../lib";
 import { innerElf } from "./common";
 
 const { saucePotion, sauceFruit, sauceEffect } = byStat({
@@ -139,7 +137,8 @@ export const LevelingQuest: Quest = {
       completed: () => levelingBuffs.every((ef) => have(ef)),
       do: () => levelingBuffs.forEach((ef) => ensureEffect(ef)),
       outfit: { acc1: $item`Powerful Glove` },
-      effects: $effects`The Odour of Magick`, // Reduce skill MP cost
+      // TODO handle this elsewhere
+      // effects: $effects`The Odour of Magick`, // Reduce skill MP cost
       limit: { tries: 1 },
     },
     {
@@ -154,6 +153,7 @@ export const LevelingQuest: Quest = {
       // TODO create cordial of concentration?
       name: "Saucecraft",
       completed: () => have(sauceEffect),
+      ready: () => have(sauceFruit),
       do: () => use(saucePotion),
       acquire: [{ item: saucePotion }],
       limit: { tries: 1 },
@@ -216,12 +216,23 @@ export const LevelingQuest: Quest = {
       limit: { tries: 1 },
     },
     {
-      name: "Nanobrainy",
+      name: "Nanorhino Buff",
       ready: () => get("ghostLocation") !== $location`none` && get("_nanorhinoCharge") >= 100,
-      completed: () => have($effect`Nanobrainy`),
+      completed: () =>
+        have(
+          byStat({
+            Muscle: $effect`Nanobrawny`,
+            Mysticality: $effect`Nanobrainy`,
+            Moxie: $effect`Nanoballsy`,
+          })
+        ),
       do: () => adv1(get("ghostLocation", $location`none`), 0, ""),
       combat: new CombatStrategy().macro(
-        Macro.skill($skill`Entangling Noodles`) // Myst skill triggers nanorhino buff
+        Macro.skill(
+          Skill.all().find(
+            (skill) => skill.level === 0 && skill.combat && skill.class === myClass()
+          ) ?? Skill.none
+        ) // Use appropriate skill to trigger nanorhino buff
           .delevel()
           .skill($skill`Shoot Ghost`)
           .skill($skill`Shoot Ghost`)
@@ -321,7 +332,7 @@ export const LevelingQuest: Quest = {
       choices: { 1310: () => (have($item`God Lobster's Ring`) ? 3 : 1) }, // Get -stats on last fight
       outfit: {
         shirt: $item`makeshift garbage shirt`,
-        famequip: $items`God Lobster's Ring, God Lobster's Scepter, none`,
+        famequip: $items`God Lobster's Ring, God Lobster's Scepter, tiny stillsuit`,
         familiar: $familiar`God Lobster`,
       },
       acquire: [{ item: $item`makeshift garbage shirt` }],
@@ -336,18 +347,14 @@ export const LevelingQuest: Quest = {
           .attack()
           .repeat()
       ),
-      outfit: {
-        offhand: $item`unbreakable umbrella`,
-        shirt: $item`makeshift garbage shirt`,
-        modes: { umbrella: "broken" },
-      },
+      outfit: { shirt: $item`makeshift garbage shirt` },
       acquire: [{ item: $item`makeshift garbage shirt` }],
       limit: { tries: 1 },
     },
     {
       name: "Witchess King",
-      prepare: () => cliExecute("terminal educate portscan"),
       completed: () => have($item`dented scepter`),
+      prepare: () => cliExecute("terminal educate portscan"),
       do: () => Witchess.fightPiece($monster`Witchess King`),
       combat: new CombatStrategy().macro(
         Macro.delevel()
@@ -355,11 +362,7 @@ export const LevelingQuest: Quest = {
           .attack()
           .repeat()
       ),
-      outfit: {
-        offhand: $item`unbreakable umbrella`,
-        shirt: $item`makeshift garbage shirt`,
-        modes: { umbrella: "broken" },
-      },
+      outfit: { shirt: $item`makeshift garbage shirt` },
       acquire: [{ item: $item`makeshift garbage shirt` }],
       limit: { tries: 1 },
     },
@@ -372,11 +375,7 @@ export const LevelingQuest: Quest = {
           .attack()
           .repeat()
       ),
-      outfit: {
-        offhand: $item`unbreakable umbrella`,
-        shirt: $item`makeshift garbage shirt`,
-        modes: { umbrella: "broken" },
-      },
+      outfit: { shirt: $item`makeshift garbage shirt` },
       acquire: [{ item: $item`makeshift garbage shirt` }],
       limit: { tries: 3 },
     },
@@ -388,11 +387,10 @@ export const LevelingQuest: Quest = {
         Macro.if_($monster`Government agent`, Macro.skill($skill`Disintegrate`)).default()
       ),
       outfit: {
-        offhand: $item`unbreakable umbrella`,
         shirt: $item`makeshift garbage shirt`,
         acc1: $item`backup camera`,
         familiar: $familiar`Machine Elf`,
-        modes: { umbrella: "broken", backupcamera: "ml" },
+        modes: { backupcamera: "ml" },
       },
       acquire: [{ item: $item`makeshift garbage shirt` }],
       limit: { tries: 5 },
@@ -403,8 +401,11 @@ export const LevelingQuest: Quest = {
       completed: () => get("_questPartyFair") !== "unstarted",
       do: (): void => {
         visitUrl(toUrl($location`The Neverending Party`));
-        if (["food", "booze"].includes(get("_questPartyFairQuest"))) runChoice(1);
-        else runChoice(2);
+        if (["food", "booze"].includes(get("_questPartyFairQuest"))) {
+          runChoice(1); // Accept quest
+        } else {
+          runChoice(2); // Decline quest
+        }
       },
       limit: { tries: 1 },
     },
@@ -433,22 +434,12 @@ export const LevelingQuest: Quest = {
       choices: { 1324: 5 },
       combat: new CombatStrategy().macro(Macro.trySkill($skill`Feel Pride`).default()),
       outfit: {
-        offhand: $item`unbreakable umbrella`,
         shirt: $item`makeshift garbage shirt`,
         acc1: $item`backup camera`,
-        modes: { umbrella: "broken", backupcamera: "ml" },
+        modes: { backupcamera: "ml" },
       },
       acquire: [{ item: $item`makeshift garbage shirt` }],
       limit: { tries: 10 },
-    },
-    {
-      name: "Pilsners",
-      ready: () => myLevel() >= 11,
-      prepare: () => tryUse($item`astral six-pack`),
-      completed: () => myInebriety() >= 4,
-      do: () => drink(4 - myInebriety(), $item`astral pilsner`),
-      effects: $effects`Ode to Booze`,
-      limit: { tries: 1 },
     },
   ],
 };

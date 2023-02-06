@@ -32,11 +32,12 @@ export const HotResQuest: Quest = {
         weapon: $item`Fourth of May Cosplay Saber`,
         offhand: $item`industrial fire extinguisher`,
         shirt: $item`Jurassic Parka`,
-        pants: $item`pantogram pants`,
+        pants: $item`designer sweatpants`,
         acc1: $item`Brutal brogues`,
         acc2: $item`hewn moon-rune spoon`,
         acc3: $item`Beach Comb`,
         familiar: $familiar`Exotic Parrot`,
+        famequip: $item`tiny stillsuit`,
         modes: { retrocape: ["vampire", "hold"], parka: "pterodactyl" },
       },
       effects: [
