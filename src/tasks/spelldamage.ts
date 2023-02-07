@@ -98,7 +98,7 @@ export const SpellDamageQuest: Quest = {
       limit: { tries: 1 },
     },
     {
-      name: "Pull Chefstaff",
+      name: "Pull Staff",
       completed: () => chefstaves.some((staff) => have(staff)),
       do: (): void => {
         const staff = chefstaves.find((s) => storageAmount(s) > 0 && canEquip(s));

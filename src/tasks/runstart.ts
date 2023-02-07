@@ -30,6 +30,12 @@ export const RunStartQuest: Quest = {
       limit: { tries: 1 },
     },
     {
+      name: "Non-Staff Pulls",
+      completed: () => PULLS.every((item) => have(item)),
+      do: () => PULLS.filter((item) => !have(item)).forEach((item) => takeStorage(1, item)),
+      limit: { tries: 1 },
+    },
+    {
       name: "Clan",
       completed: () => getClanName() === args.vipclan,
       do: () => Clan.join(args.vipclan),
@@ -74,12 +80,6 @@ export const RunStartQuest: Quest = {
         visitUrl("shop.php?whichshop=armory&action=talk");
         runChoice(1);
       },
-      limit: { tries: 1 },
-    },
-    {
-      name: "Pulls",
-      completed: () => PULLS.every((item) => have(item)),
-      do: () => PULLS.filter((item) => !have(item)).forEach((item) => takeStorage(1, item)),
       limit: { tries: 1 },
     },
     {
