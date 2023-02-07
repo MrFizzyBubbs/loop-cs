@@ -92,12 +92,6 @@ export const SpellDamageQuest: Quest = {
       limit: { tries: 1 },
     },
     {
-      name: "Snack Voucher",
-      completed: () => get("grimoire3Summons") > 0,
-      do: () => useSkill($skill`Summon Alice's Army Cards`),
-      limit: { tries: 1 },
-    },
-    {
       name: "Pull Staff",
       completed: () => chefstaves.some((staff) => have(staff)),
       do: (): void => {

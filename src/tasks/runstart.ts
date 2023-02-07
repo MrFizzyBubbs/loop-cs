@@ -7,6 +7,7 @@ import {
   runChoice,
   takeStorage,
   use,
+  useSkill,
   visitUrl,
 } from "kolmafia";
 import { $classes, $familiar, $item, $skill, Clan, get, have, Pantogram, SongBoom } from "libram";
@@ -81,6 +82,12 @@ export const RunStartQuest: Quest = {
         runChoice(1);
       },
       limit: { tries: 1 },
+    },
+    {
+      name: "Alice's Army",
+      completed: () => !!get("grimoire3Summons"),
+      ready: () => have($skill`Summon Alice's Army Cards`),
+      do: () => useSkill(1, $skill`Summon Alice's Army Cards`),
     },
     {
       name: "Chateau Desk",
