@@ -12,6 +12,7 @@ import {
 import { $classes, $familiar, $item, $skill, Clan, get, have, Pantogram, SongBoom } from "libram";
 import { Quest } from "../engine/task";
 import { args } from "../main";
+import { deckTask } from "./common";
 
 const PULLS = [
   $item`Great Wolf's beastly trousers`,
@@ -87,17 +88,13 @@ export const RunStartQuest: Quest = {
       do: () => visitUrl("place.php?whichplace=chateau&action=chateau_desk"),
       limit: { tries: 1 },
     },
-    {
-      name: "Deck",
-      completed: () => get("_deckCardsDrawn") >= 10,
-      do: () => cliExecute("cheat rope; cheat forest"),
-      limit: { tries: 1 },
-    },
+    deckTask("Forest"),
+    deckTask("Rope"),
     {
       name: "Barrel Hoop Earring",
       completed: () => get("_barrelPrayer"),
       class: $classes`Seal Clubber, Disco Bandit`,
-      do: () => cliExecute("barrelprayer earring"),
+      do: () => cliExecute("barrelprayer glamour"),
     },
     {
       name: "Cowboy Boots",

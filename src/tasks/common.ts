@@ -78,10 +78,10 @@ export function beachTask(effect: Effect): Task {
   const num = 1 + BeachComb.headBuffs.indexOf(effect);
   return {
     name: `Beach Head: ${effect}`,
-    completed: () => getProperty("_beachHeadsUsed").split(",").includes(num.toFixed(0)),
     ready: () =>
       get("_freeBeachWalksUsed") < 11 &&
       get("beachHeadsUnlocked").split(",").includes(num.toFixed(0)),
+    completed: () => getProperty("_beachHeadsUsed").split(",").includes(num.toFixed(0)),
     do: () => BeachComb.tryHead(effect),
   };
 }
@@ -90,8 +90,8 @@ export function potionTask(item: Item): Task {
   const effect = effectModifier(item, "Effect");
   return {
     name: effect.toString(),
-    completed: () => have(effect),
     ready: () => have(item),
+    completed: () => have(effect),
     do: () => use(item),
   };
 }
@@ -119,8 +119,8 @@ export function skillTask(x: Skill | Effect): Task {
     const effect = x instanceof Effect ? x : toEffect(x);
     return {
       name: skill.name,
-      completed: () => (effect !== $effect.none ? have(effect) : skill.timescast > 0),
       ready: () => myMp() >= mpCost(skill),
+      completed: () => (effect !== $effect.none ? have(effect) : skill.timescast > 0),
       do: () => useSkill(skill),
     };
   }
@@ -145,5 +145,15 @@ export function asdonTask(style: Effect | keyof typeof AsdonMartin.Driving): Tas
       }
       AsdonMartin.drive(effect);
     },
+  };
+}
+
+export function deckTask(card: string): Task {
+  return {
+    name: `Cheat At Cards: ${card}`,
+    ready: () => have($item`Deck of Every Card`) && get("_deckCardsDrawn") <= 10,
+    completed: () => get("_deckCardsSeen").toLowerCase().split("|").includes(card.toLowerCase()),
+
+    do: () => cliExecute(`cheat ${card.toLowerCase()}`),
   };
 }
