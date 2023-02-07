@@ -25,6 +25,7 @@ import {
   $location,
   $monster,
   $skill,
+  $skills,
   Cartography,
   ChateauMantegna,
   get,
@@ -98,8 +99,6 @@ const synthPairs = byStat({
   ],
 });
 
-export const summons = [$skill`Advanced Saucecrafting`, $skill`Prevent Scurvy and Sobriety`];
-
 export const LevelingQuest: Quest = {
   name: "Leveling",
   completed: () => get("csServicesPerformed").split(",").length > 1,
@@ -110,8 +109,10 @@ export const LevelingQuest: Quest = {
         if (!have(generalStoreItem)) buy(1, generalStoreItem);
       },
     },
+    // TODO flask of baconstone  juice from TT and PM juice bar
+    // TODO potion of temporary gr8ness from DB juice bar
     ...$items`votive of confidence, natural magick candle, Napalm In The Morning™ candle, MayDay™ supply package`.map(
-      potionTask // TODO $effect`Baconstoned`
+      potionTask
     ),
     ...$effects`Lack of Body-Building, We're All Made of Starfish, Pomp & Circumsands, You Learned Something Maybe!`.map(
       beachTask
@@ -174,6 +175,8 @@ export const LevelingQuest: Quest = {
       ...skillTask($skill`Inscrutable Gaze`),
       class: $classes`Pastamancer, Sauceror`,
     },
+    // Summons
+    ...$skills`Advanced Saucecrafting, Prevent Scurvy and Sobriety`.map(skillTask),
     {
       name: "Get Range",
       completed: () => get("hasRange"),
@@ -182,7 +185,6 @@ export const LevelingQuest: Quest = {
       limit: { tries: 1 },
     },
     {
-      // TODO cast Advanced Saucecrafting, Prevent Scurvy and Sobriety
       // TODO create cordial of concentration?
       name: "Saucecraft",
       ready: () => have(sauceFruit),
