@@ -48,10 +48,10 @@ export function main(command?: string): void {
   if (setTimeNow) set(timeProperty, gametimeToInt());
 
   const tasks = getTasks([
+    DietQuest,
     RunStartQuest,
     CoilWireQuest,
     LevelingQuest,
-    DietQuest,
     MoxieQuest,
     MuscleQuest,
     HPQuest,

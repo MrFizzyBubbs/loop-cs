@@ -4,7 +4,6 @@ import {
   getWorkshed,
   myPrimestat,
   retrieveItem,
-  reverseNumberology,
   runChoice,
   takeStorage,
   use,
@@ -74,20 +73,6 @@ export const RunStartQuest: Quest = {
         visitUrl("shop.php?whichshop=armory&action=talk");
         runChoice(1);
       },
-      limit: { tries: 1 },
-    },
-    {
-      name: "Numberology",
-      ready: () => Object.keys(reverseNumberology()).includes("69"),
-      completed: () => get("_universeCalculated") >= Math.min(get("skillLevel144"), 3),
-      do: () => cliExecute("numberology 69"),
-      limit: { tries: 3 },
-    },
-    {
-      name: "Borrowed Time",
-      completed: () => get("_borrowedTimeUsed"),
-      do: () => use($item`borrowed time`),
-      acquire: [{ item: $item`borrowed time` }],
       limit: { tries: 1 },
     },
     {
