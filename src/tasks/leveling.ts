@@ -125,7 +125,7 @@ export const LevelingQuest: Quest = {
     {
       name: "Boxing Daybuff",
       completed: () => get("_daycareSpa"),
-      do: () => cliExecute(`daycare ${myPrimestat()}`),
+      do: () => cliExecute(`daycare ${myPrimestat().toString().toLowerCase()}`),
     },
     {
       name: "Smile of Lyle",

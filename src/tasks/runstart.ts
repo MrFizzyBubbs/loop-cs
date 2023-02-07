@@ -143,7 +143,7 @@ export const RunStartQuest: Quest = {
     {
       name: "Mummery",
       completed: () => get("_mummeryMods").includes(myPrimestat().toString()),
-      do: () => cliExecute(`mummery ${myPrimestat().toString()}`),
+      do: () => cliExecute(`mummery ${myPrimestat().toString().toLowerCase()}`),
       outfit: { familiar: $familiar`Melodramedary` },
       limit: { tries: 1 },
     },
