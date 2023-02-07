@@ -1,25 +1,17 @@
 import { cliExecute, mySign, use, visitUrl } from "kolmafia";
 import { $effect, $familiar, $item, CommunityService, get, have } from "libram";
 import { Quest } from "../engine/task";
-import { meteorShower } from "./common";
+import { beachTask, meteorShowerTask } from "./common";
 
 export const FamiliarWeightQuest: Quest = {
   name: "Familiar Weight",
   completed: () => CommunityService.FamiliarWeight.isDone(),
   tasks: [
-    meteorShower(),
     {
       name: "Anticheese",
       completed: () => get("lastAnticheeseDay") === 1,
       do: () => visitUrl("place.php?whichplace=desertbeach&action=db_nukehouse"),
       acquire: [{ item: $item`bitchin' meatcar` }], // Need ~500 meat for meatcar
-      limit: { tries: 1 },
-    },
-    {
-      name: "Tune Moon",
-      ready: () => !get("moonTuned"),
-      completed: () => mySign() === "Platypus",
-      do: () => cliExecute("spoon platypus"),
       limit: { tries: 1 },
     },
     {
@@ -40,9 +32,24 @@ export const FamiliarWeightQuest: Quest = {
       completed: () => have($item`overloaded Yule battery`),
       do: () => use($item`box of Familiar Jacks`),
       outfit: { familiar: $familiar`Mini-Trainbot` },
-      acquire: [{ item: $item`borrowed time` }],
+      acquire: [{ item: $item`box of Familiar Jacks` }],
       limit: { tries: 1 },
     },
+    {
+      name: "Icy Revenge",
+      ready: () => have($item`love song of icy revenge`),
+      completed: () => have($effect`Cold Hearted`, 20),
+      do: () => use($item`love song of icy revenge`),
+    },
+    {
+      name: "Tune Moon",
+      ready: () => !get("moonTuned"),
+      completed: () => mySign() === "Platypus",
+      do: () => cliExecute("spoon platypus"),
+      limit: { tries: 1 },
+    },
+    meteorShowerTask(),
+    beachTask($effect`Do I Know You From Somewhere?`),
     {
       name: "Test",
       completed: () => CommunityService.FamiliarWeight.isDone(),
@@ -61,7 +68,6 @@ export const FamiliarWeightQuest: Quest = {
       effects: [
         $effect`Billiards Belligerence`,
         $effect`Blood Bond`,
-        $effect`Do I Know You From Somewhere?`,
         $effect`Empathy`,
         $effect`Leash of Linguini`,
         $effect`Puzzle Champ`,

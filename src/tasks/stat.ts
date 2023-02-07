@@ -28,9 +28,9 @@ function equalizeTask(): Task {
   return {
     ...potionTask(
       byStat({
-        Moxie: $item`oil of slipperiness`,
         Muscle: $item`oil of stability`,
         Mysticality: $item`oil of expertise`,
+        Moxie: $item`oil of slipperiness`,
       })
     ),
     class: $classes`Seal Clubber, Turtle Tamer, Disco Bandit, Accordion Thief, Sauceror`,

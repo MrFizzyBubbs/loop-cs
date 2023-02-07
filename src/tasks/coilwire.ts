@@ -52,7 +52,7 @@ export const CoilWireQuest: Quest = {
     },
     {
       name: "Kramco",
-      ready: () => getKramcoWandererChance() >= 1.0,
+      ready: () => getKramcoWandererChance() >= 1,
       completed: () => get("_sausageFights") > 0,
       do: $location`Noob Cave`,
       combat: new CombatStrategy().macro(
@@ -82,13 +82,13 @@ export const CoilWireQuest: Quest = {
         back: $item`protonic accelerator pack`,
         offhand: $item`weeping willow wand`,
         familiar: $familiar`Stocking Mimic`,
-        famequip: $item`none`,
+        famequip: $item.none,
       },
       limit: { tries: 1 },
     },
     {
       name: "Fruity Skeleton",
-      class: $classes`Sauceror, Seal Clubber, Turtle Tamer`,
+      class: $classes`Seal Clubber, Turtle Tamer, Sauceror`,
       ready: () => !have($effect`Everything Looks Yellow`),
       completed: () => have($item`cherry`),
       do: (): void => {
@@ -96,6 +96,7 @@ export const CoilWireQuest: Quest = {
       },
       outfit: { shirt: $item`Jurassic Parka`, modes: { parka: "dilophosaur" } },
       combat: new CombatStrategy().macro(Macro.skill($skill`Spit jurassic acid`)),
+      limit: { tries: 1 },
     },
     {
       name: "Evil Olive",
@@ -106,14 +107,22 @@ export const CoilWireQuest: Quest = {
       do: () => CombatLoversLocket.reminisce($monster`Evil Olive`),
       outfit: { shirt: $item`Jurassic Parka`, modes: { parka: "dilophosaur" } },
       combat: new CombatStrategy().macro(Macro.skill($skill`Spit jurassic acid`)),
+      limit: { tries: 1 },
     },
     {
       name: "Test",
       completed: () => CommunityService.CoilWire.isDone(),
       do: () => CommunityService.CoilWire.run(() => undefined),
       outfit: {
-        familiar: $familiar`Left-Hand Man`,
-        modifier: "mp, mp regen, switch disembodied hand",
+        hat: $item`Iunion Crown`,
+        shirt: $item`Jurassic Parka`,
+        pants: $item`Cargo Cultist Shorts`,
+        weapon: $item`Fourth of May Cosplay Saber`,
+        offhand: $item`familiar scrapbook`,
+        acc1: $item`Eight Days a Week Pill Keeper`,
+        acc2: $item`Powerful Glove`,
+        acc3: $item`Guzzlr tablet`,
+        modes: { parka: "ghostasaurus" },
       },
       limit: { tries: 1 },
     },

@@ -14,29 +14,30 @@ import {
 } from "libram";
 import { Quest } from "../engine/task";
 import { crimboCarols } from "../lib";
-import { innerElf } from "./common";
+import { beachTask, innerElfTask } from "./common";
 
 export const WeaponDamageQuest: Quest = {
   name: "Weapon Damage",
   completed: () => CommunityService.WeaponDamage.isDone(),
   tasks: [
     {
-      name: "Carol",
-      ready: () => crimboCarols.every((ef) => !have(ef)) && get("_reflexHammerUsed") < 3,
+      name: "Do You Crush What I Crush?",
+      ready: () => crimboCarols.every((ef) => !have(ef)),
       completed: () => have($effect`Do You Crush What I Crush?`),
       do: $location`The Dire Warren`,
       combat: new CombatStrategy().macro(Macro.skill($skill`Reflex Hammer`)),
-      outfit: { acc1: $item`Lil' Doctor™ bag`, familiar: $familiar`Ghost of Crimbo Carols` },
+      outfit: {
+        acc1: $item`Lil' Doctor™ bag`,
+        familiar: $familiar`Ghost of Crimbo Carols`,
+        famequip: $item.none,
+      },
       limit: { tries: 1 },
     },
-    innerElf(),
+    innerElfTask(),
+    beachTask($effect`Lack of Body-Building`),
     {
-      name: "Ungulith",
-      ready: () =>
-        CombatLoversLocket.availableLocketMonsters().includes($monster`ungulith`) &&
-        get("camelSpit") >= 100 &&
-        get("_meteorShowerUses") < 5 &&
-        get("_saberForceUses") < 5,
+      name: "Spit Ungulith",
+      ready: () => get("camelSpit") >= 100,
       completed: () =>
         have($effect`Spit Upon`) &&
         have($effect`Meteor Showered`) &&
@@ -74,7 +75,6 @@ export const WeaponDamageQuest: Quest = {
         $effect`Disdain of the War Snapper`,
         $effect`Frenzied, Bloody`,
         $effect`Jackasses' Symphony of Destruction`,
-        $effect`Lack of Body-Building`,
         $effect`Rage of the Reindeer`,
         $effect`Scowl of the Auk`,
         $effect`Song of the North`,

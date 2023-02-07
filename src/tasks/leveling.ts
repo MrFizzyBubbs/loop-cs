@@ -1,6 +1,7 @@
 import { CombatStrategy } from "grimoire-kolmafia";
 import {
   adv1,
+  buy,
   cliExecute,
   myClass,
   myPrimestat,
@@ -15,6 +16,7 @@ import {
   visitUrl,
 } from "kolmafia";
 import {
+  $classes,
   $effect,
   $effects,
   $familiar,
@@ -25,7 +27,6 @@ import {
   $skill,
   Cartography,
   ChateauMantegna,
-  ensureEffect,
   get,
   getKramcoWandererChance,
   getTodaysHolidayWanderers,
@@ -37,18 +38,24 @@ import {
 import Macro from "../combat";
 import { Quest } from "../engine/task";
 import { byStat, crimboCarols } from "../lib";
-import { innerElf } from "./common";
+import { beachTask, innerElfTask, potionTask, skillTask } from "./common";
+
+const generalStoreItem = byStat({
+  Muscle: $item`Ben-Gal™ Balm`,
+  Mysticality: $item`glittery mascara`,
+  Moxie: $item`hair spray`,
+});
 
 const { saucePotion, sauceFruit, sauceEffect } = byStat({
-  Mysticality: {
-    sauceFruit: $item`grapefruit`,
-    saucePotion: $item`ointment of the occult`,
-    sauceEffect: $effect`Mystically Oiled`,
-  },
   Muscle: {
     sauceFruit: $item`lemon`,
     saucePotion: $item`philter of phorce`,
     sauceEffect: $effect`Phorcefullness`,
+  },
+  Mysticality: {
+    sauceFruit: $item`grapefruit`,
+    saucePotion: $item`ointment of the occult`,
+    sauceEffect: $effect`Mystically Oiled`,
   },
   Moxie: {
     sauceFruit: $item`olive`,
@@ -57,46 +64,9 @@ const { saucePotion, sauceFruit, sauceEffect } = byStat({
   },
 });
 
-const levelingBuffs = [
-  // Skill
-  $effect`Big`,
-  $effect`Blood Bond`,
-  $effect`Blood Bubble`,
-  $effect`Carol of the Bulls`,
-  $effect`Carol of the Hells`,
-  $effect`Carol of the Thrills`,
-  $effect`Feeling Excited`,
-  $effect`Feeling Peaceful`,
-  $effect`Frenzied, Bloody`,
-  $effect`Inscrutable Gaze`,
-  $effect`Ruthlessly Efficient`,
-  $effect`Song of Bravado`,
-  $effect`Triple-Sized`,
-  // Class Skill
-  $effect`Astral Shell`,
-  $effect`Elemental Saucesphere`,
-  $effect`Empathy`,
-  $effect`Ghostly Shell`,
-  $effect`Leash of Linguini`,
-  $effect`Stevedave's Shanty of Superiority`,
-  // ML
-  $effect`Drescher's Annoying Noise`,
-  $effect`Ur-Kel's Aria of Annoyance`,
-  $effect`Pride of the Puffin`,
-  // Beach Comb
-  $effect`Do I Know You From Somewhere?`,
-  $effect`You Learned Something Maybe!`,
-  // Items
-  $effect`Baconstoned`,
-  $effect`Confidence of the Votive`,
-  $effect`Glittering Eyelashes`,
+export const levelingBuffs = [
   // Other
-  $effect`Broad-Spectrum Vaccine`,
-  $effect`Favored by Lyle`,
   $effect`Puzzle Champ`,
-  $effect`Starry-Eyed`,
-  $effect`Total Protonic Reversal`,
-  $effect`Uncucumbered`,
 ];
 
 const synthEffect = byStat({
@@ -128,18 +98,81 @@ const synthPairs = byStat({
   ],
 });
 
+export const summons = [$skill`Advanced Saucecrafting`, $skill`Prevent Scurvy and Sobriety`];
+
 export const LevelingQuest: Quest = {
   name: "Leveling",
   completed: () => get("csServicesPerformed").split(",").length > 1,
   tasks: [
     {
-      name: "Buffs",
-      completed: () => levelingBuffs.every((ef) => have(ef)),
-      do: () => levelingBuffs.forEach((ef) => ensureEffect(ef)),
+      ...potionTask(generalStoreItem),
+      prepare: (): void => {
+        if (!have(generalStoreItem)) buy(1, generalStoreItem);
+      },
+    },
+    ...$items`votive of confidence, natural magick candle, Napalm In The Morning™ candle, MayDay™ supply package`.map(
+      potionTask // TODO $effect`Baconstoned`
+    ),
+    ...$effects`Lack of Body-Building, We're All Made of Starfish, Pomp & Circumsands, You Learned Something Maybe!`.map(
+      beachTask
+    ),
+    {
+      name: "Vaccine",
+      completed: () => get("_spacegateVaccine"),
+      ready: () => get("spacegateVaccine2") && get("spacegateAlways"),
+      do: () => cliExecute("spacegate vaccine 2"),
+    },
+    {
+      name: "Boxing Daybuff",
+      completed: () => get("_daycareSpa"),
+      do: () => cliExecute(`daycare ${myPrimestat()}`),
+    },
+    {
+      name: "Smile of Lyle",
+      completed: () => get("_lyleFavored"),
+      do: () => cliExecute("monorail buff"),
+    },
+    {
+      name: "Telescope",
+      completed: () => get("telescopeLookedHigh"),
+      do: () => cliExecute("telescope look high"),
+    },
+    {
+      name: "Cross Streams",
+      completed: () => get("_streamsCrossed"),
+      do: () => cliExecute("crossstreams"),
+    },
+    {
+      name: "Triple-Sized",
+      completed: () => have($effect`Triple-Sized`),
+      do: () => useSkill($skill`CHEAT CODE: Triple Size`, 1),
       outfit: { acc1: $item`Powerful Glove` },
-      // TODO handle this elsewhere
-      // effects: $effects`The Odour of Magick`, // Reduce skill MP cost
-      limit: { tries: 1 },
+    },
+    {
+      name: "Feel Excited",
+      completed: () => get("_feelExcitementUsed") > 0,
+      do: () => useSkill($skill`Feel Excitement`),
+    },
+    {
+      name: "Feel Peaceful",
+      completed: () => get("_feelPeacefulUsed") > 0,
+      do: () => useSkill($skill`Feel Peaceful`),
+    },
+    ...[
+      // Stat
+      ...$effects`Big, Carol of the Thrills, Song of Bravado, Stevedave's Shanty of Superiority`,
+      // ML
+      ...$effects`Drescher's Annoying Noise, Pride of the Puffin, Ur-Kel's Aria of Annoyance`,
+      // Fam weight
+      ...$effects`Blood Bond, Empathy, Leash of Linguini`,
+      // Damage
+      ...$effects`Carol of the Bulls, Carol of the Hells, Frenzied\, Bloody, Ruthlessly Efficient`,
+      // Survivability
+      ...$effects`Astral Shell, Blood Bubble, Elemental Saucesphere, Ghostly Shell`,
+    ].map(skillTask),
+    {
+      ...skillTask($skill`Inscrutable Gaze`),
+      class: $classes`Pastamancer, Sauceror`,
     },
     {
       name: "Get Range",
@@ -152,8 +185,8 @@ export const LevelingQuest: Quest = {
       // TODO cast Advanced Saucecrafting, Prevent Scurvy and Sobriety
       // TODO create cordial of concentration?
       name: "Saucecraft",
-      completed: () => have(sauceEffect),
       ready: () => have(sauceFruit),
+      completed: () => have(sauceEffect),
       do: () => use(saucePotion),
       acquire: [{ item: saucePotion }],
       limit: { tries: 1 },
@@ -395,7 +428,7 @@ export const LevelingQuest: Quest = {
       acquire: [{ item: $item`makeshift garbage shirt` }],
       limit: { tries: 5 },
     },
-    innerElf(),
+    innerElfTask(),
     {
       name: "Party Fair",
       completed: () => get("_questPartyFair") !== "unstarted",
@@ -412,7 +445,7 @@ export const LevelingQuest: Quest = {
     {
       name: "Sausage Goblin",
       completed: () => get("_sausageFights") > 1,
-      ready: () => getKramcoWandererChance() >= 1.0 && have($item`cosmic bowling ball`),
+      ready: () => getKramcoWandererChance() >= 1 && have($item`cosmic bowling ball`),
       do: $location`The Neverending Party`,
       choices: { 1322: 1 },
       combat: new CombatStrategy().macro(

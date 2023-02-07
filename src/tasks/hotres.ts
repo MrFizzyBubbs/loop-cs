@@ -2,11 +2,13 @@ import { CombatStrategy } from "grimoire-kolmafia";
 import { $effect, $familiar, $item, $location, $skill, CommunityService, get, have } from "libram";
 import Macro from "../combat";
 import { Quest } from "../engine/task";
+import { beachTask } from "./common";
 
 export const HotResQuest: Quest = {
   name: "Hot Res",
   completed: () => CommunityService.HotRes.isDone(),
   tasks: [
+    beachTask($effect`Hot-Headed`),
     {
       name: "Foam Suit",
       ready: () => get("_fireExtinguisherCharge") >= 10 && get("_saberForceUses") < 5,
@@ -45,7 +47,6 @@ export const HotResQuest: Quest = {
         $effect`Elemental Saucesphere`,
         $effect`Empathy`,
         $effect`Feeling Peaceful`,
-        $effect`Hot-Headed`,
         $effect`Leash of Linguini`,
         $effect`Sleazy Hands`,
       ],

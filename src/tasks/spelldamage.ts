@@ -1,11 +1,14 @@
 import { CombatStrategy } from "grimoire-kolmafia";
 import {
+  canEquip,
   cliExecute,
   elementalResistance,
   myHp,
   myLevel,
   myMaxhp,
   numericModifier,
+  storageAmount,
+  takeStorage,
   useSkill,
 } from "kolmafia";
 import {
@@ -15,6 +18,7 @@ import {
   $element,
   $familiar,
   $item,
+  $items,
   $location,
   $skill,
   CommunityService,
@@ -24,7 +28,9 @@ import {
 } from "libram";
 import Macro from "../combat";
 import { Quest } from "../engine/task";
-import { innerElf, meteorShower } from "./common";
+import { beachTask, innerElfTask, meteorShowerTask } from "./common";
+
+const chefstaves = $items`Staff of the Roaring Hearth, Staff of Simmering Hatred`;
 
 export const SpellDamageQuest: Quest = {
   name: "Spell Damage",
@@ -37,6 +43,17 @@ export const SpellDamageQuest: Quest = {
       limit: { tries: 1 },
     },
     {
+      name: "Barrel Prayer",
+      class: $classes`Sauceror`,
+      completed: () => get("_barrelPrayer"),
+      do: () => cliExecute("barrelprayer buff"),
+    },
+    {
+      name: "Cargopocket",
+      completed: () => get("_cargoPocketEmptied"),
+      do: () => cliExecute("cargo 177"),
+    },
+    {
       name: "Saucefingers",
       class: $classes`Pastamancer`,
       ready: () => myLevel() >= 15 && get("_reflexHammerUsed") < 3,
@@ -47,14 +64,9 @@ export const SpellDamageQuest: Quest = {
       combat: new CombatStrategy().macro(Macro.skill($skill`Reflex Hammer`)),
       limit: { tries: 2 },
     },
-    {
-      name: "Barrel Prayer",
-      class: $classes`Sauceror`,
-      completed: () => get("_barrelPrayer"),
-      do: () => cliExecute("barrelprayer buff"),
-    },
-    innerElf(),
-    meteorShower(),
+    innerElfTask(),
+    meteorShowerTask(),
+    beachTask($effect`We're All Made of Starfish`),
     {
       name: "KGB",
       completed: () =>
@@ -86,19 +98,27 @@ export const SpellDamageQuest: Quest = {
       limit: { tries: 1 },
     },
     {
+      name: "Pull Chefstaff",
+      completed: () => chefstaves.some((staff) => have(staff)),
+      do: (): void => {
+        const staff = chefstaves.find((s) => storageAmount(s) > 0 && canEquip(s));
+        if (staff) takeStorage(staff, 1);
+      },
+    },
+    {
       name: "Test",
       completed: () => CommunityService.SpellDamage.isDone(),
       do: () => CommunityService.SpellDamage.run(() => undefined, 16),
       outfit: {
-        hat: $item`astral chapeau`,
-        weapon: $item`Staff of the Roaring Hearth`,
-        offhand: $item`weeping willow wand`,
+        hat: $items`astral chapeau, Hollandaise helmet, none`,
+        weapon: chefstaves,
+        offhand: $items`Abracandalabra, weeping willow wand`,
         pants: $item`pantogram pants`,
         acc1: $item`battle broom`,
         acc2: $item`Powerful Glove`,
         acc3: $item`Kremlin's Greatest Briefcase`,
-        famequip: $item`Stick-Knife of Loathing`,
         familiar: $familiar`Disembodied Hand`,
+        famequip: $item`Stick-Knife of Loathing`,
       },
       effects: [
         $effect`Arched Eyebrow of the Archmage`,
@@ -108,9 +128,9 @@ export const SpellDamageQuest: Quest = {
         $effect`Jackasses' Symphony of Destruction`,
         $effect`Mental A-cue-ity`,
         $effect`Pisces in the Skyces`,
+        $effect`Sigils of Yeg`,
         $effect`Song of Sauce`,
         $effect`The Magic of LOV`,
-        $effect`We're All Made of Starfish`,
       ],
       limit: { tries: 1 },
     },

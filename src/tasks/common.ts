@@ -1,5 +1,6 @@
 import { CombatStrategy } from "grimoire-kolmafia";
 import {
+  adv1,
   availableAmount,
   buy,
   cliExecute,
@@ -8,6 +9,7 @@ import {
   Effect,
   effectModifier,
   getFuel,
+  getProperty,
   Item,
   mpCost,
   myLevel,
@@ -18,20 +20,34 @@ import {
   use,
   useSkill,
 } from "kolmafia";
-import { $effect, $familiar, $item, $location, $skill, AsdonMartin, Clan, get, have } from "libram";
+import {
+  $effect,
+  $familiar,
+  $item,
+  $location,
+  $skill,
+  AsdonMartin,
+  BeachComb,
+  Clan,
+  get,
+  have,
+} from "libram";
 import Macro from "../combat";
 import { Task } from "../engine/task";
 import { args } from "../main";
 
-export function innerElf(): Task {
+export function innerElfTask(): Task {
   return {
     name: "Inner Elf",
-    ready: () => myLevel() >= 13 && get("_kgbTranquilizerDartUses") < 3,
-    prepare: () => Clan.join(args.slimeclan),
+    ready: () => myLevel() >= 13,
     completed: () => have($effect`Inner Elf`),
-    do: $location`The Slime Tube`,
-    post: () => Clan.join(args.vipclan),
-    combat: new CombatStrategy().macro(Macro.skill($skill`KGB tranquilizer dart`)),
+    do: () =>
+      Clan.with(args.slimeclan, () => {
+        adv1($location`The Slime Tube`, -1, "");
+      }),
+    combat: new CombatStrategy().macro(
+      Macro.trySkill($skill`KGB tranquilizer dart`).skill($skill`Snokebomb`)
+    ),
     choices: { 326: 1 },
     effects: [$effect`Blood Bubble`],
     outfit: { acc1: $item`Kremlin's Greatest Briefcase`, familiar: $familiar`Machine Elf` },
@@ -39,9 +55,9 @@ export function innerElf(): Task {
   };
 }
 
-export function meteorShower(): Task {
+export function meteorShowerTask(): Task {
   return {
-    name: "Meteor Shower",
+    name: "Meteor Showered",
     ready: () => get("_meteorShowerUses") < 5 && get("_saberForceUses") < 5,
     completed: () => have($effect`Meteor Showered`),
     do: $location`The Dire Warren`,
@@ -49,15 +65,31 @@ export function meteorShower(): Task {
       Macro.skill($skill`Meteor Shower`).skill($skill`Use the Force`)
     ),
     choices: { 1387: 3 },
-    outfit: { weapon: $item`Fourth of May Cosplay Saber` },
+    outfit: {
+      weapon: $item`Fourth of May Cosplay Saber`,
+      familiar: $familiar.none,
+      famequip: $item.none,
+    },
     limit: { tries: 1 },
+  };
+}
+
+export function beachTask(effect: Effect): Task {
+  const num = 1 + BeachComb.headBuffs.indexOf(effect);
+  return {
+    name: `Beach Head: ${effect}`,
+    completed: () => getProperty("_beachHeadsUsed").split(",").includes(num.toFixed(0)),
+    ready: () =>
+      get("_freeBeachWalksUsed") < 11 &&
+      get("beachHeadsUnlocked").split(",").includes(num.toFixed(0)),
+    do: () => BeachComb.tryHead(effect),
   };
 }
 
 export function potionTask(item: Item): Task {
   const effect = effectModifier(item, "Effect");
   return {
-    name: `${effect}`,
+    name: effect.toString(),
     completed: () => have(effect),
     ready: () => have(item),
     do: () => use(item),
@@ -87,7 +119,7 @@ export function skillTask(x: Skill | Effect): Task {
     const effect = x instanceof Effect ? x : toEffect(x);
     return {
       name: skill.name,
-      completed: () => have(effect),
+      completed: () => (effect !== $effect.none ? have(effect) : skill.timescast > 0),
       ready: () => myMp() >= mpCost(skill),
       do: () => useSkill(skill),
     };
