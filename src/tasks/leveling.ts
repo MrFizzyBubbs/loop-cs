@@ -318,7 +318,6 @@ export const LevelingQuest: Quest = {
       completed: () => !have($item`a ten-percent bonus`),
       do: () => use($item`a ten-percent bonus`),
       outfit: { offhand: $item`familiar scrapbook` },
-      effects: byStat({ Mysticality: $effects`Inscrutable Gaze`, default: [] }), // TODO do we need to do this here or is it handled prior?
       limit: { tries: 1 },
     },
     {
@@ -364,7 +363,7 @@ export const LevelingQuest: Quest = {
       completed: () => get("_godLobsterFights") >= 3,
       do: () => visitUrl("main.php?fightgodlobster=1"),
       combat: new CombatStrategy().macro(Macro.default()),
-      choices: { 1310: () => (have($item`God Lobster's Ring`) ? 3 : 1) }, // Get -stats on last fight
+      choices: { 1310: () => (have($item`God Lobster's Ring`) ? 3 : 1) }, // Get stats on last fight
       outfit: {
         shirt: $item`makeshift garbage shirt`,
         famequip: $items`God Lobster's Ring, God Lobster's Scepter, tiny stillsuit`,
