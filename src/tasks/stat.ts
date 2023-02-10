@@ -37,16 +37,12 @@ function equalizeTask(): Task {
   };
 }
 
-export const MuscleQuest: Quest = {
+export const Muscle: Quest = {
   name: "Muscle",
   completed: () => CommunityService.Muscle.isDone(),
   tasks: [
     ...skillBuffTasks("MUSCLE"),
-    potionTask($item`LOV Elixir #3`),
     thrallTask($thrall`Elbow Macaroni`),
-    // beachTask($effect`Lack of Body-Building`),
-    // birdTask("Muscle Percent"),
-    // favouriteBirdTask("Muscle Percent"),
     equalizeTask(),
     {
       name: "Test",
@@ -58,7 +54,7 @@ export const MuscleQuest: Quest = {
   ],
 };
 
-export const MysticalityQuest: Quest = {
+export const Mysticality: Quest = {
   name: "Mysticality",
   tasks: [
     {
@@ -72,7 +68,7 @@ export const MysticalityQuest: Quest = {
   ],
 };
 
-export const MoxieQuest: Quest = {
+export const Moxie: Quest = {
   name: "Moxie",
   tasks: [
     {
@@ -87,7 +83,7 @@ export const MoxieQuest: Quest = {
   ],
 };
 
-export const HPQuest: Quest = {
+export const Hitpoints: Quest = {
   name: "HP",
   tasks: [
     {
@@ -108,10 +104,10 @@ export const HPQuest: Quest = {
   ],
 };
 
-// const StatTests = byStat({
-//   Mysticality: [Moxie, Muscle, Hitpoints, Mysticality],
-//   Muscle: [Moxie, Mysticality, Hitpoints, Muscle],
-//   Moxie: [Mysticality, Muscle, Hitpoints, Moxie],
-// });
+const StatTests = byStat({
+  Mysticality: [Moxie, Muscle, Hitpoints, Mysticality],
+  Muscle: [Moxie, Mysticality, Hitpoints, Muscle],
+  Moxie: [Mysticality, Muscle, Hitpoints, Moxie],
+});
 
-// export default StatTests;
+export default StatTests;

@@ -16,7 +16,6 @@ import {
   getKramcoWandererChance,
   getTodaysHolidayWanderers,
   have,
-  StompingBoots,
 } from "libram";
 import Macro from "../combat";
 import { Quest } from "../engine/task";
@@ -27,7 +26,6 @@ export const CoilWireQuest: Quest = {
   tasks: [
     {
       name: "Holiday Runaway",
-      ready: () => StompingBoots.couldRunaway(),
       completed: () => getTodaysHolidayWanderers().length === 0 || get("_banderRunaways") >= 1,
       do: $location`Noob Cave`,
       combat: new CombatStrategy().macro(Macro.runaway()),

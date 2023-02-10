@@ -27,18 +27,16 @@ import {
   $skill,
   $skills,
   Cartography,
-  ChateauMantegna,
   get,
   getKramcoWandererChance,
   getTodaysHolidayWanderers,
   have,
-  StompingBoots,
   TunnelOfLove,
   Witchess,
 } from "libram";
 import Macro from "../combat";
 import { Quest } from "../engine/task";
-import { byStat, crimboCarols } from "../lib";
+import { byStat } from "../lib";
 import { beachTask, innerElfTask, potionTask, skillTask } from "./common";
 
 const generalStoreItem = byStat({
@@ -64,11 +62,6 @@ const { saucePotion, sauceFruit, sauceEffect } = byStat({
     sauceEffect: $effect`Superhuman Sarcasm`,
   },
 });
-
-export const levelingBuffs = [
-  // Other
-  $effect`Puzzle Champ`,
-];
 
 const synthEffect = byStat({
   Mysticality: $effect`Synthesis: Learning`,
@@ -103,17 +96,29 @@ export const LevelingQuest: Quest = {
   name: "Leveling",
   completed: () => get("csServicesPerformed").split(",").length > 1,
   tasks: [
+    innerElfTask(),
     {
       ...potionTask(generalStoreItem),
       prepare: (): void => {
         if (!have(generalStoreItem)) buy(1, generalStoreItem);
       },
     },
-    // TODO flask of baconstone  juice from TT and PM juice bar
-    // TODO potion of temporary gr8ness from DB juice bar
-    ...$items`votive of confidence, natural magick candle, Napalm In The Morning™ candle, MayDay™ supply package`.map(
-      potionTask
-    ),
+    { ...potionTask($item`flask of baconstone juice`), class: $classes`Pastamancer, Turtle Tamer` }, // From juice bar
+    { ...potionTask($item`potion of temporary gr8ness`), class: $classes`Disco Bandit` }, // From juice bar
+    { ...potionTask($item`pressurized potion of proficiency`), class: $classes`Accordion Thief` }, // From juice bar
+    {
+      ...potionTask($item`natural magick candle`),
+      class: $classes`Seal Clubber, Pastamancer, Sauceror, Disco Bandit`,
+    },
+    {
+      ...potionTask($item`Napalm In The Morning™ candle`),
+      class: $classes`Seal Clubber, Turtle Tamer`,
+    },
+    {
+      ...potionTask($item`votive of confidence`),
+      class: $classes`Turtle Tamer, Pastamancer, Accordion Thief`,
+    },
+    potionTask($item`MayDay™ supply package`),
     ...$effects`Lack of Body-Building, We're All Made of Starfish, Pomp & Circumsands, You Learned Something Maybe!`.map(
       beachTask
     ),
@@ -122,42 +127,56 @@ export const LevelingQuest: Quest = {
       completed: () => get("_spacegateVaccine"),
       ready: () => get("spacegateVaccine2") && get("spacegateAlways"),
       do: () => cliExecute("spacegate vaccine 2"),
+      limit: { tries: 1 },
     },
     {
       name: "Boxing Daybuff",
       completed: () => get("_daycareSpa"),
       do: () => cliExecute(`daycare ${myPrimestat().toString().toLowerCase()}`),
+      limit: { tries: 1 },
     },
     {
       name: "Smile of Lyle",
       completed: () => get("_lyleFavored"),
       do: () => cliExecute("monorail buff"),
+      limit: { tries: 1 },
     },
     {
       name: "Telescope",
       completed: () => get("telescopeLookedHigh"),
       do: () => cliExecute("telescope look high"),
+      limit: { tries: 1 },
     },
     {
       name: "Cross Streams",
       completed: () => get("_streamsCrossed"),
       do: () => cliExecute("crossstreams"),
+      limit: { tries: 1 },
     },
     {
       name: "Triple-Sized",
       completed: () => have($effect`Triple-Sized`),
       do: () => useSkill($skill`CHEAT CODE: Triple Size`, 1),
       outfit: { acc1: $item`Powerful Glove` },
+      limit: { tries: 1 },
     },
     {
       name: "Feel Excited",
       completed: () => get("_feelExcitementUsed") > 0,
       do: () => useSkill($skill`Feel Excitement`),
+      limit: { tries: 1 },
     },
     {
       name: "Feel Peaceful",
       completed: () => get("_feelPeacefulUsed") > 0,
       do: () => useSkill($skill`Feel Peaceful`),
+      limit: { tries: 1 },
+    },
+    {
+      name: "Puzzle Champ",
+      completed: () => get("_witchessBuff"),
+      do: () => cliExecute("witchess"),
+      limit: { tries: 1 },
     },
     ...[
       // Stat
@@ -202,7 +221,6 @@ export const LevelingQuest: Quest = {
     {
       name: synthEffect.name,
       completed: () => have(synthEffect),
-      prepare: () => cliExecute("garden pick"),
       do: (): void => {
         for (const [candy1, candy2] of synthPairs) {
           const enough = candy1 === candy2 ? have(candy1, 2) : have(candy1) && retrieveItem(candy2);
@@ -217,6 +235,7 @@ export const LevelingQuest: Quest = {
       name: "April Shower",
       completed: () => get("_aprilShower"),
       do: () => cliExecute(`shower ${myPrimestat()}`),
+      limit: { tries: 1 },
     },
     {
       name: "Bastille",
@@ -227,7 +246,6 @@ export const LevelingQuest: Quest = {
     },
     {
       name: "Holiday Runaway",
-      ready: () => StompingBoots.couldRunaway(),
       completed: () => getTodaysHolidayWanderers().length === 0 || get("_banderRunaways") >= 2,
       do: $location`Noob Cave`,
       combat: new CombatStrategy().macro(Macro.runaway()),
@@ -283,12 +301,10 @@ export const LevelingQuest: Quest = {
     },
     {
       name: "Holiday Yoked",
-      ready: () =>
-        crimboCarols.every((ef) => !have(ef)) && get("cosmicBowlingBallReturnCombats") < 1,
       completed: () => have($effect`Holiday Yoked`),
       do: $location`Noob Cave`,
       combat: new CombatStrategy().macro(Macro.skill($skill`Bowl a Curveball`)),
-      outfit: { familiar: $familiar`Ghost of Crimbo Carols` },
+      outfit: { familiar: $familiar`Ghost of Crimbo Carols`, famequip: $item.none },
       limit: { tries: 1 },
     },
     {
@@ -313,6 +329,8 @@ export const LevelingQuest: Quest = {
       acquire: [{ item: $item`makeshift garbage shirt` }],
       limit: { tries: 1 },
     },
+    potionTask($item`LOV Elixir #3`),
+    potionTask($item`LOV Elixir #6`),
     {
       name: "Ten-Percent Bonus",
       completed: () => !have($item`a ten-percent bonus`),
@@ -322,7 +340,6 @@ export const LevelingQuest: Quest = {
     },
     {
       name: "Chateau",
-      prepare: () => ChateauMantegna.changeNightstand("foreign language tapes"),
       completed: () => get("timesRested") >= totalFreeRests(),
       do: () => visitUrl("place.php?whichplace=chateau&action=chateau_restbox"),
       outfit: { offhand: $item`familiar scrapbook` },
@@ -414,7 +431,7 @@ export const LevelingQuest: Quest = {
       limit: { tries: 3 },
     },
     {
-      name: "DMT",
+      name: "Deep Machine Tunnels",
       completed: () => get("_machineTunnelsAdv") >= 5,
       do: $location`The Deep Machine Tunnels`,
       combat: new CombatStrategy().macro(
@@ -429,7 +446,6 @@ export const LevelingQuest: Quest = {
       acquire: [{ item: $item`makeshift garbage shirt` }],
       limit: { tries: 5 },
     },
-    innerElfTask(),
     {
       name: "Party Fair",
       completed: () => get("_questPartyFair") !== "unstarted",

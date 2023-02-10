@@ -2,7 +2,6 @@ import { CombatStrategy } from "grimoire-kolmafia";
 import {
   canEquip,
   cliExecute,
-  elementalResistance,
   myHp,
   myLevel,
   myMaxhp,
@@ -14,21 +13,18 @@ import {
 import {
   $classes,
   $effect,
-  $effects,
-  $element,
   $familiar,
   $item,
   $items,
   $location,
   $skill,
   CommunityService,
-  ensureEffect,
   get,
   have,
 } from "libram";
 import Macro from "../combat";
 import { Quest } from "../engine/task";
-import { beachTask, innerElfTask, meteorShowerTask } from "./common";
+import { innerElfTask, meteorShowerTask, potionTask, skillTask } from "./common";
 
 const chefstaves = $items`Staff of the Roaring Hearth, Staff of Simmering Hatred`;
 
@@ -36,12 +32,26 @@ export const SpellDamageQuest: Quest = {
   name: "Spell Damage",
   completed: () => CommunityService.SpellDamage.isDone(),
   tasks: [
+    skillTask($skill`Simmer`),
+    skillTask($skill`Spirit of Cayenne`),
     {
-      name: "Simmer",
-      completed: () => have($effect`Simmering`),
-      do: () => ensureEffect($effect`Simmering`),
+      name: "Deep Dark Visions",
+      completed: () => have($effect`Visions of the Deep Dark Deeps`),
+      do: (): void => {
+        while (myHp() < myMaxhp()) useSkill($skill`Cannelloni Cocoon`);
+        useSkill($skill`Deep Dark Visions`);
+      },
+      outfit: {
+        shirt: $item`Jurassic Parka`,
+        back: $item`unwrapped knock-off retro superhero cape`,
+        weapon: $item`Fourth of May Cosplay Saber`,
+        familiar: $familiar`Exotic Parrot`,
+        famequip: $item`tiny stillsuit`,
+        modes: { parka: "ghostasaurus", retrocape: ["vampire", "hold"] },
+      },
       limit: { tries: 1 },
     },
+    { ...potionTask($item`tobiko marble soda`), acquire: [{ item: $item`tobiko marble soda` }] },
     {
       name: "Barrel Prayer",
       class: $classes`Sauceror`,
@@ -49,10 +59,18 @@ export const SpellDamageQuest: Quest = {
       do: () => cliExecute("barrelprayer buff"),
     },
     {
+      name: "Briefcase Enchanment",
+      completed: () =>
+        numericModifier($item`Kremlin's Greatest Briefcase`, "Spell Damage Percent") > 0,
+      do: () => cliExecute("Briefcase.ash enchantment spell"),
+      limit: { tries: 1 },
+    },
+    {
       name: "Cargopocket",
       completed: () => get("_cargoPocketEmptied"),
       do: () => cliExecute("cargo 177"),
     },
+    potionTask($item`Yeg's Motel hand soap`),
     {
       name: "Saucefingers",
       class: $classes`Pastamancer`,
@@ -66,31 +84,6 @@ export const SpellDamageQuest: Quest = {
     },
     innerElfTask(),
     meteorShowerTask(),
-    beachTask($effect`We're All Made of Starfish`),
-    {
-      name: "KGB",
-      completed: () =>
-        numericModifier($item`Kremlin's Greatest Briefcase`, "Spell Damage Percent") > 0,
-      do: () => cliExecute("Briefcase.ash enchantment spell"),
-      limit: { tries: 1 },
-    },
-    {
-      name: "Deep Dark",
-      completed: () => have($effect`Visions of the Deep Dark Deeps`),
-      do: (): void => {
-        const resist = 1 - elementalResistance($element`spooky`) / 100;
-        const neededHp = Math.max(500, myMaxhp() * 4 * resist);
-        if (myMaxhp() < neededHp) throw `Not enough HP for Deep Dark Visions.`;
-        while (myHp() < neededHp) useSkill($skill`Cannelloni Cocoon`);
-        useSkill($skill`Deep Dark Visions`);
-      },
-      outfit: {
-        familiar: $familiar`Exotic Parrot`,
-        modifier: "HP 500max, Spooky Resistance",
-      },
-      effects: $effects`Astral Shell, Elemental Saucesphere`,
-      limit: { tries: 1 },
-    },
     {
       name: "Pull Staff",
       completed: () => chefstaves.some((staff) => have(staff)),
@@ -124,7 +117,6 @@ export const SpellDamageQuest: Quest = {
         $effect`Pisces in the Skyces`,
         $effect`Sigils of Yeg`,
         $effect`Song of Sauce`,
-        $effect`The Magic of LOV`,
       ],
       limit: { tries: 1 },
     },

@@ -1,23 +1,27 @@
 import { cliExecute, mySign, use, visitUrl } from "kolmafia";
-import { $effect, $familiar, $item, CommunityService, get, have } from "libram";
+import { $effect, $effects, $familiar, $item, CommunityService, get, have } from "libram";
 import { Quest } from "../engine/task";
-import { beachTask, meteorShowerTask } from "./common";
+import { beachTask, meteorShowerTask, potionTask, restoreBuffTasks } from "./common";
+
+const buffs = $effects`Empathy, Leash of Linguini, Blood Bond`;
 
 export const FamiliarWeightQuest: Quest = {
   name: "Familiar Weight",
   completed: () => CommunityService.FamiliarWeight.isDone(),
   tasks: [
+    ...restoreBuffTasks(buffs),
+    potionTask($item`green candy heart`),
+    beachTask($effect`Do I Know You From Somewhere?`),
     {
-      name: "Anticheese",
-      completed: () => get("lastAnticheeseDay") === 1,
-      do: () => visitUrl("place.php?whichplace=desertbeach&action=db_nukehouse"),
-      acquire: [{ item: $item`bitchin' meatcar` }], // Need ~500 meat for meatcar
+      name: "Puzzle Champ",
+      completed: () => get("_witchessBuff"),
+      do: () => cliExecute("witchess"),
       limit: { tries: 1 },
     },
     {
-      name: "DRINK ME",
-      completed: () => get("_lookingGlass"),
-      do: () => visitUrl("clan_viplounge.php?action=lookingglass&whichfloor=2"),
+      name: "Play Pool",
+      completed: () => have($effect`Billiards Belligerence`),
+      do: () => cliExecute("pool 1"),
       limit: { tries: 1 },
     },
     {
@@ -26,6 +30,15 @@ export const FamiliarWeightQuest: Quest = {
       prepare: () => visitUrl("clan_viplounge.php?action=fwshop&whichfloor=2", false),
       do: () => visitUrl("shop.php?whichshop=fwshop&action=buyitem&quantity=1&whichrow=1248&pwd"),
       limit: { tries: 1 },
+    },
+    {
+      name: "Tea Party",
+      completed: () => get("_madTeaParty"),
+      prepare: (): void => {
+        visitUrl("clan_viplounge.php?action=lookingglass&whichfloor=2");
+        use($item`"DRINK ME" potion`);
+      },
+      do: () => cliExecute("hatter sombrero-mounted sparkler"),
     },
     {
       name: "Yule Battery",
@@ -40,6 +53,14 @@ export const FamiliarWeightQuest: Quest = {
       ready: () => have($item`love song of icy revenge`),
       completed: () => have($effect`Cold Hearted`, 20),
       do: () => use($item`love song of icy revenge`),
+      limit: { tries: 2 },
+    },
+    {
+      name: "Blue Taffy",
+      ready: () => have($item`pulled blue taffy`),
+      completed: () => have($effect`Blue Swayed`, 50),
+      do: () => use($item`pulled blue taffy`),
+      limit: { tries: 5 },
     },
     {
       name: "Tune Moon",
@@ -49,7 +70,7 @@ export const FamiliarWeightQuest: Quest = {
       limit: { tries: 1 },
     },
     meteorShowerTask(),
-    beachTask($effect`Do I Know You From Somewhere?`),
+    potionTask($item`silver face paint`),
     {
       name: "Test",
       completed: () => CommunityService.FamiliarWeight.isDone(),
@@ -57,7 +78,7 @@ export const FamiliarWeightQuest: Quest = {
       outfit: {
         hat: $item`Daylight Shavings Helmet`,
         weapon: $item`Fourth of May Cosplay Saber`,
-        offhand: $item`rope`,
+        offhand: $item`rope`, // TODO remove this?
         pants: $item`Great Wolf's beastly trousers`,
         acc1: $item`Brutal brogues`,
         acc2: $item`hewn moon-rune spoon`,
@@ -65,15 +86,6 @@ export const FamiliarWeightQuest: Quest = {
         familiar: $familiar`Mini-Trainbot`,
         famequip: $item`overloaded Yule battery`,
       },
-      effects: [
-        $effect`Billiards Belligerence`,
-        $effect`Blood Bond`,
-        $effect`Empathy`,
-        $effect`Leash of Linguini`,
-        $effect`Puzzle Champ`,
-        $effect`Robot Friends`,
-        $effect`You Can Really Taste the Dormouse`,
-      ],
       limit: { tries: 1 },
     },
   ],

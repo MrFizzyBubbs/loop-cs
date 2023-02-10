@@ -10,22 +10,20 @@ import {
   get,
   have,
   Macro,
+  SourceTerminal,
 } from "libram";
 import { Quest } from "../engine/task";
 import { CombatStrategy } from "grimoire-kolmafia";
-import { cliExecute, use } from "kolmafia";
+import { cliExecute, useSkill, visitUrl } from "kolmafia";
+import { deckTask, potionTask, skillTask } from "./common";
 
 export const BoozeDropQuest: Quest = {
   name: "Booze Drop",
   completed: () => CommunityService.BoozeDrop.isDone(),
   tasks: [
     {
-      name: "Batform & Bowling",
-      ready: () =>
-        get("_vampyreCloakeFormUses") < 10 &&
-        have($item`cosmic bowling ball`) &&
-        get("_reflexHammerUsed") < 3,
-      completed: () => have($effect`Bat-Adjacent Form`) && have($effect`Cosmic Ball in the Air`),
+      name: "Batform",
+      completed: () => have($effect`Bat-Adjacent Form`),
       do: $location`The Dire Warren`,
       combat: new CombatStrategy().macro(
         Macro.skill($skill`Become a Bat`)
@@ -40,15 +38,22 @@ export const BoozeDropQuest: Quest = {
       limit: { tries: 1 },
     },
     {
+      name: "Play Pool",
+      completed: () => have($effect`Hustlin'`),
+      do: () => cliExecute("pool 3"),
+    },
+    {
       name: "Pray",
       class: $classes`Pastamancer`,
       completed: () => get("_barrelPrayer"),
       do: () => cliExecute("barrelprayer buff"),
+      limit: { tries: 1 },
     },
+    { ...potionTask($item`Salsa Caliente™ candle`), class: $classes`Sauceror` },
     {
-      name: "Open MayDay",
-      completed: () => !have($item`MayDay™ supply package`),
-      do: () => use($item`MayDay™ supply package`),
+      name: "Items.enh",
+      completed: () => have($effect`items.enh`),
+      do: () => SourceTerminal.enhance($effect`items.enh`),
       limit: { tries: 1 },
     },
     {
@@ -58,6 +63,35 @@ export const BoozeDropQuest: Quest = {
       do: () => AsdonMartin.drive($effect`Driving Observantly`),
       limit: { tries: 1 },
     },
+    {
+      name: "Steely-Eyed Squint",
+      completed: () => have($effect`Steely-Eyed Squint`),
+      do: () => useSkill($skill`Steely-Eyed Squint`),
+      limit: { tries: 1 },
+    },
+    {
+      name: "Feel Lost",
+      completed: () => have($effect`Feeling Lost`),
+      do: () => useSkill($skill`Feel Lost`),
+      limit: { tries: 1 },
+    },
+    {
+      ...deckTask("X - The Wheel of Fortune"),
+      class: $classes`Turtle Tamer`,
+    },
+    skillTask($skill`The Spirit of Taking`),
+    skillTask($skill`Singer's Faithful Ocelot`),
+    skillTask($skill`Fat Leon's Phat Loot Lyric`),
+    {
+      name: "Anticheese",
+      completed: () => get("lastAnticheeseDay") === 1,
+      do: () => visitUrl("place.php?whichplace=desertbeach&action=db_nukehouse"),
+      acquire: [{ item: $item`bitchin' meatcar` }], // Need ~500 meat for meatcar
+      limit: { tries: 1 },
+    },
+    { ...potionTask($item`government cheese`), acquire: [{ item: $item`government cheese` }] },
+    potionTask($item`bag of grain`),
+    potionTask($item`autumn leaf`),
     {
       name: "Test",
       completed: () => CommunityService.BoozeDrop.isDone(),
@@ -73,18 +107,6 @@ export const BoozeDropQuest: Quest = {
         familiar: $familiar`Trick-or-Treating Tot`,
         modes: { umbrella: "bucket style" },
       },
-      effects: [
-        $effect`Fat Leon's Phat Loot Lyric`,
-        $effect`Feeling Lost`,
-        $effect`Glowing Hands`,
-        $effect`Hustlin'`,
-        $effect`items.enh`,
-        $effect`I See Everything Thrice!`,
-        $effect`Nearly All-Natural`,
-        $effect`Singer's Faithful Ocelot`,
-        $effect`Steely-Eyed Squint`,
-        $effect`The Spirit of Taking`,
-      ],
       acquire: [{ item: $item`wad of used tape` }],
       limit: { tries: 1 },
     },

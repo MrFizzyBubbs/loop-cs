@@ -12,15 +12,11 @@ import { LevelingQuest } from "./tasks/leveling";
 import { NoncombatQuest } from "./tasks/noncombat";
 import { RunStartQuest } from "./tasks/runstart";
 import { SpellDamageQuest } from "./tasks/spelldamage";
-import { HPQuest, MoxieQuest, MuscleQuest, MysticalityQuest } from "./tasks/stat";
+import StatTests from "./tasks/stat";
 import { WeaponDamageQuest } from "./tasks/weapondamage";
 import { DietQuest } from "./tasks/diet";
 
 export const args = Args.create("loopcs", "A script to complete community service runs.", {
-  confirm: Args.boolean({
-    help: "If the user must confirm execution of each task.",
-    default: false,
-  }),
   vipclan: Args.string({
     help: "Name of clan that has a fully stocked VIP lounge.",
     default: "Margaretting Tye",
@@ -28,6 +24,10 @@ export const args = Args.create("loopcs", "A script to complete community servic
   slimeclan: Args.string({
     help: "Name of clan that has Mother Slime ready in The Slime Tube.",
     default: "Hobopolis Vacation Home",
+  }),
+  list: Args.flag({
+    help: "Show the status of all tasks and exit.",
+    setting: "",
   }),
 });
 
@@ -52,10 +52,7 @@ export function main(command?: string): void {
     RunStartQuest,
     CoilWireQuest,
     LevelingQuest,
-    MoxieQuest,
-    MuscleQuest,
-    HPQuest,
-    MysticalityQuest,
+    ...StatTests,
     HotResQuest,
     NoncombatQuest,
     FamiliarWeightQuest,
@@ -67,21 +64,18 @@ export function main(command?: string): void {
 
   const engine = new Engine(tasks);
   try {
-    engine.run(undefined, args.confirm);
-
-    // Print the next task that will be executed, if it exists
-    const task = engine.getNextTask();
-    if (task) {
-      print(`Next: ${task.name}`, "blue");
+    if (args.list) {
+      listTasks(engine);
+      return;
     }
 
-    // If the engine ran to completion, the run should be complete.
-    // Print any tasks that are not complete.
+    engine.run();
+
+    const remaining_tasks = tasks.filter((task) => !task.completed());
     if (!runComplete()) {
-      const uncompletedTasks = engine.tasks.filter((t) => !t.completed());
-      if (uncompletedTasks.length > 0) {
-        print("Uncompleted Tasks:");
-        for (const t of uncompletedTasks) print(t.name);
+      print("Remaining tasks:", "red");
+      for (const task of remaining_tasks) {
+        if (!task.completed()) print(`${task.name}`, "red");
       }
       throw `Unable to find available task, but the run is not complete.`;
     }
@@ -108,4 +102,16 @@ export function main(command?: string): void {
 
 function runComplete(): boolean {
   return get("kingLiberated");
+}
+
+function listTasks(engine: Engine): void {
+  for (const task of engine.tasks) {
+    if (task.completed()) {
+      print(`${task.name}: Done`, "blue");
+    } else if (engine.available(task)) {
+      print(`${task.name}: Available`);
+    } else {
+      print(`${task.name}: Not Available`, "red");
+    }
+  }
 }

@@ -1,4 +1,4 @@
-import { CombatStrategy } from "grimoire-kolmafia";
+import { CombatStrategy, maxSongs } from "grimoire-kolmafia";
 import {
   adv1,
   availableAmount,
@@ -12,6 +12,7 @@ import {
   getProperty,
   Item,
   mpCost,
+  myEffects,
   myLevel,
   myMp,
   Skill,
@@ -31,6 +32,7 @@ import {
   Clan,
   get,
   have,
+  isSong,
 } from "libram";
 import Macro from "../combat";
 import { Task } from "../engine/task";
@@ -128,6 +130,25 @@ export function skillTask(x: Skill | Effect): Task {
 
 export function restoreBuffTasks(buffs: Effect[]): Task[] {
   return [...buffs.map(skillTask), restore(buffs)];
+}
+
+export function songTasks(songs: (Skill | Effect)[]): Task[] {
+  const songEffects = songs.map((song) => (song instanceof Effect ? song : toEffect(song)));
+
+  return songEffects.map((songEffect) => ({
+    name: songEffect.name,
+    ready: () => myMp() >= mpCost(toSkill(songEffect)),
+    completed: () => have(songEffect),
+    prepare: () => {
+      const extraSongs = Object.keys(myEffects())
+        .map((effectName) => toEffect(effectName))
+        .filter((effect) => isSong(effect) && !songEffects.includes(effect));
+      extraSongs.slice(0, maxSongs() - songs.length).forEach((effect) => {
+        if (have(effect)) cliExecute(`shrug ${effect}`);
+      });
+    },
+    do: () => useSkill(toSkill(songEffect)),
+  }));
 }
 
 export function asdonTask(style: Effect | keyof typeof AsdonMartin.Driving): Task {

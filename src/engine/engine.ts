@@ -1,27 +1,14 @@
 import { Task } from "./task";
 import { Engine as BaseEngine, Outfit } from "grimoire-kolmafia";
 import { $effect, $skill, have } from "libram";
-import { myClass, myHp, myMaxhp, userConfirm, useSkill } from "kolmafia";
+import { myClass, myHp, myMaxhp, useSkill } from "kolmafia";
 import { equipDefaults } from "./outfit";
 
 export class Engine extends BaseEngine<never, Task> {
   constructor(tasks: Task[]) {
-    // Tasks for other classes are always completed
-    tasks = tasks.map((task) => {
-      if (task.class && !task.class.includes(myClass())) return { ...task, completed: () => true };
-      return task;
-    });
+    // Remove tasks for other classes
+    tasks = tasks.filter((task) => !task.class || task.class.includes(myClass()));
     super(tasks);
-  }
-
-  public run(actions?: number, confirm?: boolean): void {
-    for (let i = 0; i < (actions ?? Infinity); i++) {
-      const task = this.getNextTask();
-      if (!task) return;
-      if (task.ready && !task.ready()) throw `Task ${task.name} is not ready`;
-      if (confirm && !userConfirm(`Executing ${task.name}, continue?`)) throw `Abort requested`;
-      this.execute(task);
-    }
   }
 
   dress(task: Task, outfit: Outfit): void {

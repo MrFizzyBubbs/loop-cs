@@ -1,6 +1,8 @@
 import { CombatStrategy } from "grimoire-kolmafia";
+import { cliExecute, useSkill } from "kolmafia";
 import {
   $effect,
+  $effects,
   $familiar,
   $item,
   $location,
@@ -14,12 +16,24 @@ import {
 } from "libram";
 import { Quest } from "../engine/task";
 import { crimboCarols } from "../lib";
-import { beachTask, innerElfTask } from "./common";
+import { beachTask, innerElfTask, potionTask, restoreBuffTasks } from "./common";
+
+const buffs = $effects`Carol of the Bulls, Disdain of the War Snapper, Frenzied\, Bloody, Jackasses' Symphony of Destruction, Rage of the Reindeer, Scowl of the Auk, Song of the North, Tenacity of the Snapper`;
 
 export const WeaponDamageQuest: Quest = {
   name: "Weapon Damage",
   completed: () => CommunityService.WeaponDamage.isDone(),
   tasks: [
+    ...restoreBuffTasks(buffs),
+    potionTask($item`LOV Elixir #3`),
+    potionTask($item`vial of hamethyst juice`),
+    beachTask($effect`Lack of Body-Building`),
+    {
+      name: "Play Pool",
+      completed: () => have($effect`Billiards Belligerence`),
+      do: () => cliExecute("pool 1"),
+      limit: { tries: 1 },
+    },
     {
       name: "Do You Crush What I Crush?",
       ready: () => crimboCarols.every((ef) => !have(ef)),
@@ -34,7 +48,6 @@ export const WeaponDamageQuest: Quest = {
       limit: { tries: 1 },
     },
     innerElfTask(),
-    beachTask($effect`Lack of Body-Building`),
     {
       name: "Spit Ungulith",
       ready: () => get("camelSpit") >= 100,
@@ -55,6 +68,12 @@ export const WeaponDamageQuest: Quest = {
       },
       limit: { tries: 1 },
     },
+    potionTask($item`corrupted marrow`),
+    {
+      name: "Bow-Legged Swagger",
+      completed: () => get("_bowleggedSwaggerUsed"),
+      do: () => useSkill($skill`Bow-Legged Swagger`),
+    },
     {
       name: "Test",
       completed: () => CommunityService.WeaponDamage.isDone(),
@@ -62,25 +81,13 @@ export const WeaponDamageQuest: Quest = {
       outfit: {
         weapon: $item`dented scepter`,
         offhand: $item`broken champagne bottle`,
+        pants: $item`Great Wolf's beastly trousers`,
         acc1: $item`Brutal brogues`,
         acc2: $item`Powerful Glove`,
         acc3: $item`Kremlin's Greatest Briefcase`,
         famequip: $item`Stick-Knife of Loathing`,
         familiar: $familiar`Disembodied Hand`,
       },
-      effects: [
-        $effect`Bow-Legged Swagger`,
-        $effect`Carol of the Bulls`,
-        $effect`Cowrruption`,
-        $effect`Disdain of the War Snapper`,
-        $effect`Frenzied, Bloody`,
-        $effect`Jackasses' Symphony of Destruction`,
-        $effect`Rage of the Reindeer`,
-        $effect`Scowl of the Auk`,
-        $effect`Song of the North`,
-        $effect`Tenacity of the Snapper`,
-        $effect`The Power of LOV`,
-      ],
       acquire: [{ item: $item`broken champagne bottle` }],
       limit: { tries: 1 },
     },
