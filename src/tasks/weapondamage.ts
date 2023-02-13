@@ -17,7 +17,7 @@ import {
 } from "libram";
 import { Quest } from "../engine/task";
 import { crimboCarols } from "../lib";
-import { beachTask, innerElfTask, potionTask, restoreBuffTasks } from "./common";
+import { beachTask, innerElfTask, potionTask, skillTask } from "./common";
 
 const buffs = $effects`Carol of the Bulls, Disdain of the War Snapper, Frenzied\, Bloody, Jackasses' Symphony of Destruction, Rage of the Reindeer, Scowl of the Auk, Song of the North, Tenacity of the Snapper`;
 
@@ -25,7 +25,7 @@ export const WeaponDamageQuest: Quest = {
   name: "Weapon Damage",
   completed: () => CommunityService.WeaponDamage.isDone(),
   tasks: [
-    ...restoreBuffTasks(buffs),
+    ...buffs.map(skillTask),
     potionTask($item`LOV Elixir #3`),
     potionTask($item`vial of hamethyst juice`),
     beachTask($effect`Lack of Body-Building`),

@@ -1,7 +1,6 @@
-import { CombatStrategy, maxSongs } from "grimoire-kolmafia";
+import { CombatStrategy } from "grimoire-kolmafia";
 import {
   adv1,
-  availableAmount,
   buy,
   cliExecute,
   create,
@@ -11,8 +10,8 @@ import {
   getFuel,
   getProperty,
   Item,
+  itemAmount,
   mpCost,
-  myEffects,
   myLevel,
   myMp,
   Skill,
@@ -32,7 +31,6 @@ import {
   Clan,
   get,
   have,
-  isSong,
 } from "libram";
 import Macro from "../combat";
 import { Task } from "../engine/task";
@@ -99,74 +97,61 @@ export function potionTask(item: Item, acquire = false): Task {
   };
 }
 
-export function restore(effects: Effect[]): Task {
-  return {
-    name: "Restore",
-    completed: () => effects.every((e) => have(e)),
-    do: () => {
-      if (!have($item`magical sausage`) && have($item`magical sausage casing`)) {
-        create(1, $item`magical sausage`);
-      }
-      if (have($item`magical sausage`)) {
-        eat(1, $item`magical sausage`);
-      } else {
-        use(1, $item`psychokinetic energy blob`);
-      }
-    },
-  };
-}
-
 export function skillTask(x: Skill | Effect): Task {
   {
     const skill = x instanceof Skill ? x : toSkill(x);
     const effect = x instanceof Effect ? x : toEffect(x);
     return {
       name: skill.name,
-      ready: () => myMp() >= mpCost(skill),
       completed: () => (effect !== $effect.none ? have(effect) : skill.timescast > 0),
+      prepare: () => {
+        if (myMp() < mpCost(skill)) {
+          if (!have($item`magical sausage`) && have($item`magical sausage casing`)) {
+            create(1, $item`magical sausage`);
+          }
+          if (have($item`magical sausage`)) {
+            eat(1, $item`magical sausage`);
+          } else {
+            use(1, $item`psychokinetic energy blob`);
+          }
+        }
+      },
       do: () => useSkill(skill),
     };
   }
 }
 
-export function restoreBuffTasks(buffs: Effect[]): Task[] {
-  return [...buffs.map(skillTask), restore(buffs)];
-}
+// export function songTasks(songs: (Skill | Effect)[]): Task[] {
+//   const songEffects = songs.map((song) => (song instanceof Effect ? song : toEffect(song)));
 
-export function songTasks(songs: (Skill | Effect)[]): Task[] {
-  const songEffects = songs.map((song) => (song instanceof Effect ? song : toEffect(song)));
-
-  return songEffects.map((songEffect) => ({
-    name: songEffect.name,
-    ready: () => myMp() >= mpCost(toSkill(songEffect)),
-    completed: () => have(songEffect),
-    prepare: () => {
-      const extraSongs = Object.keys(myEffects())
-        .map((effectName) => toEffect(effectName))
-        .filter((effect) => isSong(effect) && !songEffects.includes(effect));
-      extraSongs.slice(0, maxSongs() - songs.length).forEach((effect) => {
-        if (have(effect)) cliExecute(`shrug ${effect}`);
-      });
-    },
-    do: () => useSkill(toSkill(songEffect)),
-  }));
-}
+//   return songEffects.map((songEffect) => ({
+//     name: songEffect.name,
+//     ready: () => myMp() >= mpCost(toSkill(songEffect)),
+//     completed: () => have(songEffect),
+//     prepare: () => {
+//       const extraSongs = Object.keys(myEffects())
+//         .map((effectName) => toEffect(effectName))
+//         .filter((effect) => isSong(effect) && !songEffects.includes(effect));
+//       extraSongs.slice(0, maxSongs() - songs.length).forEach((effect) => {
+//         if (have(effect)) cliExecute(`shrug ${effect}`);
+//       });
+//     },
+//     do: () => useSkill(toSkill(songEffect)),
+//   }));
+// }
 
 export function asdonTask(style: Effect | keyof typeof AsdonMartin.Driving): Task {
   const effect = style instanceof Effect ? style : AsdonMartin.Driving[style];
   return {
     name: effect.name,
     completed: () => have(effect),
-    do: () => {
-      if (getFuel() < 37) {
-        buy(1, $item`all-purpose flower`);
-        use(1, $item`all-purpose flower`);
-        buy(availableAmount($item`wad of dough`), $item`soda water`);
-        create(availableAmount($item`wad of dough`), $item`loaf of soda bread`);
-        cliExecute(`asdonmartin fuel ${availableAmount($item`loaf of soda bread`)} soda bread`);
+    prepare: () => {
+      if (getFuel() < 37 && itemAmount($item`wad of dough`) < 8) {
+        buy($item`all-purpose flower`);
+        use($item`all-purpose flower`);
       }
-      AsdonMartin.drive(effect);
     },
+    do: () => AsdonMartin.drive(effect),
   };
 }
 

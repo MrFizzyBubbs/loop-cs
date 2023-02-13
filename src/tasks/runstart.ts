@@ -30,7 +30,11 @@ import { byClass } from "../lib";
 import { args } from "../main";
 import { deckTask } from "./common";
 
-const PULLS = [$item`Great Wolf's beastly trousers`, $item`Stick-Knife of Loathing`];
+const PULLS = [
+  $item`Great Wolf's beastly trousers`,
+  $item`Stick-Knife of Loathing`,
+  $item`over-the-shoulder Folder Holder`,
+];
 
 const BEST_INITIATIVE = byClass({
   options: new Map<Class, number>([

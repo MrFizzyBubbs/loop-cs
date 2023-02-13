@@ -2,7 +2,7 @@ import { myThrall, Thrall, useSkill } from "kolmafia";
 import { $classes, $effect, $effects, $item, $thrall, CommunityService } from "libram";
 import { Quest, Task } from "../engine/task";
 import { byStat } from "../lib";
-import { beachTask, potionTask, restoreBuffTasks } from "./common";
+import { beachTask, potionTask, skillTask } from "./common";
 
 const SKILL_BUFFS = {
   MUSCLE: $effects`Feeling Excited, Big, Song of Bravado, Rage of the Reindeer, Quiet Determination, Disdain of the War Snapper`,
@@ -12,7 +12,7 @@ const SKILL_BUFFS = {
 };
 
 function skillBuffTasks(key: keyof typeof SKILL_BUFFS): Task[] {
-  return restoreBuffTasks(SKILL_BUFFS[key]);
+  return SKILL_BUFFS[key].map(skillTask);
 }
 
 function thrallTask(thrall: Thrall): Task {

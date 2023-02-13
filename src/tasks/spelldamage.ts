@@ -33,11 +33,11 @@ const chefstaves = $items`Staff of the Roaring Hearth, Staff of Simmering Hatred
 
 const maxTurns = byClass({
   options: new Map<Class, number>([
-    [$class`Pastamancer`, 12],
-    [$class`Sauceror`, 11],
-    [$class`Accordion Thief`, 14],
+    [$class`Pastamancer`, 11],
+    [$class`Sauceror`, 10],
+    [$class`Accordion Thief`, 13],
   ]),
-  default: 15,
+  default: 14,
 });
 
 export const SpellDamageQuest: Quest = {
@@ -72,6 +72,7 @@ export const SpellDamageQuest: Quest = {
       limit: { tries: 1 },
     },
     potionTask($item`tobiko marble soda`, true),
+    potionTask($item`cordial of concentration`, true),
     {
       name: "Barrel Prayer",
       class: $classes`Sauceror`,

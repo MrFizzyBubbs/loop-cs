@@ -36,7 +36,7 @@ import {
 import Macro from "../combat";
 import { Quest } from "../engine/task";
 import { byStat } from "../lib";
-import { beachTask, innerElfTask, potionTask, restoreBuffTasks, skillTask } from "./common";
+import { beachTask, innerElfTask, potionTask, skillTask } from "./common";
 
 const generalStoreItem = byStat({
   Muscle: $item`Ben-Gal™ Balm`,
@@ -179,7 +179,7 @@ export const LevelingQuest: Quest = {
       do: () => cliExecute("witchess"),
       limit: { tries: 1 },
     },
-    ...restoreBuffTasks([
+    ...[
       // Stat
       ...$effects`Big, Carol of the Thrills, Song of Bravado, Stevedave's Shanty of Superiority`,
       // ML
@@ -190,10 +190,16 @@ export const LevelingQuest: Quest = {
       ...$effects`Carol of the Bulls, Carol of the Hells, Frenzied\, Bloody, Ruthlessly Efficient`,
       // Survivability
       ...$effects`Astral Shell, Blood Bubble, Elemental Saucesphere, Ghostly Shell`,
-    ]),
+    ].map(skillTask),
     {
-      ...skillTask($skill`Inscrutable Gaze`),
-      class: $classes`Pastamancer, Sauceror`,
+      ...skillTask(
+        byStat({
+          Mysticality: $effect`Quiet Judgement`,
+          Moxie: $effect`Inscrutable Gaze`,
+          Muscle: $effect`Quiet Determination`,
+        })
+      ),
+      name: "Facial Expression",
     },
     // Summons
     ...$skills`Advanced Saucecrafting, Prevent Scurvy and Sobriety, Summon Crimbo Candy`.map(
@@ -207,7 +213,6 @@ export const LevelingQuest: Quest = {
       limit: { tries: 1 },
     },
     {
-      // TODO create cordial of concentration?
       name: "Saucecraft",
       ready: () => have(sauceFruit),
       completed: () => have(sauceEffect),
@@ -349,22 +354,29 @@ export const LevelingQuest: Quest = {
       limit: { tries: 40 },
     },
     {
-      name: "Snojo",
-      prepare: (): void => {
-        if (get("snojoSetting") === null) {
-          visitUrl("place.php?whichplace=snojo&action=snojo_controller");
-          runChoice(3);
-        }
+      name: "Set Snojo",
+      completed: () => !!get("snojoSetting"),
+      do: (): void => {
+        visitUrl("place.php?whichplace=snojo&action=snojo_controller");
+        runChoice(3);
       },
+    },
+    {
+      name: "Snojo",
       completed: () => get("_snojoFreeFights") >= 10,
       do: $location`The X-32-F Combat Training Snowman`,
-      post: (): void => {
-        if (get("_snojoFreeFights") === 10) cliExecute("hottub"); // Clean -stat effects
-      },
       combat: new CombatStrategy().macro(Macro.trySkill($skill`Bowl Straight Up`).default()),
       outfit: { shirt: $item`makeshift garbage shirt` },
       acquire: [{ item: $item`makeshift garbage shirt` }],
       limit: { tries: 10 },
+    },
+    {
+      name: "Post-Snojo Hottub",
+      completed: () =>
+        $effects`Snowballed, Half-Blooded, Half-Drained, Bruised, Relaxed Muscles, Hypnotized, Bad Haircut`.every(
+          (effect) => !have(effect)
+        ),
+      do: () => cliExecute("hottub"),
     },
     {
       name: "Eldritch Tentacle",
