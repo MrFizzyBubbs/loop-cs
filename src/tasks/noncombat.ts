@@ -18,11 +18,11 @@ export const NoncombatQuest: Quest = {
       do: () => CommunityService.Noncombat.run(() => undefined, 1),
       outfit: {
         hat: $item`very pointy crown`,
-        back: $item`protonic accelerator pack`,
         offhand: $item`unbreakable umbrella`,
+        back: $item`protonic accelerator pack`,
         shirt: $item`Jurassic Parka`,
-        pants: $item`pantogram pants`,
         familiar: $familiar`Disgeist`,
+        famequip: $item`tiny stillsuit`,
         modes: { umbrella: "cocoon", parka: "pterodactyl" },
       },
       effects: [

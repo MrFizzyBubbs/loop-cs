@@ -1,15 +1,34 @@
-import { cliExecute, mySign, use, visitUrl } from "kolmafia";
-import { $effect, $effects, $familiar, $item, CommunityService, get, have } from "libram";
+import { Class, cliExecute, mySign, use, visitUrl } from "kolmafia";
+import {
+  $class,
+  $classes,
+  $effect,
+  $effects,
+  $familiar,
+  $item,
+  $items,
+  $skill,
+  CommunityService,
+  get,
+  have,
+} from "libram";
 import { Quest } from "../engine/task";
-import { beachTask, meteorShowerTask, potionTask, restoreBuffTasks } from "./common";
+import { byClass } from "../lib";
+import { beachTask, meteorShowerTask, potionTask, restoreBuffTasks, skillTask } from "./common";
 
 const buffs = $effects`Empathy, Leash of Linguini, Blood Bond`;
+
+const maxTurns = byClass({
+  options: new Map<Class, number>([[$class`Accordion Thief`, 18]]),
+  default: 20,
+});
 
 export const FamiliarWeightQuest: Quest = {
   name: "Familiar Weight",
   completed: () => CommunityService.FamiliarWeight.isDone(),
   tasks: [
     ...restoreBuffTasks(buffs),
+    { ...skillTask($skill`Chorale of Companionship`), class: $classes`Accordion Thief` },
     potionTask($item`green candy heart`),
     beachTask($effect`Do I Know You From Somewhere?`),
     {
@@ -53,7 +72,7 @@ export const FamiliarWeightQuest: Quest = {
       ready: () => have($item`love song of icy revenge`),
       completed: () => have($effect`Cold Hearted`, 20),
       do: () => use($item`love song of icy revenge`),
-      limit: { tries: 2 },
+      limit: { tries: 4 },
     },
     {
       name: "Blue Taffy",
@@ -74,15 +93,15 @@ export const FamiliarWeightQuest: Quest = {
     {
       name: "Test",
       completed: () => CommunityService.FamiliarWeight.isDone(),
-      do: () => CommunityService.FamiliarWeight.run(() => undefined, 21),
+      do: () => CommunityService.FamiliarWeight.run(() => undefined, maxTurns),
       outfit: {
         hat: $item`Daylight Shavings Helmet`,
         weapon: $item`Fourth of May Cosplay Saber`,
-        offhand: $item`rope`, // TODO remove this?
+        offhand: $item`rope`,
         pants: $item`Great Wolf's beastly trousers`,
         acc1: $item`Brutal brogues`,
-        acc2: $item`hewn moon-rune spoon`,
-        acc3: $item`Beach Comb`,
+        acc2: $item`Beach Comb`,
+        acc3: $items`over-the-shoulder Folder Holder, hewn moon-rune spoon`,
         familiar: $familiar`Mini-Trainbot`,
         famequip: $item`overloaded Yule battery`,
       },

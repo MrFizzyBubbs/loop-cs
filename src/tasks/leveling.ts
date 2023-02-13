@@ -1,7 +1,6 @@
 import { CombatStrategy } from "grimoire-kolmafia";
 import {
   adv1,
-  buy,
   cliExecute,
   myClass,
   myPrimestat,
@@ -37,7 +36,7 @@ import {
 import Macro from "../combat";
 import { Quest } from "../engine/task";
 import { byStat } from "../lib";
-import { beachTask, innerElfTask, potionTask, skillTask } from "./common";
+import { beachTask, innerElfTask, potionTask, restoreBuffTasks, skillTask } from "./common";
 
 const generalStoreItem = byStat({
   Muscle: $item`Ben-Gal™ Balm`,
@@ -92,18 +91,20 @@ const synthPairs = byStat({
   ],
 });
 
+const LOVEquipment = byStat({
+  Muscle: $item`LOV Eardigan`,
+  Mysticality: $item`LOV Epaulettes`,
+  Moxie: $item`LOV Earrings`,
+});
+
 export const LevelingQuest: Quest = {
   name: "Leveling",
-  completed: () => get("csServicesPerformed").split(",").length > 1,
+  completed: () =>
+    get("csServicesPerformed").split(",").length > 1 || get("_neverendingPartyFreeTurns") >= 10,
   tasks: [
     innerElfTask(),
-    {
-      ...potionTask(generalStoreItem),
-      prepare: (): void => {
-        if (!have(generalStoreItem)) buy(1, generalStoreItem);
-      },
-    },
-    { ...potionTask($item`flask of baconstone juice`), class: $classes`Pastamancer, Turtle Tamer` }, // From juice bar
+    potionTask(generalStoreItem, true),
+    // { ...potionTask($item`flask of baconstone juice`), class: $classes`Pastamancer, Turtle Tamer` }, // From juice bar
     { ...potionTask($item`potion of temporary gr8ness`), class: $classes`Disco Bandit` }, // From juice bar
     { ...potionTask($item`pressurized potion of proficiency`), class: $classes`Accordion Thief` }, // From juice bar
     {
@@ -178,7 +179,7 @@ export const LevelingQuest: Quest = {
       do: () => cliExecute("witchess"),
       limit: { tries: 1 },
     },
-    ...[
+    ...restoreBuffTasks([
       // Stat
       ...$effects`Big, Carol of the Thrills, Song of Bravado, Stevedave's Shanty of Superiority`,
       // ML
@@ -189,13 +190,15 @@ export const LevelingQuest: Quest = {
       ...$effects`Carol of the Bulls, Carol of the Hells, Frenzied\, Bloody, Ruthlessly Efficient`,
       // Survivability
       ...$effects`Astral Shell, Blood Bubble, Elemental Saucesphere, Ghostly Shell`,
-    ].map(skillTask),
+    ]),
     {
       ...skillTask($skill`Inscrutable Gaze`),
       class: $classes`Pastamancer, Sauceror`,
     },
     // Summons
-    ...$skills`Advanced Saucecrafting, Prevent Scurvy and Sobriety`.map(skillTask),
+    ...$skills`Advanced Saucecrafting, Prevent Scurvy and Sobriety, Summon Crimbo Candy`.map(
+      skillTask
+    ),
     {
       name: "Get Range",
       completed: () => get("hasRange"),
@@ -335,14 +338,14 @@ export const LevelingQuest: Quest = {
       name: "Ten-Percent Bonus",
       completed: () => !have($item`a ten-percent bonus`),
       do: () => use($item`a ten-percent bonus`),
-      outfit: { offhand: $item`familiar scrapbook` },
+      outfit: { offhand: $item`familiar scrapbook`, equip: [LOVEquipment] },
       limit: { tries: 1 },
     },
     {
       name: "Chateau",
       completed: () => get("timesRested") >= totalFreeRests(),
       do: () => visitUrl("place.php?whichplace=chateau&action=chateau_restbox"),
-      outfit: { offhand: $item`familiar scrapbook` },
+      outfit: { offhand: $item`familiar scrapbook`, equip: [LOVEquipment] },
       limit: { tries: 40 },
     },
     {

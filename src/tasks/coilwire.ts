@@ -44,7 +44,6 @@ export const CoilWireQuest: Quest = {
       combat: new CombatStrategy().macro(
         Macro.skill($skill`Open a Big Red Present`).skill($skill`Bowl a Curveball`)
       ),
-      choices: { 1387: 3 },
       outfit: { familiar: $familiar`Crimbo Shrub` },
       limit: { tries: 2 }, // Skeletons in Store opening NC
     },

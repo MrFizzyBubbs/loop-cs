@@ -30,9 +30,9 @@ export const HotResQuest: Quest = {
       completed: () => CommunityService.HotRes.isDone(),
       do: () => CommunityService.HotRes.run(() => undefined, 1),
       outfit: {
-        back: $item`unwrapped knock-off retro superhero cape`,
         weapon: $item`Fourth of May Cosplay Saber`,
         offhand: $item`industrial fire extinguisher`,
+        back: $item`unwrapped knock-off retro superhero cape`,
         shirt: $item`Jurassic Parka`,
         pants: $item`designer sweatpants`,
         acc1: $item`Brutal brogues`,

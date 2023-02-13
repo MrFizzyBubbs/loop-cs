@@ -1,6 +1,7 @@
 import { CombatStrategy } from "grimoire-kolmafia";
 import { cliExecute, useSkill } from "kolmafia";
 import {
+  $classes,
   $effect,
   $effects,
   $familiar,
@@ -30,6 +31,7 @@ export const WeaponDamageQuest: Quest = {
     beachTask($effect`Lack of Body-Building`),
     {
       name: "Play Pool",
+      class: $classes`Seal Clubber, Turtle Tamer, Sauceror, Disco Bandit, Accordion Thief`,
       completed: () => have($effect`Billiards Belligerence`),
       do: () => cliExecute("pool 1"),
       limit: { tries: 1 },

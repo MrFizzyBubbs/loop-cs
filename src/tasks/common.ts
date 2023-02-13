@@ -88,13 +88,14 @@ export function beachTask(effect: Effect): Task {
   };
 }
 
-export function potionTask(item: Item): Task {
+export function potionTask(item: Item, acquire = false): Task {
   const effect = effectModifier(item, "Effect");
   return {
     name: effect.toString(),
-    ready: () => have(item),
+    ready: acquire ? undefined : () => have(item),
     completed: () => have(effect),
     do: () => use(item),
+    acquire: acquire ? [{ item }] : undefined,
   };
 }
 
@@ -174,7 +175,6 @@ export function deckTask(card: string): Task {
     name: `Cheat At Cards: ${card}`,
     ready: () => have($item`Deck of Every Card`) && get("_deckCardsDrawn") <= 10,
     completed: () => get("_deckCardsSeen").toLowerCase().split("|").includes(card.toLowerCase()),
-
     do: () => cliExecute(`cheat ${card.toLowerCase()}`),
   };
 }

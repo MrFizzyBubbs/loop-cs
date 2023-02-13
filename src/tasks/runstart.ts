@@ -30,11 +30,7 @@ import { byClass } from "../lib";
 import { args } from "../main";
 import { deckTask } from "./common";
 
-const PULLS = [
-  $item`Great Wolf's beastly trousers`,
-  $item`Stick-Knife of Loathing`,
-  $item`Staff of the Roaring Hearth`,
-];
+const PULLS = [$item`Great Wolf's beastly trousers`, $item`Stick-Knife of Loathing`];
 
 const BEST_INITIATIVE = byClass({
   options: new Map<Class, number>([
@@ -59,7 +55,7 @@ export const RunStartQuest: Quest = {
     },
     {
       name: "Garden",
-      completed: () => getCampground()[$item`peppermint sprout`.name] === 0,
+      completed: () => [0, undefined].includes(getCampground()[$item`peppermint sprout`.name]),
       do: () => cliExecute("garden pick"),
       limit: { tries: 1 },
     },
@@ -232,7 +228,7 @@ export const RunStartQuest: Quest = {
     },
     {
       name: "Fallbot",
-      completed: () => !AutumnAton.available(),
+      completed: () => !AutumnAton.available() || get("_autumnatonQuests") > 0,
       do: () => AutumnAton.sendTo($location`The Sleazy Back Alley`),
     },
   ],

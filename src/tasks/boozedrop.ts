@@ -86,10 +86,10 @@ export const BoozeDropQuest: Quest = {
       name: "Anticheese",
       completed: () => get("lastAnticheeseDay") === 1,
       do: () => visitUrl("place.php?whichplace=desertbeach&action=db_nukehouse"),
-      acquire: [{ item: $item`bitchin' meatcar` }], // Need ~500 meat for meatcar
+      // acquire: [{ item: $item`bitchin' meatcar` }], // Need ~500 meat for meatcar
       limit: { tries: 1 },
     },
-    { ...potionTask($item`government cheese`), acquire: [{ item: $item`government cheese` }] },
+    potionTask($item`government`, true),
     potionTask($item`bag of grain`),
     potionTask($item`autumn leaf`),
     {
@@ -98,8 +98,8 @@ export const BoozeDropQuest: Quest = {
       do: () => CommunityService.BoozeDrop.run(() => undefined, 1),
       outfit: {
         hat: $item`wad of used tape`,
-        back: $item`vampyric cloake`,
         offhand: $item`unbreakable umbrella`,
+        back: $item`vampyric cloake`,
         acc1: $item`Guzzlr tablet`,
         acc2: $item`gold detective badge`,
         acc3: $item`your cowboy boots`,

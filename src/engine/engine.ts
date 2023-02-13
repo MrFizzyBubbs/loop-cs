@@ -1,14 +1,25 @@
 import { Task } from "./task";
 import { Engine as BaseEngine, Outfit } from "grimoire-kolmafia";
 import { $effect, $skill, have } from "libram";
-import { myClass, myHp, myMaxhp, useSkill } from "kolmafia";
+import { myClass, myHp, myMaxhp, userConfirm, useSkill } from "kolmafia";
 import { equipDefaults } from "./outfit";
 
 export class Engine extends BaseEngine<never, Task> {
+  confirmed: Set<string>;
+
   constructor(tasks: Task[]) {
     // Remove tasks for other classes
     tasks = tasks.filter((task) => !task.class || task.class.includes(myClass()));
     super(tasks);
+    this.confirmed = new Set();
+  }
+
+  execute(task: Task): void {
+    if (!this.confirmed.has(task.name) && !userConfirm(`Executing ${task.name}, continue?`)) {
+      throw `User requested abort`;
+    }
+    this.confirmed.add(task.name);
+    super.execute(task);
   }
 
   dress(task: Task, outfit: Outfit): void {
