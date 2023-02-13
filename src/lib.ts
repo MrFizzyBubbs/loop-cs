@@ -25,8 +25,5 @@ export function byClass<T>(thing: ClassSwitch<T>): T {
 }
 export function byStat<T>(thing: StatSwitch<T>): T {
   const stat = myPrimestat().toString();
-  if ("default" in thing) {
-    return thing[stat] ?? thing.default;
-  }
-  return thing[stat];
+  return "default" in thing ? thing[stat] ?? thing.default : thing[stat];
 }
