@@ -84,9 +84,8 @@ export const BoozeDropQuest: Quest = {
     skillTask($skill`Fat Leon's Phat Loot Lyric`),
     {
       name: "Anticheese",
-      completed: () => get("lastAnticheeseDay") === 1,
+      completed: () => get("lastAnticheeseDay") > 0,
       do: () => visitUrl("place.php?whichplace=desertbeach&action=db_nukehouse"),
-      // acquire: [{ item: $item`bitchin' meatcar` }], // Need ~500 meat for meatcar
       limit: { tries: 1 },
     },
     potionTask($item`government`, true),

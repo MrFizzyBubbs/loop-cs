@@ -1,4 +1,4 @@
-import { Class, cliExecute, mySign, use, visitUrl } from "kolmafia";
+import { canAdventure, Class, cliExecute, knollAvailable, mySign, use, visitUrl } from "kolmafia";
 import {
   $class,
   $classes,
@@ -93,6 +93,18 @@ export const FamiliarWeightQuest: Quest = {
       completed: () => have($effect`Blue Swayed`, 50),
       do: () => use($item`pulled blue taffy`),
       limit: { tries: 5 },
+    },
+    {
+      name: "Unlock Beach",
+      completed: () => canAdventure($location`South of the Border`),
+      do: (): void => {
+        const desertAccessItem = knollAvailable()
+          ? $item`bitchin' meatcar`
+          : $item`Desert Bus pass`;
+        if (!have(desertAccessItem)) {
+          cliExecute(`acquire ${desertAccessItem.name}`);
+        }
+      },
     },
     {
       name: "Tune Moon",

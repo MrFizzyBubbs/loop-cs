@@ -10,7 +10,7 @@ import { FamiliarWeightQuest } from "./tasks/familiarweight";
 import { HotResQuest } from "./tasks/hotres";
 import { LevelingQuest } from "./tasks/leveling";
 import { NoncombatQuest } from "./tasks/noncombat";
-import { RunStartQuest } from "./tasks/runstart";
+import { PrologueQuest } from "./tasks/prologue";
 import { SpellDamageQuest } from "./tasks/spelldamage";
 import StatTests from "./tasks/stat";
 import { WeaponDamageQuest } from "./tasks/weapondamage";
@@ -49,7 +49,7 @@ export function main(command?: string): void {
 
   const tasks = getTasks([
     DietQuest,
-    RunStartQuest,
+    PrologueQuest,
     CoilWireQuest,
     LevelingQuest,
     ...StatTests,

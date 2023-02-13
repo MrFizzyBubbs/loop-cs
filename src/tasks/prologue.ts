@@ -48,8 +48,8 @@ const BEST_INITIATIVE = byClass({
   default: 0,
 });
 
-export const RunStartQuest: Quest = {
-  name: "Run Start",
+export const PrologueQuest: Quest = {
+  name: "Prologue",
   tasks: [
     {
       name: "Workshed",
@@ -150,20 +150,6 @@ export const RunStartQuest: Quest = {
       do: () => visitUrl("place.php?whichplace=town_wrong&action=townwrong_precinct"),
       limit: { tries: 1 },
     },
-    // {
-    //   name: "Pantogramming",
-    //   completed: () => Pantogram.havePants(),
-    //   do: (): void => {
-    //     Pantogram.makePants(
-    //       "Mysticality",
-    //       "Hot Resistance: 2",
-    //       "Maximum HP: 40",
-    //       "Combat Rate: -5",
-    //       "Spell Damage Percent: 20"
-    //     );
-    //   },
-    //   limit: { tries: 1 },
-    // },
     {
       name: "Mummery",
       completed: () => get("_mummeryMods").includes(myPrimestat().toString()),
