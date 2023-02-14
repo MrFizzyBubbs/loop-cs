@@ -6,7 +6,6 @@ import {
   $effects,
   $familiar,
   $item,
-  $items,
   $location,
   $skill,
   CommunityService,
@@ -31,7 +30,7 @@ const outfit = {
   pants: $item`Great Wolf's beastly trousers`,
   acc1: $item`Brutal brogues`,
   acc2: $item`Beach Comb`,
-  acc3: $items`over-the-shoulder Folder Holder, hewn moon-rune spoon`,
+  acc3: $item`hewn moon-rune spoon`,
   familiar: $familiar`Mini-Trainbot`,
   famequip: $item`overloaded Yule battery`,
 };
