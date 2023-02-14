@@ -19,6 +19,7 @@ import {
 } from "libram";
 import Macro from "../combat";
 import { Quest } from "../engine/task";
+import { burnLibrams } from "../lib";
 
 export const CoilWireQuest: Quest = {
   name: "Coil Wire",
@@ -109,6 +110,7 @@ export const CoilWireQuest: Quest = {
     {
       name: "Test",
       completed: () => CommunityService.CoilWire.isDone(),
+      prepare: burnLibrams,
       do: () => CommunityService.CoilWire.run(() => undefined),
       outfit: {
         hat: $item`Iunion Crown`,

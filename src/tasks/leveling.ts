@@ -35,7 +35,7 @@ import {
 } from "libram";
 import Macro from "../combat";
 import { Quest } from "../engine/task";
-import { byStat } from "../lib";
+import { burnLibrams, byStat } from "../lib";
 import { beachTask, innerElfTask, potionTask, skillTask } from "./common";
 
 const generalStoreItem = byStat({
@@ -318,6 +318,7 @@ export const LevelingQuest: Quest = {
     {
       name: "LOV Tunnel",
       completed: () => get("_loveTunnelUsed"),
+      prepare: burnLibrams,
       do: () =>
         TunnelOfLove.fightAll(
           byStat({
@@ -349,6 +350,7 @@ export const LevelingQuest: Quest = {
     {
       name: "Chateau",
       completed: () => get("timesRested") >= totalFreeRests(),
+      prepare: burnLibrams,
       do: () => visitUrl("place.php?whichplace=chateau&action=chateau_restbox"),
       outfit: { offhand: $item`familiar scrapbook`, equip: [LOVEquipment] },
       limit: { tries: 40 },
