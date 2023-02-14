@@ -25,6 +25,10 @@ export const args = Args.create("loopcs", "A script to complete community servic
     help: "Name of clan that has Mother Slime ready in The Slime Tube.",
     default: "Hobopolis Vacation Home",
   }),
+  confirm: Args.flag({
+    help: "Whether the user must confirm execution of each unique task.",
+    default: false,
+  }),
   list: Args.flag({
     help: "Show the status of all tasks and exit.",
     setting: "",

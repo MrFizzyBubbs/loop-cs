@@ -3,6 +3,7 @@ import { Engine as BaseEngine, Outfit } from "grimoire-kolmafia";
 import { $effect, $skill, have } from "libram";
 import { myClass, myHp, myMaxhp, userConfirm, useSkill } from "kolmafia";
 import { equipDefaults } from "./outfit";
+import { args } from "../main";
 
 export class Engine extends BaseEngine<never, Task> {
   confirmed: Set<string>;
@@ -15,7 +16,11 @@ export class Engine extends BaseEngine<never, Task> {
   }
 
   execute(task: Task): void {
-    if (!this.confirmed.has(task.name) && !userConfirm(`Executing ${task.name}, continue?`)) {
+    if (
+      args.confirm &&
+      !this.confirmed.has(task.name) &&
+      !userConfirm(`Executing ${task.name}, continue?`)
+    ) {
       throw `User requested abort`;
     }
     this.confirmed.add(task.name);
