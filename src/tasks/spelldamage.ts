@@ -7,7 +7,6 @@ import {
   myLevel,
   myMaxhp,
   numericModifier,
-  storageAmount,
   takeStorage,
   useSkill,
 } from "kolmafia";
@@ -26,10 +25,13 @@ import {
 } from "libram";
 import Macro from "../combat";
 import { Quest } from "../engine/task";
-import { byClass } from "../lib";
+import { byClass, byStat } from "../lib";
 import { innerElfTask, meteorShowerTask, potionTask, skillTask } from "./common";
 
-const chefstaves = $items`Staff of the Roaring Hearth, Staff of Simmering Hatred`;
+const chefstaff = byStat({
+  Mysticality: $item`Staff of the Roaring Hearth`,
+  default: $item`Staff of Simmering Hatred`,
+});
 
 const maxTurns = byClass({
   options: new Map<Class, number>([
@@ -107,10 +109,12 @@ export const SpellDamageQuest: Quest = {
     meteorShowerTask(),
     {
       name: "Pull Staff",
-      completed: () => chefstaves.some((staff) => have(staff)),
+      completed: () => have(chefstaff),
       do: (): void => {
-        const staff = chefstaves.find((s) => storageAmount(s) > 0 && canEquip(s));
-        if (staff) takeStorage(staff, 1);
+        if (!canEquip(chefstaff)) {
+          throw `Unable to equip chefstaff ${chefstaff}`;
+        }
+        takeStorage(chefstaff, 1);
       },
     },
     {
@@ -119,7 +123,7 @@ export const SpellDamageQuest: Quest = {
       do: () => CommunityService.SpellDamage.run(() => undefined, maxTurns),
       outfit: {
         hat: $items`astral chapeau, Hollandaise helmet, none`,
-        weapon: chefstaves,
+        weapon: chefstaff,
         offhand: $items`Abracandalabra, weeping willow wand`,
         acc1: $item`battle broom`,
         acc2: $item`Powerful Glove`,

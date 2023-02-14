@@ -97,6 +97,8 @@ const LOVEquipment = byStat({
   Moxie: $item`LOV Earrings`,
 });
 
+// TODO move general store potion after casting buffs to preserve MP
+// TODO acquire sewer items as a task to minimize pant switching
 export const LevelingQuest: Quest = {
   name: "Leveling",
   completed: () =>
@@ -194,9 +196,9 @@ export const LevelingQuest: Quest = {
     {
       ...skillTask(
         byStat({
-          Mysticality: $effect`Quiet Judgement`,
-          Moxie: $effect`Inscrutable Gaze`,
           Muscle: $effect`Quiet Determination`,
+          Mysticality: $effect`Inscrutable Gaze`,
+          Moxie: $effect`Quiet Desperation`,
         })
       ),
       name: "Facial Expression",

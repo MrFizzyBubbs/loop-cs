@@ -14,7 +14,7 @@ import {
 } from "libram";
 import { Quest } from "../engine/task";
 import { byClass } from "../lib";
-import { asdonTask, beachTask, meteorShowerTask, potionTask, skillTask } from "./common";
+import { beachTask, meteorShowerTask, potionTask, skillTask } from "./common";
 
 const buffs = $effects`Empathy, Leash of Linguini, Blood Bond`;
 
@@ -22,18 +22,6 @@ const maxTurns = byClass({
   options: new Map<Class, number>([[$class`Accordion Thief`, 18]]),
   default: 20,
 });
-
-const outfit = {
-  hat: $item`Daylight Shavings Helmet`,
-  weapon: $item`Fourth of May Cosplay Saber`,
-  offhand: $item`rope`,
-  pants: $item`Great Wolf's beastly trousers`,
-  acc1: $item`Brutal brogues`,
-  acc2: $item`Beach Comb`,
-  acc3: $item`hewn moon-rune spoon`,
-  familiar: $familiar`Mini-Trainbot`,
-  famequip: $item`overloaded Yule battery`,
-};
 
 export const FamiliarWeightQuest: Quest = {
   name: "Familiar Weight",
@@ -112,14 +100,23 @@ export const FamiliarWeightQuest: Quest = {
       do: () => cliExecute("spoon platypus"),
       limit: { tries: 1 },
     },
+    meteorShowerTask(),
     potionTask($item`silver face paint`),
-    asdonTask("Waterproofly"),
-    { ...meteorShowerTask(), do: $location`The Ice Hole`, outfit: outfit },
     {
       name: "Test",
       completed: () => CommunityService.FamiliarWeight.isDone(),
       do: () => CommunityService.FamiliarWeight.run(() => undefined, maxTurns),
-      outfit: outfit,
+      outfit: {
+        hat: $item`Daylight Shavings Helmet`,
+        weapon: $item`Fourth of May Cosplay Saber`,
+        offhand: $item`rope`,
+        pants: $item`Great Wolf's beastly trousers`,
+        acc1: $item`Brutal brogues`,
+        acc2: $item`Beach Comb`,
+        acc3: $item`hewn moon-rune spoon`,
+        familiar: $familiar`Mini-Trainbot`,
+        famequip: $item`overloaded Yule battery`,
+      },
       limit: { tries: 1 },
     },
   ],
