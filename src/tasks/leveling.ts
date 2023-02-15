@@ -38,7 +38,7 @@ import { Quest } from "../engine/task";
 import { burnLibrams, byStat } from "../lib";
 import { beachTask, innerElfTask, potionTask, skillTask } from "./common";
 
-const generalStoreItem = byStat({
+export const generalStoreItem = byStat({
   Muscle: $item`Ben-Gal™ Balm`,
   Mysticality: $item`glittery mascara`,
   Moxie: $item`hair spray`,
@@ -97,16 +97,14 @@ const LOVEquipment = byStat({
   Moxie: $item`LOV Earrings`,
 });
 
-// TODO move general store potion after casting buffs to preserve MP
-// TODO acquire sewer items as a task to minimize pant switching
 export const LevelingQuest: Quest = {
   name: "Leveling",
   completed: () =>
     get("csServicesPerformed").split(",").length > 1 || get("_neverendingPartyFreeTurns") >= 10,
   tasks: [
     innerElfTask(),
-    potionTask(generalStoreItem, true),
-    // { ...potionTask($item`flask of baconstone juice`), class: $classes`Pastamancer, Turtle Tamer` }, // From juice bar
+    potionTask(generalStoreItem),
+    { ...potionTask($item`flask of baconstone juice`), class: $classes`Pastamancer, Turtle Tamer` }, // From juice bar
     { ...potionTask($item`potion of temporary gr8ness`), class: $classes`Disco Bandit` }, // From juice bar
     { ...potionTask($item`pressurized potion of proficiency`), class: $classes`Accordion Thief` }, // From juice bar
     {

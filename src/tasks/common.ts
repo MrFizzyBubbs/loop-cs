@@ -89,7 +89,7 @@ export function beachTask(effect: Effect): Task {
 export function potionTask(item: Item, acquire = false): Task {
   const effect = effectModifier(item, "Effect");
   return {
-    name: effect.toString(),
+    name: item.toString(),
     ready: acquire ? undefined : () => have(item),
     completed: () => have(effect),
     do: () => use(item),
@@ -120,25 +120,6 @@ export function skillTask(x: Skill | Effect): Task {
     };
   }
 }
-
-// export function songTasks(songs: (Skill | Effect)[]): Task[] {
-//   const songEffects = songs.map((song) => (song instanceof Effect ? song : toEffect(song)));
-
-//   return songEffects.map((songEffect) => ({
-//     name: songEffect.name,
-//     ready: () => myMp() >= mpCost(toSkill(songEffect)),
-//     completed: () => have(songEffect),
-//     prepare: () => {
-//       const extraSongs = Object.keys(myEffects())
-//         .map((effectName) => toEffect(effectName))
-//         .filter((effect) => isSong(effect) && !songEffects.includes(effect));
-//       extraSongs.slice(0, maxSongs() - songs.length).forEach((effect) => {
-//         if (have(effect)) cliExecute(`shrug ${effect}`);
-//       });
-//     },
-//     do: () => useSkill(toSkill(songEffect)),
-//   }));
-// }
 
 export function asdonTask(style: Effect | keyof typeof AsdonMartin.Driving): Task {
   const effect = style instanceof Effect ? style : AsdonMartin.Driving[style];
