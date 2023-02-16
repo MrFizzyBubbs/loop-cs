@@ -1,5 +1,5 @@
-import { mpCost } from "kolmafia";
-import { $item, $skill, StrictMacro } from "libram";
+import { mpCost, myClass } from "kolmafia";
+import { $item, $skill, $stat, StrictMacro } from "libram";
 
 export default class Macro extends StrictMacro {
   delevel(): Macro {
@@ -22,7 +22,14 @@ export default class Macro extends StrictMacro {
   }
 
   kill(): Macro {
-    return this.while_(`!mpbelow ${mpCost($skill`Saucestorm`)}`, Macro.skill($skill`Saucestorm`))
+    return this.externalIf(
+      myClass().primestat === $stat`Muscle`,
+      Macro.while_(
+        `!mpbelow ${mpCost($skill`Lunging Thrust-Smack`)}`,
+        Macro.skill($skill`Lunging Thrust-Smack`)
+      ),
+      Macro.while_(`!mpbelow ${mpCost($skill`Saucestorm`)}`, Macro.skill($skill`Saucestorm`))
+    )
       .attack()
       .repeat();
   }

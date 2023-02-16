@@ -14,6 +14,7 @@ import {
   $class,
   $classes,
   $effect,
+  $effects,
   $familiar,
   $item,
   $items,
@@ -46,8 +47,9 @@ export const SpellDamageQuest: Quest = {
   name: "Spell Damage",
   completed: () => CommunityService.SpellDamage.isDone(),
   tasks: [
-    skillTask($skill`Simmer`),
-    skillTask($skill`Spirit of Cayenne`),
+    ...$effects`Arched Eyebrow of the Archmage, Carol of the Hells, Jackasses' Symphony of Destruction, Simmering, Song of Sauce, Spirit of Cayenne`.map(
+      skillTask
+    ),
     { ...skillTask($skill`Elron's Explosive Etude`), class: $classes`Accordion Thief` },
     {
       name: "Play Pool",
@@ -131,17 +133,6 @@ export const SpellDamageQuest: Quest = {
         familiar: $familiar`Disembodied Hand`,
         famequip: $item`Stick-Knife of Loathing`,
       },
-      effects: [
-        $effect`Arched Eyebrow of the Archmage`,
-        $effect`Carol of the Hells`,
-        $effect`Concentration`,
-        $effect`Cowrruption`,
-        $effect`Jackasses' Symphony of Destruction`,
-        $effect`Mental A-cue-ity`,
-        $effect`Pisces in the Skyces`,
-        $effect`Sigils of Yeg`,
-        $effect`Song of Sauce`,
-      ],
       limit: { tries: 1 },
     },
   ],

@@ -6,7 +6,6 @@ import {
   $items,
   $location,
   $skill,
-  AsdonMartin,
   CommunityService,
   get,
   have,
@@ -16,7 +15,7 @@ import {
 import { Quest } from "../engine/task";
 import { CombatStrategy } from "grimoire-kolmafia";
 import { cliExecute, useSkill, visitUrl } from "kolmafia";
-import { deckTask, potionTask, skillTask } from "./common";
+import { asdonTask, deckTask, potionTask, skillTask } from "./common";
 
 export const BoozeDropQuest: Quest = {
   name: "Booze Drop",
@@ -32,7 +31,6 @@ export const BoozeDropQuest: Quest = {
       limit: { tries: 1 },
     },
     potionTask($item`government`, true),
-    potionTask($item`bag of grain`),
     potionTask($item`autumn leaf`),
     {
       name: "Batform",
@@ -73,13 +71,8 @@ export const BoozeDropQuest: Quest = {
       do: () => SourceTerminal.enhance($effect`items.enh`),
       limit: { tries: 1 },
     },
-    {
-      name: "Driving Observantly",
-      completed: () => have($effect`Driving Observantly`),
-      prepare: () => AsdonMartin.insertFuel($item`20-lb can of rice and beans`),
-      do: () => AsdonMartin.drive($effect`Driving Observantly`),
-      limit: { tries: 1 },
-    },
+    asdonTask("Observantly"),
+    potionTask($item`bag of grain`),
     {
       name: "Steely-Eyed Squint",
       completed: () => have($effect`Steely-Eyed Squint`),

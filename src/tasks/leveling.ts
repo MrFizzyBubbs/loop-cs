@@ -181,9 +181,7 @@ export const LevelingQuest: Quest = {
     },
     ...[
       // Stat
-      ...$effects`Big, Carol of the Thrills, Song of Bravado, Stevedave's Shanty of Superiority`,
-      // ML
-      ...$effects`Drescher's Annoying Noise, Pride of the Puffin, Ur-Kel's Aria of Annoyance`,
+      ...$effects`Big, Carol of the Thrills, Song of Bravado, Stevedave's Shanty of Superiority, Rage of the Reindeer`,
       // Fam weight
       ...$effects`Blood Bond, Empathy, Leash of Linguini`,
       // Damage
@@ -322,8 +320,8 @@ export const LevelingQuest: Quest = {
       do: () =>
         TunnelOfLove.fightAll(
           byStat({
-            Mysticality: "LOV Epaulettes",
             Muscle: "LOV Eardigan",
+            Mysticality: "LOV Epaulettes",
             Moxie: "LOV Earring",
           }),
           "Open Heart Surgery",
@@ -331,7 +329,7 @@ export const LevelingQuest: Quest = {
         ),
       combat: new CombatStrategy().macro(
         Macro.if_($monster`LOV Enforcer`, Macro.attack().repeat())
-          .if_($monster`LOV Engineer`, Macro.skill($skill`Candyblast`).repeat())
+          .if_($monster`LOV Engineer`, Macro.skill($skill`Weapon of the Pastalord`).repeat())
           .if_($monster`LOV Equivocator`, Macro.default())
       ),
       outfit: { shirt: $item`makeshift garbage shirt` },
@@ -412,10 +410,17 @@ export const LevelingQuest: Quest = {
       do: () => Witchess.fightPiece($monster`Witchess Witch`),
       combat: new CombatStrategy().macro(
         Macro.trySkill($skill`Curse of Weaksauce`)
-          .attack()
+          .trySkill($skill`Micrometeorite`)
+          .trySkill($skill`Summon Love Stinkbug`)
+          .skill($skill`Lunging Thrust-Smack`)
           .repeat()
       ),
-      outfit: { shirt: $item`makeshift garbage shirt` },
+      outfit: {
+        weapon: $item`Fourth of May Cosplay Saber`,
+        offhand: $item`familiar scrapbook`,
+        shirt: $item`makeshift garbage shirt`,
+        familiar: $familiar`Shorter-Order Cook`,
+      },
       acquire: [{ item: $item`makeshift garbage shirt` }],
       limit: { tries: 1 },
     },
@@ -426,11 +431,15 @@ export const LevelingQuest: Quest = {
       do: () => Witchess.fightPiece($monster`Witchess King`),
       combat: new CombatStrategy().macro(
         Macro.delevel()
-          .skill($skill`Portscan`) // Portscan so government agent appears in DMT later
+          .skill($skill`Portscan`) // So government agent appears in DMT later
           .attack()
           .repeat()
       ),
-      outfit: { shirt: $item`makeshift garbage shirt` },
+      outfit: {
+        weapon: $item`Fourth of May Cosplay Saber`,
+        offhand: $item`familiar scrapbook`,
+        shirt: $item`makeshift garbage shirt`,
+      },
       acquire: [{ item: $item`makeshift garbage shirt` }],
       limit: { tries: 1 },
     },
@@ -443,16 +452,24 @@ export const LevelingQuest: Quest = {
           .attack()
           .repeat()
       ),
-      outfit: { shirt: $item`makeshift garbage shirt` },
+      outfit: {
+        weapon: $item`Fourth of May Cosplay Saber`,
+        offhand: $item`familiar scrapbook`,
+        shirt: $item`makeshift garbage shirt`,
+      },
       acquire: [{ item: $item`makeshift garbage shirt` }],
       limit: { tries: 3 },
     },
+    // Pump ML after witchess fights
+    ...$effects`Drescher's Annoying Noise, Pride of the Puffin, Ur-Kel's Aria of Annoyance`.map(
+      skillTask
+    ),
     {
       name: "Deep Machine Tunnels",
       completed: () => get("_machineTunnelsAdv") >= 5,
       do: $location`The Deep Machine Tunnels`,
       combat: new CombatStrategy().macro(
-        Macro.if_($monster`Government agent`, Macro.skill($skill`Disintegrate`)).default()
+        Macro.if_($monster`Government agent`, Macro.skill($skill`Disintegrate`)).default() // TODO don't YR, otoscope instead
       ),
       outfit: {
         shirt: $item`makeshift garbage shirt`,

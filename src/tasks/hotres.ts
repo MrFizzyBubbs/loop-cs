@@ -1,13 +1,31 @@
 import { CombatStrategy } from "grimoire-kolmafia";
-import { $effect, $familiar, $item, $location, $skill, CommunityService, get, have } from "libram";
+import { useSkill } from "kolmafia";
+import {
+  $effect,
+  $effects,
+  $familiar,
+  $item,
+  $location,
+  $skill,
+  CommunityService,
+  get,
+  have,
+} from "libram";
 import Macro from "../combat";
 import { Quest } from "../engine/task";
-import { beachTask } from "./common";
+import { beachTask, skillTask } from "./common";
 
 export const HotResQuest: Quest = {
   name: "Hot Res",
   completed: () => CommunityService.HotRes.isDone(),
   tasks: [
+    ...$effects`Astral Shell, Elemental Saucesphere, Empathy, Leash of Linguini`.map(skillTask),
+    {
+      name: "Feel Peaceful",
+      completed: () => get("_feelPeacefulUsed") > 0,
+      do: () => useSkill($skill`Feel Peaceful`),
+      limit: { tries: 1 },
+    },
     beachTask($effect`Hot-Headed`),
     {
       name: "Foam Suit",
@@ -42,14 +60,6 @@ export const HotResQuest: Quest = {
         famequip: $item`tiny stillsuit`,
         modes: { retrocape: ["vampire", "hold"], parka: "pterodactyl" },
       },
-      effects: [
-        $effect`Astral Shell`,
-        $effect`Elemental Saucesphere`,
-        $effect`Empathy`,
-        $effect`Feeling Peaceful`,
-        $effect`Leash of Linguini`,
-        $effect`Sleazy Hands`,
-      ],
       limit: { tries: 1 },
     },
   ],
