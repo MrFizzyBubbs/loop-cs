@@ -1,6 +1,6 @@
 # loop-cs
 
-`loop-cs` is a script for looping softcore Community Service runs designed to work if you are me, [Baden (#2460823)](https://cheesellc.com/kol/profile.php?u=Baden). It is built using the task-based engine from [grimoire](https://github.com/Loathing-Associates-Scripting-Society/grimoire) and achieves a 105-turn run with 0/4/2 organ use. This script is a greatly improved version of my previous Community Service script, [fizz-sccs](https://github.com/MrFizzyBubbs/fizz-sccs).
+`loop-cs` is a script for looping softcore Community Service runs designed to work if you are me, [Baden (#2460823)](https://api.aventuristo.net/av-snapshot?u=Baden). It is built using the task-based engine from [grimoire](https://github.com/Loathing-Associates-Scripting-Society/grimoire) and achieves an cost-optimal(ish) run with 0/4/1 organ use for any class. This script is a greatly improved version of my previous Community Service script: [fizz-sccs](https://github.com/MrFizzyBubbs/fizz-sccs).
 
 ## Installation
 
@@ -33,83 +33,92 @@ If you meet the requirements in the following sections, there is a good chance t
 - All 11 beach heads unlocked for the [Beach Comb](https://kol.coldfront.net/thekolwiki/index.php/Beach_Comb)
 - [Chateau Mantegna](https://kol.coldfront.net/thekolwiki/index.php/Chateau_Mantegna) containing:
   - ceiling fan
-  - foreign language tapes
+  - class-appropriate nightstand
   - continental juice bar
 - [Gold detective badge](https://kol.coldfront.net/thekolwiki/index.php/Gold_detective_badge) purchased from the [11th Precinct](https://kol.coldfront.net/thekolwiki/index.php/The_Precinct)
-- [Your cowboy boots](https://kol.coldfront.net/thekolwiki/index.php/Your_cowboy_boots) modified with [nicksilver spurs](https://kol.coldfront.net/thekolwiki/index.php/Nicksilver_spurs) and [frontwinder skin](https://kol.coldfront.net/thekolwiki/index.php/Frontwinder_skin) (items drop and mysticality)
+- [Your cowboy boots](https://kol.coldfront.net/thekolwiki/index.php/Your_cowboy_boots) modified with [nicksilver spurs](https://kol.coldfront.net/thekolwiki/index.php/Nicksilver_spurs) and class-appropriate skin
 - [Peppermint patch](https://kol.coldfront.net/thekolwiki/index.php/A_Peppermint_Patch) growing in your garden
 - [Source Terminal](https://kol.coldfront.net/thekolwiki/index.php/Source_Terminal) fully upgraded
 - [Spacegate Vaccination Machine](https://kol.coldfront.net/thekolwiki/index.php/Spacegate_Vaccination_Machine) with the [Broad-Spectrum Vaccine](https://kol.coldfront.net/thekolwiki/index.php/Broad-Spectrum_Vaccine) unlocked
 - All 150 [Witchess puzzles](https://kol.coldfront.net/thekolwiki/index.php/Witchess_Puzzles) completed
 - Eudora set to [Our Daily Candles™ order form](https://kol.coldfront.net/thekolwiki/index.php/Our_Daily_Candles%E2%84%A2_order_form)
-- An [ungulith](https://kol.coldfront.net/thekolwiki/index.php/Ungulith) in your [combat lover's locket](https://kol.coldfront.net/thekolwiki/index.php/Combat_lover%27s_locket)
+- An [ungulith](https://kol.coldfront.net/thekolwiki/index.php/Ungulith) and [Evil Olive](https://kol.coldfront.net/thekolwiki/index.php/Evil_Olive) in your [combat lover's locket](https://kol.coldfront.net/thekolwiki/index.php/Combat_lover%27s_locket)
 
 ### In Valhalla
 
 - astral six-pack from The Deli Lama
 - astral chapeau from Pet Heaven
-- Pastamancer class
-- Wallaby moon sign
+- class-appropriate knoll moon sign
 
-### Resources
+### Owned Resources
 
-| Resource                                                                                                                      | Type       |
-| ----------------------------------------------------------------------------------------------------------------------------- | ---------- |
-| [Beach Comb](https://kol.coldfront.net/thekolwiki/index.php/Beach_Comb)                                                       | Accessory  |
-| [combat lover's locket](https://kol.coldfront.net/thekolwiki/index.php/Combat_lover%27s_locket)                               | Accessory  |
-| [hewn moon-rune spoon](https://kol.coldfront.net/thekolwiki/index.php/Hewn_moon-rune_spoon)                                   | Accessory  |
-| [Kremlin's Greatest Briefcase](https://kol.coldfront.net/thekolwiki/index.php/Kremlin%27s_Greatest_Briefcase)                 | Accessory  |
-| [protonic accelerator pack](https://kol.coldfront.net/thekolwiki/index.php/Protonic_accelerator_pack)                         | Back       |
-| [vampyric cloake](https://kol.coldfront.net/thekolwiki/index.php/Vampyric_cloake)                                             | Back       |
-| [Peppermint Pip Packet](https://kol.coldfront.net/thekolwiki/index.php/Peppermint_Pip_Packet)                                 | Campground |
-| [Source Terminal](https://kol.coldfront.net/thekolwiki/index.php/Source_Terminal)                                             | Campground |
-| [Witchess Set](https://kol.coldfront.net/thekolwiki/index.php/Witchess_Set)                                                   | Campground |
-| [Clan VIP Lounge invitation](https://kol.coldfront.net/thekolwiki/index.php/Clan_VIP_Lounge_invitation)                       | Clan       |
-| [Our Daily Candles™ order form](https://kol.coldfront.net/thekolwiki/index.php/Our_Daily_Candles%E2%84%A2_order_form)         | Eudora     |
-| [MayDay™ contract](https://kol.coldfront.net/thekolwiki/index.php/MayDay%E2%84%A2_contract)                                   | Eudora-ish |
-| [Crimbo Shrub](https://kol.coldfront.net/thekolwiki/index.php/Crimbo_Shrub)                                                   | Familiar   |
-| [Disgeist](<https://kol.coldfront.net/thekolwiki/index.php/Disgeist_(familiar)>)                                              | Familiar   |
-| [Exotic Parrot](https://kol.coldfront.net/thekolwiki/index.php/Exotic_Parrot)                                                 | Familiar   |
-| [Ghost of Crimbo Carols](https://kol.coldfront.net/thekolwiki/index.php/Ghost_of_Crimbo_Carols)                               | Familiar   |
-| [God Lobster](https://kol.coldfront.net/thekolwiki/index.php/God_Lobster)                                                     | Familiar   |
-| [Left-Hand Man](https://kol.coldfront.net/thekolwiki/index.php/Left-Hand_Man)                                                 | Familiar   |
-| [Machine Elf](https://kol.coldfront.net/thekolwiki/index.php/Machine_Elf)                                                     | Familiar   |
-| [Melodramedary](https://kol.coldfront.net/thekolwiki/index.php/Melodramedary)                                                 | Familiar   |
-| [Nanorhino](https://kol.coldfront.net/thekolwiki/index.php/Nanorhino)                                                         | Familiar   |
-| [Pair of Stomping Boots](https://kol.coldfront.net/thekolwiki/index.php/Pair_of_Stomping_Boots)                               | Familiar   |
-| [Stocking Mimic](https://kol.coldfront.net/thekolwiki/index.php/Stocking_Mimic)                                               | Familiar   |
-| [Trick-or-Treating Tot](https://kol.coldfront.net/thekolwiki/index.php/Trick-or-Treating_Tot)                                 | Familiar   |
-| [Daylight Shavings Helment](https://kol.coldfront.net/thekolwiki/index.php/Daylight_Shavings_Helmet)                          | Hat        |
-| [Deck of Every Card](https://kol.coldfront.net/thekolwiki/index.php/Deck_of_Every_Card)                                       | Item       |
-| [January's Garbage Tote](https://kol.coldfront.net/thekolwiki/index.php/January%27s_Garbage_Tote)                             | Item       |
-| [mumming trunk](https://kol.coldfront.net/thekolwiki/index.php/Mumming_trunk)                                                 | Item       |
-| [portable pantogram](https://kol.coldfront.net/thekolwiki/index.php/Portable_pantogram)                                       | Item       |
-| [SongBoom™ BoomBox](https://kol.coldfront.net/thekolwiki/index.php/SongBoom%E2%84%A2_BoomBox)                                 | Item       |
-| [SpinMaster™ lathe](https://kol.coldfront.net/thekolwiki/index.php/SpinMaster%E2%84%A2_lathe)                                 | Item       |
-| [Time-Spinner](https://kol.coldfront.net/thekolwiki/index.php/Time-Spinner)                                                   | Item       |
-| [Kramco Sausage-o-Matic™](https://kol.coldfront.net/thekolwiki/index.php/Kramco_Sausage-o-Matic%E2%84%A2)                     | Off-hand   |
-| [industrial fire extinguisher](https://kol.coldfront.net/thekolwiki/index.php/Industrial_fire_extinguisher)                   | Off-hand   |
-| [unbreakable umbrella](https://kol.coldfront.net/thekolwiki/index.php/Unbreakable_umbrella)                                   | Off-hand   |
-| [Bird-a-Day calendar](https://kol.coldfront.net/thekolwiki/index.php/Bird-a-Day_calendar)                                     | Skill      |
-| [Comprehensive Cartographic Compendium](https://kol.coldfront.net/thekolwiki/index.php/Comprehensive_Cartographic_Compendium) | Skill      |
-| [emotion chip](https://kol.coldfront.net/thekolwiki/index.php/Emotion_chip)                                                   | Skill      |
-| [Manual of Numberology](https://kol.coldfront.net/thekolwiki/index.php/Manual_of_Numberology)                                 | Skill      |
-| [Pocket Meteor Guide](https://kol.coldfront.net/thekolwiki/index.php/Pocket_Meteor_Guide)                                     | Skill      |
-| [Rethinking Candy](https://kol.coldfront.net/thekolwiki/index.php/Rethinking_Candy)                                           | Skill      |
-| [Tome of Clip Art](https://kol.coldfront.net/thekolwiki/index.php/Tome_of_Clip_Art)                                           | Skill      |
-| [Fourth of May Cosplay Saber](https://kol.coldfront.net/thekolwiki/index.php/Fourth_of_May_Cosplay_Saber)                     | Weapon     |
-| [airplane charter: Dinseylandfill](https://kol.coldfront.net/thekolwiki/index.php/Airplane_charter:_Dinseylandfill)           | Zone       |
-| [airplane charter: That 70s Volcano](https://kol.coldfront.net/thekolwiki/index.php/Airplane_charter:_That_70s_Volcano)       | Zone       |
-| [Bastille Battalion control rig](https://kol.coldfront.net/thekolwiki/index.php/Bastille_Battalion_control_rig)               | Zone       |
-| [Boxing Day care package](https://kol.coldfront.net/thekolwiki/index.php/Boxing_Day_care_package)                             | Zone       |
-| [Chateau Mantegna room key](https://kol.coldfront.net/thekolwiki/index.php/Chateau_Mantegna_room_key)                         | Zone       |
-| [Detective school application](https://kol.coldfront.net/thekolwiki/index.php/Detective_school_application)                   | Zone       |
-| [Distant Woods Getaway Brochure](https://kol.coldfront.net/thekolwiki/index.php/Distant_Woods_Getaway_Brochure)               | Zone       |
-| [heart-shaped crate](https://kol.coldfront.net/thekolwiki/index.php/Heart-shaped_crate)                                       | Zone       |
-| [Horsery contract](https://kol.coldfront.net/thekolwiki/index.php/Horsery_contract)                                           | Zone       |
-| [LT&T telegraph office deed](https://kol.coldfront.net/thekolwiki/index.php/LT%26T_telegraph_office_deed)                     | Zone       |
-| [Neverending Party invitation envelope](https://kol.coldfront.net/thekolwiki/index.php/Neverending_Party_invitation_envelope) | Zone       |
-| [shrine to the Barrel god](https://kol.coldfront.net/thekolwiki/index.php/Shrine_to_the_Barrel_god)                           | Zone       |
-| [Spacegate access badge](https://kol.coldfront.net/thekolwiki/index.php/Spacegate_access_badge)                               | Zone       |
-| [voter registration form](https://kol.coldfront.net/thekolwiki/index.php/Voter_registration_form)                             | Zone       |
-| [X-32-F snowman crate](https://kol.coldfront.net/thekolwiki/index.php/X-32-F_snowman_crate)                                   | Zone       |
+| Resource                                                                                                                                      | Year | Month     |
+| --------------------------------------------------------------------------------------------------------------------------------------------- | ---- | --------- |
+| [spooky rattling cigar box](https://kol.coldfront.net/thekolwiki/index.php/Spooky_rattling_cigar_box)                                         | 2008 | October   |
+| [Libram of Love Songs](https://kol.coldfront.net/thekolwiki/index.php/Libram_of_Love_Songs)                                                   | 2009 | February  |
+| [suspicious stocking](https://kol.coldfront.net/thekolwiki/index.php/Suspicious_stocking)                                                     | 2009 | December  |
+| [Sorcerers of the Shore Grimoire](https://kol.coldfront.net/thekolwiki/index.php/Sorcerers_of_the_Shore_Grimoire)                             | 2011 | March     |
+| [fairy-worn boots](https://kol.coldfront.net/thekolwiki/index.php/Fairy-worn_boots)                                                           | 2011 | August    |
+| [Tome of Clip Art](https://kol.coldfront.net/thekolwiki/index.php/Tome_of_Clip_Art)                                                           | 2011 | September |
+| [Mint Salton Pepper's Peppermint Seed Catalog](https://kol.coldfront.net/thekolwiki/index.php/Mint_Salton_Pepper%27s_Peppermint_Seed_Catalog) | 2011 | December  |
+| [deactivated nanobots](https://kol.coldfront.net/thekolwiki/index.php/Deactivated_nanobots)                                                   | 2012 | November  |
+| [adventurer clone egg](https://kol.coldfront.net/thekolwiki/index.php/Adventurer_clone_egg)                                                   | 2013 | June      |
+| [Crimbo sapling](https://kol.coldfront.net/thekolwiki/index.php/Crimbo_sapling)                                                               | 2014 | December  |
+| [Chateau Mantegna room key](https://kol.coldfront.net/thekolwiki/index.php/Chateau_Mantegna_room_key)                                         | 2015 | January   |
+| [bottle of lovebug pheromones](https://kol.coldfront.net/thekolwiki/index.php/Bottle_of_lovebug_pheromones)                                   | 2015 | February  |
+| [Pack of Every Card](https://kol.coldfront.net/thekolwiki/index.php/Pack_of_Every_Card)                                                       | 2015 | July      |
+| [shrine to the Barrel god](https://kol.coldfront.net/thekolwiki/index.php/Shrine_to_the_Barrel_god)                                           | 2015 | September |
+| [machine elf capsule](https://kol.coldfront.net/thekolwiki/index.php/Machine_elf_capsule)                                                     | 2015 | December  |
+| [X-32-F snowman crate](https://kol.coldfront.net/thekolwiki/index.php/X-32-F_snowman_crate)                                                   | 2016 | January   |
+| [Witchess Set](https://kol.coldfront.net/thekolwiki/index.php/Witchess_Set)                                                                   | 2016 | March     |
+| [Source terminal](https://kol.coldfront.net/thekolwiki/index.php/Source_terminal)                                                             | 2016 | June      |
+| [detective school application](https://kol.coldfront.net/thekolwiki/index.php/Detective_school_application)                                   | 2016 | July      |
+| [DIY protonic accelerator kit](https://kol.coldfront.net/thekolwiki/index.php/DIY_protonic_accelerator_kit)                                   | 2016 | August    |
+| [Dear Past Self Package](https://kol.coldfront.net/thekolwiki/index.php/Dear_Past_Self_Package)                                               | 2016 | September |
+| [li'l orphan tot](https://kol.coldfront.net/thekolwiki/index.php/Li%27l_orphan_tot)                                                           | 2016 | October   |
+| [heart-shaped crate](https://kol.coldfront.net/thekolwiki/index.php/Heart-shaped_crate)                                                       | 2017 | February  |
+| [New-You Club Membership Form](https://kol.coldfront.net/thekolwiki/index.php/New-You_Club_Membership_Form)                                   | 2017 | May       |
+| [suspicious package](https://kol.coldfront.net/thekolwiki/index.php/Suspicious_package)                                                       | 2017 | June      |
+| [LI-11 Motor Pool voucher](https://kol.coldfront.net/thekolwiki/index.php/LI-11_Motor_Pool_voucher)                                           | 2017 | July      |
+| [Pocket Meteor Guide](https://kol.coldfront.net/thekolwiki/index.php/Pocket_Meteor_Guide)                                                     | 2017 | August    |
+| [locked mumming trunk](https://kol.coldfront.net/thekolwiki/index.php/Locked_mumming_trunk)                                                   | 2017 | December  |
+| [January's Garbage Tote (unopened)](<https://kol.coldfront.net/thekolwiki/index.php/January%27s_Garbage_Tote_(unopened)>)                     | 2018 | January   |
+| [God Lobster Egg](https://kol.coldfront.net/thekolwiki/index.php/God_Lobster_Egg)                                                             | 2018 | May       |
+| [SongBoom™ BoomBox Box](https://kol.coldfront.net/thekolwiki/index.php/SongBoom%E2%84%A2_BoomBox_Box)                                         | 2018 | June      |
+| [Bastille Battalion control rig crate](https://kol.coldfront.net/thekolwiki/index.php/Bastille_Battalion_control_rig_crate)                   | 2018 | August    |
+| [Neverending Party invitation envelope](https://kol.coldfront.net/thekolwiki/index.php/Neverending_Party_invitation_envelope)                 | 2018 | September |
+| [voter registration form](https://kol.coldfront.net/thekolwiki/index.php/Voter_registration_form)                                             | 2018 | November  |
+| [Boxing Day care package](https://kol.coldfront.net/thekolwiki/index.php/Boxing_Day_care_package)                                             | 2018 | December  |
+| [Kramco Industries packing carton](https://kol.coldfront.net/thekolwiki/index.php/Kramco_Industries_packing_carton)                           | 2019 | January   |
+| [mint condition Lil' Doctor™ bag](https://kol.coldfront.net/thekolwiki/index.php/Mint_condition_Lil%27_Doctor%E2%84%A2_bag)                   | 2019 | February  |
+| [vampyric cloake pattern](https://kol.coldfront.net/thekolwiki/index.php/Vampyric_cloake_pattern)                                             | 2019 | March     |
+| [Fourth of May Cosplay Saber kit](https://kol.coldfront.net/thekolwiki/index.php/Fourth_of_May_Cosplay_Saber_Kit)                             | 2019 | May       |
+| [rune-strewn spoon cocoon](https://kol.coldfront.net/thekolwiki/index.php/Rune-strewn_spoon_cocoon)                                           | 2019 | June      |
+| [Beach Comb Box](https://kol.coldfront.net/thekolwiki/index.php/Beach_Comb_Box)                                                               | 2019 | July      |
+| [Distant Woods Getaway Brochure](https://kol.coldfront.net/thekolwiki/index.php/Distant_Woods_Getaway_Brochure)                               | 2019 | August    |
+| [Unopened Eight Days a Week Pill Keeper](https://kol.coldfront.net/thekolwiki/index.php/Unopened_Eight_Days_a_Week_Pill_Keeper)               | 2019 | October   |
+| [bird?](https://kol.coldfront.net/thekolwiki/index.php/Unopened_Bird-a-Day_calendar)                                                          |      |           |
+| [mint-in-box Powerful Glove](https://kol.coldfront.net/thekolwiki/index.php/Mint-in-box_Powerful_Glove)                                       | 2020 | February  |
+| [sinistral homunculus](https://kol.coldfront.net/thekolwiki/index.php/Sinistral_homunculus)                                                   | 2020 | April     |
+| [Guzzlr application](https://kol.coldfront.net/thekolwiki/index.php/Guzzlr_application)                                                       | 2020 | May       |
+| [bag of Iunion stones](https://kol.coldfront.net/thekolwiki/index.php/Bag_of_Iunion_stones)                                                   | 2020 | June      |
+| [baby camelCalf](https://kol.coldfront.net/thekolwiki/index.php/Baby_camelCalf)                                                               | 2020 | July      |
+| [packaged SpinMaster™ lathe](https://kol.coldfront.net/thekolwiki/index.php/Packaged_SpinMaster%E2%84%A2_lathe)                               | 2020 | August    |
+| [Bagged Cargo Cultist Shorts](https://kol.coldfront.net/thekolwiki/index.php/Bagged_Cargo_Cultist_Shorts)                                     | 2020 | September |
+| [Comprehensive Cartographic Compendium](https://kol.coldfront.net/thekolwiki/index.php/Comprehensive_Cartographic_Compendium)                 | 2020 | October   |
+| [packaged knock-off retro superhero cape](https://kol.coldfront.net/thekolwiki/index.php/Packaged_knock-off_retro_superhero_cape)             | 2020 | November  |
+| [box o' ghosts](https://kol.coldfront.net/thekolwiki/index.php/Box_o%27_ghosts)                                                               | 2020 | December  |
+| [emotion chip](https://kol.coldfront.net/thekolwiki/index.php/Emotion_chip)                                                                   | 2021 | February  |
+| [shortest-order cook](https://kol.coldfront.net/thekolwiki/index.php/Shortest-order_cook)                                                     | 2021 | May       |
+| [packaged familiar scrapbook](https://kol.coldfront.net/thekolwiki/index.php/Packaged_familiar_scrapbook)                                     | 2021 | June      |
+| [Our Daily Candles™ order form](https://kol.coldfront.net/thekolwiki/index.php/Our_Daily_Candles%E2%84%A2_order_form)                         | 2021 | August    |
+| [packaged industrial fire extinguisher](https://kol.coldfront.net/thekolwiki/index.php/Packaged_industrial_fire_extinguisher)                 | 2021 | September |
+| [packaged Daylight Shavings Helmet](https://kol.coldfront.net/thekolwiki/index.php/Packaged_Daylight_Shavings_Helmet)                         | 2021 | November  |
+| [undrilled cosmic bowling ball](https://kol.coldfront.net/thekolwiki/index.php/Undrilled_cosmic_bowling_ball)                                 | 2022 | January   |
+| [combat lover's locket lockbox](https://kol.coldfront.net/thekolwiki/index.php/Combat_lover%27s_locket_lockbox)                               | 2022 | February  |
+| [undamaged Unbreakable Umbrella](https://kol.coldfront.net/thekolwiki/index.php/Undamaged_Unbreakable_Umbrella)                               | 2022 | April     |
+| [MayDay™ contract](https://kol.coldfront.net/thekolwiki/index.php/MayDay%E2%84%A2_contract)                                                   | 2022 | May       |
+| [designer sweatpants (new old stock)](<https://kol.coldfront.net/thekolwiki/index.php/Designer_sweatpants_(new_old_stock)>)                   | 2022 | July      |
+| [unopened tiny stillsuit](https://kol.coldfront.net/thekolwiki/index.php/Unopened_tiny_stillsuit)                                             | 2022 | August    |
+| [packaged Jurassic Parka](https://kol.coldfront.net/thekolwiki/index.php/Packaged_Jurassic_Parka)                                             | 2022 | September |
+| [boxed autumn-aton](https://kol.coldfront.net/thekolwiki/index.php/Boxed_autumn-aton)                                                         | 2022 | October   |

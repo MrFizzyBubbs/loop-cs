@@ -105,7 +105,6 @@ export const CoilWireQuest: Quest = {
       class: $classes`Disco Bandit, Accordion Thief`,
       ready: () => !have($effect`Everything Looks Yellow`),
       completed: () => have($item`jumbo olive`),
-
       do: () => CombatLoversLocket.reminisce($monster`Evil Olive`),
       outfit: { shirt: $item`Jurassic Parka`, modes: { parka: "dilophosaur" } },
       combat: new CombatStrategy().macro(Macro.skill($skill`Spit jurassic acid`)),
