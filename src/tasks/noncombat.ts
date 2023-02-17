@@ -27,7 +27,7 @@ export const NoncombatQuest: Quest = {
       do: () => cliExecute("Detective Solver.ash"),
       limit: { tries: 1 },
     },
-    potionTask($item`shoe gum`),
+    potionTask($item`shoe gum`, true),
     potionTask($item`shady shades`),
     {
       name: "Test",

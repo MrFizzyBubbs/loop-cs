@@ -21,7 +21,7 @@ export class Engine extends BaseEngine<never, Task> {
       !this.confirmed.has(task.name) &&
       !userConfirm(`Executing ${task.name}, continue?`)
     ) {
-      throw `User requested abort`;
+      throw `User rejected execution of task ${task.name}`;
     }
     this.confirmed.add(task.name);
     super.execute(task);

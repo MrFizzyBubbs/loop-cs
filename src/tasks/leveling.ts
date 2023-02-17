@@ -390,7 +390,7 @@ export const LevelingQuest: Quest = {
     },
     {
       name: "God Lobster",
-      completed: () => get("_godLobsterFights") >= 2,
+      completed: () => get("_godLobsterFights") >= 3,
       do: () => visitUrl("main.php?fightgodlobster=1"),
       combat: new CombatStrategy().macro(Macro.default()),
       choices: { 1310: () => (get("_godLobsterFights") === 2 ? 2 : 1) }, // Get -combat buff
@@ -400,7 +400,7 @@ export const LevelingQuest: Quest = {
         familiar: $familiar`God Lobster`,
       },
       acquire: [{ item: $item`makeshift garbage shirt` }],
-      limit: { tries: 2 },
+      limit: { tries: 3 },
     },
     {
       name: "Witchess Witch",
@@ -422,7 +422,6 @@ export const LevelingQuest: Quest = {
         weapon: $item`Fourth of May Cosplay Saber`,
         offhand: $item`familiar scrapbook`,
         shirt: $item`makeshift garbage shirt`,
-        // familiar: $familiar`Shorter-Order Cook`, // TODO does this need to be here and on queen?
       },
       acquire: [{ item: $item`makeshift garbage shirt` }],
       limit: { tries: 1 },
@@ -453,6 +452,7 @@ export const LevelingQuest: Quest = {
         weapon: $item`Fourth of May Cosplay Saber`,
         offhand: $item`familiar scrapbook`,
         shirt: $item`makeshift garbage shirt`,
+        familiar: $familiar`Shorter-Order Cook`,
       },
       acquire: [{ item: $item`makeshift garbage shirt` }],
       limit: { tries: 3 },
@@ -496,6 +496,7 @@ export const LevelingQuest: Quest = {
         acc1: $item`backup camera`,
         modes: { backupcamera: "ml" },
       },
+      acquire: [{ item: $item`makeshift garbage shirt` }],
       limit: { tries: 3 },
     },
     {

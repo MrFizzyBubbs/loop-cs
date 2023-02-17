@@ -25,6 +25,10 @@ export const BoozeDropQuest: Quest = {
     skillTask($skill`Singer's Faithful Ocelot`),
     skillTask($skill`Fat Leon's Phat Loot Lyric`),
     {
+      ...skillTask($effect`Spice Haze`),
+      class: $classes`Seal Clubber, Turtle Tamer, Sauceror, Disco Bandit, Accordion Thief`,
+    },
+    {
       name: "Anticheese",
       completed: () => get("lastAnticheeseDay") > 0,
       do: () => visitUrl("place.php?whichplace=desertbeach&action=db_nukehouse"),
@@ -32,6 +36,13 @@ export const BoozeDropQuest: Quest = {
     },
     potionTask($item`government`, true),
     potionTask($item`autumn leaf`),
+    {
+      name: "Oversized Sparkler",
+      completed: () => have($item`oversized sparkler`),
+      prepare: () => visitUrl("clan_viplounge.php?action=fwshop&whichfloor=2", false),
+      do: () => visitUrl("shop.php?whichshop=fwshop&action=buyitem&quantity=1&whichrow=1257&pwd"),
+      limit: { tries: 1 },
+    },
     {
       name: "Batform",
       completed: () => have($effect`Bat-Adjacent Form`),
@@ -91,6 +102,7 @@ export const BoozeDropQuest: Quest = {
       do: () => CommunityService.BoozeDrop.run(() => undefined, 1),
       outfit: {
         hat: $item`wad of used tape`,
+        weapon: $item`oversized sparkler`,
         offhand: $item`unbreakable umbrella`,
         back: $item`vampyric cloake`,
         acc1: $item`Guzzlr tablet`,
