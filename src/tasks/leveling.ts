@@ -366,8 +366,6 @@ export const LevelingQuest: Quest = {
       completed: () => get("_snojoFreeFights") >= 10,
       do: $location`The X-32-F Combat Training Snowman`,
       combat: new CombatStrategy().macro(Macro.trySkill($skill`Bowl Straight Up`).default()),
-      outfit: { shirt: $item`makeshift garbage shirt` },
-      acquire: [{ item: $item`makeshift garbage shirt` }],
       limit: { tries: 10 },
     },
     {
@@ -392,17 +390,17 @@ export const LevelingQuest: Quest = {
     },
     {
       name: "God Lobster",
-      completed: () => get("_godLobsterFights") >= 3,
+      completed: () => get("_godLobsterFights") >= 2,
       do: () => visitUrl("main.php?fightgodlobster=1"),
       combat: new CombatStrategy().macro(Macro.default()),
-      choices: { 1310: () => (have($item`God Lobster's Ring`) ? 3 : 1) }, // Get stats on last fight
+      choices: { 1310: () => (get("_godLobsterFights") === 2 ? 2 : 1) }, // Get -combat buff
       outfit: {
         shirt: $item`makeshift garbage shirt`,
         famequip: $items`God Lobster's Ring, God Lobster's Scepter, tiny stillsuit`,
         familiar: $familiar`God Lobster`,
       },
       acquire: [{ item: $item`makeshift garbage shirt` }],
-      limit: { tries: 3 },
+      limit: { tries: 2 },
     },
     {
       name: "Witchess Witch",
@@ -412,14 +410,19 @@ export const LevelingQuest: Quest = {
         Macro.trySkill($skill`Curse of Weaksauce`)
           .trySkill($skill`Micrometeorite`)
           .trySkill($skill`Summon Love Stinkbug`)
-          .skill($skill`Lunging Thrust-Smack`)
+          .step(
+            byStat({
+              Mysticality: Macro.attack(),
+              default: Macro.skill($skill`Lunging Thrust-Smack`),
+            })
+          )
           .repeat()
       ),
       outfit: {
         weapon: $item`Fourth of May Cosplay Saber`,
         offhand: $item`familiar scrapbook`,
         shirt: $item`makeshift garbage shirt`,
-        familiar: $familiar`Shorter-Order Cook`,
+        // familiar: $familiar`Shorter-Order Cook`, // TODO does this need to be here and on queen?
       },
       acquire: [{ item: $item`makeshift garbage shirt` }],
       limit: { tries: 1 },
@@ -427,14 +430,8 @@ export const LevelingQuest: Quest = {
     {
       name: "Witchess King",
       completed: () => have($item`dented scepter`),
-      prepare: () => cliExecute("terminal educate portscan"),
       do: () => Witchess.fightPiece($monster`Witchess King`),
-      combat: new CombatStrategy().macro(
-        Macro.delevel()
-          .skill($skill`Portscan`) // So government agent appears in DMT later
-          .attack()
-          .repeat()
-      ),
+      combat: new CombatStrategy().macro(Macro.delevel().attack().repeat()),
       outfit: {
         weapon: $item`Fourth of May Cosplay Saber`,
         offhand: $item`familiar scrapbook`,
@@ -468,8 +465,10 @@ export const LevelingQuest: Quest = {
       name: "Deep Machine Tunnels",
       completed: () => get("_machineTunnelsAdv") >= 5,
       do: $location`The Deep Machine Tunnels`,
-      combat: new CombatStrategy().macro(
-        Macro.if_($monster`Government agent`, Macro.skill($skill`Disintegrate`)).default() // TODO don't YR, otoscope instead
+      combat: new CombatStrategy().macro(() =>
+        Macro.default(
+          Macro.externalIf(get("_machineTunnelsAdv") === 4, Macro.skill($skill`Portscan`))
+        )
       ),
       outfit: {
         shirt: $item`makeshift garbage shirt`,
@@ -479,6 +478,25 @@ export const LevelingQuest: Quest = {
       },
       acquire: [{ item: $item`makeshift garbage shirt` }],
       limit: { tries: 5 },
+    },
+    {
+      name: "Oliver's Place",
+      completed: () => get("_speakeasyFreeFights") >= 3,
+      do: $location`An Unusually Quiet Barroom Brawl`,
+      combat: new CombatStrategy().macro(() =>
+        Macro.default(
+          Macro.trySkill($skill`Portscan`).externalIf(
+            !have($item`government cheese`),
+            Macro.skill($skill`Feel Envy`)
+          )
+        )
+      ),
+      outfit: {
+        shirt: $item`makeshift garbage shirt`,
+        acc1: $item`backup camera`,
+        modes: { backupcamera: "ml" },
+      },
+      limit: { tries: 3 },
     },
     {
       name: "Party Fair",

@@ -24,6 +24,7 @@ import {
   get,
   have,
   SongBoom,
+  SourceTerminal,
 } from "libram";
 import { Quest } from "../engine/task";
 import { byClass } from "../lib";
@@ -138,6 +139,12 @@ export const PrologueQuest: Quest = {
       name: "Cowboy Boots",
       completed: () => have($item`your cowboy boots`),
       do: () => visitUrl("place.php?whichplace=town_right&action=townright_ltt"),
+      limit: { tries: 1 },
+    },
+    {
+      name: "Terminal Skill",
+      completed: () => SourceTerminal.getSkills().includes($skill`Portscan`),
+      do: () => SourceTerminal.educate($skill`Portscan`),
       limit: { tries: 1 },
     },
     {

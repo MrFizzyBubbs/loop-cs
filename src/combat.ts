@@ -38,11 +38,14 @@ export default class Macro extends StrictMacro {
     return new Macro().kill();
   }
 
-  default(): Macro {
-    return this.delevel().sing().kill();
+  default(...extraSteps: Parameters<typeof Macro.step>): Macro {
+    return this.delevel()
+      .sing()
+      .step(...extraSteps)
+      .kill();
   }
 
-  static default(): Macro {
-    return new Macro().default();
+  static default(...extraSteps: Parameters<typeof Macro.step>): Macro {
+    return new Macro().default(...extraSteps);
   }
 }
