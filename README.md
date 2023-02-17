@@ -52,9 +52,9 @@ If you meet the requirements in the following sections, there is a good chance t
 
 ### Owned Resources
 
-| Year | Month      | Resource                                                                                                                                      | Removable?   |
-| ---- | ---------- | --------------------------------------------------------------------------------------------------------------------------------------------- | ------------ |
-| 2008 | October    | [spooky rattling cigar box](https://kol.coldfront.net/thekolwiki/index.php/Spooky_rattling_cigar_box)                                         | :red_circle: |
+| Year | Month      | Resource                                                                                                                                      |
+| ---- | ---------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| 2008 | October    | [spooky rattling cigar box](https://kol.coldfront.net/thekolwiki/index.php/Spooky_rattling_cigar_box)                                         |
 | 2009 | February   | [Libram of Love Songs](https://kol.coldfront.net/thekolwiki/index.php/Libram_of_Love_Songs)                                                   |
 | 2009 | December   | [suspicious stocking](https://kol.coldfront.net/thekolwiki/index.php/Suspicious_stocking)                                                     |
 | 2011 | March      | [Sorcerers of the Shore Grimoire](https://kol.coldfront.net/thekolwiki/index.php/Sorcerers_of_the_Shore_Grimoire)                             |
