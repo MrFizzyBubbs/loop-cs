@@ -11,6 +11,7 @@ import {
   getProperty,
   Item,
   itemAmount,
+  knollAvailable,
   mpCost,
   myLevel,
   myMp,
@@ -29,6 +30,7 @@ import {
   AsdonMartin,
   BeachComb,
   Clan,
+  Counter,
   get,
   have,
 } from "libram";
@@ -39,7 +41,7 @@ import { args } from "../main";
 export function innerElfTask(): Task {
   return {
     name: "Inner Elf",
-    ready: () => myLevel() >= 13,
+    ready: () => myLevel() >= 13 && !Counter.exists("portscan.edu"),
     completed: () => have($effect`Inner Elf`),
     do: () =>
       Clan.with(args.slimeclan, () => {
@@ -103,6 +105,7 @@ export function skillTask(x: Skill | Effect): Task {
     const effect = x instanceof Effect ? x : toEffect(x);
     return {
       name: skill.name,
+      ready: () => have(skill),
       completed: () => (effect !== $effect.none ? have(effect) : skill.timescast > 0),
       prepare: () => {
         if (myMp() < mpCost(skill)) {
@@ -127,7 +130,7 @@ export function asdonTask(style: Effect | keyof typeof AsdonMartin.Driving): Tas
     name: effect.name,
     completed: () => have(effect),
     prepare: () => {
-      if (getFuel() < 37 && itemAmount($item`wad of dough`) < 8) {
+      if (!knollAvailable() && getFuel() < 37 && itemAmount($item`wad of dough`) < 8) {
         buy($item`all-purpose flower`);
         use($item`all-purpose flower`);
       }

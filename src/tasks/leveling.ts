@@ -2,11 +2,9 @@ import { CombatStrategy } from "grimoire-kolmafia";
 import {
   adv1,
   cliExecute,
-  myClass,
   myPrimestat,
   retrieveItem,
   runChoice,
-  Skill,
   sweetSynthesis,
   totalFreeRests,
   toUrl,
@@ -35,7 +33,7 @@ import {
 } from "libram";
 import Macro from "../combat";
 import { Quest } from "../engine/task";
-import { burnLibrams, byStat } from "../lib";
+import { burnLibrams, byClass, byStat } from "../lib";
 import { beachTask, innerElfTask, potionTask, skillTask } from "./common";
 
 export const generalStoreItem = byStat({
@@ -260,7 +258,6 @@ export const LevelingQuest: Quest = {
     },
     {
       name: "Ninja Costume",
-      ready: () => get("_monstersMapped") < 3 && get("_chestXRayUsed") < 3,
       completed: () => have($item`li'l ninja costume`) && have($effect`Giant Growth`),
       do: () => Cartography.mapMonster($location`The Haiku Dungeon`, $monster`amateur ninja`),
       post: () => visitUrl("questlog.php?which=1"), // Check quest log for protonic ghost location
@@ -288,10 +285,15 @@ export const LevelingQuest: Quest = {
       do: () => adv1(get("ghostLocation", $location`none`), 0, ""),
       combat: new CombatStrategy().macro(
         Macro.skill(
-          Skill.all().find(
-            (skill) => skill.level === 0 && skill.combat && skill.class === myClass()
-          ) ?? Skill.none
-        ) // Use appropriate skill to trigger nanorhino buff
+          byClass({
+            "Seal Clubber": $skill`Clobber`,
+            "Turtle Tamer": $skill`Toss`,
+            Pastamancer: $skill`Spaghetti Spear`,
+            Sauceror: $skill`Salsaball`,
+            "Disco Bandit": $skill`Suckerpunch`,
+            "Accordion Thief": $skill`Sing`,
+          })
+        )
           .delevel()
           .skill($skill`Shoot Ghost`)
           .skill($skill`Shoot Ghost`)
@@ -332,7 +334,7 @@ export const LevelingQuest: Quest = {
           .if_($monster`LOV Engineer`, Macro.skill($skill`Weapon of the Pastalord`).repeat())
           .if_($monster`LOV Equivocator`, Macro.default())
       ),
-      outfit: { shirt: $item`makeshift garbage shirt` },
+      outfit: { offhand: $item`June cleaver`, shirt: $item`makeshift garbage shirt` },
       acquire: [{ item: $item`makeshift garbage shirt` }],
       limit: { tries: 1 },
     },
@@ -360,6 +362,7 @@ export const LevelingQuest: Quest = {
         visitUrl("place.php?whichplace=snojo&action=snojo_controller");
         runChoice(3);
       },
+      limit: { tries: 1 },
     },
     {
       name: "Snojo",
@@ -375,6 +378,7 @@ export const LevelingQuest: Quest = {
           (effect) => !have(effect)
         ),
       do: () => cliExecute("hottub"),
+      limit: { tries: 1 },
     },
     {
       name: "Eldritch Tentacle",
@@ -441,7 +445,7 @@ export const LevelingQuest: Quest = {
     },
     {
       name: "Witchess Queen",
-      completed: () => Witchess.fightsDone() >= 5,
+      completed: () => have($item`very pointy crown`),
       do: () => Witchess.fightPiece($monster`Witchess Queen`),
       combat: new CombatStrategy().macro(
         Macro.item($item`Time-Spinner`)
@@ -455,7 +459,7 @@ export const LevelingQuest: Quest = {
         familiar: $familiar`Shorter-Order Cook`,
       },
       acquire: [{ item: $item`makeshift garbage shirt` }],
-      limit: { tries: 3 },
+      limit: { tries: 1 },
     },
     // Pump ML after witchess fights
     ...$effects`Drescher's Annoying Noise, Pride of the Puffin, Ur-Kel's Aria of Annoyance`.map(

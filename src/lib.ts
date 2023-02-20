@@ -1,7 +1,6 @@
 // Entire file courtesy of phccs
 import {
   availableAmount,
-  Class,
   haveEffect,
   Item,
   myClass,
@@ -39,10 +38,20 @@ export function convertMilliseconds(milliseconds: number): string {
   );
 }
 
+type PrimaryClassType =
+  | "Seal Clubber"
+  | "Turtle Tamer"
+  | "Pastamancer"
+  | "Sauceror"
+  | "Disco Bandit"
+  | "Accordion Thief";
 type StatSwitch<T> = Record<StatType, T> | (Partial<{ [x in StatType]: T }> & { default: T });
-type ClassSwitch<T> = { options: Map<Class, T>; default: T };
+type ClassSwitch<T> =
+  | Record<PrimaryClassType, T>
+  | (Partial<{ [x in PrimaryClassType]: T }> & { default: T });
 export function byClass<T>(thing: ClassSwitch<T>): T {
-  return thing.options.get(myClass()) ?? thing.default;
+  const class_ = myClass().toString() as PrimaryClassType;
+  return "default" in thing ? thing[class_] ?? thing.default : thing[class_];
 }
 export function byStat<T>(thing: StatSwitch<T>): T {
   const stat = myPrimestat().toString();

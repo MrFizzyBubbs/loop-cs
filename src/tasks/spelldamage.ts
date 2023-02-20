@@ -1,7 +1,6 @@
 import { CombatStrategy } from "grimoire-kolmafia";
 import {
   canEquip,
-  Class,
   cliExecute,
   myHp,
   myLevel,
@@ -11,7 +10,6 @@ import {
   useSkill,
 } from "kolmafia";
 import {
-  $class,
   $classes,
   $effect,
   $effects,
@@ -35,11 +33,9 @@ const chefstaff = byStat({
 });
 
 const maxTurns = byClass({
-  options: new Map<Class, number>([
-    [$class`Pastamancer`, 11],
-    [$class`Sauceror`, 10],
-    [$class`Accordion Thief`, 13],
-  ]),
+  Pastamancer: 11,
+  Sauceror: 10,
+  "Accordion Thief": 13,
   default: 14,
 });
 

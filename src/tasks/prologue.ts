@@ -1,5 +1,4 @@
 import {
-  Class,
   cliExecute,
   getCampground,
   getClanName,
@@ -13,7 +12,6 @@ import {
   visitUrl,
 } from "kolmafia";
 import {
-  $class,
   $classes,
   $familiar,
   $item,
@@ -34,15 +32,12 @@ import { deckTask } from "./common";
 const PULLS = [$item`Great Wolf's beastly trousers`, $item`Stick-Knife of Loathing`];
 
 const BEST_INITIATIVE = byClass({
-  options: new Map<Class, number>([
-    [$class`Seal Clubber`, 2], // Familiar exp: 2
-    [$class`Turtle Tamer`, 3], // Weapon Damage Percent: 100
-    [$class`Disco Bandit`, 4], // Maximum MP Percent: 30
-    [$class`Accordion Thief`, 1], // Booze Drop: 30
-    [$class`Pastamancer`, 2], // Familiar exp: 2
-    [$class`Sauceror`, 1], // Exp: 3
-  ]),
-  default: 0,
+  "Seal Clubber": 2, // Familiar exp: 2
+  "Turtle Tamer": 3, // Weapon Damage Percent: 100
+  "Disco Bandit": 4, // Maximum MP Percent: 30
+  "Accordion Thief": 1, // Booze Drop: 30
+  Pastamancer: 2, // Familiar exp: 2
+  Sauceror: 1, // Exp: 3
 });
 
 export const PrologueQuest: Quest = {

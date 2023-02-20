@@ -1,25 +1,23 @@
-import { canAdventure, Class, cliExecute, knollAvailable, mySign, use, visitUrl } from "kolmafia";
+import { cliExecute, knollAvailable, myAscensions, mySign, use, visitUrl } from "kolmafia";
 import {
-  $class,
   $classes,
   $effect,
   $effects,
   $familiar,
   $item,
-  $location,
   $skill,
   CommunityService,
   get,
   have,
 } from "libram";
 import { Quest } from "../engine/task";
-import { byClass } from "../lib";
+import { burnLibrams, byClass } from "../lib";
 import { beachTask, meteorShowerTask, potionTask, skillTask } from "./common";
 
 const buffs = $effects`Empathy, Leash of Linguini, Blood Bond`;
 
 const maxTurns = byClass({
-  options: new Map<Class, number>([[$class`Accordion Thief`, 18]]),
+  "Accordion Thief": 18,
   default: 20,
 });
 
@@ -83,7 +81,7 @@ export const FamiliarWeightQuest: Quest = {
     },
     {
       name: "Unlock Beach",
-      completed: () => canAdventure($location`South of the Border`),
+      completed: () => get("lastDesertUnlock") === myAscensions(),
       do: (): void => {
         const desertAccessItem = knollAvailable()
           ? $item`bitchin' meatcar`
@@ -105,6 +103,7 @@ export const FamiliarWeightQuest: Quest = {
     {
       name: "Test",
       completed: () => CommunityService.FamiliarWeight.isDone(),
+      prepare: burnLibrams,
       do: () => CommunityService.FamiliarWeight.run(() => undefined, maxTurns),
       outfit: {
         hat: $item`Daylight Shavings Helmet`,
