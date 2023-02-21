@@ -27,6 +27,7 @@ import {
   $item,
   $location,
   $skill,
+  $skills,
   AsdonMartin,
   BeachComb,
   Clan,
@@ -103,9 +104,11 @@ export function skillTask(x: Skill | Effect): Task {
   {
     const skill = x instanceof Skill ? x : toSkill(x);
     const effect = x instanceof Effect ? x : toEffect(x);
+    const needGlove = $skills`CHEAT CODE: Invisible Avatar, CHEAT CODE: Triple Size`.includes(
+      skill
+    );
     return {
       name: skill.name,
-      ready: () => have(skill),
       completed: () => (effect !== $effect.none ? have(effect) : skill.timescast > 0),
       prepare: () => {
         if (myMp() < mpCost(skill)) {
@@ -120,6 +123,7 @@ export function skillTask(x: Skill | Effect): Task {
         }
       },
       do: () => useSkill(skill),
+      outfit: { equip: needGlove ? [$item`Powerful Glove`] : [] },
     };
   }
 }

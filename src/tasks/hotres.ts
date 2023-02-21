@@ -1,5 +1,4 @@
 import { CombatStrategy } from "grimoire-kolmafia";
-import { useSkill } from "kolmafia";
 import {
   $effect,
   $effects,
@@ -19,13 +18,9 @@ export const HotResQuest: Quest = {
   name: "Hot Res",
   completed: () => CommunityService.HotRes.isDone(),
   tasks: [
-    ...$effects`Astral Shell, Elemental Saucesphere, Empathy, Leash of Linguini`.map(skillTask),
-    {
-      name: "Feel Peaceful",
-      completed: () => get("_feelPeacefulUsed") > 0,
-      do: () => useSkill($skill`Feel Peaceful`),
-      limit: { tries: 1 },
-    },
+    ...$effects`Astral Shell, Elemental Saucesphere, Empathy, Feeling Peaceful, Leash of Linguini`.map(
+      skillTask
+    ),
     beachTask($effect`Hot-Headed`),
     {
       name: "Foam Suit",

@@ -1,5 +1,5 @@
-import { cliExecute, useSkill } from "kolmafia";
-import { $effect, $effects, $familiar, $item, $skill, CommunityService, get, have } from "libram";
+import { cliExecute } from "kolmafia";
+import { $effect, $effects, $familiar, $item, CommunityService, get, have } from "libram";
 import { Quest } from "../engine/task";
 import { potionTask, skillTask } from "./common";
 
@@ -7,18 +7,13 @@ export const NoncombatQuest: Quest = {
   name: "Noncombat",
   completed: () => CommunityService.Noncombat.isDone(),
   tasks: [
-    ...$effects`Smooth Movements, The Sonata of Sneakiness`.map(skillTask),
-    { ...skillTask($effect`Invisible Avatar`), outfit: { acc1: $item`Powerful Glove` } },
+    ...$effects`Feeling Lonely, Smooth Movements, The Sonata of Sneakiness, Invisible Avatar`.map(
+      skillTask
+    ),
     {
       name: "Silent Running",
       completed: () => have($effect`Silent Running`),
       do: () => cliExecute("swim sprints"),
-      limit: { tries: 1 },
-    },
-    {
-      name: "Feel Lonely",
-      completed: () => get("_feelLonelyUsed") > 0,
-      do: () => useSkill($skill`Feel Lonely`),
       limit: { tries: 1 },
     },
     {

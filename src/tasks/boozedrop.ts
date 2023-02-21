@@ -90,12 +90,7 @@ export const BoozeDropQuest: Quest = {
       do: () => useSkill($skill`Steely-Eyed Squint`),
       limit: { tries: 1 },
     },
-    {
-      name: "Feel Lost",
-      completed: () => have($effect`Feeling Lost`),
-      do: () => useSkill($skill`Feel Lost`),
-      limit: { tries: 1 },
-    },
+    skillTask($effect`Feeling Lost`),
     {
       name: "Test",
       completed: () => CommunityService.BoozeDrop.isDone(),

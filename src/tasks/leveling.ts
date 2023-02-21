@@ -42,6 +42,15 @@ export const generalStoreItem = byStat({
   Moxie: $item`hair spray`,
 });
 
+const buffs = {
+  stats: $effects`Triple-Sized, Big, Song of Bravado, Stevedave's Shanty of Superiority, Rage of the Reindeer, Feeling Excited, Carol of the Thrills`,
+  familiarWeight: $effects`Empathy, Leash of Linguini, Blood Bond`,
+  damage: $effects`Carol of the Hells, Carol of the Bulls, Frenzied\, Bloody`,
+  elementalDamage: $effects`Takin' It Greasy, Intimidating Mien, Rotten Memories, Pyromania, Frostbeard`,
+  survivability: $effects`Blood Bubble, Ruthlessly Efficient, Feeling Peaceful, Astral Shell, Ghostly Shell, Elemental Saucesphere`,
+  monsterLevel: $effects`Ur-Kel's Aria of Annoyance, Pride of the Puffin, Drescher's Annoying Noise`,
+};
+
 const { saucePotion, sauceFruit, sauceEffect } = byStat({
   Muscle: {
     sauceFruit: $item`lemon`,
@@ -153,40 +162,16 @@ export const LevelingQuest: Quest = {
       limit: { tries: 1 },
     },
     {
-      name: "Triple-Sized",
-      completed: () => have($effect`Triple-Sized`),
-      do: () => useSkill($skill`CHEAT CODE: Triple Size`, 1),
-      outfit: { acc1: $item`Powerful Glove` },
-      limit: { tries: 1 },
-    },
-    {
-      name: "Feel Excited",
-      completed: () => get("_feelExcitementUsed") > 0,
-      do: () => useSkill($skill`Feel Excitement`),
-      limit: { tries: 1 },
-    },
-    {
-      name: "Feel Peaceful",
-      completed: () => get("_feelPeacefulUsed") > 0,
-      do: () => useSkill($skill`Feel Peaceful`),
-      limit: { tries: 1 },
-    },
-    {
       name: "Puzzle Champ",
       completed: () => get("_witchessBuff"),
       do: () => cliExecute("witchess"),
       limit: { tries: 1 },
     },
-    ...[
-      // Stat
-      ...$effects`Big, Carol of the Thrills, Song of Bravado, Stevedave's Shanty of Superiority, Rage of the Reindeer`,
-      // Fam weight
-      ...$effects`Blood Bond, Empathy, Leash of Linguini`,
-      // Damage
-      ...$effects`Carol of the Bulls, Carol of the Hells, Frenzied\, Bloody, Ruthlessly Efficient`,
-      // Survivability
-      ...$effects`Astral Shell, Blood Bubble, Elemental Saucesphere, Ghostly Shell`,
-    ].map(skillTask),
+    ...buffs.stats.map(skillTask),
+    ...buffs.familiarWeight.map(skillTask),
+    ...buffs.damage.map(skillTask),
+    ...buffs.elementalDamage.map(skillTask),
+    ...buffs.survivability.map(skillTask),
     {
       ...skillTask(
         byStat({
@@ -197,7 +182,6 @@ export const LevelingQuest: Quest = {
       ),
       name: "Facial Expression",
     },
-    // Summons
     ...$skills`Advanced Saucecrafting, Prevent Scurvy and Sobriety, Summon Crimbo Candy`.map(
       skillTask
     ),
@@ -397,7 +381,7 @@ export const LevelingQuest: Quest = {
       completed: () => get("_godLobsterFights") >= 3,
       do: () => visitUrl("main.php?fightgodlobster=1"),
       combat: new CombatStrategy().macro(Macro.default()),
-      choices: { 1310: () => (get("_godLobsterFights") === 2 ? 2 : 1) }, // Get -combat buff
+      choices: { 1310: () => (get("_godLobsterFights") === 2 ? 2 : 1) }, // Get -combat buff on last combat
       outfit: {
         shirt: $item`makeshift garbage shirt`,
         famequip: $items`God Lobster's Ring, God Lobster's Scepter, tiny stillsuit`,
@@ -408,6 +392,7 @@ export const LevelingQuest: Quest = {
     },
     {
       name: "Witchess Witch",
+      ready: () => Witchess.fightsDone() < 5,
       completed: () => have($item`battle broom`),
       do: () => Witchess.fightPiece($monster`Witchess Witch`),
       combat: new CombatStrategy().macro(
@@ -432,6 +417,7 @@ export const LevelingQuest: Quest = {
     },
     {
       name: "Witchess King",
+      ready: () => Witchess.fightsDone() < 5,
       completed: () => have($item`dented scepter`),
       do: () => Witchess.fightPiece($monster`Witchess King`),
       combat: new CombatStrategy().macro(Macro.delevel().attack().repeat()),
@@ -445,6 +431,7 @@ export const LevelingQuest: Quest = {
     },
     {
       name: "Witchess Queen",
+      ready: () => Witchess.fightsDone() < 5,
       completed: () => have($item`very pointy crown`),
       do: () => Witchess.fightPiece($monster`Witchess Queen`),
       combat: new CombatStrategy().macro(
@@ -461,10 +448,7 @@ export const LevelingQuest: Quest = {
       acquire: [{ item: $item`makeshift garbage shirt` }],
       limit: { tries: 1 },
     },
-    // Pump ML after witchess fights
-    ...$effects`Drescher's Annoying Noise, Pride of the Puffin, Ur-Kel's Aria of Annoyance`.map(
-      skillTask
-    ),
+    ...buffs.monsterLevel.map(skillTask),
     {
       name: "Deep Machine Tunnels",
       completed: () => get("_machineTunnelsAdv") >= 5,

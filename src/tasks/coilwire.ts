@@ -40,11 +40,11 @@ export const CoilWireQuest: Quest = {
     {
       name: "Shrub Meat",
       ready: () => have($item`cosmic bowling ball`),
+      completed: () => have($effect`Everything Looks Red`),
       prepare: (): void => {
         CrimboShrub.decorate(myPrimestat().toString(), "Spooky Damage", "Blocking", "Red Ray");
         if (myHp() < myMaxhp()) cliExecute("hottub");
       },
-      completed: () => have($effect`Everything Looks Red`),
       do: $location`The Skeleton Store`, // Shrub's spooky damage won't kill monsters here
       combat: new CombatStrategy().macro(
         Macro.skill($skill`Open a Big Red Present`).skill($skill`Bowl a Curveball`)
@@ -111,7 +111,7 @@ export const CoilWireQuest: Quest = {
       limit: { tries: 1 },
     },
     {
-      // Prevent swapping pants and consequently losing MP when casting leveling buffs
+      // Prevent swapping pants and potentially losing MP when casting leveling buffs
       name: "General Store",
       completed: () => [generalStoreItem, ...sewerItems].every((item) => have(item)),
       do: () => [generalStoreItem, ...sewerItems].forEach((item) => retrieveItem(item)),
@@ -122,18 +122,7 @@ export const CoilWireQuest: Quest = {
       completed: () => CommunityService.CoilWire.isDone(),
       prepare: burnLibrams,
       do: () => CommunityService.CoilWire.run(() => undefined),
-      outfit: {
-        hat: $item`Iunion Crown`,
-        weapon: $item`weeping willow wand`,
-        offhand: $item`familiar scrapbook`,
-        back: $item`unwrapped knock-off retro superhero cape`,
-        shirt: $item`Jurassic Parka`,
-        pants: $item`Cargo Cultist Shorts`,
-        acc1: $item`Eight Days a Week Pill Keeper`,
-        acc2: $item`Kremlin's Greatest Briefcase`,
-        acc3: $item`hewn moon-rune spoon`,
-        modes: { retrocape: ["heck", "thrill"], parka: "ghostasaurus" },
-      },
+      outfit: { modifier: "mp, mp regen" },
       limit: { tries: 1 },
     },
   ],

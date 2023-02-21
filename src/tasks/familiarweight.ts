@@ -14,8 +14,6 @@ import { Quest } from "../engine/task";
 import { burnLibrams, byClass } from "../lib";
 import { beachTask, meteorShowerTask, potionTask, skillTask } from "./common";
 
-const buffs = $effects`Empathy, Leash of Linguini, Blood Bond`;
-
 const maxTurns = byClass({
   "Accordion Thief": 18,
   default: 20,
@@ -25,7 +23,7 @@ export const FamiliarWeightQuest: Quest = {
   name: "Familiar Weight",
   completed: () => CommunityService.FamiliarWeight.isDone(),
   tasks: [
-    ...buffs.map(skillTask),
+    ...$effects`Empathy, Leash of Linguini, Blood Bond`.map(skillTask),
     { ...skillTask($skill`Chorale of Companionship`), class: $classes`Accordion Thief` },
     potionTask($item`green candy heart`),
     beachTask($effect`Do I Know You From Somewhere?`),

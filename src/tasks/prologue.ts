@@ -34,10 +34,10 @@ const PULLS = [$item`Great Wolf's beastly trousers`, $item`Stick-Knife of Loathi
 const BEST_INITIATIVE = byClass({
   "Seal Clubber": 2, // Familiar exp: 2
   "Turtle Tamer": 3, // Weapon Damage Percent: 100
-  "Disco Bandit": 4, // Maximum MP Percent: 30
-  "Accordion Thief": 1, // Booze Drop: 30
   Pastamancer: 2, // Familiar exp: 2
   Sauceror: 1, // Exp: 3
+  "Disco Bandit": 4, // Maximum MP Percent: 30
+  "Accordion Thief": 1, // Booze Drop: 30
 });
 
 export const PrologueQuest: Quest = {
