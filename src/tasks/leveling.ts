@@ -42,11 +42,13 @@ export const generalStoreItem = byStat({
   Moxie: $item`hair spray`,
 });
 
+const sewerItems = $items`turtle totem, saucepan, stolen accordion`;
+
 const buffs = {
   stats: $effects`Triple-Sized, Big, Song of Bravado, Stevedave's Shanty of Superiority, Rage of the Reindeer, Feeling Excited, Carol of the Thrills`,
   familiarWeight: $effects`Empathy, Leash of Linguini, Blood Bond`,
   damage: $effects`Carol of the Hells, Carol of the Bulls, Frenzied\, Bloody`,
-  elementalDamage: $effects`Takin' It Greasy, Intimidating Mien, Rotten Memories, Pyromania, Frostbeard`,
+  elementalDamage: $effects`Takin' It Greasy, Intimidating Mien, Rotten Memories, Pyromania`, //, Frostbeard`,
   survivability: $effects`Blood Bubble, Ruthlessly Efficient, Feeling Peaceful, Astral Shell, Ghostly Shell, Elemental Saucesphere`,
   monsterLevel: $effects`Ur-Kel's Aria of Annoyance, Pride of the Puffin, Drescher's Annoying Noise`,
 };
@@ -106,8 +108,7 @@ const LOVEquipment = byStat({
 
 export const LevelingQuest: Quest = {
   name: "Leveling",
-  completed: () =>
-    get("csServicesPerformed").split(",").length > 1 || get("_neverendingPartyFreeTurns") >= 10,
+  completed: () => get("csServicesPerformed").split(",").length > 1,
   tasks: [
     innerElfTask(),
     potionTask(generalStoreItem),
@@ -166,6 +167,12 @@ export const LevelingQuest: Quest = {
       completed: () => get("_witchessBuff"),
       do: () => cliExecute("witchess"),
       limit: { tries: 1 },
+    },
+    {
+      name: "General Store",
+      completed: () => [generalStoreItem, ...sewerItems].every((item) => have(item)),
+      do: () => [generalStoreItem, ...sewerItems].forEach((item) => retrieveItem(item)),
+      outfit: { pants: $item`designer sweatpants` },
     },
     ...buffs.stats.map(skillTask),
     ...buffs.familiarWeight.map(skillTask),
@@ -291,14 +298,14 @@ export const LevelingQuest: Quest = {
       },
       limit: { tries: 1 },
     },
-    {
-      name: "Holiday Yoked",
-      completed: () => have($effect`Holiday Yoked`),
-      do: $location`Noob Cave`,
-      combat: new CombatStrategy().macro(Macro.skill($skill`Bowl a Curveball`)),
-      outfit: { familiar: $familiar`Ghost of Crimbo Carols`, famequip: $item.none },
-      limit: { tries: 1 },
-    },
+    // {
+    //   name: "Holiday Yoked",
+    //   completed: () => have($effect`Holiday Yoked`),
+    //   do: $location`Noob Cave`,
+    //   combat: new CombatStrategy().macro(Macro.skill($skill`Bowl a Curveball`)),
+    //   outfit: { familiar: $familiar`Ghost of Crimbo Carols`, famequip: $item.none },
+    //   limit: { tries: 1 },
+    // },
     {
       name: "LOV Tunnel",
       completed: () => get("_loveTunnelUsed"),

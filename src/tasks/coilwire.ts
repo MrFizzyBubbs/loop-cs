@@ -1,11 +1,10 @@
 import { CombatStrategy } from "grimoire-kolmafia";
-import { adv1, cliExecute, myHp, myMaxhp, myPrimestat, retrieveItem } from "kolmafia";
+import { adv1, cliExecute, myHp, myMaxhp, myPrimestat } from "kolmafia";
 import {
   $classes,
   $effect,
   $familiar,
   $item,
-  $items,
   $location,
   $monster,
   $skill,
@@ -21,9 +20,6 @@ import {
 import Macro from "../combat";
 import { Quest } from "../engine/task";
 import { burnLibrams } from "../lib";
-import { generalStoreItem } from "./leveling";
-
-const sewerItems = $items`turtle totem, saucepan, stolen accordion`;
 
 export const CoilWireQuest: Quest = {
   name: "Coil Wire",
@@ -111,18 +107,11 @@ export const CoilWireQuest: Quest = {
       limit: { tries: 1 },
     },
     {
-      // Prevent swapping pants and potentially losing MP when casting leveling buffs
-      name: "General Store",
-      completed: () => [generalStoreItem, ...sewerItems].every((item) => have(item)),
-      do: () => [generalStoreItem, ...sewerItems].forEach((item) => retrieveItem(item)),
-      outfit: { pants: $item`designer sweatpants` },
-    },
-    {
       name: "Test",
       completed: () => CommunityService.CoilWire.isDone(),
       prepare: burnLibrams,
       do: () => CommunityService.CoilWire.run(() => undefined),
-      outfit: { modifier: "mp, mp regen" },
+      outfit: { modifier: "mp, mp regen 15min" },
       limit: { tries: 1 },
     },
   ],
