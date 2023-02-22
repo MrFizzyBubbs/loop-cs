@@ -29,6 +29,9 @@ export const args = Args.create("loopcs", "A script to complete community servic
     help: "Whether the user must confirm execution of each unique task.",
     default: false,
   }),
+  abort: Args.string({
+    help: "If given, abort during the prepare() step for the task with matching name.",
+  }),
   list: Args.flag({
     help: "Show the status of all tasks and exit.",
     setting: "",
@@ -65,6 +68,15 @@ export function main(command?: string): void {
     BoozeDropQuest,
     DonateQuest,
   ]);
+
+  // Abort during the prepare() step of the specified task
+  if (args.abort) {
+    const to_abort = tasks.find((task) => task.name === args.abort);
+    if (!to_abort) throw `Unable to identify task ${args.abort}`;
+    to_abort.prepare = (): void => {
+      throw "Abort requested";
+    };
+  }
 
   const engine = new Engine(tasks);
   try {

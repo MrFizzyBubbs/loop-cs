@@ -1,5 +1,5 @@
 import { CombatStrategy } from "grimoire-kolmafia";
-import { adv1, cliExecute, myHp, myMaxhp, myPrimestat } from "kolmafia";
+import { adv1, cliExecute, myPrimestat } from "kolmafia";
 import {
   $classes,
   $effect,
@@ -17,7 +17,7 @@ import {
   getTodaysHolidayWanderers,
   have,
 } from "libram";
-import Macro from "../combat";
+import Macro from "../macro";
 import { Quest } from "../engine/task";
 import { burnLibrams } from "../lib";
 
@@ -35,11 +35,11 @@ export const CoilWireQuest: Quest = {
     },
     {
       name: "Shrub Meat",
-      ready: () => have($item`cosmic bowling ball`),
       completed: () => have($effect`Everything Looks Red`),
+      ready: () => have($item`cosmic bowling ball`),
       prepare: (): void => {
         CrimboShrub.decorate(myPrimestat().toString(), "Spooky Damage", "Blocking", "Red Ray");
-        if (myHp() < myMaxhp()) cliExecute("hottub");
+        if (get("_hotTubSoaks") < 1) cliExecute("hottub");
       },
       do: $location`The Skeleton Store`, // Shrub's spooky damage won't kill monsters here
       combat: new CombatStrategy().macro(
@@ -50,8 +50,8 @@ export const CoilWireQuest: Quest = {
     },
     {
       name: "Kramco",
-      ready: () => getKramcoWandererChance() >= 1,
       completed: () => get("_sausageFights") > 0,
+      ready: () => getKramcoWandererChance() >= 1,
       do: $location`Noob Cave`,
       combat: new CombatStrategy().macro(
         Macro.skill($skill`Micrometeorite`)
@@ -66,8 +66,8 @@ export const CoilWireQuest: Quest = {
     },
     {
       name: "Mimic",
-      ready: () => get("ghostLocation") !== $location`none`,
       completed: () => get("_bagOfCandy"),
+      ready: () => get("ghostLocation") !== $location`none`,
       do: () => adv1(get("ghostLocation", $location`none`), 0, ""),
       combat: new CombatStrategy().macro(
         Macro.delevel()
@@ -87,8 +87,8 @@ export const CoilWireQuest: Quest = {
     {
       name: "Fruity Skeleton",
       class: $classes`Seal Clubber, Turtle Tamer, Sauceror`,
-      ready: () => !have($effect`Everything Looks Yellow`),
       completed: () => have($item`cherry`),
+      ready: () => !have($effect`Everything Looks Yellow`),
       do: (): void => {
         Cartography.mapMonster($location`The Skeleton Store`, $monster`novelty tropical skeleton`);
       },
@@ -99,8 +99,8 @@ export const CoilWireQuest: Quest = {
     {
       name: "Evil Olive",
       class: $classes`Disco Bandit, Accordion Thief`,
-      ready: () => !have($effect`Everything Looks Yellow`),
       completed: () => have($item`jumbo olive`),
+      ready: () => !have($effect`Everything Looks Yellow`),
       do: () => CombatLoversLocket.reminisce($monster`Evil Olive`),
       outfit: { shirt: $item`Jurassic Parka`, modes: { parka: "dilophosaur" } },
       combat: new CombatStrategy().macro(Macro.skill($skill`Spit jurassic acid`)),

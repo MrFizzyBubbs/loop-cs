@@ -10,7 +10,7 @@ import {
   get,
   have,
 } from "libram";
-import Macro from "../combat";
+import Macro from "../macro";
 import { Quest } from "../engine/task";
 import { beachTask, skillTask } from "./common";
 
@@ -24,8 +24,8 @@ export const HotResQuest: Quest = {
     beachTask($effect`Hot-Headed`),
     {
       name: "Foam Suit",
-      ready: () => get("_fireExtinguisherCharge") >= 10 && get("_saberForceUses") < 5,
       completed: () => have($effect`Fireproof Foam Suit`),
+      ready: () => get("_fireExtinguisherCharge") >= 10 && get("_saberForceUses") < 5,
       do: $location`The Dire Warren`,
       combat: new CombatStrategy().macro(
         Macro.skill($skill`Fire Extinguisher: Foam Yourself`).skill($skill`Use the Force`)

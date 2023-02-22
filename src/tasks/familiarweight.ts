@@ -65,15 +65,15 @@ export const FamiliarWeightQuest: Quest = {
     },
     {
       name: "Icy Revenge",
-      ready: () => have($item`love song of icy revenge`),
       completed: () => have($effect`Cold Hearted`, 20),
+      ready: () => have($item`love song of icy revenge`),
       do: () => use($item`love song of icy revenge`),
       limit: { tries: 4 },
     },
     {
       name: "Blue Taffy",
-      ready: () => have($item`pulled blue taffy`),
       completed: () => have($effect`Blue Swayed`, 50),
+      ready: () => have($item`pulled blue taffy`),
       do: () => use($item`pulled blue taffy`),
       limit: { tries: 5 },
     },
@@ -91,8 +91,8 @@ export const FamiliarWeightQuest: Quest = {
     },
     {
       name: "Tune Moon",
-      ready: () => !get("moonTuned"),
       completed: () => mySign() === "Platypus",
+      ready: () => !get("moonTuned"),
       do: () => cliExecute("spoon platypus"),
       limit: { tries: 1 },
     },

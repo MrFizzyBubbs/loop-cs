@@ -22,7 +22,7 @@ import {
   get,
   have,
 } from "libram";
-import Macro from "../combat";
+import Macro from "../macro";
 import { Quest } from "../engine/task";
 import { byClass, byStat } from "../lib";
 import { innerElfTask, meteorShowerTask, potionTask, skillTask } from "./common";
@@ -95,8 +95,8 @@ export const SpellDamageQuest: Quest = {
     {
       name: "Saucefingers",
       class: $classes`Pastamancer`,
-      ready: () => myLevel() >= 15 && get("_reflexHammerUsed") < 3,
       completed: () => have($effect`Saucefingers`),
+      ready: () => myLevel() >= 15 && get("_reflexHammerUsed") < 3,
       do: $location`The Dire Warren`,
       outfit: { acc1: $item`Lil' Doctor™ bag`, familiar: $familiar`Mini-Adventurer` },
       choices: { 768: 4 },

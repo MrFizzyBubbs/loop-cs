@@ -38,8 +38,8 @@ export const WeaponDamageQuest: Quest = {
     },
     {
       name: "Do You Crush What I Crush?",
-      ready: () => crimboCarols.every((ef) => !have(ef)),
       completed: () => have($effect`Do You Crush What I Crush?`),
+      ready: () => crimboCarols.every((ef) => !have(ef)),
       do: $location`The Dire Warren`,
       combat: new CombatStrategy().macro(Macro.skill($skill`Reflex Hammer`)),
       outfit: {
@@ -52,11 +52,11 @@ export const WeaponDamageQuest: Quest = {
     innerElfTask(),
     {
       name: "Spit Ungulith",
-      ready: () => get("camelSpit") >= 100,
       completed: () =>
         have($effect`Spit Upon`) &&
         have($effect`Meteor Showered`) &&
         (have($item`corrupted marrow`) || have($effect`Cowrruption`)),
+      ready: () => get("camelSpit") >= 100,
       do: () => CombatLoversLocket.reminisce($monster`ungulith`),
       combat: new CombatStrategy().macro(
         Macro.skill($skill`%fn, spit on me!`)

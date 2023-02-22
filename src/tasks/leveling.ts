@@ -1,8 +1,9 @@
-import { CombatStrategy } from "grimoire-kolmafia";
+import { CombatStrategy, OutfitSpec } from "grimoire-kolmafia";
 import {
   adv1,
   cliExecute,
   myPrimestat,
+  restoreMp,
   retrieveItem,
   runChoice,
   sweetSynthesis,
@@ -31,7 +32,8 @@ import {
   TunnelOfLove,
   Witchess,
 } from "libram";
-import Macro from "../combat";
+import Macro from "../macro";
+import { freekillSources } from "../engine/resources";
 import { Quest } from "../engine/task";
 import { burnLibrams, byClass, byStat } from "../lib";
 import { beachTask, innerElfTask, potionTask, skillTask } from "./common";
@@ -42,13 +44,11 @@ export const generalStoreItem = byStat({
   Moxie: $item`hair spray`,
 });
 
-const sewerItems = $items`turtle totem, saucepan, stolen accordion`;
-
 const buffs = {
   stats: $effects`Triple-Sized, Big, Song of Bravado, Stevedave's Shanty of Superiority, Rage of the Reindeer, Feeling Excited, Carol of the Thrills`,
   familiarWeight: $effects`Empathy, Leash of Linguini, Blood Bond`,
   damage: $effects`Carol of the Hells, Carol of the Bulls, Frenzied\, Bloody`,
-  elementalDamage: $effects`Takin' It Greasy, Intimidating Mien, Rotten Memories, Pyromania`, //, Frostbeard`,
+  elementalDamage: $effects`Takin' It Greasy, Intimidating Mien, Rotten Memories, Pyromania, Frostbeard`,
   survivability: $effects`Blood Bubble, Ruthlessly Efficient, Feeling Peaceful, Astral Shell, Ghostly Shell, Elemental Saucesphere`,
   monsterLevel: $effects`Ur-Kel's Aria of Annoyance, Pride of the Puffin, Drescher's Annoying Noise`,
 };
@@ -108,10 +108,12 @@ const LOVEquipment = byStat({
 
 export const LevelingQuest: Quest = {
   name: "Leveling",
-  completed: () => get("csServicesPerformed").split(",").length > 1,
+  completed: () =>
+    get("csServicesPerformed").split(",").length > 1 ||
+    freekillSources.every((source) => !source.available()),
   tasks: [
     innerElfTask(),
-    potionTask(generalStoreItem),
+    potionTask(generalStoreItem, true),
     { ...potionTask($item`flask of baconstone juice`), class: $classes`Pastamancer, Turtle Tamer` }, // From juice bar
     { ...potionTask($item`potion of temporary gr8ness`), class: $classes`Disco Bandit` }, // From juice bar
     { ...potionTask($item`pressurized potion of proficiency`), class: $classes`Accordion Thief` }, // From juice bar
@@ -169,9 +171,10 @@ export const LevelingQuest: Quest = {
       limit: { tries: 1 },
     },
     {
-      name: "General Store",
-      completed: () => [generalStoreItem, ...sewerItems].every((item) => have(item)),
-      do: () => [generalStoreItem, ...sewerItems].forEach((item) => retrieveItem(item)),
+      name: "Sewer Items",
+      completed: () => $items`turtle totem, saucepan, stolen accordion`.every((item) => have(item)),
+      do: () =>
+        $items`turtle totem, saucepan, stolen accordion`.forEach((item) => retrieveItem(item)),
       outfit: { pants: $item`designer sweatpants` },
     },
     ...buffs.stats.map(skillTask),
@@ -201,8 +204,8 @@ export const LevelingQuest: Quest = {
     },
     {
       name: "Saucecraft",
-      ready: () => have(sauceFruit),
       completed: () => have(sauceEffect),
+      ready: () => have(sauceFruit),
       do: () => use(saucePotion),
       acquire: [{ item: saucePotion }],
       limit: { tries: 1 },
@@ -264,7 +267,6 @@ export const LevelingQuest: Quest = {
     },
     {
       name: "Nanorhino Buff",
-      ready: () => get("ghostLocation") !== $location`none` && get("_nanorhinoCharge") >= 100,
       completed: () =>
         have(
           byStat({
@@ -273,6 +275,7 @@ export const LevelingQuest: Quest = {
             Moxie: $effect`Nanoballsy`,
           })
         ),
+      ready: () => get("ghostLocation") !== $location`none` && get("_nanorhinoCharge") >= 100,
       do: () => adv1(get("ghostLocation", $location`none`), 0, ""),
       combat: new CombatStrategy().macro(
         Macro.skill(
@@ -399,8 +402,8 @@ export const LevelingQuest: Quest = {
     },
     {
       name: "Witchess Witch",
-      ready: () => Witchess.fightsDone() < 5,
       completed: () => have($item`battle broom`),
+      ready: () => Witchess.fightsDone() < 5,
       do: () => Witchess.fightPiece($monster`Witchess Witch`),
       combat: new CombatStrategy().macro(
         Macro.trySkill($skill`Curse of Weaksauce`)
@@ -424,8 +427,8 @@ export const LevelingQuest: Quest = {
     },
     {
       name: "Witchess King",
-      ready: () => Witchess.fightsDone() < 5,
       completed: () => have($item`dented scepter`),
+      ready: () => Witchess.fightsDone() < 5,
       do: () => Witchess.fightPiece($monster`Witchess King`),
       combat: new CombatStrategy().macro(Macro.delevel().attack().repeat()),
       outfit: {
@@ -438,8 +441,8 @@ export const LevelingQuest: Quest = {
     },
     {
       name: "Witchess Queen",
-      ready: () => Witchess.fightsDone() < 5,
       completed: () => have($item`very pointy crown`),
+      ready: () => Witchess.fightsDone() < 5,
       do: () => Witchess.fightPiece($monster`Witchess Queen`),
       combat: new CombatStrategy().macro(
         Macro.item($item`Time-Spinner`)
@@ -538,6 +541,26 @@ export const LevelingQuest: Quest = {
       },
       acquire: [{ item: $item`makeshift garbage shirt` }],
       limit: { tries: 10 },
+    },
+    {
+      name: "Freekill Neverending Party",
+      completed: () => freekillSources.every((source) => !source.available()),
+      prepare: () => restoreMp(30),
+      do: $location`The Neverending Party`,
+      choices: { 1324: 5 },
+      combat: new CombatStrategy().macro(
+        freekillSources.reduce((macro, source) => macro.trySkill(source.do), new Macro()).abort()
+      ),
+      outfit: (): OutfitSpec => {
+        return {
+          shirt: get("garbageShirtCharge") > 0 ? $item`makeshift garbage shirt` : undefined,
+          acc1: $item`backup camera`,
+          modes: { backupcamera: "ml" },
+          ...freekillSources.find((source) => source.available())?.equip,
+        };
+      },
+      acquire: [{ item: $item`makeshift garbage shirt` }],
+      limit: { tries: 8 },
     },
   ],
 };

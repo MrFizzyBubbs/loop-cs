@@ -35,15 +35,15 @@ import {
   get,
   have,
 } from "libram";
-import Macro from "../combat";
+import Macro from "../macro";
 import { Task } from "../engine/task";
 import { args } from "../main";
 
 export function innerElfTask(): Task {
   return {
     name: "Inner Elf",
-    ready: () => myLevel() >= 13 && !Counter.exists("portscan.edu"),
     completed: () => have($effect`Inner Elf`),
+    ready: () => myLevel() >= 13 && !Counter.exists("portscan.edu"),
     do: () =>
       Clan.with(args.slimeclan, () => {
         adv1($location`The Slime Tube`, -1, "");
@@ -61,8 +61,8 @@ export function innerElfTask(): Task {
 export function meteorShowerTask(): Task {
   return {
     name: "Meteor Showered",
-    ready: () => get("_meteorShowerUses") < 5 && get("_saberForceUses") < 5,
     completed: () => have($effect`Meteor Showered`),
+    ready: () => get("_meteorShowerUses") < 5 && get("_saberForceUses") < 5,
     do: $location`The Dire Warren`,
     combat: new CombatStrategy().macro(
       Macro.skill($skill`Meteor Shower`).skill($skill`Use the Force`)
@@ -81,11 +81,12 @@ export function beachTask(effect: Effect): Task {
   const num = 1 + BeachComb.headBuffs.indexOf(effect);
   return {
     name: `Beach Head: ${effect}`,
+    completed: () => getProperty("_beachHeadsUsed").split(",").includes(num.toFixed(0)),
     ready: () =>
       get("_freeBeachWalksUsed") < 11 &&
       get("beachHeadsUnlocked").split(",").includes(num.toFixed(0)),
-    completed: () => getProperty("_beachHeadsUsed").split(",").includes(num.toFixed(0)),
     do: () => BeachComb.tryHead(effect),
+    limit: { tries: 1 },
   };
 }
 
@@ -93,10 +94,11 @@ export function potionTask(item: Item, acquire = false): Task {
   const effect = effectModifier(item, "Effect");
   return {
     name: item.toString(),
-    ready: acquire ? undefined : () => have(item),
     completed: () => have(effect),
+    ready: acquire ? undefined : () => have(item),
     do: () => use(item),
     acquire: acquire ? [{ item }] : undefined,
+    limit: { tries: 1 },
   };
 }
 
@@ -124,6 +126,7 @@ export function skillTask(x: Skill | Effect): Task {
       },
       do: () => useSkill(skill),
       outfit: { equip: needGlove ? [$item`Powerful Glove`] : [] },
+      limit: { tries: 1 },
     };
   }
 }
@@ -140,14 +143,16 @@ export function asdonTask(style: Effect | keyof typeof AsdonMartin.Driving): Tas
       }
     },
     do: () => AsdonMartin.drive(effect),
+    limit: { tries: 1 },
   };
 }
 
 export function deckTask(card: string): Task {
   return {
     name: `Cheat At Cards: ${card}`,
-    ready: () => have($item`Deck of Every Card`) && get("_deckCardsDrawn") <= 10,
     completed: () => get("_deckCardsSeen").toLowerCase().split("|").includes(card.toLowerCase()),
+    ready: () => have($item`Deck of Every Card`) && get("_deckCardsDrawn") <= 10,
     do: () => cliExecute(`cheat ${card.toLowerCase()}`),
+    limit: { tries: 1 },
   };
 }

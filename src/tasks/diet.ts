@@ -7,8 +7,8 @@ export const DietQuest: Quest = {
   tasks: [
     {
       name: "Numberology",
-      ready: () => Object.keys(reverseNumberology()).includes("69"), //&& get("skillLevel144") <= 3,
       completed: () => get("_universeCalculated") >= Math.min(get("skillLevel144"), 3),
+      ready: () => Object.keys(reverseNumberology()).includes("69"), //&& get("skillLevel144") <= 3,
       do: () => cliExecute("numberology 69"),
       limit: { tries: 3 },
     },
@@ -26,8 +26,8 @@ export const DietQuest: Quest = {
     },
     {
       name: "Drink Pilsner",
-      ready: () => myLevel() >= 11,
       completed: () => myInebriety() >= 4,
+      ready: () => myLevel() >= 11,
       do: () => drink($item`astral pilsner`),
       effects: $effects`Ode to Booze`,
     },
