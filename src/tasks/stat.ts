@@ -21,6 +21,7 @@ function thrallTask(thrall: Thrall): Task {
     class: $classes`Pastamancer`,
     completed: () => myThrall() === thrall,
     do: () => useSkill(thrall.skill),
+    limit: { tries: 1 },
   };
 }
 
@@ -35,6 +36,7 @@ function equalizeTask(): Task {
       true
     ),
     class: $classes`Seal Clubber, Turtle Tamer, Disco Bandit, Accordion Thief, Sauceror`,
+    limit: { tries: 1 },
   };
 }
 
