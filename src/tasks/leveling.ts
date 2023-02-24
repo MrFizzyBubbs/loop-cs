@@ -1,9 +1,8 @@
-import { CombatStrategy, OutfitSpec } from "grimoire-kolmafia";
+import { CombatStrategy } from "grimoire-kolmafia";
 import {
   adv1,
   cliExecute,
   myPrimestat,
-  restoreMp,
   retrieveItem,
   runChoice,
   sweetSynthesis,
@@ -33,7 +32,6 @@ import {
   Witchess,
 } from "libram";
 import Macro from "../macro";
-import { freekillSources } from "../engine/resources";
 import { Quest } from "../engine/task";
 import { burnLibrams, byClass, byStat } from "../lib";
 import { beachTask, innerElfTask, potionTask, skillTask } from "./common";
@@ -110,7 +108,7 @@ export const LevelingQuest: Quest = {
   name: "Leveling",
   completed: () =>
     get("csServicesPerformed").split(",").length > 1 ||
-    freekillSources.every((source) => !source.available()),
+    (get("_neverendingPartyFreeTurns") >= 10 && have($effect`Spit Upon`)),
   tasks: [
     innerElfTask(),
     potionTask(generalStoreItem, true),
@@ -136,7 +134,6 @@ export const LevelingQuest: Quest = {
     {
       name: "Vaccine",
       completed: () => get("_spacegateVaccine"),
-      ready: () => get("spacegateVaccine2") && get("spacegateAlways"),
       do: () => cliExecute("spacegate vaccine 2"),
       limit: { tries: 1 },
     },
@@ -162,12 +159,6 @@ export const LevelingQuest: Quest = {
       name: "Cross Streams",
       completed: () => get("_streamsCrossed"),
       do: () => cliExecute("crossstreams"),
-      limit: { tries: 1 },
-    },
-    {
-      name: "Puzzle Champ",
-      completed: () => get("_witchessBuff"),
-      do: () => cliExecute("witchess"),
       limit: { tries: 1 },
     },
     {
@@ -301,14 +292,6 @@ export const LevelingQuest: Quest = {
       },
       limit: { tries: 1 },
     },
-    // {
-    //   name: "Holiday Yoked",
-    //   completed: () => have($effect`Holiday Yoked`),
-    //   do: $location`Noob Cave`,
-    //   combat: new CombatStrategy().macro(Macro.skill($skill`Bowl a Curveball`)),
-    //   outfit: { familiar: $familiar`Ghost of Crimbo Carols`, famequip: $item.none },
-    //   limit: { tries: 1 },
-    // },
     {
       name: "LOV Tunnel",
       completed: () => get("_loveTunnelUsed"),
@@ -401,6 +384,41 @@ export const LevelingQuest: Quest = {
       limit: { tries: 3 },
     },
     {
+      name: "Oliver's Place: Goblin Flapper",
+      completed: () => have($item`imported taffy`) || have($effect`Imported Strength`),
+      ready: () => get("_speakeasyFreeFights") < 3,
+      do: () =>
+        Cartography.mapMonster(
+          $location`An Unusually Quiet Barroom Brawl`,
+          $monster`goblin flapper`
+        ),
+      combat: new CombatStrategy().macro(
+        Macro.skill($skill`Feel Envy`)
+          .skill($skill`Portscan`)
+          .sing()
+          .kill()
+      ),
+      limit: { tries: 1 },
+    },
+    potionTask($item`imported taffy`),
+    {
+      name: "Oliver's Place: Government Agent",
+      completed: () => get("_speakeasyFreeFights") >= 3,
+      do: $location`An Unusually Quiet Barroom Brawl`,
+      combat: new CombatStrategy().macro(() =>
+        Macro.externalIf(!have($item`government cheese`), Macro.skill($skill`Feel Envy`))
+          .externalIf(get("_speakeasyFreeFights") < 2, Macro.skill($skill`Portscan`))
+          .default()
+      ),
+      outfit: {
+        shirt: $item`makeshift garbage shirt`,
+        acc1: $item`backup camera`,
+        modes: { backupcamera: "ml" },
+      },
+      acquire: [{ item: $item`makeshift garbage shirt` }],
+      limit: { tries: 2 },
+    },
+    {
       name: "Witchess Witch",
       completed: () => have($item`battle broom`),
       ready: () => Witchess.fightsDone() < 5,
@@ -464,9 +482,7 @@ export const LevelingQuest: Quest = {
       completed: () => get("_machineTunnelsAdv") >= 5,
       do: $location`The Deep Machine Tunnels`,
       combat: new CombatStrategy().macro(() =>
-        Macro.default(
-          Macro.externalIf(get("_machineTunnelsAdv") === 4, Macro.skill($skill`Portscan`))
-        )
+        Macro.externalIf(get("_machineTunnelsAdv") === 4, Macro.skill($skill`Portscan`)).default()
       ),
       outfit: {
         shirt: $item`makeshift garbage shirt`,
@@ -476,26 +492,6 @@ export const LevelingQuest: Quest = {
       },
       acquire: [{ item: $item`makeshift garbage shirt` }],
       limit: { tries: 5 },
-    },
-    {
-      name: "Oliver's Place",
-      completed: () => get("_speakeasyFreeFights") >= 3,
-      do: $location`An Unusually Quiet Barroom Brawl`,
-      combat: new CombatStrategy().macro(() =>
-        Macro.default(
-          Macro.trySkill($skill`Portscan`).externalIf(
-            !have($item`government cheese`),
-            Macro.skill($skill`Feel Envy`)
-          )
-        )
-      ),
-      outfit: {
-        shirt: $item`makeshift garbage shirt`,
-        acc1: $item`backup camera`,
-        modes: { backupcamera: "ml" },
-      },
-      acquire: [{ item: $item`makeshift garbage shirt` }],
-      limit: { tries: 3 },
     },
     {
       name: "Party Fair",
@@ -530,10 +526,14 @@ export const LevelingQuest: Quest = {
     },
     {
       name: "Neverending Party",
-      completed: () => get("_neverendingPartyFreeTurns") >= 10,
+      completed: () => get("_neverendingPartyFreeTurns") >= 10 && have($effect`Spit Upon`),
       do: $location`The Neverending Party`,
       choices: { 1324: 5 },
-      combat: new CombatStrategy().macro(Macro.trySkill($skill`Feel Pride`).default()),
+      combat: new CombatStrategy().macro(
+        Macro.trySkill($skill`Feel Pride`)
+          .trySkill($skill`%fn, spit on me!`)
+          .default()
+      ),
       outfit: {
         shirt: $item`makeshift garbage shirt`,
         acc1: $item`backup camera`,
@@ -541,26 +541,6 @@ export const LevelingQuest: Quest = {
       },
       acquire: [{ item: $item`makeshift garbage shirt` }],
       limit: { tries: 10 },
-    },
-    {
-      name: "Freekill Neverending Party",
-      completed: () => freekillSources.every((source) => !source.available()),
-      prepare: () => restoreMp(30),
-      do: $location`The Neverending Party`,
-      choices: { 1324: 5 },
-      combat: new CombatStrategy().macro(
-        freekillSources.reduce((macro, source) => macro.trySkill(source.do), new Macro()).abort()
-      ),
-      outfit: (): OutfitSpec => {
-        return {
-          shirt: get("garbageShirtCharge") > 0 ? $item`makeshift garbage shirt` : undefined,
-          acc1: $item`backup camera`,
-          modes: { backupcamera: "ml" },
-          ...freekillSources.find((source) => source.available())?.equip,
-        };
-      },
-      acquire: [{ item: $item`makeshift garbage shirt` }],
-      limit: { tries: 8 },
     },
   ],
 };

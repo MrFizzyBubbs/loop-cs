@@ -1,7 +1,6 @@
 import { CombatStrategy } from "grimoire-kolmafia";
-import { cliExecute, useSkill } from "kolmafia";
+import { useSkill } from "kolmafia";
 import {
-  $classes,
   $effect,
   $effects,
   $familiar,
@@ -30,13 +29,6 @@ export const WeaponDamageQuest: Quest = {
     potionTask($item`vial of hamethyst juice`),
     beachTask($effect`Lack of Body-Building`),
     {
-      name: "Play Pool",
-      class: $classes`Seal Clubber, Turtle Tamer, Sauceror, Disco Bandit, Accordion Thief`,
-      completed: () => have($effect`Billiards Belligerence`),
-      do: () => cliExecute("pool 1"),
-      limit: { tries: 1 },
-    },
-    {
       name: "Do You Crush What I Crush?",
       completed: () => have($effect`Do You Crush What I Crush?`),
       ready: () => crimboCarols.every((ef) => !have(ef)),
@@ -51,22 +43,16 @@ export const WeaponDamageQuest: Quest = {
     },
     innerElfTask(),
     {
-      name: "Spit Ungulith",
-      completed: () =>
-        have($effect`Spit Upon`) &&
-        have($effect`Meteor Showered`) &&
-        (have($item`corrupted marrow`) || have($effect`Cowrruption`)),
-      ready: () => get("camelSpit") >= 100,
+      name: "Meteor Ungulith",
+      completed: () => CombatLoversLocket.monstersReminisced().includes($monster`ungulith`),
       do: () => CombatLoversLocket.reminisce($monster`ungulith`),
       combat: new CombatStrategy().macro(
-        Macro.skill($skill`%fn, spit on me!`)
-          .skill($skill`Meteor Shower`)
-          .skill($skill`Use the Force`)
+        Macro.skill($skill`Meteor Shower`).skill($skill`Use the Force`)
       ),
       choices: { 1387: 3 },
       outfit: {
         weapon: $item`Fourth of May Cosplay Saber`,
-        familiar: $familiar`Melodramedary`,
+        familiar: $familiar.none,
       },
       limit: { tries: 1 },
     },

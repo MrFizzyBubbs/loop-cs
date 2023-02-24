@@ -45,9 +45,7 @@ export const Muscle: Quest = {
   completed: () => CommunityService.Muscle.isDone(),
   tasks: [
     ...skillBuffTasks("MUSCLE"),
-    potionTask($item`LOV Elixir #3`),
     thrallTask($thrall`Elbow Macaroni`),
-    beachTask($effect`Lack of Body-Building`),
     equalizeTask(),
     {
       name: "Test",
@@ -64,8 +62,6 @@ export const Mysticality: Quest = {
   completed: () => CommunityService.Mysticality.isDone(),
   tasks: [
     ...skillBuffTasks("MYSTICALITY"),
-    potionTask($item`LOV Elixir #6`),
-    beachTask($effect`We're All Made of Starfish`),
     equalizeTask(),
     {
       name: "Test",
@@ -83,7 +79,6 @@ export const Moxie: Quest = {
   tasks: [
     ...skillBuffTasks("MOXIE"),
     thrallTask($thrall`Penne Dreadful`),
-    beachTask($effect`Pomp & Circumsands`),
     equalizeTask(),
     {
       name: "Test",

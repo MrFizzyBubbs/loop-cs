@@ -1,18 +1,8 @@
 import { cliExecute, knollAvailable, myAscensions, mySign, use, visitUrl } from "kolmafia";
-import {
-  $classes,
-  $effect,
-  $effects,
-  $familiar,
-  $item,
-  $skill,
-  CommunityService,
-  get,
-  have,
-} from "libram";
+import { $classes, $effect, $familiar, $item, $skill, CommunityService, get, have } from "libram";
 import { Quest } from "../engine/task";
-import { burnLibrams, byClass } from "../lib";
-import { beachTask, meteorShowerTask, potionTask, skillTask } from "./common";
+import { byClass } from "../lib";
+import { beachTask, libramTask, meteorShowerTask, potionTask, skillTask } from "./common";
 
 const maxTurns = byClass({
   "Accordion Thief": 18,
@@ -23,7 +13,6 @@ export const FamiliarWeightQuest: Quest = {
   name: "Familiar Weight",
   completed: () => CommunityService.FamiliarWeight.isDone(),
   tasks: [
-    ...$effects`Empathy, Leash of Linguini, Blood Bond`.map(skillTask),
     { ...skillTask($skill`Chorale of Companionship`), class: $classes`Accordion Thief` },
     potionTask($item`green candy heart`),
     beachTask($effect`Do I Know You From Somewhere?`),
@@ -98,10 +87,10 @@ export const FamiliarWeightQuest: Quest = {
     },
     meteorShowerTask(),
     potionTask($item`silver face paint`),
+    libramTask(),
     {
       name: "Test",
       completed: () => CommunityService.FamiliarWeight.isDone(),
-      prepare: burnLibrams,
       do: () => CommunityService.FamiliarWeight.run(() => undefined, maxTurns),
       outfit: {
         hat: $item`Daylight Shavings Helmet`,

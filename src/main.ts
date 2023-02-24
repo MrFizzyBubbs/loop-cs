@@ -50,7 +50,7 @@ export function main(command?: string): void {
     return;
   }
 
-  const timeProperty = "loopcs_elapsedTime";
+  const timeProperty = "_loopcs_elapsedTime";
   const setTimeNow = get(timeProperty, -1) === -1;
   if (setTimeNow) set(timeProperty, gametimeToInt());
 
@@ -60,11 +60,11 @@ export function main(command?: string): void {
     CoilWireQuest,
     LevelingQuest,
     ...StatTests,
+    WeaponDamageQuest,
+    SpellDamageQuest,
     HotResQuest,
     NoncombatQuest,
     FamiliarWeightQuest,
-    WeaponDamageQuest,
-    SpellDamageQuest,
     BoozeDropQuest,
     DonateQuest,
   ]);

@@ -27,29 +27,28 @@ import { Quest } from "../engine/task";
 import { byClass, byStat } from "../lib";
 import { innerElfTask, meteorShowerTask, potionTask, skillTask } from "./common";
 
+const buffs = $effects`Arched Eyebrow of the Archmage, Carol of the Hells, Jackasses' Symphony of Destruction, Simmering, Song of Sauce, Spirit of Cayenne`;
+
 const chefstaff = byStat({
   Mysticality: $item`Staff of the Roaring Hearth`,
   default: $item`Staff of Simmering Hatred`,
 });
 
 const maxTurns = byClass({
-  Pastamancer: 11,
-  Sauceror: 10,
-  "Accordion Thief": 13,
-  default: 14,
+  Pastamancer: 10,
+  Sauceror: 8,
+  "Accordion Thief": 11,
+  default: 12,
 });
 
 export const SpellDamageQuest: Quest = {
   name: "Spell Damage",
   completed: () => CommunityService.SpellDamage.isDone(),
   tasks: [
-    ...$effects`Arched Eyebrow of the Archmage, Carol of the Hells, Jackasses' Symphony of Destruction, Simmering, Song of Sauce, Spirit of Cayenne`.map(
-      skillTask
-    ),
+    ...buffs.map(skillTask),
     { ...skillTask($skill`Elron's Explosive Etude`), class: $classes`Accordion Thief` },
     {
       name: "Play Pool",
-      class: $classes`Pastamancer`,
       completed: () => have($effect`Mental A-cue-ity`),
       do: () => cliExecute("pool 2"),
       limit: { tries: 1 },

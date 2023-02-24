@@ -38,6 +38,7 @@ import {
 import Macro from "../macro";
 import { Task } from "../engine/task";
 import { args } from "../main";
+import { burnLibrams, canCastLibrams } from "../lib";
 
 export function innerElfTask(): Task {
   return {
@@ -154,5 +155,13 @@ export function deckTask(card: string): Task {
     ready: () => have($item`Deck of Every Card`) && get("_deckCardsDrawn") <= 10,
     do: () => cliExecute(`cheat ${card.toLowerCase()}`),
     limit: { tries: 1 },
+  };
+}
+
+export function libramTask(): Task {
+  return {
+    name: "Burn Librams",
+    completed: () => !canCastLibrams(),
+    do: burnLibrams,
   };
 }

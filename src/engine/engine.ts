@@ -6,24 +6,16 @@ import { equipDefaults } from "./outfit";
 import { args } from "../main";
 
 export class Engine extends BaseEngine<never, Task> {
-  confirmed: Set<string>;
-
   constructor(tasks: Task[]) {
     // Remove tasks for other classes
     tasks = tasks.filter((task) => !task.class || task.class.includes(myClass()));
     super(tasks);
-    this.confirmed = new Set();
   }
 
   execute(task: Task): void {
-    if (
-      args.confirm &&
-      !this.confirmed.has(task.name) &&
-      !userConfirm(`Executing ${task.name}, continue?`)
-    ) {
+    if (args.confirm && !userConfirm(`Executing ${task.name}, continue?`)) {
       throw `User rejected execution of task ${task.name}`;
     }
-    this.confirmed.add(task.name);
     super.execute(task);
   }
 

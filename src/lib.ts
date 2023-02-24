@@ -58,7 +58,7 @@ export function byStat<T>(thing: StatSwitch<T>): T {
   return "default" in thing ? thing[stat] ?? thing.default : thing[stat];
 }
 
-function canCastLibrams(): boolean {
+export function canCastLibrams(): boolean {
   const summonNumber = 1 + get("libramSummons");
   const cost = 1 + (summonNumber * (summonNumber - 1)) / 2;
   return myMp() >= cost;

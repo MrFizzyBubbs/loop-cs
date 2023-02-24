@@ -14,13 +14,19 @@ import Macro from "../macro";
 import { Quest } from "../engine/task";
 import { beachTask, skillTask } from "./common";
 
+const buffs = $effects`Feeling Peaceful, Astral Shell, Ghostly Shell, Empathy, Leash of Linguini, Blood Bond`;
+
 export const HotResQuest: Quest = {
   name: "Hot Res",
   completed: () => CommunityService.HotRes.isDone(),
   tasks: [
-    ...$effects`Astral Shell, Elemental Saucesphere, Empathy, Feeling Peaceful, Leash of Linguini`.map(
-      skillTask
-    ),
+    ...buffs.map(skillTask),
+    // {
+    //   name: "Puzzle Champ",
+    //   completed: () => get("_witchessBuff"),
+    //   do: () => cliExecute("witchess"),
+    //   limit: { tries: 1 },
+    // },
     beachTask($effect`Hot-Headed`),
     {
       name: "Foam Suit",
