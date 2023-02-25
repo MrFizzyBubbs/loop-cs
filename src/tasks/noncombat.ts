@@ -3,13 +3,13 @@ import { $effect, $effects, $familiar, $item, CommunityService, get, have } from
 import { Quest } from "../engine/task";
 import { potionTask, skillTask } from "./common";
 
+const buffs = $effects`Feeling Lonely, Smooth Movements, The Sonata of Sneakiness, Invisible Avatar`;
+
 export const NoncombatQuest: Quest = {
   name: "Noncombat",
   completed: () => CommunityService.Noncombat.isDone(),
   tasks: [
-    ...$effects`Feeling Lonely, Smooth Movements, The Sonata of Sneakiness, Invisible Avatar`.map(
-      skillTask
-    ),
+    ...buffs.map(skillTask),
     {
       name: "Silent Running",
       completed: () => have($effect`Silent Running`),
@@ -33,6 +33,10 @@ export const NoncombatQuest: Quest = {
         offhand: $item`unbreakable umbrella`,
         back: $item`protonic accelerator pack`,
         shirt: $item`Jurassic Parka`,
+        pants: $item`Great Wolf's beastly trousers`,
+        acc1: $item`Brutal brogues`,
+        acc2: $item`Beach Comb`,
+        acc3: $item`hewn moon-rune spoon`,
         familiar: $familiar`Disgeist`,
         famequip: $item`tiny stillsuit`,
         modes: { umbrella: "cocoon", parka: "pterodactyl" },

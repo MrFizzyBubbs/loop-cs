@@ -21,12 +21,6 @@ export const HotResQuest: Quest = {
   completed: () => CommunityService.HotRes.isDone(),
   tasks: [
     ...buffs.map(skillTask),
-    // {
-    //   name: "Puzzle Champ",
-    //   completed: () => get("_witchessBuff"),
-    //   do: () => cliExecute("witchess"),
-    //   limit: { tries: 1 },
-    // },
     beachTask($effect`Hot-Headed`),
     {
       name: "Foam Suit",

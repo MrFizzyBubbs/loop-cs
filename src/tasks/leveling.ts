@@ -293,6 +293,14 @@ export const LevelingQuest: Quest = {
       limit: { tries: 1 },
     },
     {
+      name: "Do You Crush What I Crush?",
+      completed: () => have($effect`Do You Crush What I Crush?`),
+      do: $location`The Dire Warren`,
+      combat: new CombatStrategy().macro(Macro.skill($skill`Bowl a Curveball`)),
+      outfit: { familiar: $familiar`Ghost of Crimbo Carols`, famequip: $item.none },
+      limit: { tries: 1 },
+    },
+    {
       name: "LOV Tunnel",
       completed: () => get("_loveTunnelUsed"),
       prepare: burnLibrams,
@@ -481,9 +489,7 @@ export const LevelingQuest: Quest = {
       name: "Deep Machine Tunnels",
       completed: () => get("_machineTunnelsAdv") >= 5,
       do: $location`The Deep Machine Tunnels`,
-      combat: new CombatStrategy().macro(() =>
-        Macro.externalIf(get("_machineTunnelsAdv") === 4, Macro.skill($skill`Portscan`)).default()
-      ),
+      combat: new CombatStrategy().macro(Macro.default()),
       outfit: {
         shirt: $item`makeshift garbage shirt`,
         acc1: $item`backup camera`,

@@ -65,7 +65,7 @@ export const BoozeDropQuest: Quest = {
       do: () => cliExecute("pool 3"),
     },
     {
-      ...deckTask("X - The Wheel of Fortune"),
+      ...deckTask("X of Fortune"),
       class: $classes`Turtle Tamer`,
     },
     {

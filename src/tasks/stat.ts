@@ -1,14 +1,14 @@
 import { myThrall, Thrall, useSkill } from "kolmafia";
-import { $classes, $effect, $effects, $item, $thrall, CommunityService } from "libram";
+import { $classes, $effect, $effects, $item, $skill, $thrall, CommunityService } from "libram";
 import { Quest, Task } from "../engine/task";
 import { byStat } from "../lib";
 import { beachTask, potionTask, skillTask } from "./common";
 
 const SKILL_BUFFS = {
-  MUSCLE: $effects`Feeling Excited, Big, Song of Bravado, Rage of the Reindeer, Quiet Determination, Disdain of the War Snapper`,
+  MUSCLE: $effects`Feeling Excited, Big, Song of Bravado, Rage of the Reindeer, Quiet Determination`,
   MYSTICALITY: $effects`Feeling Excited, Big, Song of Bravado, Quiet Judgement`,
   MOXIE: $effects`Feeling Excited, Big, Song of Bravado, Quiet Desperation, Disco Fever, Blubbered Up, Mariachi Mood, Disco State of Mind`,
-  HP: $effects`Feeling Excited, Big, Song of Starch, Rage of the Reindeer, Quiet Determination, Disdain of the War Snapper`,
+  HP: $effects`Feeling Excited, Big, Song of Starch, Rage of the Reindeer, Quiet Determination`,
 };
 
 function skillBuffTasks(key: keyof typeof SKILL_BUFFS): Task[] {
@@ -45,6 +45,7 @@ export const Muscle: Quest = {
   completed: () => CommunityService.Muscle.isDone(),
   tasks: [
     ...skillBuffTasks("MUSCLE"),
+    skillTask($skill`Blessing of the War Snapper`),
     thrallTask($thrall`Elbow Macaroni`),
     equalizeTask(),
     {
@@ -95,7 +96,7 @@ export const Hitpoints: Quest = {
   completed: () => CommunityService.HP.isDone(),
   tasks: [
     ...skillBuffTasks("HP"),
-    potionTask($item`LOV Elixir #3`),
+    skillTask($skill`Blessing of the War Snapper`),
     thrallTask($thrall`Elbow Macaroni`),
     beachTask($effect`Lack of Body-Building`),
     equalizeTask(),
