@@ -1,4 +1,3 @@
-// Entire file courtesy of phccs
 import {
   availableAmount,
   haveEffect,
@@ -11,7 +10,6 @@ import {
   useSkill,
 } from "kolmafia";
 import {
-  $effects,
   $item,
   $skill,
   bestLibramToCast,
@@ -22,8 +20,6 @@ import {
   have,
   possibleLibramSummons,
 } from "libram";
-
-export const crimboCarols = $effects`Do You Crush What I Crush?, Holiday Yoked, Let It Snow/Boil/Stink/Frighten/Grease, All I Want For Crimbo Is Stuff, Crimbo Wrapping`;
 
 export function convertMilliseconds(milliseconds: number): string {
   const seconds = milliseconds / 1000;

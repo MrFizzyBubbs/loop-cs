@@ -1,6 +1,7 @@
 import {
   $classes,
   $effect,
+  $effects,
   $familiar,
   $item,
   $items,
@@ -17,13 +18,13 @@ import { CombatStrategy } from "grimoire-kolmafia";
 import { cliExecute, useSkill, visitUrl } from "kolmafia";
 import { asdonTask, deckTask, potionTask, skillTask } from "./common";
 
+const buffs = $effects`Singer's Faithful Ocelot, Fat Leon's Phat Loot Lyric, The Spirit of Taking`;
+
 export const BoozeDropQuest: Quest = {
   name: "Booze Drop",
   completed: () => CommunityService.BoozeDrop.isDone(),
   tasks: [
-    skillTask($skill`The Spirit of Taking`),
-    skillTask($skill`Singer's Faithful Ocelot`),
-    skillTask($skill`Fat Leon's Phat Loot Lyric`),
+    ...buffs.map(skillTask),
     {
       ...skillTask($effect`Spice Haze`),
       class: $classes`Seal Clubber, Turtle Tamer, Sauceror, Disco Bandit, Accordion Thief`,

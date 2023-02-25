@@ -1,6 +1,6 @@
 # loop-cs
 
-`loop-cs` is a script for looping softcore Community Service runs designed to work if you are me, [Baden (#2460823)](https://api.aventuristo.net/av-snapshot?u=Baden). It is built using the task-based engine from [grimoire](https://github.com/Loathing-Associates-Scripting-Society/grimoire) and achieves an cost-optimal(ish) run with 0/4/1 organ use for any class. This script is a greatly improved version of my previous Community Service script: [fizz-sccs](https://github.com/MrFizzyBubbs/fizz-sccs).
+`loop-cs` is a script for looping softcore Community Service runs designed to work if you are me, [Baden (#2460823)](https://api.aventuristo.net/av-snapshot?u=Baden). It is built using the task-based engine from [grimoire](https://github.com/Loathing-Associates-Scripting-Society/grimoire) and achieves a near cost-optimal run with 0/4/1 organ use for any class. This script is a greatly improved version of my previous Community Service script: [fizz-sccs](https://github.com/MrFizzyBubbs/fizz-sccs).
 
 ## Installation
 
@@ -50,7 +50,13 @@ If you meet the requirements in the following sections, there is a good chance t
 - astral chapeau from Pet Heaven
 - class-appropriate knoll moon sign
 
-### Owned Resources
+### Required Resources
+
+The table below lists the Mr. Store content required to run this script. Other resource requirements, such as skill perms, are too exhaustive to enumerate but generally include everything that [reduces test turns](https://kol.coldfront.net/thekolwiki/index.php/Community_Service#Strategy), [improves leveling](https://kol.coldfront.net/thekolwiki/index.php/Advancement), or [makes combat easier](https://kol.coldfront.net/thekolwiki/index.php/Combat_Style). Some notable (and expensive) examples are:
+
+- [Bow-Legged Swagger](<https://kol.coldfront.net/thekolwiki/index.php/Bow-Legged_Swagger_(skill)>)
+- [Sweet Synthesis](https://kol.coldfront.net/thekolwiki/index.php/Sweet_Synthesis)
+- [Mini-Trainbot](https://kol.coldfront.net/thekolwiki/index.php/Mini-Trainbot)
 
 | Year | Month      | Resource                                                                                                                                      |
 | ---- | ---------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -81,6 +87,7 @@ If you meet the requirements in the following sections, there is a good chance t
 | 2017 | June       | [suspicious package](https://kol.coldfront.net/thekolwiki/index.php/Suspicious_package)                                                       |
 | 2017 | July       | [LI-11 Motor Pool voucher](https://kol.coldfront.net/thekolwiki/index.php/LI-11_Motor_Pool_voucher)                                           |
 | 2017 | August     | [Pocket Meteor Guide](https://kol.coldfront.net/thekolwiki/index.php/Pocket_Meteor_Guide)                                                     |
+| 2017 | August     | [Horsery contract](https://kol.coldfront.net/thekolwiki/index.php/Horsery_contract)                                                           |
 | 2017 | December   | [locked mumming trunk](https://kol.coldfront.net/thekolwiki/index.php/Locked_mumming_trunk)                                                   |
 | 2018 | January    | [January's Garbage Tote (unopened)](<https://kol.coldfront.net/thekolwiki/index.php/January%27s_Garbage_Tote_(unopened)>)                     |
 | 2018 | May        | [God Lobster Egg](https://kol.coldfront.net/thekolwiki/index.php/God_Lobster_Egg)                                                             |
@@ -121,3 +128,5 @@ If you meet the requirements in the following sections, there is a good chance t
 | 2022 | August     | [unopened tiny stillsuit](https://kol.coldfront.net/thekolwiki/index.php/Unopened_tiny_stillsuit)                                             |
 | 2022 | September  | [packaged Jurassic Parka](https://kol.coldfront.net/thekolwiki/index.php/Packaged_Jurassic_Parka)                                             |
 | 2022 | October    | [boxed autumn-aton](https://kol.coldfront.net/thekolwiki/index.php/Boxed_autumn-aton)                                                         |
+| 2022 | November   | [deed to Oliver's Place](http://kol.coldfront.net/thekolwiki/index.php/deed%20to%20Oliver's%20Place)                                          |
+|      |
