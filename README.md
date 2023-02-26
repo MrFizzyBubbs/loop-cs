@@ -14,13 +14,18 @@ Will require [a recent build of KoLMafia](http://builds.kolmafia.us/job/Kolmafia
 
 ## Usage
 
-Be in a softcore Community Service run that meets the [requirements](#requirements) and either type `loopcs` in the graphical CLI or select it from the Scripts menu. There are several optional arguments:
+Be in a softcore Community Service run that meets the [requirements](#requirements) and run `loopcs`.
 
-1. `confirm` BOOLEAN - If the user must confirm execution of each task. _[default: false]_ _[setting: loopcs_confirm]_
-2. `vipclan` TEXT - Name of clan that has a fully stocked VIP lounge. _[default: Margaretting Tye]_ _[setting: loopcs_vipclan]_
-3. `slimeclan` TEXT - Name of clan that has Mother Slime ready in The Slime Tube. _[default: Hobopolis Vacation Home]_ _[setting: loopcs_slimeclan]_
+The script provides several options that can be changed in a few different ways:
 
-These arguments be specified in the CLI when running the script (e.g., `loopcs confirm=true`) or as a preference (e.g., `set loopcs_vipclan="Bonus Adventures from Hell"`).
+- By setting a mafia setting, e.g. `set loopcs_vipclan="Margaretting Tye"`.
+- By providing an argument at runtime, e.g. `loopcs vipclan="Margaretting Tye"`. Note that any arguments provided at runtime override mafia settings.
+
+Run `loopcs help` for the full set of script commands and options:
+
+```
+
+```
 
 ## Requirements
 
@@ -50,13 +55,9 @@ If you meet the requirements in the following sections, there is a good chance t
 - astral chapeau from Pet Heaven
 - class-appropriate knoll moon sign
 
-### Required Resources
+### Owned Resources
 
-The table below lists the Mr. Store content required to run this script. Other resource requirements, such as skill perms, are too exhaustive to enumerate but generally include everything that [reduces test turns](https://kol.coldfront.net/thekolwiki/index.php/Community_Service#Strategy), [improves leveling](https://kol.coldfront.net/thekolwiki/index.php/Advancement), or [makes combat easier](https://kol.coldfront.net/thekolwiki/index.php/Combat_Style). Some notable (and expensive) examples are:
-
-- [Bow-Legged Swagger](<https://kol.coldfront.net/thekolwiki/index.php/Bow-Legged_Swagger_(skill)>)
-- [Sweet Synthesis](https://kol.coldfront.net/thekolwiki/index.php/Sweet_Synthesis)
-- [Mini-Trainbot](https://kol.coldfront.net/thekolwiki/index.php/Mini-Trainbot)
+The table below lists the Mr. Store content required to run this script. Other resource requirements, such as skill perms, are too exhaustive to enumerate but generally include everything that [reduces test turns](https://kol.coldfront.net/thekolwiki/index.php/Community_Service#Strategy), [improves leveling](https://kol.coldfront.net/thekolwiki/index.php/Advancement), or [makes combat easier](https://kol.coldfront.net/thekolwiki/index.php/Combat_Style). Some notable (and expensive) examples are [Bow-Legged Swagger](<https://kol.coldfront.net/thekolwiki/index.php/Bow-Legged_Swagger_(skill)>), [Sweet Synthesis](https://kol.coldfront.net/thekolwiki/index.php/Sweet_Synthesis), and [Mini-Trainbot](https://kol.coldfront.net/thekolwiki/index.php/Mini-Trainbot).
 
 | Year | Month      | Resource                                                                                                                                      |
 | ---- | ---------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
