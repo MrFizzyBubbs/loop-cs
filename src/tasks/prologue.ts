@@ -36,7 +36,7 @@ const BEST_INITIATIVE = byClass({
   "Turtle Tamer": 3, // Weapon Damage Percent: 100
   Pastamancer: 2, // Familiar exp: 2
   Sauceror: 1, // Exp: 3
-  "Disco Bandit": 4, // Maximum MP Percent: 30
+  "Disco Bandit": 0, // Maximum MP Percent: 30
   "Accordion Thief": 1, // Booze Drop: 30
 });
 

@@ -54,7 +54,7 @@ export function innerElfTask(): Task {
     ),
     choices: { 326: 1 },
     effects: [$effect`Blood Bubble`],
-    outfit: { acc1: $item`Kremlin's Greatest Briefcase`, familiar: $familiar`Machine Elf` },
+    outfit: { acc3: $item`Kremlin's Greatest Briefcase`, familiar: $familiar`Machine Elf` },
     limit: { tries: 1 },
   };
 }

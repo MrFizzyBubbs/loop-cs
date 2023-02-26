@@ -162,6 +162,7 @@ export const LevelingQuest: Quest = {
       limit: { tries: 1 },
     },
     {
+      // Minimize pants switching
       name: "Sewer Items",
       completed: () => $items`turtle totem, saucepan, stolen accordion`.every((item) => have(item)),
       do: () =>
@@ -252,7 +253,7 @@ export const LevelingQuest: Quest = {
       outfit: {
         back: $item`protonic accelerator pack`,
         offhand: $item`weeping willow wand`,
-        acc1: $item`Lil' Doctor™ bag`,
+        acc3: $item`Lil' Doctor™ bag`,
       },
       limit: { tries: 1 },
     },
@@ -420,7 +421,7 @@ export const LevelingQuest: Quest = {
       ),
       outfit: {
         shirt: $item`makeshift garbage shirt`,
-        acc1: $item`backup camera`,
+        acc3: $item`backup camera`,
         modes: { backupcamera: "ml" },
       },
       acquire: [{ item: $item`makeshift garbage shirt` }],
@@ -492,7 +493,7 @@ export const LevelingQuest: Quest = {
       combat: new CombatStrategy().macro(Macro.default()),
       outfit: {
         shirt: $item`makeshift garbage shirt`,
-        acc1: $item`backup camera`,
+        acc3: $item`backup camera`,
         familiar: $familiar`Machine Elf`,
         modes: { backupcamera: "ml" },
       },
@@ -524,7 +525,7 @@ export const LevelingQuest: Quest = {
       outfit: {
         offhand: $item`Kramco Sausage-o-Matic™`,
         shirt: $item`makeshift garbage shirt`,
-        acc1: $item`backup camera`,
+        acc3: $item`backup camera`,
         modes: { backupcamera: "ml" },
       },
       acquire: [{ item: $item`makeshift garbage shirt` }],
@@ -542,7 +543,7 @@ export const LevelingQuest: Quest = {
       ),
       outfit: {
         shirt: $item`makeshift garbage shirt`,
-        acc1: $item`backup camera`,
+        acc3: $item`backup camera`,
         modes: { backupcamera: "ml" },
       },
       acquire: [{ item: $item`makeshift garbage shirt` }],
