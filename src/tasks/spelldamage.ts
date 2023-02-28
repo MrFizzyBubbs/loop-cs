@@ -22,7 +22,7 @@ import {
   get,
   have,
 } from "libram";
-import Macro from "../macro";
+import Macro from "../combat";
 import { Quest } from "../engine/task";
 import { byClass, byStat } from "../lib";
 import { innerElfTask, meteorShowerTask, potionTask, skillTask } from "./common";

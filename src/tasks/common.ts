@@ -35,7 +35,7 @@ import {
   get,
   have,
 } from "libram";
-import Macro from "../macro";
+import Macro from "../combat";
 import { Task } from "../engine/task";
 import { args } from "../main";
 import { burnLibrams, canCastLibrams } from "../lib";

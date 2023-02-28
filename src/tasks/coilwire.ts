@@ -17,7 +17,7 @@ import {
   getTodaysHolidayWanderers,
   have,
 } from "libram";
-import Macro from "../macro";
+import Macro from "../combat";
 import { Quest } from "../engine/task";
 import { burnLibrams } from "../lib";
 

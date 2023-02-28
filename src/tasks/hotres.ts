@@ -10,7 +10,7 @@ import {
   get,
   have,
 } from "libram";
-import Macro from "../macro";
+import Macro from "../combat";
 import { Quest } from "../engine/task";
 import { beachTask, skillTask } from "./common";
 

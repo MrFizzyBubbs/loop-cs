@@ -31,7 +31,7 @@ import {
   TunnelOfLove,
   Witchess,
 } from "libram";
-import Macro from "../macro";
+import Macro from "../combat";
 import { Quest } from "../engine/task";
 import { burnLibrams, byClass, byStat } from "../lib";
 import { beachTask, innerElfTask, potionTask, skillTask } from "./common";
