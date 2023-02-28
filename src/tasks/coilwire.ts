@@ -1,21 +1,25 @@
 import { CombatStrategy } from "grimoire-kolmafia";
-import { adv1, cliExecute, myHp, myMaxhp } from "kolmafia";
+import { adv1, cliExecute, myPrimestat } from "kolmafia";
 import {
+  $classes,
   $effect,
   $familiar,
   $item,
   $location,
+  $monster,
   $skill,
+  Cartography,
+  CombatLoversLocket,
   CommunityService,
   CrimboShrub,
   get,
   getKramcoWandererChance,
   getTodaysHolidayWanderers,
   have,
-  StompingBoots,
 } from "libram";
 import Macro from "../combat";
 import { Quest } from "../engine/task";
+import { burnLibrams } from "../lib";
 
 export const CoilWireQuest: Quest = {
   name: "Coil Wire",
@@ -23,7 +27,6 @@ export const CoilWireQuest: Quest = {
   tasks: [
     {
       name: "Holiday Runaway",
-      ready: () => StompingBoots.couldRunaway(),
       completed: () => getTodaysHolidayWanderers().length === 0 || get("_banderRunaways") >= 1,
       do: $location`Noob Cave`,
       combat: new CombatStrategy().macro(Macro.runaway()),
@@ -32,24 +35,23 @@ export const CoilWireQuest: Quest = {
     },
     {
       name: "Shrub Meat",
+      completed: () => have($effect`Everything Looks Red`),
       ready: () => have($item`cosmic bowling ball`),
       prepare: (): void => {
-        CrimboShrub.decorate("Mysticality", "Spooky Damage", "Blocking", "Red Ray");
-        if (myHp() < myMaxhp()) cliExecute("hottub");
+        CrimboShrub.decorate(myPrimestat().toString(), "Spooky Damage", "Blocking", "Red Ray");
+        if (get("_hotTubSoaks") < 1) cliExecute("hottub");
       },
-      completed: () => have($effect`Everything Looks Red`),
       do: $location`The Skeleton Store`, // Shrub's spooky damage won't kill monsters here
       combat: new CombatStrategy().macro(
         Macro.skill($skill`Open a Big Red Present`).skill($skill`Bowl a Curveball`)
       ),
-      choices: { 1387: 3 },
       outfit: { familiar: $familiar`Crimbo Shrub` },
       limit: { tries: 2 }, // Skeletons in Store opening NC
     },
     {
       name: "Kramco",
-      ready: () => getKramcoWandererChance() >= 1.0,
       completed: () => get("_sausageFights") > 0,
+      ready: () => getKramcoWandererChance() >= 1,
       do: $location`Noob Cave`,
       combat: new CombatStrategy().macro(
         Macro.skill($skill`Micrometeorite`)
@@ -64,8 +66,8 @@ export const CoilWireQuest: Quest = {
     },
     {
       name: "Mimic",
-      ready: () => get("ghostLocation") !== $location`none`,
       completed: () => get("_bagOfCandy"),
+      ready: () => get("ghostLocation") !== $location`none`,
       do: () => adv1(get("ghostLocation", $location`none`), 0, ""),
       combat: new CombatStrategy().macro(
         Macro.delevel()
@@ -78,18 +80,38 @@ export const CoilWireQuest: Quest = {
         back: $item`protonic accelerator pack`,
         offhand: $item`weeping willow wand`,
         familiar: $familiar`Stocking Mimic`,
-        famequip: $item`none`,
+        famequip: $item.none,
       },
+      limit: { tries: 1 },
+    },
+    {
+      name: "Fruity Skeleton",
+      class: $classes`Seal Clubber, Turtle Tamer, Sauceror`,
+      completed: () => have($item`cherry`),
+      ready: () => !have($effect`Everything Looks Yellow`),
+      do: (): void => {
+        Cartography.mapMonster($location`The Skeleton Store`, $monster`novelty tropical skeleton`);
+      },
+      outfit: { shirt: $item`Jurassic Parka`, modes: { parka: "dilophosaur" } },
+      combat: new CombatStrategy().macro(Macro.skill($skill`Spit jurassic acid`)),
+      limit: { tries: 1 },
+    },
+    {
+      name: "Evil Olive",
+      class: $classes`Disco Bandit, Accordion Thief`,
+      completed: () => have($item`jumbo olive`),
+      ready: () => !have($effect`Everything Looks Yellow`),
+      do: () => CombatLoversLocket.reminisce($monster`Evil Olive`),
+      outfit: { shirt: $item`Jurassic Parka`, modes: { parka: "dilophosaur" } },
+      combat: new CombatStrategy().macro(Macro.skill($skill`Spit jurassic acid`)),
       limit: { tries: 1 },
     },
     {
       name: "Test",
       completed: () => CommunityService.CoilWire.isDone(),
+      prepare: burnLibrams,
       do: () => CommunityService.CoilWire.run(() => undefined),
-      outfit: {
-        familiar: $familiar`Left-Hand Man`,
-        modifier: "mp, mp regen, switch disembodied hand",
-      },
+      outfit: { modifier: "mp, mp regen 15min" },
       limit: { tries: 1 },
     },
   ],

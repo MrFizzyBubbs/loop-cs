@@ -1,16 +1,31 @@
 import { CombatStrategy } from "grimoire-kolmafia";
-import { $effect, $familiar, $item, $location, $skill, CommunityService, get, have } from "libram";
+import {
+  $effect,
+  $effects,
+  $familiar,
+  $item,
+  $location,
+  $skill,
+  CommunityService,
+  get,
+  have,
+} from "libram";
 import Macro from "../combat";
 import { Quest } from "../engine/task";
+import { beachTask, skillTask } from "./common";
+
+const buffs = $effects`Feeling Peaceful, Astral Shell, Ghostly Shell, Empathy, Leash of Linguini, Blood Bond`;
 
 export const HotResQuest: Quest = {
   name: "Hot Res",
   completed: () => CommunityService.HotRes.isDone(),
   tasks: [
+    ...buffs.map(skillTask),
+    beachTask($effect`Hot-Headed`),
     {
       name: "Foam Suit",
-      ready: () => get("_fireExtinguisherCharge") >= 10 && get("_saberForceUses") < 5,
       completed: () => have($effect`Fireproof Foam Suit`),
+      ready: () => get("_fireExtinguisherCharge") >= 10 && get("_saberForceUses") < 5,
       do: $location`The Dire Warren`,
       combat: new CombatStrategy().macro(
         Macro.skill($skill`Fire Extinguisher: Foam Yourself`).skill($skill`Use the Force`)
@@ -28,26 +43,18 @@ export const HotResQuest: Quest = {
       completed: () => CommunityService.HotRes.isDone(),
       do: () => CommunityService.HotRes.run(() => undefined, 1),
       outfit: {
-        back: $item`unwrapped knock-off retro superhero cape`,
         weapon: $item`Fourth of May Cosplay Saber`,
         offhand: $item`industrial fire extinguisher`,
+        back: $item`unwrapped knock-off retro superhero cape`,
         shirt: $item`Jurassic Parka`,
-        pants: $item`pantogram pants`,
+        pants: $item`designer sweatpants`,
         acc1: $item`Brutal brogues`,
         acc2: $item`hewn moon-rune spoon`,
         acc3: $item`Beach Comb`,
         familiar: $familiar`Exotic Parrot`,
+        famequip: $item`tiny stillsuit`,
         modes: { retrocape: ["vampire", "hold"], parka: "pterodactyl" },
       },
-      effects: [
-        $effect`Astral Shell`,
-        $effect`Elemental Saucesphere`,
-        $effect`Empathy`,
-        $effect`Feeling Peaceful`,
-        $effect`Hot-Headed`,
-        $effect`Leash of Linguini`,
-        $effect`Sleazy Hands`,
-      ],
       limit: { tries: 1 },
     },
   ],

@@ -1,109 +1,133 @@
 import { CombatStrategy } from "grimoire-kolmafia";
 import {
+  canEquip,
   cliExecute,
-  elementalResistance,
   myHp,
   myLevel,
   myMaxhp,
   numericModifier,
+  takeStorage,
   useSkill,
 } from "kolmafia";
 import {
+  $classes,
   $effect,
   $effects,
-  $element,
   $familiar,
   $item,
+  $items,
   $location,
   $skill,
   CommunityService,
-  ensureEffect,
   get,
   have,
 } from "libram";
 import Macro from "../combat";
 import { Quest } from "../engine/task";
-import { innerElf, meteorShower } from "./common";
+import { byClass, byStat } from "../lib";
+import { innerElfTask, meteorShowerTask, potionTask, skillTask } from "./common";
+
+const buffs = $effects`Arched Eyebrow of the Archmage, Carol of the Hells, Jackasses' Symphony of Destruction, Simmering, Song of Sauce, Spirit of Cayenne`;
+
+const chefstaff = byStat({
+  Mysticality: $item`Staff of the Roaring Hearth`,
+  default: $item`Staff of Simmering Hatred`,
+});
+
+const maxTurns = byClass({
+  Pastamancer: 10,
+  Sauceror: 8,
+  "Accordion Thief": 11,
+  default: 12,
+});
 
 export const SpellDamageQuest: Quest = {
   name: "Spell Damage",
   completed: () => CommunityService.SpellDamage.isDone(),
   tasks: [
+    ...buffs.map(skillTask),
+    { ...skillTask($skill`Elron's Explosive Etude`), class: $classes`Accordion Thief` },
     {
-      name: "Saucefingers",
-      ready: () => myLevel() >= 15 && get("_reflexHammerUsed") < 3,
-      completed: () => have($effect`Saucefingers`),
-      do: $location`The Dire Warren`,
-      outfit: { acc1: $item`Lil' Doctor™ bag`, familiar: $familiar`Mini-Adventurer` },
-      choices: { 768: 4 },
-      combat: new CombatStrategy().macro(Macro.skill($skill`Reflex Hammer`)),
-      limit: { tries: 2 },
-    },
-    {
-      name: "Simmer",
-      completed: () => have($effect`Simmering`),
-      do: () => ensureEffect($effect`Simmering`),
+      name: "Play Pool",
+      completed: () => have($effect`Mental A-cue-ity`),
+      do: () => cliExecute("pool 2"),
       limit: { tries: 1 },
     },
-    innerElf(),
-    meteorShower(),
     {
-      name: "KGB",
+      name: "Deep Dark Visions",
+      completed: () => have($effect`Visions of the Deep Dark Deeps`),
+      do: (): void => {
+        while (myHp() < myMaxhp()) useSkill($skill`Cannelloni Cocoon`);
+        useSkill($skill`Deep Dark Visions`);
+      },
+      outfit: {
+        shirt: $item`Jurassic Parka`,
+        back: $item`unwrapped knock-off retro superhero cape`,
+        weapon: $item`Fourth of May Cosplay Saber`,
+        familiar: $familiar`Exotic Parrot`,
+        famequip: $item`tiny stillsuit`,
+        modes: { parka: "ghostasaurus", retrocape: ["vampire", "hold"] },
+      },
+      limit: { tries: 1 },
+    },
+    potionTask($item`tobiko marble soda`, true),
+    potionTask($item`cordial of concentration`, true),
+    {
+      name: "Barrel Prayer",
+      class: $classes`Sauceror`,
+      completed: () => get("_barrelPrayer"),
+      do: () => cliExecute("barrelprayer buff"),
+    },
+    {
+      name: "Briefcase Enchantment",
       completed: () =>
         numericModifier($item`Kremlin's Greatest Briefcase`, "Spell Damage Percent") > 0,
       do: () => cliExecute("Briefcase.ash enchantment spell"),
       limit: { tries: 1 },
     },
     {
-      name: "Deep Dark",
-      completed: () => have($effect`Visions of the Deep Dark Deeps`),
-      do: (): void => {
-        const resist = 1 - elementalResistance($element`spooky`) / 100;
-        const neededHp = Math.max(500, myMaxhp() * 4 * resist);
-        if (myMaxhp() < neededHp) throw `Not enough HP for Deep Dark Visions.`;
-        while (myHp() < neededHp) useSkill($skill`Cannelloni Cocoon`);
-        useSkill($skill`Deep Dark Visions`);
-      },
-      outfit: {
-        familiar: $familiar`Exotic Parrot`,
-        modifier: "HP 500max, Spooky Resistance",
-      },
-      effects: $effects`Astral Shell, Elemental Saucesphere`,
-      limit: { tries: 1 },
+      name: "Cargopocket",
+      completed: () => get("_cargoPocketEmptied"),
+      do: () => cliExecute("cargo 177"),
     },
+    potionTask($item`Yeg's Motel hand soap`),
     {
-      name: "Snack Voucher",
-      completed: () => get("grimoire3Summons") > 0,
-      do: () => useSkill($skill`Summon Alice's Army Cards`),
-      limit: { tries: 1 },
+      name: "Saucefingers",
+      class: $classes`Pastamancer`,
+      completed: () => have($effect`Saucefingers`),
+      ready: () => myLevel() >= 15 && get("_reflexHammerUsed") < 3,
+      do: $location`The Dire Warren`,
+      outfit: { acc3: $item`Lil' Doctor™ bag`, familiar: $familiar`Mini-Adventurer` },
+      choices: { 768: 4 },
+      combat: new CombatStrategy().macro(Macro.skill($skill`Reflex Hammer`)),
+      limit: { tries: 2 },
+    },
+    innerElfTask(),
+    meteorShowerTask(),
+    {
+      name: "Pull Staff",
+      completed: () => have(chefstaff),
+      do: (): void => {
+        if (!canEquip(chefstaff)) {
+          throw `Unable to equip chefstaff ${chefstaff}`;
+        }
+        takeStorage(chefstaff, 1);
+      },
     },
     {
       name: "Test",
       completed: () => CommunityService.SpellDamage.isDone(),
-      do: () => CommunityService.SpellDamage.run(() => undefined, 16),
+      do: () => CommunityService.SpellDamage.run(() => undefined, maxTurns),
       outfit: {
-        hat: $item`astral chapeau`,
-        weapon: $item`Staff of the Roaring Hearth`,
-        offhand: $item`weeping willow wand`,
-        pants: $item`pantogram pants`,
+        hat: $items`astral chapeau, Hollandaise helmet, none`,
+        weapon: chefstaff,
+        offhand: $items`Abracandalabra, weeping willow wand`,
         acc1: $item`battle broom`,
         acc2: $item`Powerful Glove`,
         acc3: $item`Kremlin's Greatest Briefcase`,
-        famequip: $item`Stick-Knife of Loathing`,
         familiar: $familiar`Disembodied Hand`,
+        famequip: $item`Stick-Knife of Loathing`,
       },
-      effects: [
-        $effect`Arched Eyebrow of the Archmage`,
-        $effect`Carol of the Hells`,
-        $effect`Concentration`,
-        $effect`Cowrruption`,
-        $effect`Jackasses' Symphony of Destruction`,
-        $effect`Mental A-cue-ity`,
-        $effect`Pisces in the Skyces`,
-        $effect`Song of Sauce`,
-        $effect`The Magic of LOV`,
-        $effect`We're All Made of Starfish`,
-      ],
       limit: { tries: 1 },
     },
   ],

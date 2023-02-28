@@ -1,73 +1,119 @@
-import { useSkill } from "kolmafia";
-import { $effect, $effects, $skill, CommunityService } from "libram";
-import { Quest } from "../engine/task";
+import { myThrall, Thrall, useSkill } from "kolmafia";
+import { $classes, $effect, $effects, $item, $skill, $thrall, CommunityService } from "libram";
+import { Quest, Task } from "../engine/task";
+import { byStat } from "../lib";
+import { beachTask, potionTask, skillTask } from "./common";
 
-export const MoxieQuest: Quest = {
-  name: "Moxie",
-  tasks: [
-    {
-      name: "Test",
-      prepare: () => useSkill($skill`Bind Penne Dreadful`),
-      completed: () => CommunityService.Moxie.isDone(),
-      do: () => CommunityService.Moxie.run(() => undefined, 1),
-      outfit: { modifier: "Moxie" },
-      effects: [$effect`Quiet Desperation`],
-      limit: { tries: 1 },
-    },
-  ],
+const SKILL_BUFFS = {
+  MUSCLE: $effects`Feeling Excited, Big, Song of Bravado, Rage of the Reindeer, Quiet Determination`,
+  MYSTICALITY: $effects`Feeling Excited, Big, Song of Bravado, Quiet Judgement`,
+  MOXIE: $effects`Feeling Excited, Big, Song of Bravado, Quiet Desperation, Disco Fever, Blubbered Up, Mariachi Mood, Disco State of Mind`,
+  HP: $effects`Feeling Excited, Big, Song of Starch, Rage of the Reindeer, Quiet Determination`,
 };
 
-export const MuscleQuest: Quest = {
+function skillBuffTasks(key: keyof typeof SKILL_BUFFS): Task[] {
+  return SKILL_BUFFS[key].map(skillTask);
+}
+
+function thrallTask(thrall: Thrall): Task {
+  return {
+    name: thrall.toString(),
+    class: $classes`Pastamancer`,
+    completed: () => myThrall() === thrall,
+    do: () => useSkill(thrall.skill),
+    limit: { tries: 1 },
+  };
+}
+
+function equalizeTask(): Task {
+  return {
+    ...potionTask(
+      byStat({
+        Muscle: $item`oil of stability`,
+        Mysticality: $item`oil of expertise`,
+        Moxie: $item`oil of slipperiness`,
+      }),
+      true
+    ),
+    class: $classes`Seal Clubber, Turtle Tamer, Disco Bandit, Accordion Thief, Sauceror`,
+    limit: { tries: 1 },
+  };
+}
+
+export const Muscle: Quest = {
   name: "Muscle",
+  completed: () => CommunityService.Muscle.isDone(),
   tasks: [
+    ...skillBuffTasks("MUSCLE"),
+    skillTask($skill`Blessing of the War Snapper`),
+    thrallTask($thrall`Elbow Macaroni`),
+    equalizeTask(),
     {
       name: "Test",
-      prepare: () => useSkill($skill`Bind Undead Elbow Macaroni`),
       completed: () => CommunityService.Muscle.isDone(),
       do: () => CommunityService.Muscle.run(() => undefined, 1),
       outfit: { modifier: "Muscle" },
-      effects: [
-        $effect`Ham-Fisted`,
-        $effect`Quiet Determination`,
-        $effect`Power Ballad of the Arrowsmith`,
-        $effect`Rage of the Reindeer`,
-      ],
       limit: { tries: 1 },
     },
   ],
 };
 
-export const HPQuest: Quest = {
-  name: "HP",
-  tasks: [
-    {
-      name: "Test",
-      prepare: () => useSkill($skill`Bind Undead Elbow Macaroni`),
-      completed: () => CommunityService.HP.isDone(),
-      do: () => CommunityService.HP.run(() => undefined, 1),
-      outfit: { modifier: "HP" },
-      effects: [
-        $effect`A Few Extra Pounds`,
-        $effect`Power Ballad of the Arrowsmith`,
-        $effect`Quiet Determination`,
-        $effect`Reptilian Fortitude`,
-        $effect`Song of Starch`,
-      ],
-      limit: { tries: 1 },
-    },
-  ],
-};
-
-export const MysticalityQuest: Quest = {
+export const Mysticality: Quest = {
   name: "Mysticality",
+  completed: () => CommunityService.Mysticality.isDone(),
   tasks: [
+    ...skillBuffTasks("MYSTICALITY"),
+    equalizeTask(),
     {
       name: "Test",
       completed: () => CommunityService.Mysticality.isDone(),
       do: () => CommunityService.Mysticality.run(() => undefined, 1),
       outfit: { modifier: "Mysticality" },
-      effects: $effects`Quiet Judgement`,
       limit: { tries: 1 },
     },
   ],
 };
+
+export const Moxie: Quest = {
+  name: "Moxie",
+  completed: () => CommunityService.Moxie.isDone(),
+  tasks: [
+    ...skillBuffTasks("MOXIE"),
+    thrallTask($thrall`Penne Dreadful`),
+    equalizeTask(),
+    {
+      name: "Test",
+      completed: () => CommunityService.Moxie.isDone(),
+      do: () => CommunityService.Moxie.run(() => undefined, 1),
+      outfit: { modifier: "Moxie" },
+      limit: { tries: 1 },
+    },
+  ],
+};
+
+export const Hitpoints: Quest = {
+  name: "Hitpoints",
+  completed: () => CommunityService.HP.isDone(),
+  tasks: [
+    ...skillBuffTasks("HP"),
+    skillTask($skill`Blessing of the War Snapper`),
+    thrallTask($thrall`Elbow Macaroni`),
+    beachTask($effect`Lack of Body-Building`),
+    equalizeTask(),
+    {
+      name: "Test",
+      completed: () => CommunityService.HP.isDone(),
+      do: () => CommunityService.HP.run(() => undefined, 1),
+      outfit: { modifier: "HP" },
+      limit: { tries: 1 },
+    },
+  ],
+};
+
+const StatTests = byStat({
+  Muscle: [Moxie, Mysticality, Hitpoints, Muscle],
+  Mysticality: [Moxie, Muscle, Hitpoints, Mysticality],
+  Moxie: [Mysticality, Muscle, Hitpoints, Moxie],
+});
+
+export default StatTests;

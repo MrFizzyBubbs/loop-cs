@@ -1,0 +1,35 @@
+import { cliExecute, drink, myInebriety, myLevel, reverseNumberology, use } from "kolmafia";
+import { $effects, $item, get, have } from "libram";
+import { Quest } from "../engine/task";
+
+export const DietQuest: Quest = {
+  name: "Diet",
+  tasks: [
+    {
+      name: "Numberology",
+      completed: () => get("_universeCalculated") >= Math.min(get("skillLevel144"), 3),
+      ready: () => Object.keys(reverseNumberology()).includes("69"), //&& get("skillLevel144") <= 3,
+      do: () => cliExecute("numberology 69"),
+      limit: { tries: 3 },
+    },
+    {
+      name: "Borrowed Time",
+      completed: () => get("_borrowedTimeUsed"),
+      do: () => use($item`borrowed time`),
+      acquire: [{ item: $item`borrowed time` }],
+      limit: { tries: 1 },
+    },
+    {
+      name: "Open Six-Pack",
+      completed: () => !have($item`astral six-pack`),
+      do: () => use($item`astral six-pack`),
+    },
+    {
+      name: "Drink Pilsner",
+      completed: () => myInebriety() >= 4,
+      ready: () => myLevel() >= 11,
+      do: () => drink($item`astral pilsner`),
+      effects: $effects`Ode to Booze`,
+    },
+  ],
+};

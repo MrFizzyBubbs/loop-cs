@@ -1,22 +1,66 @@
 import {
   cliExecute,
+  getCampground,
   getClanName,
   getWorkshed,
-  pullsRemaining,
+  myPrimestat,
   retrieveItem,
-  reverseNumberology,
   runChoice,
   takeStorage,
   use,
+  useSkill,
   visitUrl,
 } from "kolmafia";
-import { $familiar, $item, $skill, Clan, get, have, Pantogram, SongBoom } from "libram";
+import {
+  $classes,
+  $familiar,
+  $item,
+  $location,
+  $skill,
+  AutumnAton,
+  Clan,
+  get,
+  have,
+  SongBoom,
+  SourceTerminal,
+} from "libram";
 import { Quest } from "../engine/task";
+import { byClass } from "../lib";
 import { args } from "../main";
+import { deckTask } from "./common";
 
-export const RunStartQuest: Quest = {
-  name: "Run Start",
+const PULLS = [$item`Great Wolf's beastly trousers`, $item`Stick-Knife of Loathing`];
+
+const BEST_INITIATIVE = byClass({
+  "Seal Clubber": 2, // Familiar exp: 2
+  "Turtle Tamer": 0, // Weapon Damage Percent: 100
+  Pastamancer: 2, // Familiar exp: 2
+  Sauceror: 1, // Exp: 3
+  "Disco Bandit": 0, // Maximum MP Percent: 30
+  "Accordion Thief": 2, // Booze Drop: 30
+});
+
+export const PrologueQuest: Quest = {
+  name: "Prologue",
   tasks: [
+    {
+      name: "Workshed",
+      completed: () => getWorkshed() === $item`Asdon Martin keyfob`,
+      do: () => use($item`Asdon Martin keyfob`),
+      limit: { tries: 1 },
+    },
+    {
+      name: "Garden",
+      completed: () => [0, undefined].includes(getCampground()[$item`peppermint sprout`.name]),
+      do: () => cliExecute("garden pick"),
+      limit: { tries: 1 },
+    },
+    {
+      name: "Non-Staff Pulls",
+      completed: () => PULLS.every((item) => have(item)),
+      do: () => PULLS.filter((item) => !have(item)).forEach((item) => takeStorage(1, item)),
+      limit: { tries: 1 },
+    },
     {
       name: "Clan",
       completed: () => getClanName() === args.vipclan,
@@ -65,30 +109,10 @@ export const RunStartQuest: Quest = {
       limit: { tries: 1 },
     },
     {
-      name: "Numberology",
-      ready: () => Object.keys(reverseNumberology()).includes("69"),
-      completed: () => get("_universeCalculated") >= Math.min(get("skillLevel144"), 3),
-      do: () => cliExecute("numberology 69"),
-      limit: { tries: 3 },
-    },
-    {
-      name: "Borrowed Time",
-      completed: () => get("_borrowedTimeUsed"),
-      do: () => use($item`borrowed time`),
-      acquire: [{ item: $item`borrowed time` }],
-      limit: { tries: 1 },
-    },
-    {
-      name: "Pulls",
-      completed: () => pullsRemaining() <= 2,
-      do: () =>
-        [
-          $item`Great Wolf's beastly trousers`,
-          $item`Stick-Knife of Loathing`,
-          $item`Staff of the Roaring Hearth`,
-        ]
-          .filter((item) => !have(item))
-          .forEach((item) => takeStorage(1, item)),
+      name: "Alice's Army",
+      completed: () => !!get("grimoire3Summons"),
+      ready: () => have($skill`Summon Alice's Army Cards`),
+      do: () => useSkill(1, $skill`Summon Alice's Army Cards`),
       limit: { tries: 1 },
     },
     {
@@ -97,10 +121,13 @@ export const RunStartQuest: Quest = {
       do: () => visitUrl("place.php?whichplace=chateau&action=chateau_desk"),
       limit: { tries: 1 },
     },
+    deckTask("Forest"),
+    deckTask("Rope"),
     {
-      name: "Deck",
-      completed: () => get("_deckCardsDrawn") >= 10,
-      do: () => cliExecute("cheat rope; cheat forest"),
+      name: "Barrel Hoop Earring",
+      completed: () => get("_barrelPrayer"),
+      class: $classes`Seal Clubber, Disco Bandit`,
+      do: () => cliExecute("barrelprayer glamour"),
       limit: { tries: 1 },
     },
     {
@@ -110,29 +137,21 @@ export const RunStartQuest: Quest = {
       limit: { tries: 1 },
     },
     {
+      name: "Terminal Skill",
+      completed: () => SourceTerminal.getSkills().includes($skill`Portscan`),
+      do: () => SourceTerminal.educate($skill`Portscan`),
+      limit: { tries: 1 },
+    },
+    {
       name: "Detective Badge",
       completed: () => have($item`gold detective badge`),
       do: () => visitUrl("place.php?whichplace=town_wrong&action=townwrong_precinct"),
       limit: { tries: 1 },
     },
     {
-      name: "Pantogramming",
-      completed: () => Pantogram.havePants(),
-      do: (): void => {
-        Pantogram.makePants(
-          "Mysticality",
-          "Hot Resistance: 2",
-          "Maximum HP: 40",
-          "Combat Rate: -5",
-          "Spell Damage Percent: 20"
-        );
-      },
-      limit: { tries: 1 },
-    },
-    {
       name: "Mummery",
-      completed: () => get("_mummeryMods").includes("Experience (Mysticality)"),
-      do: () => cliExecute("mummery myst"),
+      completed: () => get("_mummeryMods").includes(myPrimestat().toString()),
+      do: () => cliExecute(`mummery ${myPrimestat().toString().toLowerCase()}`),
       outfit: { familiar: $familiar`Melodramedary` },
       limit: { tries: 1 },
     },
@@ -149,9 +168,15 @@ export const RunStartQuest: Quest = {
       limit: { tries: 1 },
     },
     {
-      name: "Vote",
+      name: "Vote!",
       completed: () => have($item`"I Voted!" sticker`),
-      do: () => cliExecute("VotingBooth.ash"),
+      do: (): void => {
+        visitUrl("place.php?whichplace=town_right&action=townright_vote");
+        visitUrl(
+          `choice.php?option=1&whichchoice=1331&g=2&local%5B%5D=${BEST_INITIATIVE}&local%5B%5D=${BEST_INITIATIVE}`
+        );
+        visitUrl("place.php?whichplace=town_right&action=townright_vote");
+      },
       limit: { tries: 1 },
     },
     {
@@ -171,7 +196,7 @@ export const RunStartQuest: Quest = {
       limit: { tries: 1 },
     },
     {
-      name: "Bird Calendar",
+      name: "Unlock Bird",
       completed: () => have($skill`Seek out a Bird`),
       do: () => use($item`Bird-a-Day calendar`),
       limit: { tries: 1 },
@@ -185,10 +210,15 @@ export const RunStartQuest: Quest = {
       limit: { tries: 1 },
     },
     {
-      name: "Workshed",
-      completed: () => getWorkshed() === $item`Asdon Martin keyfob`,
-      do: () => use($item`Asdon Martin keyfob`),
+      name: "Backup Camera Reverser",
+      completed: () => get("backupCameraReverserEnabled"),
+      do: () => cliExecute("backupcamera reverser"),
       limit: { tries: 1 },
+    },
+    {
+      name: "Fallbot",
+      completed: () => !AutumnAton.available() || get("_autumnatonQuests") > 0,
+      do: () => AutumnAton.sendTo($location`The Sleazy Back Alley`),
     },
   ],
 };

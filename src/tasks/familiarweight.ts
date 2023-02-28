@@ -1,31 +1,31 @@
-import { cliExecute, mySign, use, visitUrl } from "kolmafia";
-import { $effect, $familiar, $item, CommunityService, get, have } from "libram";
+import { cliExecute, knollAvailable, myAscensions, mySign, use, visitUrl } from "kolmafia";
+import { $classes, $effect, $familiar, $item, $skill, CommunityService, get, have } from "libram";
 import { Quest } from "../engine/task";
-import { meteorShower } from "./common";
+import { byClass } from "../lib";
+import { beachTask, libramTask, meteorShowerTask, potionTask, skillTask } from "./common";
+
+const maxTurns = byClass({
+  "Accordion Thief": 18,
+  default: 20,
+});
 
 export const FamiliarWeightQuest: Quest = {
   name: "Familiar Weight",
   completed: () => CommunityService.FamiliarWeight.isDone(),
   tasks: [
-    meteorShower(),
+    { ...skillTask($skill`Chorale of Companionship`), class: $classes`Accordion Thief` },
+    potionTask($item`green candy heart`),
+    beachTask($effect`Do I Know You From Somewhere?`),
     {
-      name: "Anticheese",
-      completed: () => get("lastAnticheeseDay") === 1,
-      do: () => visitUrl("place.php?whichplace=desertbeach&action=db_nukehouse"),
-      acquire: [{ item: $item`bitchin' meatcar` }], // Need ~500 meat for meatcar
+      name: "Puzzle Champ",
+      completed: () => get("_witchessBuff"),
+      do: () => cliExecute("witchess"),
       limit: { tries: 1 },
     },
     {
-      name: "Tune Moon",
-      ready: () => !get("moonTuned"),
-      completed: () => mySign() === "Platypus",
-      do: () => cliExecute("spoon platypus"),
-      limit: { tries: 1 },
-    },
-    {
-      name: "DRINK ME",
-      completed: () => get("_lookingGlass"),
-      do: () => visitUrl("clan_viplounge.php?action=lookingglass&whichfloor=2"),
+      name: "Play Pool",
+      completed: () => have($effect`Billiards Belligerence`),
+      do: () => cliExecute("pool 1"),
       limit: { tries: 1 },
     },
     {
@@ -36,42 +36,73 @@ export const FamiliarWeightQuest: Quest = {
       limit: { tries: 1 },
     },
     {
-      name: "Yule battery",
-      // eslint-disable-next-line libram/verify-constants
+      name: "Tea Party",
+      completed: () => get("_madTeaParty"),
+      prepare: (): void => {
+        visitUrl("clan_viplounge.php?action=lookingglass&whichfloor=2");
+        use($item`"DRINK ME" potion`);
+      },
+      do: () => cliExecute("hatter sombrero-mounted sparkler"),
+    },
+    {
+      name: "Yule Battery",
       completed: () => have($item`overloaded Yule battery`),
       do: () => use($item`box of Familiar Jacks`),
-      // eslint-disable-next-line libram/verify-constants
       outfit: { familiar: $familiar`Mini-Trainbot` },
-      acquire: [{ item: $item`borrowed time` }],
+      acquire: [{ item: $item`box of Familiar Jacks` }],
       limit: { tries: 1 },
     },
     {
+      name: "Icy Revenge",
+      completed: () => have($effect`Cold Hearted`, 20),
+      ready: () => have($item`love song of icy revenge`),
+      do: () => use($item`love song of icy revenge`),
+      limit: { tries: 4 },
+    },
+    {
+      name: "Blue Taffy",
+      completed: () => have($effect`Blue Swayed`, 50),
+      ready: () => have($item`pulled blue taffy`),
+      do: () => use($item`pulled blue taffy`),
+      limit: { tries: 5 },
+    },
+    {
+      name: "Unlock Beach",
+      completed: () => get("lastDesertUnlock") === myAscensions(),
+      do: (): void => {
+        const desertAccessItem = knollAvailable()
+          ? $item`bitchin' meatcar`
+          : $item`Desert Bus pass`;
+        if (!have(desertAccessItem)) {
+          cliExecute(`acquire ${desertAccessItem.name}`);
+        }
+      },
+    },
+    {
+      name: "Tune Moon",
+      completed: () => mySign() === "Platypus",
+      ready: () => !get("moonTuned"),
+      do: () => cliExecute("spoon platypus"),
+      limit: { tries: 1 },
+    },
+    meteorShowerTask(),
+    potionTask($item`silver face paint`),
+    libramTask(),
+    {
       name: "Test",
       completed: () => CommunityService.FamiliarWeight.isDone(),
-      do: () => CommunityService.FamiliarWeight.run(() => undefined, 21),
+      do: () => CommunityService.FamiliarWeight.run(() => undefined, maxTurns),
       outfit: {
         hat: $item`Daylight Shavings Helmet`,
         weapon: $item`Fourth of May Cosplay Saber`,
         offhand: $item`rope`,
         pants: $item`Great Wolf's beastly trousers`,
         acc1: $item`Brutal brogues`,
-        acc2: $item`hewn moon-rune spoon`,
-        acc3: $item`Beach Comb`,
-        // eslint-disable-next-line libram/verify-constants
-        famequip: $item`overloaded Yule battery`,
-        // eslint-disable-next-line libram/verify-constants
+        acc2: $item`Beach Comb`,
+        acc3: $item`hewn moon-rune spoon`,
         familiar: $familiar`Mini-Trainbot`,
+        famequip: $item`overloaded Yule battery`,
       },
-      effects: [
-        $effect`Billiards Belligerence`,
-        $effect`Blood Bond`,
-        $effect`Do I Know You From Somewhere?`,
-        $effect`Empathy`,
-        $effect`Leash of Linguini`,
-        $effect`Puzzle Champ`,
-        $effect`Robot Friends`,
-        $effect`You Can Really Taste the Dormouse`,
-      ],
       limit: { tries: 1 },
     },
   ],
