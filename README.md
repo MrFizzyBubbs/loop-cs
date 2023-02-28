@@ -7,7 +7,7 @@
 Run this command in the graphical CLI:
 
 ```text
-git checkout https://github.com/MrFizzyBubbs/loop-cs.git
+git checkout MrFizzyBubbs/loop-cs.git release
 ```
 
 Will require [a recent build of KoLMafia](http://builds.kolmafia.us/job/Kolmafia/lastSuccessfulBuild/).
