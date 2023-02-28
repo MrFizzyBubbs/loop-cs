@@ -12814,7 +12814,7 @@ var BEST_INITIATIVE = byClass({
   // Familiar exp: 2
   "Turtle Tamer": 0,
   // Weapon Damage Percent: 100
-  Pastamancer: 2,
+  Pastamancer: 3,
   // Familiar exp: 2
   Sauceror: 1,
   // Exp: 3
