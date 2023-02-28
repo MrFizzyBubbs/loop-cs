@@ -12812,7 +12812,7 @@ var PULLS = [template_string_$item(prologue_templateObject || (prologue_template
 var BEST_INITIATIVE = byClass({
   "Seal Clubber": 2,
   // Familiar exp: 2
-  "Turtle Tamer": 3,
+  "Turtle Tamer": 0,
   // Weapon Damage Percent: 100
   Pastamancer: 2,
   // Familiar exp: 2
@@ -12820,7 +12820,7 @@ var BEST_INITIATIVE = byClass({
   // Exp: 3
   "Disco Bandit": 0,
   // Maximum MP Percent: 30
-  "Accordion Thief": 1 // Booze Drop: 30
+  "Accordion Thief": 2 // Booze Drop: 30
 
 });
 var PrologueQuest = {
@@ -12973,6 +12973,9 @@ var PrologueQuest = {
       (0,external_kolmafia_namespaceObject.visitUrl)("place.php?whichplace=town_right&action=townright_vote");
       (0,external_kolmafia_namespaceObject.visitUrl)("choice.php?option=1&whichchoice=1331&g=2&local%5B%5D=".concat(BEST_INITIATIVE, "&local%5B%5D=").concat(BEST_INITIATIVE));
       (0,external_kolmafia_namespaceObject.visitUrl)("place.php?whichplace=town_right&action=townright_vote");
+    },
+    limit: {
+      tries: 1
     }
   }, {
     name: "Scavenge",
