@@ -87,7 +87,7 @@ const synthPairs = byStat({
     [$item`Crimbo fudge`, $item`Crimbo peppermint bark`],
     [$item`bag of many confections`, $item`Crimbo peppermint bark`],
     [$item`Crimbo candied pecan`, $item`peppermint patty`],
-    [$item`peppermint sprout`, $item`peppermint twist`],
+    [$item`peppermint sprout`, $item`peppermint patty`],
   ],
   Moxie: [
     [$item`Crimbo fudge`, $item`Crimbo candied pecan`],
