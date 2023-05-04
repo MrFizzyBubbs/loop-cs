@@ -102,8 +102,9 @@ export const BoozeDropQuest: Quest = {
         offhand: $item`unbreakable umbrella`,
         back: $item`vampyric cloake`,
         acc1: $item`Guzzlr tablet`,
-        acc2: $item`gold detective badge`,
-        acc3: $items`barrel hoop earring, your cowboy boots`,
+        // eslint-disable-next-line libram/verify-constants
+        acc2: $item`Cincho de Mayo`,
+        acc3: $items`barrel hoop earring, gold detective badge`,
         famequip: $item`li'l ninja costume`,
         familiar: $familiar`Trick-or-Treating Tot`,
         modes: { umbrella: "bucket style" },

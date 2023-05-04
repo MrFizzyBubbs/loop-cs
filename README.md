@@ -41,7 +41,7 @@ If you meet the requirements in the following sections, there is a good chance t
   - class-appropriate nightstand
   - continental juice bar
 - [Gold detective badge](https://kol.coldfront.net/thekolwiki/index.php/Gold_detective_badge) purchased from the [11th Precinct](https://kol.coldfront.net/thekolwiki/index.php/The_Precinct)
-- [Your cowboy boots](https://kol.coldfront.net/thekolwiki/index.php/Your_cowboy_boots) modified with [nicksilver spurs](https://kol.coldfront.net/thekolwiki/index.php/Nicksilver_spurs) and class-appropriate skin
+- [Your cowboy boots](https://kol.coldfront.net/thekolwiki/index.php/Your_cowboy_boots) modified with a class-appropriate skin
 - [Peppermint patch](https://kol.coldfront.net/thekolwiki/index.php/A_Peppermint_Patch) growing in your garden
 - [Source Terminal](https://kol.coldfront.net/thekolwiki/index.php/Source_Terminal) fully upgraded
 - [Spacegate Vaccination Machine](https://kol.coldfront.net/thekolwiki/index.php/Spacegate_Vaccination_Machine) with the [Broad-Spectrum Vaccine](https://kol.coldfront.net/thekolwiki/index.php/Broad-Spectrum_Vaccine) unlocked
@@ -130,4 +130,5 @@ The table below lists the Mr. Store content required to run this script. Other r
 | 2022 | September  | [packaged Jurassic Parka](https://kol.coldfront.net/thekolwiki/index.php/Packaged_Jurassic_Parka)                                             |
 | 2022 | October    | [boxed autumn-aton](https://kol.coldfront.net/thekolwiki/index.php/Boxed_autumn-aton)                                                         |
 | 2022 | November   | [deed to Oliver's Place](http://kol.coldfront.net/thekolwiki/index.php/deed%20to%20Oliver's%20Place)                                          |
+| 2023 | May        | [shrink-wrapped Cincho de Mayo](https://kol.coldfront.net/thekolwiki/index.php/Shrink-wrapped_Cincho_de_Mayo)                                 |
 |      |

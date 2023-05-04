@@ -6,7 +6,6 @@ import {
   retrieveItem,
   runChoice,
   sweetSynthesis,
-  totalFreeRests,
   toUrl,
   use,
   useSkill,
@@ -320,7 +319,11 @@ export const LevelingQuest: Quest = {
           .if_($monster`LOV Engineer`, Macro.skill($skill`Weapon of the Pastalord`).repeat())
           .if_($monster`LOV Equivocator`, Macro.default())
       ),
-      outfit: { offhand: $item`June cleaver`, shirt: $item`makeshift garbage shirt` },
+      outfit: {
+        offhand: $item`June cleaver`,
+        shirt: $item`makeshift garbage shirt`,
+        famequip: $item.none,
+      },
       acquire: [{ item: $item`makeshift garbage shirt` }],
       limit: { tries: 1 },
     },
@@ -332,14 +335,6 @@ export const LevelingQuest: Quest = {
       do: () => use($item`a ten-percent bonus`),
       outfit: { offhand: $item`familiar scrapbook`, equip: [LOVEquipment] },
       limit: { tries: 1 },
-    },
-    {
-      name: "Chateau",
-      completed: () => get("timesRested") >= totalFreeRests(),
-      prepare: burnLibrams,
-      do: () => visitUrl("place.php?whichplace=chateau&action=chateau_restbox"),
-      outfit: { offhand: $item`familiar scrapbook`, equip: [LOVEquipment] },
-      limit: { tries: 40 },
     },
     {
       name: "Set Snojo",
