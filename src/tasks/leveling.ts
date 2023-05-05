@@ -70,24 +70,24 @@ const { saucePotion, sauceFruit, sauceEffect } = byStat({
 });
 
 const synthEffect = byStat({
+  Muscle: $effect`Synthesis: Movement`,
   Mysticality: $effect`Synthesis: Learning`,
   Moxie: $effect`Synthesis: Style`,
-  Muscle: $effect`Synthesis: Movement`,
 });
 
 const synthPairs = byStat({
+  Muscle: [
+    [$item`Crimbo fudge`, $item`Crimbo peppermint bark`],
+    [$item`bag of many confections`, $item`Crimbo peppermint bark`],
+    [$item`Crimbo candied pecan`, $item`peppermint patty`],
+    [$item`peppermint sprout`, $item`peppermint patty`],
+  ],
   Mysticality: [
     [$item`Crimbo fudge`, $item`Crimbo fudge`],
     [$item`Crimbo fudge`, $item`bag of many confections`],
     [$item`Crimbo peppermint bark`, $item`Crimbo candied pecan`],
     [$item`Crimbo peppermint bark`, $item`peppermint sprout`],
     [$item`Crimbo candied pecan`, $item`peppermint crook`],
-  ],
-  Muscle: [
-    [$item`Crimbo fudge`, $item`Crimbo peppermint bark`],
-    [$item`bag of many confections`, $item`Crimbo peppermint bark`],
-    [$item`Crimbo candied pecan`, $item`peppermint patty`],
-    [$item`peppermint sprout`, $item`peppermint patty`],
   ],
   Moxie: [
     [$item`Crimbo fudge`, $item`Crimbo candied pecan`],
