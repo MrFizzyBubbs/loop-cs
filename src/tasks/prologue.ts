@@ -25,13 +25,13 @@ import {
   SourceTerminal,
 } from "libram";
 import { Quest } from "../engine/task";
-import { byClass } from "../lib";
+import { byPrimaryClass } from "../lib";
 import { args } from "../main";
 import { deckTask } from "./common";
 
 const PULLS = [$item`Great Wolf's beastly trousers`, $item`Stick-Knife of Loathing`];
 
-const BEST_INITIATIVE = byClass({
+const BEST_INITIATIVE = byPrimaryClass({
   "Seal Clubber": 2, // Familiar exp: 2
   "Turtle Tamer": 0, // Weapon Damage Percent: 100
   Pastamancer: 3, // Familiar exp: 2
