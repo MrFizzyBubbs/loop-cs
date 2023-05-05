@@ -1,14 +1,4 @@
-import {
-  availableAmount,
-  haveEffect,
-  Item,
-  myClass,
-  myMp,
-  myPrimestat,
-  Skill,
-  StatType,
-  useSkill,
-} from "kolmafia";
+import { availableAmount, haveEffect, Item, myClass, myMp, Skill, useSkill } from "kolmafia";
 import {
   $item,
   $skill,
@@ -18,6 +8,7 @@ import {
   get,
   getModifier,
   have,
+  makeByXFunction,
   possibleLibramSummons,
 } from "libram";
 
@@ -41,18 +32,8 @@ type PrimaryClassType =
   | "Sauceror"
   | "Disco Bandit"
   | "Accordion Thief";
-type StatSwitch<T> = Record<StatType, T> | (Partial<{ [x in StatType]: T }> & { default: T });
-type ClassSwitch<T> =
-  | Record<PrimaryClassType, T>
-  | (Partial<{ [x in PrimaryClassType]: T }> & { default: T });
-export function byClass<T>(thing: ClassSwitch<T>): T {
-  const class_ = myClass().toString() as PrimaryClassType;
-  return "default" in thing ? thing[class_] ?? thing.default : thing[class_];
-}
-export function byStat<T>(thing: StatSwitch<T>): T {
-  const stat = myPrimestat().toString();
-  return "default" in thing ? thing[stat] ?? thing.default : thing[stat];
-}
+
+export const byPrimaryClass = makeByXFunction(() => myClass().toString() as PrimaryClassType);
 
 export function canCastLibrams(): boolean {
   const summonNumber = 1 + get("libramSummons");

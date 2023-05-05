@@ -18,14 +18,15 @@ import {
   $items,
   $location,
   $skill,
+  byStat,
   CommunityService,
   get,
   have,
 } from "libram";
 import Macro from "../combat";
 import { Quest } from "../engine/task";
-import { byClass, byStat } from "../lib";
 import { innerElfTask, meteorShowerTask, potionTask, skillTask } from "./common";
+import { byPrimaryClass } from "../lib";
 
 const buffs = $effects`Arched Eyebrow of the Archmage, Carol of the Hells, Jackasses' Symphony of Destruction, Simmering, Song of Sauce, Spirit of Cayenne`;
 
@@ -34,7 +35,7 @@ const chefstaff = byStat({
   default: $item`Staff of Simmering Hatred`,
 });
 
-const maxTurns = byClass({
+const maxTurns = byPrimaryClass({
   Pastamancer: 10,
   Sauceror: 8,
   "Accordion Thief": 11,

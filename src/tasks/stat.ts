@@ -1,7 +1,15 @@
 import { myThrall, Thrall, useSkill } from "kolmafia";
-import { $classes, $effect, $effects, $item, $skill, $thrall, CommunityService } from "libram";
+import {
+  $classes,
+  $effect,
+  $effects,
+  $item,
+  $skill,
+  $thrall,
+  byStat,
+  CommunityService,
+} from "libram";
 import { Quest, Task } from "../engine/task";
-import { byStat } from "../lib";
 import { beachTask, potionTask, skillTask } from "./common";
 
 const SKILL_BUFFS = {

@@ -1,7 +1,16 @@
 import { cliExecute, knollAvailable, myAscensions, mySign, use, visitUrl } from "kolmafia";
-import { $classes, $effect, $familiar, $item, $skill, CommunityService, get, have } from "libram";
+import {
+  $classes,
+  $effect,
+  $familiar,
+  $item,
+  $skill,
+  byClass,
+  CommunityService,
+  get,
+  have,
+} from "libram";
 import { Quest } from "../engine/task";
-import { byClass } from "../lib";
 import { beachTask, libramTask, meteorShowerTask, potionTask, skillTask } from "./common";
 
 const maxTurns = byClass({

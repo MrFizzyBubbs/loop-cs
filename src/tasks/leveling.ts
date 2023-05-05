@@ -22,6 +22,7 @@ import {
   $monster,
   $skill,
   $skills,
+  byStat,
   Cartography,
   get,
   getKramcoWandererChance,
@@ -32,7 +33,7 @@ import {
 } from "libram";
 import Macro from "../combat";
 import { Quest } from "../engine/task";
-import { burnLibrams, byClass, byStat } from "../lib";
+import { burnLibrams, byPrimaryClass } from "../lib";
 import { beachTask, innerElfTask, potionTask, skillTask } from "./common";
 
 export const generalStoreItem = byStat({
@@ -270,7 +271,7 @@ export const LevelingQuest: Quest = {
       do: () => adv1(get("ghostLocation", $location`none`), 0, ""),
       combat: new CombatStrategy().macro(
         Macro.skill(
-          byClass({
+          byPrimaryClass({
             "Seal Clubber": $skill`Clobber`,
             "Turtle Tamer": $skill`Toss`,
             Pastamancer: $skill`Spaghetti Spear`,

@@ -1,6 +1,5 @@
 import { Outfit } from "grimoire-kolmafia";
-import { $familiar, $item, $items, $slot } from "libram";
-import { byStat } from "../lib";
+import { $familiar, $item, $items, $slot, byStat } from "libram";
 
 export function equipDefaults(outfit: Outfit): void {
   outfit.equip(
