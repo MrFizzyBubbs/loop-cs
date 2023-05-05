@@ -24,7 +24,17 @@ The script provides several options that can be changed in a few different ways:
 Run `loopcs help` for the full set of script commands and options:
 
 ```
+> loopcs help
 
+A script to complete community service runs.
+
+Options:
+  vipclan TEXT - Name of clan that has a fully stocked VIP lounge. [default: Margaretting Tye] [setting: loopcs_vipclan]
+  slimeclan TEXT - Name of clan that has Mother Slime ready in The Slime Tube. [default: Hobopolis Vacation Home] [setting: loopcs_slimeclan]
+  confirm - Whether the user must confirm execution of each unique task. [default: false] [setting: loopcs_confirm]
+  abort TEXT - If given, abort during the prepare() step for the task with matching name. [setting: loopcs_abort]
+  list - Show the status of all tasks and exit.
+  help - Show this message and exit.
 ```
 
 ## Requirements
@@ -61,6 +71,7 @@ The table below lists the Mr. Store content required to run this script. Other r
 
 | Year | Month      | Resource                                                                                                                                      |
 | ---- | ---------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| 2006 | August     | [Comma Chameleon egg](https://kol.coldfront.net/thekolwiki/index.php/Comma_Chameleon_egg)                                                     |
 | 2008 | October    | [spooky rattling cigar box](https://kol.coldfront.net/thekolwiki/index.php/Spooky_rattling_cigar_box)                                         |
 | 2009 | February   | [Libram of Love Songs](https://kol.coldfront.net/thekolwiki/index.php/Libram_of_Love_Songs)                                                   |
 | 2009 | December   | [suspicious stocking](https://kol.coldfront.net/thekolwiki/index.php/Suspicious_stocking)                                                     |

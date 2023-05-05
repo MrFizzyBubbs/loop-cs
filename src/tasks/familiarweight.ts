@@ -1,4 +1,4 @@
-import { cliExecute, knollAvailable, myAscensions, mySign, use, visitUrl } from "kolmafia";
+import { cliExecute, knollAvailable, myAscensions, mySign, toInt, use, visitUrl } from "kolmafia";
 import {
   $classes,
   $effect,
@@ -14,8 +14,8 @@ import { Quest } from "../engine/task";
 import { beachTask, libramTask, meteorShowerTask, potionTask, skillTask } from "./common";
 
 const maxTurns = byClass({
-  "Accordion Thief": 18,
-  default: 20,
+  "Accordion Thief": 5,
+  default: 7,
 });
 
 export const FamiliarWeightQuest: Quest = {
@@ -54,12 +54,22 @@ export const FamiliarWeightQuest: Quest = {
       do: () => cliExecute("hatter sombrero-mounted sparkler"),
     },
     {
-      name: "Yule Battery",
-      completed: () => have($item`overloaded Yule battery`),
+      name: "Homemade Robot Gear",
+      completed: () =>
+        have($item`homemade robot gear`) || get("commaFamiliar") === $familiar`Homemade Robot`,
       do: () => use($item`box of Familiar Jacks`),
-      outfit: { familiar: $familiar`Mini-Trainbot` },
+      outfit: { familiar: $familiar`Homemade Robot` },
       acquire: [{ item: $item`box of Familiar Jacks` }],
       limit: { tries: 1 },
+    },
+    {
+      name: "Feed Chameleon",
+      completed: () => get("commaFamiliar") === $familiar`Homemade Robot`,
+      do: () =>
+        visitUrl(
+          `inv_equip.php?which=2&action=equip&whichitem=${toInt($item`homemade robot gear`)}&pwd`
+        ),
+      outfit: { familiar: $familiar`Comma Chameleon` },
     },
     {
       name: "Icy Revenge",
