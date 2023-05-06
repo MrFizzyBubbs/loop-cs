@@ -1,6 +1,7 @@
 import { CombatStrategy } from "grimoire-kolmafia";
-import { useSkill } from "kolmafia";
+import { cliExecute, useSkill } from "kolmafia";
 import {
+  $effect,
   $effects,
   $familiar,
   $item,
@@ -9,6 +10,7 @@ import {
   CombatLoversLocket,
   CommunityService,
   get,
+  have,
   Macro,
 } from "libram";
 import { Quest } from "../engine/task";
@@ -22,6 +24,11 @@ export const WeaponDamageQuest: Quest = {
   tasks: [
     ...buffs.map(skillTask),
     skillTask($skill`Blessing of the War Snapper`),
+    {
+      name: "Play Pool",
+      completed: () => have($effect`Billiards Belligerence`),
+      do: () => cliExecute("pool 1"),
+    },
     innerElfTask(),
     {
       name: "Meteor Ungulith",
@@ -50,7 +57,6 @@ export const WeaponDamageQuest: Quest = {
       outfit: {
         weapon: $item`dented scepter`,
         offhand: $item`broken champagne bottle`,
-        pants: $item`Great Wolf's beastly trousers`,
         acc1: $item`Brutal brogues`,
         acc2: $item`Powerful Glove`,
         acc3: $item`Kremlin's Greatest Briefcase`,

@@ -14,8 +14,8 @@ import { Quest } from "../engine/task";
 import { beachTask, libramTask, meteorShowerTask, potionTask, skillTask } from "./common";
 
 const maxTurns = byClass({
-  "Accordion Thief": 5,
-  default: 7,
+  "Accordion Thief": 4,
+  default: 6,
 });
 
 export const FamiliarWeightQuest: Quest = {
@@ -115,12 +115,14 @@ export const FamiliarWeightQuest: Quest = {
         hat: $item`Daylight Shavings Helmet`,
         weapon: $item`Fourth of May Cosplay Saber`,
         offhand: $item`rope`,
+        back: $item`Buddy Bjorn`,
         pants: $item`Great Wolf's beastly trousers`,
         acc1: $item`Brutal brogues`,
         acc2: $item`Beach Comb`,
         acc3: $item`hewn moon-rune spoon`,
         familiar: $familiar`Mini-Trainbot`,
         famequip: $item`overloaded Yule battery`,
+        riders: { "buddy-bjorn": $familiar`Misshapen Animal Skeleton` },
       },
       limit: { tries: 1 },
     },

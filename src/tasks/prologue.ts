@@ -29,7 +29,11 @@ import { byPrimaryClass } from "../lib";
 import { args } from "../main";
 import { deckTask } from "./common";
 
-const PULLS = [$item`Great Wolf's beastly trousers`, $item`Stick-Knife of Loathing`];
+const PULLS = [
+  $item`Great Wolf's beastly trousers`,
+  $item`Stick-Knife of Loathing`,
+  $item`Buddy Bjorn`,
+];
 
 const BEST_INITIATIVE = byPrimaryClass({
   "Seal Clubber": 2, // Familiar exp: 2

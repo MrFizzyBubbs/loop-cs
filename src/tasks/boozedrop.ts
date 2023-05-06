@@ -15,8 +15,8 @@ import {
 } from "libram";
 import { Quest } from "../engine/task";
 import { CombatStrategy } from "grimoire-kolmafia";
-import { cliExecute, useSkill, visitUrl } from "kolmafia";
-import { asdonTask, deckTask, potionTask, skillTask } from "./common";
+import { useSkill, visitUrl } from "kolmafia";
+import { asdonTask, potionTask, skillTask } from "./common";
 
 const buffs = $effects`Singer's Faithful Ocelot, Fat Leon's Phat Loot Lyric, The Spirit of Taking`;
 
@@ -60,22 +60,6 @@ export const BoozeDropQuest: Quest = {
       },
       limit: { tries: 1 },
     },
-    {
-      name: "Play Pool",
-      completed: () => have($effect`Hustlin'`),
-      do: () => cliExecute("pool 3"),
-    },
-    {
-      ...deckTask("X of Fortune"),
-      class: $classes`Turtle Tamer`,
-    },
-    {
-      name: "Pray",
-      class: $classes`Pastamancer`,
-      completed: () => get("_barrelPrayer"),
-      do: () => cliExecute("barrelprayer buff"),
-      limit: { tries: 1 },
-    },
     { ...potionTask($item`Salsa Caliente™ candle`), class: $classes`Sauceror` },
     {
       name: "Items.enh",
@@ -100,7 +84,7 @@ export const BoozeDropQuest: Quest = {
         hat: $item`wad of used tape`,
         weapon: $item`oversized sparkler`,
         offhand: $item`unbreakable umbrella`,
-        back: $item`vampyric cloake`,
+        back: $item`Buddy Bjorn`,
         acc1: $item`Guzzlr tablet`,
         // eslint-disable-next-line libram/verify-constants
         acc2: $item`Cincho de Mayo`,
@@ -108,6 +92,7 @@ export const BoozeDropQuest: Quest = {
         famequip: $item`li'l ninja costume`,
         familiar: $familiar`Trick-or-Treating Tot`,
         modes: { umbrella: "bucket style" },
+        riders: { "buddy-bjorn": $familiar`Party Mouse` },
       },
       acquire: [{ item: $item`wad of used tape` }],
       limit: { tries: 1 },
