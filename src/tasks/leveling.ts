@@ -107,8 +107,7 @@ const LOVEquipment = byStat({
 export const LevelingQuest: Quest = {
   name: "Leveling",
   completed: () =>
-    get("csServicesPerformed").split(",").length > 1 ||
-    (get("_neverendingPartyFreeTurns") >= 10 && have($effect`Spit Upon`)),
+    get("csServicesPerformed").split(",").length > 1 || get("_gingerbreadMobHitUsed"),
   tasks: [
     innerElfTask(),
     potionTask(generalStoreItem, true),
@@ -544,6 +543,20 @@ export const LevelingQuest: Quest = {
       },
       acquire: [{ item: $item`makeshift garbage shirt` }],
       limit: { tries: 10 },
+    },
+    {
+      name: "Gingerbread Mob Hit",
+      completed: () => get("_gingerbreadMobHitUsed"),
+      do: $location`The Neverending Party`,
+      choices: { 1324: 5 },
+      combat: new CombatStrategy().macro(Macro.skill($skill`Gingerbread Mob Hit`)),
+      outfit: {
+        shirt: $item`makeshift garbage shirt`,
+        acc3: $item`backup camera`,
+        modes: { backupcamera: "ml" },
+      },
+      acquire: [{ item: $item`makeshift garbage shirt` }],
+      limit: { tries: 1 },
     },
   ],
 };
