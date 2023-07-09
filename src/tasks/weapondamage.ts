@@ -25,8 +25,9 @@ export const WeaponDamageQuest: Quest = {
     ...buffs.map(skillTask),
     skillTask($skill`Blessing of the War Snapper`),
     {
+      // Sometimes LOV Elixir #3 does not drop
       name: "Play Pool",
-      completed: () => have($effect`Billiards Belligerence`),
+      completed: () => have($effect`The Power of LOV`) || have($effect`Billiards Belligerence`),
       do: () => cliExecute("pool 1"),
     },
     innerElfTask(),
@@ -57,6 +58,7 @@ export const WeaponDamageQuest: Quest = {
       outfit: {
         weapon: $item`dented scepter`,
         offhand: $item`broken champagne bottle`,
+        pants: $item`Great Wolf's beastly trousers`,
         acc1: $item`Brutal brogues`,
         acc2: $item`Powerful Glove`,
         acc3: $item`Kremlin's Greatest Briefcase`,

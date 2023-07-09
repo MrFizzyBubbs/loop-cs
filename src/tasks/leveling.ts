@@ -304,7 +304,8 @@ export const LevelingQuest: Quest = {
       name: "LOV Tunnel",
       completed: () => get("_loveTunnelUsed"),
       prepare: burnLibrams,
-      do: () =>
+      do: (): void => {
+        cliExecute("debug on");
         TunnelOfLove.fightAll(
           byStat({
             Muscle: "LOV Eardigan",
@@ -313,7 +314,13 @@ export const LevelingQuest: Quest = {
           }),
           "Open Heart Surgery",
           "LOV Extraterrestrial Chocolate"
-        ),
+        );
+        cliExecute("debug off");
+      },
+      post: (): void => {
+        const elixirs = $items`LOV Elixir #3, LOV Elixir #6`.filter((elixir) => !have(elixir));
+        if (elixirs.length > 0) throw `${elixirs} did not drop`;
+      },
       combat: new CombatStrategy().macro(
         Macro.if_($monster`LOV Enforcer`, Macro.attack().repeat())
           .if_($monster`LOV Engineer`, Macro.skill($skill`Weapon of the Pastalord`).repeat())
