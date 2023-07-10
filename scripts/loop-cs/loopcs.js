@@ -10856,7 +10856,7 @@ var LevelingQuest = {
     },
     post: () => {
       var elixirs = template_string_$items(_templateObject111 || (_templateObject111 = leveling_taggedTemplateLiteral(["LOV Elixir #3, LOV Elixir #6"]))).filter(elixir => !lib_have(elixir));
-      if (elixirs.length === 0) throw "".concat(elixirs, " did not drop");
+      if (elixirs.length > 0) throw "".concat(elixirs, " did not drop");
     },
     combat: new CombatStrategy().macro(combat_Macro.if_($monster(_templateObject112 || (_templateObject112 = leveling_taggedTemplateLiteral(["LOV Enforcer"]))), combat_Macro.attack().repeat()).if_($monster(_templateObject113 || (_templateObject113 = leveling_taggedTemplateLiteral(["LOV Engineer"]))), combat_Macro.skill(template_string_$skill(_templateObject114 || (_templateObject114 = leveling_taggedTemplateLiteral(["Weapon of the Pastalord"])))).repeat()).if_($monster(_templateObject115 || (_templateObject115 = leveling_taggedTemplateLiteral(["LOV Equivocator"]))), combat_Macro["default"]())),
     outfit: {
