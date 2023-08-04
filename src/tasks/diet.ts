@@ -1,16 +1,15 @@
-import { cliExecute, drink, myInebriety, myLevel, reverseNumberology, use } from "kolmafia";
-import { $effects, $item, get, have } from "libram";
+import { drink, myInebriety, myLevel, use, useSkill } from "kolmafia";
+import { $effects, $item, $skill, get, have } from "libram";
 import { Quest } from "../engine/task";
 
 export const DietQuest: Quest = {
   name: "Diet",
   tasks: [
     {
-      name: "Numberology",
-      completed: () => get("_universeCalculated") >= Math.min(get("skillLevel144"), 3),
-      ready: () => Object.keys(reverseNumberology()).includes("69"), //&& get("skillLevel144") <= 3,
-      do: () => cliExecute("numberology 69"),
-      limit: { tries: 3 },
+      name: "Ancestral Recall",
+      completed: () => $skill`Ancestral Recall`.timescast > 0,
+      ready: () => have($item`blue mana`),
+      do: () => useSkill($skill`Ancestral Recall`),
     },
     {
       name: "Borrowed Time",

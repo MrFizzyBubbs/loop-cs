@@ -126,6 +126,7 @@ export const PrologueQuest: Quest = {
       limit: { tries: 1 },
     },
     deckTask("Forest"),
+    deckTask("Island"),
     deckTask("Rope"),
     {
       name: "Barrel Hoop Earring",
