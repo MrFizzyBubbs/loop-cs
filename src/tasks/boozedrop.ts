@@ -13,14 +13,14 @@ import {
   Macro,
   SourceTerminal,
 } from "libram";
-import { Quest } from "../engine/task";
+import { CSQuest } from "../engine/task";
 import { CombatStrategy } from "grimoire-kolmafia";
 import { useSkill, visitUrl } from "kolmafia";
 import { asdonTask, potionTask, skillTask } from "./common";
 
 const buffs = $effects`Singer's Faithful Ocelot, Fat Leon's Phat Loot Lyric, The Spirit of Taking`;
 
-export const BoozeDropQuest: Quest = {
+export const BoozeDropQuest: CSQuest = {
   name: "Booze Drop",
   completed: () => CommunityService.BoozeDrop.isDone(),
   tasks: [

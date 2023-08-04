@@ -24,7 +24,7 @@ import {
   have,
 } from "libram";
 import Macro from "../combat";
-import { Quest } from "../engine/task";
+import { CSQuest } from "../engine/task";
 import { innerElfTask, meteorShowerTask, potionTask, skillTask } from "./common";
 import { byPrimaryClass } from "../lib";
 
@@ -42,7 +42,7 @@ const maxTurns = byPrimaryClass({
   default: 12,
 });
 
-export const SpellDamageQuest: Quest = {
+export const SpellDamageQuest: CSQuest = {
   name: "Spell Damage",
   completed: () => CommunityService.SpellDamage.isDone(),
   tasks: [
@@ -78,6 +78,7 @@ export const SpellDamageQuest: Quest = {
       class: $classes`Sauceror`,
       completed: () => get("_barrelPrayer"),
       do: () => cliExecute("barrelprayer buff"),
+      limit: { tries: 1 },
     },
     {
       name: "Briefcase Enchantment",
@@ -90,6 +91,7 @@ export const SpellDamageQuest: Quest = {
       name: "Cargopocket",
       completed: () => get("_cargoPocketEmptied"),
       do: () => cliExecute("cargo 177"),
+      limit: { tries: 1 },
     },
     potionTask($item`Yeg's Motel hand soap`),
     {
@@ -114,6 +116,7 @@ export const SpellDamageQuest: Quest = {
         }
         takeStorage(chefstaff, 1);
       },
+      limit: { tries: 1 },
     },
     {
       name: "Test",

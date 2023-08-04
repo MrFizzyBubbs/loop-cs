@@ -18,10 +18,10 @@ import {
   have,
 } from "libram";
 import Macro from "../combat";
-import { Quest } from "../engine/task";
+import { CSQuest } from "../engine/task";
 import { burnLibrams } from "../lib";
 
-export const CoilWireQuest: Quest = {
+export const CoilWireQuest: CSQuest = {
   name: "Coil Wire",
   completed: () => CommunityService.CoilWire.isDone(),
   tasks: [

@@ -10,7 +10,7 @@ import {
   get,
   have,
 } from "libram";
-import { Quest } from "../engine/task";
+import { CSQuest } from "../engine/task";
 import { beachTask, libramTask, meteorShowerTask, potionTask, skillTask } from "./common";
 
 const maxTurns = byClass({
@@ -18,7 +18,7 @@ const maxTurns = byClass({
   default: 6,
 });
 
-export const FamiliarWeightQuest: Quest = {
+export const FamiliarWeightQuest: CSQuest = {
   name: "Familiar Weight",
   completed: () => CommunityService.FamiliarWeight.isDone(),
   tasks: [
@@ -52,6 +52,7 @@ export const FamiliarWeightQuest: Quest = {
         use($item`"DRINK ME" potion`);
       },
       do: () => cliExecute("hatter sombrero-mounted sparkler"),
+      limit: { tries: 1 },
     },
     {
       name: "Homemade Robot Gear",
@@ -72,6 +73,7 @@ export const FamiliarWeightQuest: Quest = {
         visitUrl("charpane.php");
       },
       outfit: { familiar: $familiar`Comma Chameleon` },
+      limit: { tries: 1 },
     },
     {
       name: "Icy Revenge",
@@ -98,6 +100,7 @@ export const FamiliarWeightQuest: Quest = {
           cliExecute(`acquire ${desertAccessItem.name}`);
         }
       },
+      limit: { tries: 1 },
     },
     {
       name: "Tune Moon",

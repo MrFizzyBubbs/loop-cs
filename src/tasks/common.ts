@@ -36,11 +36,11 @@ import {
   have,
 } from "libram";
 import Macro from "../combat";
-import { Task } from "../engine/task";
+import { CSTask } from "../engine/task";
 import { args } from "../main";
 import { burnLibrams, canCastLibrams } from "../lib";
 
-export function innerElfTask(): Task {
+export function innerElfTask(): CSTask {
   return {
     name: "Inner Elf",
     completed: () => have($effect`Inner Elf`),
@@ -59,7 +59,7 @@ export function innerElfTask(): Task {
   };
 }
 
-export function meteorShowerTask(): Task {
+export function meteorShowerTask(): CSTask {
   return {
     name: "Meteor Showered",
     completed: () => have($effect`Meteor Showered`),
@@ -78,7 +78,7 @@ export function meteorShowerTask(): Task {
   };
 }
 
-export function beachTask(effect: Effect): Task {
+export function beachTask(effect: Effect): CSTask {
   const num = 1 + BeachComb.headBuffs.indexOf(effect);
   return {
     name: `Beach Head: ${effect}`,
@@ -91,7 +91,7 @@ export function beachTask(effect: Effect): Task {
   };
 }
 
-export function potionTask(item: Item, acquire = false): Task {
+export function potionTask(item: Item, acquire = false): CSTask {
   const effect = effectModifier(item, "Effect");
   return {
     name: item.toString(),
@@ -103,7 +103,7 @@ export function potionTask(item: Item, acquire = false): Task {
   };
 }
 
-export function skillTask(x: Skill | Effect): Task {
+export function skillTask(x: Skill | Effect): CSTask {
   {
     const skill = x instanceof Skill ? x : toSkill(x);
     const effect = x instanceof Effect ? x : toEffect(x);
@@ -133,7 +133,7 @@ export function skillTask(x: Skill | Effect): Task {
   }
 }
 
-export function asdonTask(style: Effect | keyof typeof AsdonMartin.Driving): Task {
+export function asdonTask(style: Effect | keyof typeof AsdonMartin.Driving): CSTask {
   const effect = style instanceof Effect ? style : AsdonMartin.Driving[style];
   return {
     name: effect.name,
@@ -149,7 +149,7 @@ export function asdonTask(style: Effect | keyof typeof AsdonMartin.Driving): Tas
   };
 }
 
-export function deckTask(card: string): Task {
+export function deckTask(card: string): CSTask {
   return {
     name: `Cheat At Cards: ${card}`,
     completed: () => get("_deckCardsSeen").toLowerCase().split("|").includes(card.toLowerCase()),
@@ -159,10 +159,11 @@ export function deckTask(card: string): Task {
   };
 }
 
-export function libramTask(): Task {
+export function libramTask(): CSTask {
   return {
     name: "Burn Librams",
     completed: () => !canCastLibrams(),
     do: burnLibrams,
+    limit: { tries: 1 },
   };
 }

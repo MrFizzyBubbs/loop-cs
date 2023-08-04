@@ -24,7 +24,7 @@ import {
   SongBoom,
   SourceTerminal,
 } from "libram";
-import { Quest } from "../engine/task";
+import { CSQuest } from "../engine/task";
 import { byPrimaryClass } from "../lib";
 import { args } from "../main";
 import { deckTask } from "./common";
@@ -44,7 +44,7 @@ const BEST_INITIATIVE = byPrimaryClass({
   "Accordion Thief": 2, // Booze Drop: 30
 });
 
-export const PrologueQuest: Quest = {
+export const PrologueQuest: CSQuest = {
   name: "Prologue",
   tasks: [
     {
@@ -225,6 +225,7 @@ export const PrologueQuest: Quest = {
       name: "Fallbot",
       completed: () => !AutumnAton.available() || get("_autumnatonQuests") > 0,
       do: () => AutumnAton.sendTo($location`The Sleazy Back Alley`),
+      limit: { tries: 1 },
     },
     {
       name: "Learn About Bugs",
@@ -232,6 +233,7 @@ export const PrologueQuest: Quest = {
       completed: () => get("_sitCourseCompleted") || have($skill`Insectologist`),
       do: () => use($item`S.I.T. Course Completion Certificate`),
       choices: { 1494: 2 },
+      limit: { tries: 1 },
     },
   ],
 };

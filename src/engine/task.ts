@@ -1,5 +1,5 @@
-import { Quest as BaseQuest, Task as BaseTask } from "grimoire-kolmafia";
+import { Limit, Quest, Task } from "grimoire-kolmafia";
 import { Class } from "kolmafia";
 
-export type Task = BaseTask & { class?: Class[] };
-export type Quest = BaseQuest<Task>;
+export type CSTask = Task & { limit: Limit; class?: Class[] };
+export type CSQuest = Quest<CSTask>;

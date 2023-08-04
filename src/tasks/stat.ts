@@ -9,7 +9,7 @@ import {
   byStat,
   CommunityService,
 } from "libram";
-import { Quest, Task } from "../engine/task";
+import { CSQuest, CSTask } from "../engine/task";
 import { beachTask, potionTask, skillTask } from "./common";
 
 const SKILL_BUFFS = {
@@ -19,11 +19,11 @@ const SKILL_BUFFS = {
   HP: $effects`Feeling Excited, Big, Song of Starch, Rage of the Reindeer, Quiet Determination`,
 };
 
-function skillBuffTasks(key: keyof typeof SKILL_BUFFS): Task[] {
+function skillBuffTasks(key: keyof typeof SKILL_BUFFS): CSTask[] {
   return SKILL_BUFFS[key].map(skillTask);
 }
 
-function thrallTask(thrall: Thrall): Task {
+function thrallTask(thrall: Thrall): CSTask {
   return {
     name: thrall.toString(),
     class: $classes`Pastamancer`,
@@ -33,7 +33,7 @@ function thrallTask(thrall: Thrall): Task {
   };
 }
 
-function equalizeTask(): Task {
+function equalizeTask(): CSTask {
   return {
     ...potionTask(
       byStat({
@@ -48,7 +48,7 @@ function equalizeTask(): Task {
   };
 }
 
-export const Muscle: Quest = {
+export const Muscle: CSQuest = {
   name: "Muscle",
   completed: () => CommunityService.Muscle.isDone(),
   tasks: [
@@ -66,7 +66,7 @@ export const Muscle: Quest = {
   ],
 };
 
-export const Mysticality: Quest = {
+export const Mysticality: CSQuest = {
   name: "Mysticality",
   completed: () => CommunityService.Mysticality.isDone(),
   tasks: [
@@ -82,7 +82,7 @@ export const Mysticality: Quest = {
   ],
 };
 
-export const Moxie: Quest = {
+export const Moxie: CSQuest = {
   name: "Moxie",
   completed: () => CommunityService.Moxie.isDone(),
   tasks: [
@@ -99,7 +99,7 @@ export const Moxie: Quest = {
   ],
 };
 
-export const Hitpoints: Quest = {
+export const Hitpoints: CSQuest = {
   name: "Hitpoints",
   completed: () => CommunityService.HP.isDone(),
   tasks: [

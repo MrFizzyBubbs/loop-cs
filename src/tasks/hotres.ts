@@ -11,12 +11,12 @@ import {
   have,
 } from "libram";
 import Macro from "../combat";
-import { Quest } from "../engine/task";
+import { CSQuest } from "../engine/task";
 import { beachTask, skillTask } from "./common";
 
 const buffs = $effects`Feeling Peaceful, Astral Shell, Ghostly Shell, Empathy, Leash of Linguini, Blood Bond`;
 
-export const HotResQuest: Quest = {
+export const HotResQuest: CSQuest = {
   name: "Hot Res",
   completed: () => CommunityService.HotRes.isDone(),
   tasks: [

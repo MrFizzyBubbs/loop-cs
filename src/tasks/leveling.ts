@@ -32,7 +32,7 @@ import {
   Witchess,
 } from "libram";
 import Macro from "../combat";
-import { Quest } from "../engine/task";
+import { CSQuest } from "../engine/task";
 import { burnLibrams, byPrimaryClass } from "../lib";
 import { beachTask, innerElfTask, potionTask, skillTask } from "./common";
 
@@ -104,7 +104,7 @@ const LOVEquipment = byStat({
   Moxie: $item`LOV Earrings`,
 });
 
-export const LevelingQuest: Quest = {
+export const LevelingQuest: CSQuest = {
   name: "Leveling",
   completed: () =>
     get("csServicesPerformed").split(",").length > 1 || get("_gingerbreadMobHitUsed"),
@@ -167,6 +167,7 @@ export const LevelingQuest: Quest = {
       do: () =>
         $items`turtle totem, saucepan, stolen accordion`.forEach((item) => retrieveItem(item)),
       outfit: { pants: $item`designer sweatpants` },
+      limit: { tries: 1 },
     },
     ...buffs.stats.map(skillTask),
     ...buffs.familiarWeight.map(skillTask),

@@ -1,21 +1,21 @@
-import { Task } from "./task";
+import { CSTask } from "./task";
 import { Engine as BaseEngine, Outfit } from "grimoire-kolmafia";
 import { $effect, $skill, have } from "libram";
 import { myClass, myHp, myMaxhp, userConfirm, useSkill } from "kolmafia";
 import { equipDefaults } from "./outfit";
 import { args } from "../main";
 
-export class Engine extends BaseEngine<never, Task> {
+export class Engine extends BaseEngine<never, CSTask> {
   confirmed: Set<string>;
 
-  constructor(tasks: Task[]) {
+  constructor(tasks: CSTask[]) {
     // Remove tasks for other classes
     tasks = tasks.filter((task) => !task.class || task.class.includes(myClass()));
     super(tasks);
     this.confirmed = new Set();
   }
 
-  execute(task: Task): void {
+  execute(task: CSTask): void {
     if (
       args.confirm &&
       !this.confirmed.has(task.name) &&
@@ -27,17 +27,17 @@ export class Engine extends BaseEngine<never, Task> {
     super.execute(task);
   }
 
-  dress(task: Task, outfit: Outfit): void {
+  dress(task: CSTask, outfit: Outfit): void {
     if (task.combat !== undefined && !outfit.skipDefaults) equipDefaults(outfit);
     super.dress(task, outfit);
   }
 
-  prepare(task: Task): void {
+  prepare(task: CSTask): void {
     super.prepare(task);
     if (task.combat !== undefined && myHp() < myMaxhp() * 0.9) useSkill($skill`Cannelloni Cocoon`);
   }
 
-  post(task: Task): void {
+  post(task: CSTask): void {
     super.post(task);
     if (have($effect`Beaten Up`)) throw "Fight was lost; stop.";
   }

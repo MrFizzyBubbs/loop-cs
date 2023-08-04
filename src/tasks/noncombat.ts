@@ -1,11 +1,11 @@
 import { cliExecute } from "kolmafia";
 import { $effect, $effects, $familiar, $item, CommunityService, get, have } from "libram";
-import { Quest } from "../engine/task";
+import { CSQuest } from "../engine/task";
 import { potionTask, skillTask } from "./common";
 
 const buffs = $effects`Feeling Lonely, Smooth Movements, The Sonata of Sneakiness, Invisible Avatar`;
 
-export const NoncombatQuest: Quest = {
+export const NoncombatQuest: CSQuest = {
   name: "Noncombat",
   completed: () => CommunityService.Noncombat.isDone(),
   tasks: [

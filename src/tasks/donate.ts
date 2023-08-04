@@ -1,7 +1,7 @@
 import { CommunityService, get } from "libram";
-import { Quest } from "../engine/task";
+import { CSQuest } from "../engine/task";
 
-export const DonateQuest: Quest = {
+export const DonateQuest: CSQuest = {
   name: "Donate",
   tasks: [
     {

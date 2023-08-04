@@ -13,12 +13,12 @@ import {
   have,
   Macro,
 } from "libram";
-import { Quest } from "../engine/task";
+import { CSQuest } from "../engine/task";
 import { innerElfTask, potionTask, skillTask } from "./common";
 
 const buffs = $effects`Carol of the Bulls, Frenzied\, Bloody, Jackasses' Symphony of Destruction, Rage of the Reindeer, Scowl of the Auk, Song of the North, Tenacity of the Snapper`;
 
-export const WeaponDamageQuest: Quest = {
+export const WeaponDamageQuest: CSQuest = {
   name: "Weapon Damage",
   completed: () => CommunityService.WeaponDamage.isDone(),
   tasks: [
@@ -29,6 +29,7 @@ export const WeaponDamageQuest: Quest = {
       name: "Play Pool",
       completed: () => have($effect`The Power of LOV`) || have($effect`Billiards Belligerence`),
       do: () => cliExecute("pool 1"),
+      limit: { tries: 1 },
     },
     innerElfTask(),
     {
@@ -50,6 +51,7 @@ export const WeaponDamageQuest: Quest = {
       name: "Bow-Legged Swagger",
       completed: () => get("_bowleggedSwaggerUsed"),
       do: () => useSkill($skill`Bow-Legged Swagger`),
+      limit: { tries: 1 },
     },
     {
       name: "Test",
