@@ -225,5 +225,12 @@ export const PrologueQuest: Quest = {
       completed: () => !AutumnAton.available() || get("_autumnatonQuests") > 0,
       do: () => AutumnAton.sendTo($location`The Sleazy Back Alley`),
     },
+    {
+      name: "Learn About Bugs",
+      ready: () => have($item`S.I.T. Course Completion Certificate`),
+      completed: () => get("_sitCourseCompleted") || have($skill`Insectologist`),
+      do: () => use($item`S.I.T. Course Completion Certificate`),
+      choices: { 1494: 2 },
+    },
   ],
 };

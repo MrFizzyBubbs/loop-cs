@@ -141,5 +141,5 @@ The table below lists the Mr. Store content required to run this script. Other r
 | 2022 | September  | [packaged Jurassic Parka](https://kol.coldfront.net/thekolwiki/index.php/Packaged_Jurassic_Parka)                                             |
 | 2022 | October    | [boxed autumn-aton](https://kol.coldfront.net/thekolwiki/index.php/Boxed_autumn-aton)                                                         |
 | 2022 | November   | [deed to Oliver's Place](http://kol.coldfront.net/thekolwiki/index.php/deed%20to%20Oliver's%20Place)                                          |
+| 2023 | February   | [S.I.T. Course Voucher](https://kol.coldfront.net/thekolwiki/index.php/S.I.T._Course_Voucher)                                                 |
 | 2023 | May        | [shrink-wrapped Cincho de Mayo](https://kol.coldfront.net/thekolwiki/index.php/Shrink-wrapped_Cincho_de_Mayo)                                 |
-|      |
