@@ -112,7 +112,8 @@ export function skillTask(x: Skill | Effect): Task {
     );
     return {
       name: skill.name,
-      completed: () => (effect !== $effect.none ? have(effect) : skill.timescast > 0),
+      completed: () =>
+        effect !== $effect.none ? have(effect) : skill.timescast > skill.dailylimit,
       prepare: () => {
         if (myMp() < mpCost(skill)) {
           if (!have($item`magical sausage`) && have($item`magical sausage casing`)) {
