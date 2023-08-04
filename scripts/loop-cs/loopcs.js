@@ -1,7 +1,4723 @@
 /******/ (() => { // webpackBootstrap
 /******/ 	"use strict";
-/******/ 	// The require scope
-/******/ 	var __webpack_require__ = {};
+/******/ 	var __webpack_modules__ = ({
+
+/***/ 607:
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+
+var __assign = this && this.__assign || function () {
+  __assign = Object.assign || function (t) {
+    for (var s, i = 1, n = arguments.length; i < n; i++) {
+      s = arguments[i];
+
+      for (var p in s) {
+        if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+      }
+    }
+
+    return t;
+  };
+
+  return __assign.apply(this, arguments);
+};
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+
+var named_references_1 = __webpack_require__(554);
+
+var numeric_unicode_map_1 = __webpack_require__(255);
+
+var surrogate_pairs_1 = __webpack_require__(608);
+
+var allNamedReferences = __assign(__assign({}, named_references_1.namedReferences), {
+  all: named_references_1.namedReferences.html5
+});
+
+var encodeRegExps = {
+  specialChars: /[<>'"&]/g,
+  nonAscii: /[<>'"&\u0080-\uD7FF\uE000-\uFFFF]|[\uD800-\uDBFF][\uDC00-\uDFFF]|[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?:[^\uD800-\uDBFF]|^)[\uDC00-\uDFFF]/g,
+  nonAsciiPrintable: /[<>'"&\x01-\x08\x11-\x15\x17-\x1F\x7f-\uD7FF\uE000-\uFFFF]|[\uD800-\uDBFF][\uDC00-\uDFFF]|[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?:[^\uD800-\uDBFF]|^)[\uDC00-\uDFFF]/g,
+  nonAsciiPrintableOnly: /[\x01-\x08\x11-\x15\x17-\x1F\x7f-\uD7FF\uE000-\uFFFF]|[\uD800-\uDBFF][\uDC00-\uDFFF]|[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?:[^\uD800-\uDBFF]|^)[\uDC00-\uDFFF]/g,
+  extensive: /[\x01-\x0c\x0e-\x1f\x21-\x2c\x2e-\x2f\x3a-\x40\x5b-\x60\x7b-\x7d\x7f-\uD7FF\uE000-\uFFFF]|[\uD800-\uDBFF][\uDC00-\uDFFF]|[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?:[^\uD800-\uDBFF]|^)[\uDC00-\uDFFF]/g
+};
+var defaultEncodeOptions = {
+  mode: 'specialChars',
+  level: 'all',
+  numeric: 'decimal'
+};
+/** Encodes all the necessary (specified by `level`) characters in the text */
+
+function encode(text, _a) {
+  var _b = _a === void 0 ? defaultEncodeOptions : _a,
+      _c = _b.mode,
+      mode = _c === void 0 ? 'specialChars' : _c,
+      _d = _b.numeric,
+      numeric = _d === void 0 ? 'decimal' : _d,
+      _e = _b.level,
+      level = _e === void 0 ? 'all' : _e;
+
+  if (!text) {
+    return '';
+  }
+
+  var encodeRegExp = encodeRegExps[mode];
+  var references = allNamedReferences[level].characters;
+  var isHex = numeric === 'hexadecimal';
+  encodeRegExp.lastIndex = 0;
+
+  var _b = encodeRegExp.exec(text);
+
+  var _c;
+
+  if (_b) {
+    _c = '';
+    var _d = 0;
+
+    do {
+      if (_d !== _b.index) {
+        _c += text.substring(_d, _b.index);
+      }
+
+      var _e = _b[0];
+      var result_1 = references[_e];
+
+      if (!result_1) {
+        var code_1 = _e.length > 1 ? surrogate_pairs_1.getCodePoint(_e, 0) : _e.charCodeAt(0);
+        result_1 = (isHex ? '&#x' + code_1.toString(16) : '&#' + code_1) + ';';
+      }
+
+      _c += result_1;
+      _d = _b.index + _e.length;
+    } while (_b = encodeRegExp.exec(text));
+
+    if (_d !== text.length) {
+      _c += text.substring(_d);
+    }
+  } else {
+    _c = text;
+  }
+
+  return _c;
+}
+
+exports.encode = encode;
+var defaultDecodeOptions = {
+  scope: 'body',
+  level: 'all'
+};
+var strict = /&(?:#\d+|#[xX][\da-fA-F]+|[0-9a-zA-Z]+);/g;
+var attribute = /&(?:#\d+|#[xX][\da-fA-F]+|[0-9a-zA-Z]+)[;=]?/g;
+var baseDecodeRegExps = {
+  xml: {
+    strict: strict,
+    attribute: attribute,
+    body: named_references_1.bodyRegExps.xml
+  },
+  html4: {
+    strict: strict,
+    attribute: attribute,
+    body: named_references_1.bodyRegExps.html4
+  },
+  html5: {
+    strict: strict,
+    attribute: attribute,
+    body: named_references_1.bodyRegExps.html5
+  }
+};
+
+var decodeRegExps = __assign(__assign({}, baseDecodeRegExps), {
+  all: baseDecodeRegExps.html5
+});
+
+var fromCharCode = String.fromCharCode;
+var outOfBoundsChar = fromCharCode(65533);
+var defaultDecodeEntityOptions = {
+  level: 'all'
+};
+/** Decodes a single entity */
+
+function decodeEntity(entity, _a) {
+  var _b = (_a === void 0 ? defaultDecodeEntityOptions : _a).level,
+      level = _b === void 0 ? 'all' : _b;
+
+  if (!entity) {
+    return '';
+  }
+
+  var _b = entity;
+  var decodeEntityLastChar_1 = entity[entity.length - 1];
+
+  if (false) {} else if (false) {} else {
+    var decodeResultByReference_1 = allNamedReferences[level].entities[entity];
+
+    if (decodeResultByReference_1) {
+      _b = decodeResultByReference_1;
+    } else if (entity[0] === '&' && entity[1] === '#') {
+      var decodeSecondChar_1 = entity[2];
+      var decodeCode_1 = decodeSecondChar_1 == 'x' || decodeSecondChar_1 == 'X' ? parseInt(entity.substr(3), 16) : parseInt(entity.substr(2));
+      _b = decodeCode_1 >= 0x10ffff ? outOfBoundsChar : decodeCode_1 > 65535 ? surrogate_pairs_1.fromCodePoint(decodeCode_1) : fromCharCode(numeric_unicode_map_1.numericUnicodeMap[decodeCode_1] || decodeCode_1);
+    }
+  }
+
+  return _b;
+}
+
+exports.decodeEntity = decodeEntity;
+/** Decodes all entities in the text */
+
+function decode(text, _a) {
+  var decodeSecondChar_1 = _a === void 0 ? defaultDecodeOptions : _a,
+      decodeCode_1 = decodeSecondChar_1.level,
+      level = decodeCode_1 === void 0 ? 'all' : decodeCode_1,
+      _b = decodeSecondChar_1.scope,
+      scope = _b === void 0 ? level === 'xml' ? 'strict' : 'body' : _b;
+
+  if (!text) {
+    return '';
+  }
+
+  var decodeRegExp = decodeRegExps[level][scope];
+  var references = allNamedReferences[level].entities;
+  var isAttribute = scope === 'attribute';
+  var isStrict = scope === 'strict';
+  decodeRegExp.lastIndex = 0;
+  var replaceMatch_1 = decodeRegExp.exec(text);
+  var replaceResult_1;
+
+  if (replaceMatch_1) {
+    replaceResult_1 = '';
+    var replaceLastIndex_1 = 0;
+
+    do {
+      if (replaceLastIndex_1 !== replaceMatch_1.index) {
+        replaceResult_1 += text.substring(replaceLastIndex_1, replaceMatch_1.index);
+      }
+
+      var replaceInput_1 = replaceMatch_1[0];
+      var decodeResult_1 = replaceInput_1;
+      var decodeEntityLastChar_2 = replaceInput_1[replaceInput_1.length - 1];
+
+      if (isAttribute && decodeEntityLastChar_2 === '=') {
+        decodeResult_1 = replaceInput_1;
+      } else if (isStrict && decodeEntityLastChar_2 !== ';') {
+        decodeResult_1 = replaceInput_1;
+      } else {
+        var decodeResultByReference_2 = references[replaceInput_1];
+
+        if (decodeResultByReference_2) {
+          decodeResult_1 = decodeResultByReference_2;
+        } else if (replaceInput_1[0] === '&' && replaceInput_1[1] === '#') {
+          var decodeSecondChar_2 = replaceInput_1[2];
+          var decodeCode_2 = decodeSecondChar_2 == 'x' || decodeSecondChar_2 == 'X' ? parseInt(replaceInput_1.substr(3), 16) : parseInt(replaceInput_1.substr(2));
+          decodeResult_1 = decodeCode_2 >= 0x10ffff ? outOfBoundsChar : decodeCode_2 > 65535 ? surrogate_pairs_1.fromCodePoint(decodeCode_2) : fromCharCode(numeric_unicode_map_1.numericUnicodeMap[decodeCode_2] || decodeCode_2);
+        }
+      }
+
+      replaceResult_1 += decodeResult_1;
+      replaceLastIndex_1 = replaceMatch_1.index + replaceInput_1.length;
+    } while (replaceMatch_1 = decodeRegExp.exec(text));
+
+    if (replaceLastIndex_1 !== text.length) {
+      replaceResult_1 += text.substring(replaceLastIndex_1);
+    }
+  } else {
+    replaceResult_1 = text;
+  }
+
+  return replaceResult_1;
+}
+
+exports.decode = decode;
+
+/***/ }),
+
+/***/ 554:
+/***/ ((__unused_webpack_module, exports) => {
+
+
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+exports.bodyRegExps = {
+  xml: /&(?:#\d+|#[xX][\da-fA-F]+|[0-9a-zA-Z]+);?/g,
+  html4: /&notin;|&(?:nbsp|iexcl|cent|pound|curren|yen|brvbar|sect|uml|copy|ordf|laquo|not|shy|reg|macr|deg|plusmn|sup2|sup3|acute|micro|para|middot|cedil|sup1|ordm|raquo|frac14|frac12|frac34|iquest|Agrave|Aacute|Acirc|Atilde|Auml|Aring|AElig|Ccedil|Egrave|Eacute|Ecirc|Euml|Igrave|Iacute|Icirc|Iuml|ETH|Ntilde|Ograve|Oacute|Ocirc|Otilde|Ouml|times|Oslash|Ugrave|Uacute|Ucirc|Uuml|Yacute|THORN|szlig|agrave|aacute|acirc|atilde|auml|aring|aelig|ccedil|egrave|eacute|ecirc|euml|igrave|iacute|icirc|iuml|eth|ntilde|ograve|oacute|ocirc|otilde|ouml|divide|oslash|ugrave|uacute|ucirc|uuml|yacute|thorn|yuml|quot|amp|lt|gt|#\d+|#[xX][\da-fA-F]+|[0-9a-zA-Z]+);?/g,
+  html5: /&centerdot;|&copysr;|&divideontimes;|&gtcc;|&gtcir;|&gtdot;|&gtlPar;|&gtquest;|&gtrapprox;|&gtrarr;|&gtrdot;|&gtreqless;|&gtreqqless;|&gtrless;|&gtrsim;|&ltcc;|&ltcir;|&ltdot;|&lthree;|&ltimes;|&ltlarr;|&ltquest;|&ltrPar;|&ltri;|&ltrie;|&ltrif;|&notin;|&notinE;|&notindot;|&notinva;|&notinvb;|&notinvc;|&notni;|&notniva;|&notnivb;|&notnivc;|&parallel;|&timesb;|&timesbar;|&timesd;|&(?:AElig|AMP|Aacute|Acirc|Agrave|Aring|Atilde|Auml|COPY|Ccedil|ETH|Eacute|Ecirc|Egrave|Euml|GT|Iacute|Icirc|Igrave|Iuml|LT|Ntilde|Oacute|Ocirc|Ograve|Oslash|Otilde|Ouml|QUOT|REG|THORN|Uacute|Ucirc|Ugrave|Uuml|Yacute|aacute|acirc|acute|aelig|agrave|amp|aring|atilde|auml|brvbar|ccedil|cedil|cent|copy|curren|deg|divide|eacute|ecirc|egrave|eth|euml|frac12|frac14|frac34|gt|iacute|icirc|iexcl|igrave|iquest|iuml|laquo|lt|macr|micro|middot|nbsp|not|ntilde|oacute|ocirc|ograve|ordf|ordm|oslash|otilde|ouml|para|plusmn|pound|quot|raquo|reg|sect|shy|sup1|sup2|sup3|szlig|thorn|times|uacute|ucirc|ugrave|uml|uuml|yacute|yen|yuml|#\d+|#[xX][\da-fA-F]+|[0-9a-zA-Z]+);?/g
+};
+exports.namedReferences = {
+  xml: {
+    entities: {
+      "&lt;": "<",
+      "&gt;": ">",
+      "&quot;": '"',
+      "&apos;": "'",
+      "&amp;": "&"
+    },
+    characters: {
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&apos;",
+      "&": "&amp;"
+    }
+  },
+  html4: {
+    entities: {
+      "&apos;": "'",
+      "&nbsp": " ",
+      "&nbsp;": " ",
+      "&iexcl": "¡",
+      "&iexcl;": "¡",
+      "&cent": "¢",
+      "&cent;": "¢",
+      "&pound": "£",
+      "&pound;": "£",
+      "&curren": "¤",
+      "&curren;": "¤",
+      "&yen": "¥",
+      "&yen;": "¥",
+      "&brvbar": "¦",
+      "&brvbar;": "¦",
+      "&sect": "§",
+      "&sect;": "§",
+      "&uml": "¨",
+      "&uml;": "¨",
+      "&copy": "©",
+      "&copy;": "©",
+      "&ordf": "ª",
+      "&ordf;": "ª",
+      "&laquo": "«",
+      "&laquo;": "«",
+      "&not": "¬",
+      "&not;": "¬",
+      "&shy": "­",
+      "&shy;": "­",
+      "&reg": "®",
+      "&reg;": "®",
+      "&macr": "¯",
+      "&macr;": "¯",
+      "&deg": "°",
+      "&deg;": "°",
+      "&plusmn": "±",
+      "&plusmn;": "±",
+      "&sup2": "²",
+      "&sup2;": "²",
+      "&sup3": "³",
+      "&sup3;": "³",
+      "&acute": "´",
+      "&acute;": "´",
+      "&micro": "µ",
+      "&micro;": "µ",
+      "&para": "¶",
+      "&para;": "¶",
+      "&middot": "·",
+      "&middot;": "·",
+      "&cedil": "¸",
+      "&cedil;": "¸",
+      "&sup1": "¹",
+      "&sup1;": "¹",
+      "&ordm": "º",
+      "&ordm;": "º",
+      "&raquo": "»",
+      "&raquo;": "»",
+      "&frac14": "¼",
+      "&frac14;": "¼",
+      "&frac12": "½",
+      "&frac12;": "½",
+      "&frac34": "¾",
+      "&frac34;": "¾",
+      "&iquest": "¿",
+      "&iquest;": "¿",
+      "&Agrave": "À",
+      "&Agrave;": "À",
+      "&Aacute": "Á",
+      "&Aacute;": "Á",
+      "&Acirc": "Â",
+      "&Acirc;": "Â",
+      "&Atilde": "Ã",
+      "&Atilde;": "Ã",
+      "&Auml": "Ä",
+      "&Auml;": "Ä",
+      "&Aring": "Å",
+      "&Aring;": "Å",
+      "&AElig": "Æ",
+      "&AElig;": "Æ",
+      "&Ccedil": "Ç",
+      "&Ccedil;": "Ç",
+      "&Egrave": "È",
+      "&Egrave;": "È",
+      "&Eacute": "É",
+      "&Eacute;": "É",
+      "&Ecirc": "Ê",
+      "&Ecirc;": "Ê",
+      "&Euml": "Ë",
+      "&Euml;": "Ë",
+      "&Igrave": "Ì",
+      "&Igrave;": "Ì",
+      "&Iacute": "Í",
+      "&Iacute;": "Í",
+      "&Icirc": "Î",
+      "&Icirc;": "Î",
+      "&Iuml": "Ï",
+      "&Iuml;": "Ï",
+      "&ETH": "Ð",
+      "&ETH;": "Ð",
+      "&Ntilde": "Ñ",
+      "&Ntilde;": "Ñ",
+      "&Ograve": "Ò",
+      "&Ograve;": "Ò",
+      "&Oacute": "Ó",
+      "&Oacute;": "Ó",
+      "&Ocirc": "Ô",
+      "&Ocirc;": "Ô",
+      "&Otilde": "Õ",
+      "&Otilde;": "Õ",
+      "&Ouml": "Ö",
+      "&Ouml;": "Ö",
+      "&times": "×",
+      "&times;": "×",
+      "&Oslash": "Ø",
+      "&Oslash;": "Ø",
+      "&Ugrave": "Ù",
+      "&Ugrave;": "Ù",
+      "&Uacute": "Ú",
+      "&Uacute;": "Ú",
+      "&Ucirc": "Û",
+      "&Ucirc;": "Û",
+      "&Uuml": "Ü",
+      "&Uuml;": "Ü",
+      "&Yacute": "Ý",
+      "&Yacute;": "Ý",
+      "&THORN": "Þ",
+      "&THORN;": "Þ",
+      "&szlig": "ß",
+      "&szlig;": "ß",
+      "&agrave": "à",
+      "&agrave;": "à",
+      "&aacute": "á",
+      "&aacute;": "á",
+      "&acirc": "â",
+      "&acirc;": "â",
+      "&atilde": "ã",
+      "&atilde;": "ã",
+      "&auml": "ä",
+      "&auml;": "ä",
+      "&aring": "å",
+      "&aring;": "å",
+      "&aelig": "æ",
+      "&aelig;": "æ",
+      "&ccedil": "ç",
+      "&ccedil;": "ç",
+      "&egrave": "è",
+      "&egrave;": "è",
+      "&eacute": "é",
+      "&eacute;": "é",
+      "&ecirc": "ê",
+      "&ecirc;": "ê",
+      "&euml": "ë",
+      "&euml;": "ë",
+      "&igrave": "ì",
+      "&igrave;": "ì",
+      "&iacute": "í",
+      "&iacute;": "í",
+      "&icirc": "î",
+      "&icirc;": "î",
+      "&iuml": "ï",
+      "&iuml;": "ï",
+      "&eth": "ð",
+      "&eth;": "ð",
+      "&ntilde": "ñ",
+      "&ntilde;": "ñ",
+      "&ograve": "ò",
+      "&ograve;": "ò",
+      "&oacute": "ó",
+      "&oacute;": "ó",
+      "&ocirc": "ô",
+      "&ocirc;": "ô",
+      "&otilde": "õ",
+      "&otilde;": "õ",
+      "&ouml": "ö",
+      "&ouml;": "ö",
+      "&divide": "÷",
+      "&divide;": "÷",
+      "&oslash": "ø",
+      "&oslash;": "ø",
+      "&ugrave": "ù",
+      "&ugrave;": "ù",
+      "&uacute": "ú",
+      "&uacute;": "ú",
+      "&ucirc": "û",
+      "&ucirc;": "û",
+      "&uuml": "ü",
+      "&uuml;": "ü",
+      "&yacute": "ý",
+      "&yacute;": "ý",
+      "&thorn": "þ",
+      "&thorn;": "þ",
+      "&yuml": "ÿ",
+      "&yuml;": "ÿ",
+      "&quot": '"',
+      "&quot;": '"',
+      "&amp": "&",
+      "&amp;": "&",
+      "&lt": "<",
+      "&lt;": "<",
+      "&gt": ">",
+      "&gt;": ">",
+      "&OElig;": "Œ",
+      "&oelig;": "œ",
+      "&Scaron;": "Š",
+      "&scaron;": "š",
+      "&Yuml;": "Ÿ",
+      "&circ;": "ˆ",
+      "&tilde;": "˜",
+      "&ensp;": " ",
+      "&emsp;": " ",
+      "&thinsp;": " ",
+      "&zwnj;": "‌",
+      "&zwj;": "‍",
+      "&lrm;": "‎",
+      "&rlm;": "‏",
+      "&ndash;": "–",
+      "&mdash;": "—",
+      "&lsquo;": "‘",
+      "&rsquo;": "’",
+      "&sbquo;": "‚",
+      "&ldquo;": "“",
+      "&rdquo;": "”",
+      "&bdquo;": "„",
+      "&dagger;": "†",
+      "&Dagger;": "‡",
+      "&permil;": "‰",
+      "&lsaquo;": "‹",
+      "&rsaquo;": "›",
+      "&euro;": "€",
+      "&fnof;": "ƒ",
+      "&Alpha;": "Α",
+      "&Beta;": "Β",
+      "&Gamma;": "Γ",
+      "&Delta;": "Δ",
+      "&Epsilon;": "Ε",
+      "&Zeta;": "Ζ",
+      "&Eta;": "Η",
+      "&Theta;": "Θ",
+      "&Iota;": "Ι",
+      "&Kappa;": "Κ",
+      "&Lambda;": "Λ",
+      "&Mu;": "Μ",
+      "&Nu;": "Ν",
+      "&Xi;": "Ξ",
+      "&Omicron;": "Ο",
+      "&Pi;": "Π",
+      "&Rho;": "Ρ",
+      "&Sigma;": "Σ",
+      "&Tau;": "Τ",
+      "&Upsilon;": "Υ",
+      "&Phi;": "Φ",
+      "&Chi;": "Χ",
+      "&Psi;": "Ψ",
+      "&Omega;": "Ω",
+      "&alpha;": "α",
+      "&beta;": "β",
+      "&gamma;": "γ",
+      "&delta;": "δ",
+      "&epsilon;": "ε",
+      "&zeta;": "ζ",
+      "&eta;": "η",
+      "&theta;": "θ",
+      "&iota;": "ι",
+      "&kappa;": "κ",
+      "&lambda;": "λ",
+      "&mu;": "μ",
+      "&nu;": "ν",
+      "&xi;": "ξ",
+      "&omicron;": "ο",
+      "&pi;": "π",
+      "&rho;": "ρ",
+      "&sigmaf;": "ς",
+      "&sigma;": "σ",
+      "&tau;": "τ",
+      "&upsilon;": "υ",
+      "&phi;": "φ",
+      "&chi;": "χ",
+      "&psi;": "ψ",
+      "&omega;": "ω",
+      "&thetasym;": "ϑ",
+      "&upsih;": "ϒ",
+      "&piv;": "ϖ",
+      "&bull;": "•",
+      "&hellip;": "…",
+      "&prime;": "′",
+      "&Prime;": "″",
+      "&oline;": "‾",
+      "&frasl;": "⁄",
+      "&weierp;": "℘",
+      "&image;": "ℑ",
+      "&real;": "ℜ",
+      "&trade;": "™",
+      "&alefsym;": "ℵ",
+      "&larr;": "←",
+      "&uarr;": "↑",
+      "&rarr;": "→",
+      "&darr;": "↓",
+      "&harr;": "↔",
+      "&crarr;": "↵",
+      "&lArr;": "⇐",
+      "&uArr;": "⇑",
+      "&rArr;": "⇒",
+      "&dArr;": "⇓",
+      "&hArr;": "⇔",
+      "&forall;": "∀",
+      "&part;": "∂",
+      "&exist;": "∃",
+      "&empty;": "∅",
+      "&nabla;": "∇",
+      "&isin;": "∈",
+      "&notin;": "∉",
+      "&ni;": "∋",
+      "&prod;": "∏",
+      "&sum;": "∑",
+      "&minus;": "−",
+      "&lowast;": "∗",
+      "&radic;": "√",
+      "&prop;": "∝",
+      "&infin;": "∞",
+      "&ang;": "∠",
+      "&and;": "∧",
+      "&or;": "∨",
+      "&cap;": "∩",
+      "&cup;": "∪",
+      "&int;": "∫",
+      "&there4;": "∴",
+      "&sim;": "∼",
+      "&cong;": "≅",
+      "&asymp;": "≈",
+      "&ne;": "≠",
+      "&equiv;": "≡",
+      "&le;": "≤",
+      "&ge;": "≥",
+      "&sub;": "⊂",
+      "&sup;": "⊃",
+      "&nsub;": "⊄",
+      "&sube;": "⊆",
+      "&supe;": "⊇",
+      "&oplus;": "⊕",
+      "&otimes;": "⊗",
+      "&perp;": "⊥",
+      "&sdot;": "⋅",
+      "&lceil;": "⌈",
+      "&rceil;": "⌉",
+      "&lfloor;": "⌊",
+      "&rfloor;": "⌋",
+      "&lang;": "〈",
+      "&rang;": "〉",
+      "&loz;": "◊",
+      "&spades;": "♠",
+      "&clubs;": "♣",
+      "&hearts;": "♥",
+      "&diams;": "♦"
+    },
+    characters: {
+      "'": "&apos;",
+      " ": "&nbsp;",
+      "¡": "&iexcl;",
+      "¢": "&cent;",
+      "£": "&pound;",
+      "¤": "&curren;",
+      "¥": "&yen;",
+      "¦": "&brvbar;",
+      "§": "&sect;",
+      "¨": "&uml;",
+      "©": "&copy;",
+      "ª": "&ordf;",
+      "«": "&laquo;",
+      "¬": "&not;",
+      "­": "&shy;",
+      "®": "&reg;",
+      "¯": "&macr;",
+      "°": "&deg;",
+      "±": "&plusmn;",
+      "²": "&sup2;",
+      "³": "&sup3;",
+      "´": "&acute;",
+      "µ": "&micro;",
+      "¶": "&para;",
+      "·": "&middot;",
+      "¸": "&cedil;",
+      "¹": "&sup1;",
+      "º": "&ordm;",
+      "»": "&raquo;",
+      "¼": "&frac14;",
+      "½": "&frac12;",
+      "¾": "&frac34;",
+      "¿": "&iquest;",
+      "À": "&Agrave;",
+      "Á": "&Aacute;",
+      "Â": "&Acirc;",
+      "Ã": "&Atilde;",
+      "Ä": "&Auml;",
+      "Å": "&Aring;",
+      "Æ": "&AElig;",
+      "Ç": "&Ccedil;",
+      "È": "&Egrave;",
+      "É": "&Eacute;",
+      "Ê": "&Ecirc;",
+      "Ë": "&Euml;",
+      "Ì": "&Igrave;",
+      "Í": "&Iacute;",
+      "Î": "&Icirc;",
+      "Ï": "&Iuml;",
+      "Ð": "&ETH;",
+      "Ñ": "&Ntilde;",
+      "Ò": "&Ograve;",
+      "Ó": "&Oacute;",
+      "Ô": "&Ocirc;",
+      "Õ": "&Otilde;",
+      "Ö": "&Ouml;",
+      "×": "&times;",
+      "Ø": "&Oslash;",
+      "Ù": "&Ugrave;",
+      "Ú": "&Uacute;",
+      "Û": "&Ucirc;",
+      "Ü": "&Uuml;",
+      "Ý": "&Yacute;",
+      "Þ": "&THORN;",
+      "ß": "&szlig;",
+      "à": "&agrave;",
+      "á": "&aacute;",
+      "â": "&acirc;",
+      "ã": "&atilde;",
+      "ä": "&auml;",
+      "å": "&aring;",
+      "æ": "&aelig;",
+      "ç": "&ccedil;",
+      "è": "&egrave;",
+      "é": "&eacute;",
+      "ê": "&ecirc;",
+      "ë": "&euml;",
+      "ì": "&igrave;",
+      "í": "&iacute;",
+      "î": "&icirc;",
+      "ï": "&iuml;",
+      "ð": "&eth;",
+      "ñ": "&ntilde;",
+      "ò": "&ograve;",
+      "ó": "&oacute;",
+      "ô": "&ocirc;",
+      "õ": "&otilde;",
+      "ö": "&ouml;",
+      "÷": "&divide;",
+      "ø": "&oslash;",
+      "ù": "&ugrave;",
+      "ú": "&uacute;",
+      "û": "&ucirc;",
+      "ü": "&uuml;",
+      "ý": "&yacute;",
+      "þ": "&thorn;",
+      "ÿ": "&yuml;",
+      '"': "&quot;",
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      "Œ": "&OElig;",
+      "œ": "&oelig;",
+      "Š": "&Scaron;",
+      "š": "&scaron;",
+      "Ÿ": "&Yuml;",
+      "ˆ": "&circ;",
+      "˜": "&tilde;",
+      " ": "&ensp;",
+      " ": "&emsp;",
+      " ": "&thinsp;",
+      "‌": "&zwnj;",
+      "‍": "&zwj;",
+      "‎": "&lrm;",
+      "‏": "&rlm;",
+      "–": "&ndash;",
+      "—": "&mdash;",
+      "‘": "&lsquo;",
+      "’": "&rsquo;",
+      "‚": "&sbquo;",
+      "“": "&ldquo;",
+      "”": "&rdquo;",
+      "„": "&bdquo;",
+      "†": "&dagger;",
+      "‡": "&Dagger;",
+      "‰": "&permil;",
+      "‹": "&lsaquo;",
+      "›": "&rsaquo;",
+      "€": "&euro;",
+      "ƒ": "&fnof;",
+      "Α": "&Alpha;",
+      "Β": "&Beta;",
+      "Γ": "&Gamma;",
+      "Δ": "&Delta;",
+      "Ε": "&Epsilon;",
+      "Ζ": "&Zeta;",
+      "Η": "&Eta;",
+      "Θ": "&Theta;",
+      "Ι": "&Iota;",
+      "Κ": "&Kappa;",
+      "Λ": "&Lambda;",
+      "Μ": "&Mu;",
+      "Ν": "&Nu;",
+      "Ξ": "&Xi;",
+      "Ο": "&Omicron;",
+      "Π": "&Pi;",
+      "Ρ": "&Rho;",
+      "Σ": "&Sigma;",
+      "Τ": "&Tau;",
+      "Υ": "&Upsilon;",
+      "Φ": "&Phi;",
+      "Χ": "&Chi;",
+      "Ψ": "&Psi;",
+      "Ω": "&Omega;",
+      "α": "&alpha;",
+      "β": "&beta;",
+      "γ": "&gamma;",
+      "δ": "&delta;",
+      "ε": "&epsilon;",
+      "ζ": "&zeta;",
+      "η": "&eta;",
+      "θ": "&theta;",
+      "ι": "&iota;",
+      "κ": "&kappa;",
+      "λ": "&lambda;",
+      "μ": "&mu;",
+      "ν": "&nu;",
+      "ξ": "&xi;",
+      "ο": "&omicron;",
+      "π": "&pi;",
+      "ρ": "&rho;",
+      "ς": "&sigmaf;",
+      "σ": "&sigma;",
+      "τ": "&tau;",
+      "υ": "&upsilon;",
+      "φ": "&phi;",
+      "χ": "&chi;",
+      "ψ": "&psi;",
+      "ω": "&omega;",
+      "ϑ": "&thetasym;",
+      "ϒ": "&upsih;",
+      "ϖ": "&piv;",
+      "•": "&bull;",
+      "…": "&hellip;",
+      "′": "&prime;",
+      "″": "&Prime;",
+      "‾": "&oline;",
+      "⁄": "&frasl;",
+      "℘": "&weierp;",
+      "ℑ": "&image;",
+      "ℜ": "&real;",
+      "™": "&trade;",
+      "ℵ": "&alefsym;",
+      "←": "&larr;",
+      "↑": "&uarr;",
+      "→": "&rarr;",
+      "↓": "&darr;",
+      "↔": "&harr;",
+      "↵": "&crarr;",
+      "⇐": "&lArr;",
+      "⇑": "&uArr;",
+      "⇒": "&rArr;",
+      "⇓": "&dArr;",
+      "⇔": "&hArr;",
+      "∀": "&forall;",
+      "∂": "&part;",
+      "∃": "&exist;",
+      "∅": "&empty;",
+      "∇": "&nabla;",
+      "∈": "&isin;",
+      "∉": "&notin;",
+      "∋": "&ni;",
+      "∏": "&prod;",
+      "∑": "&sum;",
+      "−": "&minus;",
+      "∗": "&lowast;",
+      "√": "&radic;",
+      "∝": "&prop;",
+      "∞": "&infin;",
+      "∠": "&ang;",
+      "∧": "&and;",
+      "∨": "&or;",
+      "∩": "&cap;",
+      "∪": "&cup;",
+      "∫": "&int;",
+      "∴": "&there4;",
+      "∼": "&sim;",
+      "≅": "&cong;",
+      "≈": "&asymp;",
+      "≠": "&ne;",
+      "≡": "&equiv;",
+      "≤": "&le;",
+      "≥": "&ge;",
+      "⊂": "&sub;",
+      "⊃": "&sup;",
+      "⊄": "&nsub;",
+      "⊆": "&sube;",
+      "⊇": "&supe;",
+      "⊕": "&oplus;",
+      "⊗": "&otimes;",
+      "⊥": "&perp;",
+      "⋅": "&sdot;",
+      "⌈": "&lceil;",
+      "⌉": "&rceil;",
+      "⌊": "&lfloor;",
+      "⌋": "&rfloor;",
+      "〈": "&lang;",
+      "〉": "&rang;",
+      "◊": "&loz;",
+      "♠": "&spades;",
+      "♣": "&clubs;",
+      "♥": "&hearts;",
+      "♦": "&diams;"
+    }
+  },
+  html5: {
+    entities: {
+      "&AElig": "Æ",
+      "&AElig;": "Æ",
+      "&AMP": "&",
+      "&AMP;": "&",
+      "&Aacute": "Á",
+      "&Aacute;": "Á",
+      "&Abreve;": "Ă",
+      "&Acirc": "Â",
+      "&Acirc;": "Â",
+      "&Acy;": "А",
+      "&Afr;": "𝔄",
+      "&Agrave": "À",
+      "&Agrave;": "À",
+      "&Alpha;": "Α",
+      "&Amacr;": "Ā",
+      "&And;": "⩓",
+      "&Aogon;": "Ą",
+      "&Aopf;": "𝔸",
+      "&ApplyFunction;": "⁡",
+      "&Aring": "Å",
+      "&Aring;": "Å",
+      "&Ascr;": "𝒜",
+      "&Assign;": "≔",
+      "&Atilde": "Ã",
+      "&Atilde;": "Ã",
+      "&Auml": "Ä",
+      "&Auml;": "Ä",
+      "&Backslash;": "∖",
+      "&Barv;": "⫧",
+      "&Barwed;": "⌆",
+      "&Bcy;": "Б",
+      "&Because;": "∵",
+      "&Bernoullis;": "ℬ",
+      "&Beta;": "Β",
+      "&Bfr;": "𝔅",
+      "&Bopf;": "𝔹",
+      "&Breve;": "˘",
+      "&Bscr;": "ℬ",
+      "&Bumpeq;": "≎",
+      "&CHcy;": "Ч",
+      "&COPY": "©",
+      "&COPY;": "©",
+      "&Cacute;": "Ć",
+      "&Cap;": "⋒",
+      "&CapitalDifferentialD;": "ⅅ",
+      "&Cayleys;": "ℭ",
+      "&Ccaron;": "Č",
+      "&Ccedil": "Ç",
+      "&Ccedil;": "Ç",
+      "&Ccirc;": "Ĉ",
+      "&Cconint;": "∰",
+      "&Cdot;": "Ċ",
+      "&Cedilla;": "¸",
+      "&CenterDot;": "·",
+      "&Cfr;": "ℭ",
+      "&Chi;": "Χ",
+      "&CircleDot;": "⊙",
+      "&CircleMinus;": "⊖",
+      "&CirclePlus;": "⊕",
+      "&CircleTimes;": "⊗",
+      "&ClockwiseContourIntegral;": "∲",
+      "&CloseCurlyDoubleQuote;": "”",
+      "&CloseCurlyQuote;": "’",
+      "&Colon;": "∷",
+      "&Colone;": "⩴",
+      "&Congruent;": "≡",
+      "&Conint;": "∯",
+      "&ContourIntegral;": "∮",
+      "&Copf;": "ℂ",
+      "&Coproduct;": "∐",
+      "&CounterClockwiseContourIntegral;": "∳",
+      "&Cross;": "⨯",
+      "&Cscr;": "𝒞",
+      "&Cup;": "⋓",
+      "&CupCap;": "≍",
+      "&DD;": "ⅅ",
+      "&DDotrahd;": "⤑",
+      "&DJcy;": "Ђ",
+      "&DScy;": "Ѕ",
+      "&DZcy;": "Џ",
+      "&Dagger;": "‡",
+      "&Darr;": "↡",
+      "&Dashv;": "⫤",
+      "&Dcaron;": "Ď",
+      "&Dcy;": "Д",
+      "&Del;": "∇",
+      "&Delta;": "Δ",
+      "&Dfr;": "𝔇",
+      "&DiacriticalAcute;": "´",
+      "&DiacriticalDot;": "˙",
+      "&DiacriticalDoubleAcute;": "˝",
+      "&DiacriticalGrave;": "`",
+      "&DiacriticalTilde;": "˜",
+      "&Diamond;": "⋄",
+      "&DifferentialD;": "ⅆ",
+      "&Dopf;": "𝔻",
+      "&Dot;": "¨",
+      "&DotDot;": "⃜",
+      "&DotEqual;": "≐",
+      "&DoubleContourIntegral;": "∯",
+      "&DoubleDot;": "¨",
+      "&DoubleDownArrow;": "⇓",
+      "&DoubleLeftArrow;": "⇐",
+      "&DoubleLeftRightArrow;": "⇔",
+      "&DoubleLeftTee;": "⫤",
+      "&DoubleLongLeftArrow;": "⟸",
+      "&DoubleLongLeftRightArrow;": "⟺",
+      "&DoubleLongRightArrow;": "⟹",
+      "&DoubleRightArrow;": "⇒",
+      "&DoubleRightTee;": "⊨",
+      "&DoubleUpArrow;": "⇑",
+      "&DoubleUpDownArrow;": "⇕",
+      "&DoubleVerticalBar;": "∥",
+      "&DownArrow;": "↓",
+      "&DownArrowBar;": "⤓",
+      "&DownArrowUpArrow;": "⇵",
+      "&DownBreve;": "̑",
+      "&DownLeftRightVector;": "⥐",
+      "&DownLeftTeeVector;": "⥞",
+      "&DownLeftVector;": "↽",
+      "&DownLeftVectorBar;": "⥖",
+      "&DownRightTeeVector;": "⥟",
+      "&DownRightVector;": "⇁",
+      "&DownRightVectorBar;": "⥗",
+      "&DownTee;": "⊤",
+      "&DownTeeArrow;": "↧",
+      "&Downarrow;": "⇓",
+      "&Dscr;": "𝒟",
+      "&Dstrok;": "Đ",
+      "&ENG;": "Ŋ",
+      "&ETH": "Ð",
+      "&ETH;": "Ð",
+      "&Eacute": "É",
+      "&Eacute;": "É",
+      "&Ecaron;": "Ě",
+      "&Ecirc": "Ê",
+      "&Ecirc;": "Ê",
+      "&Ecy;": "Э",
+      "&Edot;": "Ė",
+      "&Efr;": "𝔈",
+      "&Egrave": "È",
+      "&Egrave;": "È",
+      "&Element;": "∈",
+      "&Emacr;": "Ē",
+      "&EmptySmallSquare;": "◻",
+      "&EmptyVerySmallSquare;": "▫",
+      "&Eogon;": "Ę",
+      "&Eopf;": "𝔼",
+      "&Epsilon;": "Ε",
+      "&Equal;": "⩵",
+      "&EqualTilde;": "≂",
+      "&Equilibrium;": "⇌",
+      "&Escr;": "ℰ",
+      "&Esim;": "⩳",
+      "&Eta;": "Η",
+      "&Euml": "Ë",
+      "&Euml;": "Ë",
+      "&Exists;": "∃",
+      "&ExponentialE;": "ⅇ",
+      "&Fcy;": "Ф",
+      "&Ffr;": "𝔉",
+      "&FilledSmallSquare;": "◼",
+      "&FilledVerySmallSquare;": "▪",
+      "&Fopf;": "𝔽",
+      "&ForAll;": "∀",
+      "&Fouriertrf;": "ℱ",
+      "&Fscr;": "ℱ",
+      "&GJcy;": "Ѓ",
+      "&GT": ">",
+      "&GT;": ">",
+      "&Gamma;": "Γ",
+      "&Gammad;": "Ϝ",
+      "&Gbreve;": "Ğ",
+      "&Gcedil;": "Ģ",
+      "&Gcirc;": "Ĝ",
+      "&Gcy;": "Г",
+      "&Gdot;": "Ġ",
+      "&Gfr;": "𝔊",
+      "&Gg;": "⋙",
+      "&Gopf;": "𝔾",
+      "&GreaterEqual;": "≥",
+      "&GreaterEqualLess;": "⋛",
+      "&GreaterFullEqual;": "≧",
+      "&GreaterGreater;": "⪢",
+      "&GreaterLess;": "≷",
+      "&GreaterSlantEqual;": "⩾",
+      "&GreaterTilde;": "≳",
+      "&Gscr;": "𝒢",
+      "&Gt;": "≫",
+      "&HARDcy;": "Ъ",
+      "&Hacek;": "ˇ",
+      "&Hat;": "^",
+      "&Hcirc;": "Ĥ",
+      "&Hfr;": "ℌ",
+      "&HilbertSpace;": "ℋ",
+      "&Hopf;": "ℍ",
+      "&HorizontalLine;": "─",
+      "&Hscr;": "ℋ",
+      "&Hstrok;": "Ħ",
+      "&HumpDownHump;": "≎",
+      "&HumpEqual;": "≏",
+      "&IEcy;": "Е",
+      "&IJlig;": "Ĳ",
+      "&IOcy;": "Ё",
+      "&Iacute": "Í",
+      "&Iacute;": "Í",
+      "&Icirc": "Î",
+      "&Icirc;": "Î",
+      "&Icy;": "И",
+      "&Idot;": "İ",
+      "&Ifr;": "ℑ",
+      "&Igrave": "Ì",
+      "&Igrave;": "Ì",
+      "&Im;": "ℑ",
+      "&Imacr;": "Ī",
+      "&ImaginaryI;": "ⅈ",
+      "&Implies;": "⇒",
+      "&Int;": "∬",
+      "&Integral;": "∫",
+      "&Intersection;": "⋂",
+      "&InvisibleComma;": "⁣",
+      "&InvisibleTimes;": "⁢",
+      "&Iogon;": "Į",
+      "&Iopf;": "𝕀",
+      "&Iota;": "Ι",
+      "&Iscr;": "ℐ",
+      "&Itilde;": "Ĩ",
+      "&Iukcy;": "І",
+      "&Iuml": "Ï",
+      "&Iuml;": "Ï",
+      "&Jcirc;": "Ĵ",
+      "&Jcy;": "Й",
+      "&Jfr;": "𝔍",
+      "&Jopf;": "𝕁",
+      "&Jscr;": "𝒥",
+      "&Jsercy;": "Ј",
+      "&Jukcy;": "Є",
+      "&KHcy;": "Х",
+      "&KJcy;": "Ќ",
+      "&Kappa;": "Κ",
+      "&Kcedil;": "Ķ",
+      "&Kcy;": "К",
+      "&Kfr;": "𝔎",
+      "&Kopf;": "𝕂",
+      "&Kscr;": "𝒦",
+      "&LJcy;": "Љ",
+      "&LT": "<",
+      "&LT;": "<",
+      "&Lacute;": "Ĺ",
+      "&Lambda;": "Λ",
+      "&Lang;": "⟪",
+      "&Laplacetrf;": "ℒ",
+      "&Larr;": "↞",
+      "&Lcaron;": "Ľ",
+      "&Lcedil;": "Ļ",
+      "&Lcy;": "Л",
+      "&LeftAngleBracket;": "⟨",
+      "&LeftArrow;": "←",
+      "&LeftArrowBar;": "⇤",
+      "&LeftArrowRightArrow;": "⇆",
+      "&LeftCeiling;": "⌈",
+      "&LeftDoubleBracket;": "⟦",
+      "&LeftDownTeeVector;": "⥡",
+      "&LeftDownVector;": "⇃",
+      "&LeftDownVectorBar;": "⥙",
+      "&LeftFloor;": "⌊",
+      "&LeftRightArrow;": "↔",
+      "&LeftRightVector;": "⥎",
+      "&LeftTee;": "⊣",
+      "&LeftTeeArrow;": "↤",
+      "&LeftTeeVector;": "⥚",
+      "&LeftTriangle;": "⊲",
+      "&LeftTriangleBar;": "⧏",
+      "&LeftTriangleEqual;": "⊴",
+      "&LeftUpDownVector;": "⥑",
+      "&LeftUpTeeVector;": "⥠",
+      "&LeftUpVector;": "↿",
+      "&LeftUpVectorBar;": "⥘",
+      "&LeftVector;": "↼",
+      "&LeftVectorBar;": "⥒",
+      "&Leftarrow;": "⇐",
+      "&Leftrightarrow;": "⇔",
+      "&LessEqualGreater;": "⋚",
+      "&LessFullEqual;": "≦",
+      "&LessGreater;": "≶",
+      "&LessLess;": "⪡",
+      "&LessSlantEqual;": "⩽",
+      "&LessTilde;": "≲",
+      "&Lfr;": "𝔏",
+      "&Ll;": "⋘",
+      "&Lleftarrow;": "⇚",
+      "&Lmidot;": "Ŀ",
+      "&LongLeftArrow;": "⟵",
+      "&LongLeftRightArrow;": "⟷",
+      "&LongRightArrow;": "⟶",
+      "&Longleftarrow;": "⟸",
+      "&Longleftrightarrow;": "⟺",
+      "&Longrightarrow;": "⟹",
+      "&Lopf;": "𝕃",
+      "&LowerLeftArrow;": "↙",
+      "&LowerRightArrow;": "↘",
+      "&Lscr;": "ℒ",
+      "&Lsh;": "↰",
+      "&Lstrok;": "Ł",
+      "&Lt;": "≪",
+      "&Map;": "⤅",
+      "&Mcy;": "М",
+      "&MediumSpace;": " ",
+      "&Mellintrf;": "ℳ",
+      "&Mfr;": "𝔐",
+      "&MinusPlus;": "∓",
+      "&Mopf;": "𝕄",
+      "&Mscr;": "ℳ",
+      "&Mu;": "Μ",
+      "&NJcy;": "Њ",
+      "&Nacute;": "Ń",
+      "&Ncaron;": "Ň",
+      "&Ncedil;": "Ņ",
+      "&Ncy;": "Н",
+      "&NegativeMediumSpace;": "​",
+      "&NegativeThickSpace;": "​",
+      "&NegativeThinSpace;": "​",
+      "&NegativeVeryThinSpace;": "​",
+      "&NestedGreaterGreater;": "≫",
+      "&NestedLessLess;": "≪",
+      "&NewLine;": "\n",
+      "&Nfr;": "𝔑",
+      "&NoBreak;": "⁠",
+      "&NonBreakingSpace;": " ",
+      "&Nopf;": "ℕ",
+      "&Not;": "⫬",
+      "&NotCongruent;": "≢",
+      "&NotCupCap;": "≭",
+      "&NotDoubleVerticalBar;": "∦",
+      "&NotElement;": "∉",
+      "&NotEqual;": "≠",
+      "&NotEqualTilde;": "≂̸",
+      "&NotExists;": "∄",
+      "&NotGreater;": "≯",
+      "&NotGreaterEqual;": "≱",
+      "&NotGreaterFullEqual;": "≧̸",
+      "&NotGreaterGreater;": "≫̸",
+      "&NotGreaterLess;": "≹",
+      "&NotGreaterSlantEqual;": "⩾̸",
+      "&NotGreaterTilde;": "≵",
+      "&NotHumpDownHump;": "≎̸",
+      "&NotHumpEqual;": "≏̸",
+      "&NotLeftTriangle;": "⋪",
+      "&NotLeftTriangleBar;": "⧏̸",
+      "&NotLeftTriangleEqual;": "⋬",
+      "&NotLess;": "≮",
+      "&NotLessEqual;": "≰",
+      "&NotLessGreater;": "≸",
+      "&NotLessLess;": "≪̸",
+      "&NotLessSlantEqual;": "⩽̸",
+      "&NotLessTilde;": "≴",
+      "&NotNestedGreaterGreater;": "⪢̸",
+      "&NotNestedLessLess;": "⪡̸",
+      "&NotPrecedes;": "⊀",
+      "&NotPrecedesEqual;": "⪯̸",
+      "&NotPrecedesSlantEqual;": "⋠",
+      "&NotReverseElement;": "∌",
+      "&NotRightTriangle;": "⋫",
+      "&NotRightTriangleBar;": "⧐̸",
+      "&NotRightTriangleEqual;": "⋭",
+      "&NotSquareSubset;": "⊏̸",
+      "&NotSquareSubsetEqual;": "⋢",
+      "&NotSquareSuperset;": "⊐̸",
+      "&NotSquareSupersetEqual;": "⋣",
+      "&NotSubset;": "⊂⃒",
+      "&NotSubsetEqual;": "⊈",
+      "&NotSucceeds;": "⊁",
+      "&NotSucceedsEqual;": "⪰̸",
+      "&NotSucceedsSlantEqual;": "⋡",
+      "&NotSucceedsTilde;": "≿̸",
+      "&NotSuperset;": "⊃⃒",
+      "&NotSupersetEqual;": "⊉",
+      "&NotTilde;": "≁",
+      "&NotTildeEqual;": "≄",
+      "&NotTildeFullEqual;": "≇",
+      "&NotTildeTilde;": "≉",
+      "&NotVerticalBar;": "∤",
+      "&Nscr;": "𝒩",
+      "&Ntilde": "Ñ",
+      "&Ntilde;": "Ñ",
+      "&Nu;": "Ν",
+      "&OElig;": "Œ",
+      "&Oacute": "Ó",
+      "&Oacute;": "Ó",
+      "&Ocirc": "Ô",
+      "&Ocirc;": "Ô",
+      "&Ocy;": "О",
+      "&Odblac;": "Ő",
+      "&Ofr;": "𝔒",
+      "&Ograve": "Ò",
+      "&Ograve;": "Ò",
+      "&Omacr;": "Ō",
+      "&Omega;": "Ω",
+      "&Omicron;": "Ο",
+      "&Oopf;": "𝕆",
+      "&OpenCurlyDoubleQuote;": "“",
+      "&OpenCurlyQuote;": "‘",
+      "&Or;": "⩔",
+      "&Oscr;": "𝒪",
+      "&Oslash": "Ø",
+      "&Oslash;": "Ø",
+      "&Otilde": "Õ",
+      "&Otilde;": "Õ",
+      "&Otimes;": "⨷",
+      "&Ouml": "Ö",
+      "&Ouml;": "Ö",
+      "&OverBar;": "‾",
+      "&OverBrace;": "⏞",
+      "&OverBracket;": "⎴",
+      "&OverParenthesis;": "⏜",
+      "&PartialD;": "∂",
+      "&Pcy;": "П",
+      "&Pfr;": "𝔓",
+      "&Phi;": "Φ",
+      "&Pi;": "Π",
+      "&PlusMinus;": "±",
+      "&Poincareplane;": "ℌ",
+      "&Popf;": "ℙ",
+      "&Pr;": "⪻",
+      "&Precedes;": "≺",
+      "&PrecedesEqual;": "⪯",
+      "&PrecedesSlantEqual;": "≼",
+      "&PrecedesTilde;": "≾",
+      "&Prime;": "″",
+      "&Product;": "∏",
+      "&Proportion;": "∷",
+      "&Proportional;": "∝",
+      "&Pscr;": "𝒫",
+      "&Psi;": "Ψ",
+      "&QUOT": '"',
+      "&QUOT;": '"',
+      "&Qfr;": "𝔔",
+      "&Qopf;": "ℚ",
+      "&Qscr;": "𝒬",
+      "&RBarr;": "⤐",
+      "&REG": "®",
+      "&REG;": "®",
+      "&Racute;": "Ŕ",
+      "&Rang;": "⟫",
+      "&Rarr;": "↠",
+      "&Rarrtl;": "⤖",
+      "&Rcaron;": "Ř",
+      "&Rcedil;": "Ŗ",
+      "&Rcy;": "Р",
+      "&Re;": "ℜ",
+      "&ReverseElement;": "∋",
+      "&ReverseEquilibrium;": "⇋",
+      "&ReverseUpEquilibrium;": "⥯",
+      "&Rfr;": "ℜ",
+      "&Rho;": "Ρ",
+      "&RightAngleBracket;": "⟩",
+      "&RightArrow;": "→",
+      "&RightArrowBar;": "⇥",
+      "&RightArrowLeftArrow;": "⇄",
+      "&RightCeiling;": "⌉",
+      "&RightDoubleBracket;": "⟧",
+      "&RightDownTeeVector;": "⥝",
+      "&RightDownVector;": "⇂",
+      "&RightDownVectorBar;": "⥕",
+      "&RightFloor;": "⌋",
+      "&RightTee;": "⊢",
+      "&RightTeeArrow;": "↦",
+      "&RightTeeVector;": "⥛",
+      "&RightTriangle;": "⊳",
+      "&RightTriangleBar;": "⧐",
+      "&RightTriangleEqual;": "⊵",
+      "&RightUpDownVector;": "⥏",
+      "&RightUpTeeVector;": "⥜",
+      "&RightUpVector;": "↾",
+      "&RightUpVectorBar;": "⥔",
+      "&RightVector;": "⇀",
+      "&RightVectorBar;": "⥓",
+      "&Rightarrow;": "⇒",
+      "&Ropf;": "ℝ",
+      "&RoundImplies;": "⥰",
+      "&Rrightarrow;": "⇛",
+      "&Rscr;": "ℛ",
+      "&Rsh;": "↱",
+      "&RuleDelayed;": "⧴",
+      "&SHCHcy;": "Щ",
+      "&SHcy;": "Ш",
+      "&SOFTcy;": "Ь",
+      "&Sacute;": "Ś",
+      "&Sc;": "⪼",
+      "&Scaron;": "Š",
+      "&Scedil;": "Ş",
+      "&Scirc;": "Ŝ",
+      "&Scy;": "С",
+      "&Sfr;": "𝔖",
+      "&ShortDownArrow;": "↓",
+      "&ShortLeftArrow;": "←",
+      "&ShortRightArrow;": "→",
+      "&ShortUpArrow;": "↑",
+      "&Sigma;": "Σ",
+      "&SmallCircle;": "∘",
+      "&Sopf;": "𝕊",
+      "&Sqrt;": "√",
+      "&Square;": "□",
+      "&SquareIntersection;": "⊓",
+      "&SquareSubset;": "⊏",
+      "&SquareSubsetEqual;": "⊑",
+      "&SquareSuperset;": "⊐",
+      "&SquareSupersetEqual;": "⊒",
+      "&SquareUnion;": "⊔",
+      "&Sscr;": "𝒮",
+      "&Star;": "⋆",
+      "&Sub;": "⋐",
+      "&Subset;": "⋐",
+      "&SubsetEqual;": "⊆",
+      "&Succeeds;": "≻",
+      "&SucceedsEqual;": "⪰",
+      "&SucceedsSlantEqual;": "≽",
+      "&SucceedsTilde;": "≿",
+      "&SuchThat;": "∋",
+      "&Sum;": "∑",
+      "&Sup;": "⋑",
+      "&Superset;": "⊃",
+      "&SupersetEqual;": "⊇",
+      "&Supset;": "⋑",
+      "&THORN": "Þ",
+      "&THORN;": "Þ",
+      "&TRADE;": "™",
+      "&TSHcy;": "Ћ",
+      "&TScy;": "Ц",
+      "&Tab;": "\t",
+      "&Tau;": "Τ",
+      "&Tcaron;": "Ť",
+      "&Tcedil;": "Ţ",
+      "&Tcy;": "Т",
+      "&Tfr;": "𝔗",
+      "&Therefore;": "∴",
+      "&Theta;": "Θ",
+      "&ThickSpace;": "  ",
+      "&ThinSpace;": " ",
+      "&Tilde;": "∼",
+      "&TildeEqual;": "≃",
+      "&TildeFullEqual;": "≅",
+      "&TildeTilde;": "≈",
+      "&Topf;": "𝕋",
+      "&TripleDot;": "⃛",
+      "&Tscr;": "𝒯",
+      "&Tstrok;": "Ŧ",
+      "&Uacute": "Ú",
+      "&Uacute;": "Ú",
+      "&Uarr;": "↟",
+      "&Uarrocir;": "⥉",
+      "&Ubrcy;": "Ў",
+      "&Ubreve;": "Ŭ",
+      "&Ucirc": "Û",
+      "&Ucirc;": "Û",
+      "&Ucy;": "У",
+      "&Udblac;": "Ű",
+      "&Ufr;": "𝔘",
+      "&Ugrave": "Ù",
+      "&Ugrave;": "Ù",
+      "&Umacr;": "Ū",
+      "&UnderBar;": "_",
+      "&UnderBrace;": "⏟",
+      "&UnderBracket;": "⎵",
+      "&UnderParenthesis;": "⏝",
+      "&Union;": "⋃",
+      "&UnionPlus;": "⊎",
+      "&Uogon;": "Ų",
+      "&Uopf;": "𝕌",
+      "&UpArrow;": "↑",
+      "&UpArrowBar;": "⤒",
+      "&UpArrowDownArrow;": "⇅",
+      "&UpDownArrow;": "↕",
+      "&UpEquilibrium;": "⥮",
+      "&UpTee;": "⊥",
+      "&UpTeeArrow;": "↥",
+      "&Uparrow;": "⇑",
+      "&Updownarrow;": "⇕",
+      "&UpperLeftArrow;": "↖",
+      "&UpperRightArrow;": "↗",
+      "&Upsi;": "ϒ",
+      "&Upsilon;": "Υ",
+      "&Uring;": "Ů",
+      "&Uscr;": "𝒰",
+      "&Utilde;": "Ũ",
+      "&Uuml": "Ü",
+      "&Uuml;": "Ü",
+      "&VDash;": "⊫",
+      "&Vbar;": "⫫",
+      "&Vcy;": "В",
+      "&Vdash;": "⊩",
+      "&Vdashl;": "⫦",
+      "&Vee;": "⋁",
+      "&Verbar;": "‖",
+      "&Vert;": "‖",
+      "&VerticalBar;": "∣",
+      "&VerticalLine;": "|",
+      "&VerticalSeparator;": "❘",
+      "&VerticalTilde;": "≀",
+      "&VeryThinSpace;": " ",
+      "&Vfr;": "𝔙",
+      "&Vopf;": "𝕍",
+      "&Vscr;": "𝒱",
+      "&Vvdash;": "⊪",
+      "&Wcirc;": "Ŵ",
+      "&Wedge;": "⋀",
+      "&Wfr;": "𝔚",
+      "&Wopf;": "𝕎",
+      "&Wscr;": "𝒲",
+      "&Xfr;": "𝔛",
+      "&Xi;": "Ξ",
+      "&Xopf;": "𝕏",
+      "&Xscr;": "𝒳",
+      "&YAcy;": "Я",
+      "&YIcy;": "Ї",
+      "&YUcy;": "Ю",
+      "&Yacute": "Ý",
+      "&Yacute;": "Ý",
+      "&Ycirc;": "Ŷ",
+      "&Ycy;": "Ы",
+      "&Yfr;": "𝔜",
+      "&Yopf;": "𝕐",
+      "&Yscr;": "𝒴",
+      "&Yuml;": "Ÿ",
+      "&ZHcy;": "Ж",
+      "&Zacute;": "Ź",
+      "&Zcaron;": "Ž",
+      "&Zcy;": "З",
+      "&Zdot;": "Ż",
+      "&ZeroWidthSpace;": "​",
+      "&Zeta;": "Ζ",
+      "&Zfr;": "ℨ",
+      "&Zopf;": "ℤ",
+      "&Zscr;": "𝒵",
+      "&aacute": "á",
+      "&aacute;": "á",
+      "&abreve;": "ă",
+      "&ac;": "∾",
+      "&acE;": "∾̳",
+      "&acd;": "∿",
+      "&acirc": "â",
+      "&acirc;": "â",
+      "&acute": "´",
+      "&acute;": "´",
+      "&acy;": "а",
+      "&aelig": "æ",
+      "&aelig;": "æ",
+      "&af;": "⁡",
+      "&afr;": "𝔞",
+      "&agrave": "à",
+      "&agrave;": "à",
+      "&alefsym;": "ℵ",
+      "&aleph;": "ℵ",
+      "&alpha;": "α",
+      "&amacr;": "ā",
+      "&amalg;": "⨿",
+      "&amp": "&",
+      "&amp;": "&",
+      "&and;": "∧",
+      "&andand;": "⩕",
+      "&andd;": "⩜",
+      "&andslope;": "⩘",
+      "&andv;": "⩚",
+      "&ang;": "∠",
+      "&ange;": "⦤",
+      "&angle;": "∠",
+      "&angmsd;": "∡",
+      "&angmsdaa;": "⦨",
+      "&angmsdab;": "⦩",
+      "&angmsdac;": "⦪",
+      "&angmsdad;": "⦫",
+      "&angmsdae;": "⦬",
+      "&angmsdaf;": "⦭",
+      "&angmsdag;": "⦮",
+      "&angmsdah;": "⦯",
+      "&angrt;": "∟",
+      "&angrtvb;": "⊾",
+      "&angrtvbd;": "⦝",
+      "&angsph;": "∢",
+      "&angst;": "Å",
+      "&angzarr;": "⍼",
+      "&aogon;": "ą",
+      "&aopf;": "𝕒",
+      "&ap;": "≈",
+      "&apE;": "⩰",
+      "&apacir;": "⩯",
+      "&ape;": "≊",
+      "&apid;": "≋",
+      "&apos;": "'",
+      "&approx;": "≈",
+      "&approxeq;": "≊",
+      "&aring": "å",
+      "&aring;": "å",
+      "&ascr;": "𝒶",
+      "&ast;": "*",
+      "&asymp;": "≈",
+      "&asympeq;": "≍",
+      "&atilde": "ã",
+      "&atilde;": "ã",
+      "&auml": "ä",
+      "&auml;": "ä",
+      "&awconint;": "∳",
+      "&awint;": "⨑",
+      "&bNot;": "⫭",
+      "&backcong;": "≌",
+      "&backepsilon;": "϶",
+      "&backprime;": "‵",
+      "&backsim;": "∽",
+      "&backsimeq;": "⋍",
+      "&barvee;": "⊽",
+      "&barwed;": "⌅",
+      "&barwedge;": "⌅",
+      "&bbrk;": "⎵",
+      "&bbrktbrk;": "⎶",
+      "&bcong;": "≌",
+      "&bcy;": "б",
+      "&bdquo;": "„",
+      "&becaus;": "∵",
+      "&because;": "∵",
+      "&bemptyv;": "⦰",
+      "&bepsi;": "϶",
+      "&bernou;": "ℬ",
+      "&beta;": "β",
+      "&beth;": "ℶ",
+      "&between;": "≬",
+      "&bfr;": "𝔟",
+      "&bigcap;": "⋂",
+      "&bigcirc;": "◯",
+      "&bigcup;": "⋃",
+      "&bigodot;": "⨀",
+      "&bigoplus;": "⨁",
+      "&bigotimes;": "⨂",
+      "&bigsqcup;": "⨆",
+      "&bigstar;": "★",
+      "&bigtriangledown;": "▽",
+      "&bigtriangleup;": "△",
+      "&biguplus;": "⨄",
+      "&bigvee;": "⋁",
+      "&bigwedge;": "⋀",
+      "&bkarow;": "⤍",
+      "&blacklozenge;": "⧫",
+      "&blacksquare;": "▪",
+      "&blacktriangle;": "▴",
+      "&blacktriangledown;": "▾",
+      "&blacktriangleleft;": "◂",
+      "&blacktriangleright;": "▸",
+      "&blank;": "␣",
+      "&blk12;": "▒",
+      "&blk14;": "░",
+      "&blk34;": "▓",
+      "&block;": "█",
+      "&bne;": "=⃥",
+      "&bnequiv;": "≡⃥",
+      "&bnot;": "⌐",
+      "&bopf;": "𝕓",
+      "&bot;": "⊥",
+      "&bottom;": "⊥",
+      "&bowtie;": "⋈",
+      "&boxDL;": "╗",
+      "&boxDR;": "╔",
+      "&boxDl;": "╖",
+      "&boxDr;": "╓",
+      "&boxH;": "═",
+      "&boxHD;": "╦",
+      "&boxHU;": "╩",
+      "&boxHd;": "╤",
+      "&boxHu;": "╧",
+      "&boxUL;": "╝",
+      "&boxUR;": "╚",
+      "&boxUl;": "╜",
+      "&boxUr;": "╙",
+      "&boxV;": "║",
+      "&boxVH;": "╬",
+      "&boxVL;": "╣",
+      "&boxVR;": "╠",
+      "&boxVh;": "╫",
+      "&boxVl;": "╢",
+      "&boxVr;": "╟",
+      "&boxbox;": "⧉",
+      "&boxdL;": "╕",
+      "&boxdR;": "╒",
+      "&boxdl;": "┐",
+      "&boxdr;": "┌",
+      "&boxh;": "─",
+      "&boxhD;": "╥",
+      "&boxhU;": "╨",
+      "&boxhd;": "┬",
+      "&boxhu;": "┴",
+      "&boxminus;": "⊟",
+      "&boxplus;": "⊞",
+      "&boxtimes;": "⊠",
+      "&boxuL;": "╛",
+      "&boxuR;": "╘",
+      "&boxul;": "┘",
+      "&boxur;": "└",
+      "&boxv;": "│",
+      "&boxvH;": "╪",
+      "&boxvL;": "╡",
+      "&boxvR;": "╞",
+      "&boxvh;": "┼",
+      "&boxvl;": "┤",
+      "&boxvr;": "├",
+      "&bprime;": "‵",
+      "&breve;": "˘",
+      "&brvbar": "¦",
+      "&brvbar;": "¦",
+      "&bscr;": "𝒷",
+      "&bsemi;": "⁏",
+      "&bsim;": "∽",
+      "&bsime;": "⋍",
+      "&bsol;": "\\",
+      "&bsolb;": "⧅",
+      "&bsolhsub;": "⟈",
+      "&bull;": "•",
+      "&bullet;": "•",
+      "&bump;": "≎",
+      "&bumpE;": "⪮",
+      "&bumpe;": "≏",
+      "&bumpeq;": "≏",
+      "&cacute;": "ć",
+      "&cap;": "∩",
+      "&capand;": "⩄",
+      "&capbrcup;": "⩉",
+      "&capcap;": "⩋",
+      "&capcup;": "⩇",
+      "&capdot;": "⩀",
+      "&caps;": "∩︀",
+      "&caret;": "⁁",
+      "&caron;": "ˇ",
+      "&ccaps;": "⩍",
+      "&ccaron;": "č",
+      "&ccedil": "ç",
+      "&ccedil;": "ç",
+      "&ccirc;": "ĉ",
+      "&ccups;": "⩌",
+      "&ccupssm;": "⩐",
+      "&cdot;": "ċ",
+      "&cedil": "¸",
+      "&cedil;": "¸",
+      "&cemptyv;": "⦲",
+      "&cent": "¢",
+      "&cent;": "¢",
+      "&centerdot;": "·",
+      "&cfr;": "𝔠",
+      "&chcy;": "ч",
+      "&check;": "✓",
+      "&checkmark;": "✓",
+      "&chi;": "χ",
+      "&cir;": "○",
+      "&cirE;": "⧃",
+      "&circ;": "ˆ",
+      "&circeq;": "≗",
+      "&circlearrowleft;": "↺",
+      "&circlearrowright;": "↻",
+      "&circledR;": "®",
+      "&circledS;": "Ⓢ",
+      "&circledast;": "⊛",
+      "&circledcirc;": "⊚",
+      "&circleddash;": "⊝",
+      "&cire;": "≗",
+      "&cirfnint;": "⨐",
+      "&cirmid;": "⫯",
+      "&cirscir;": "⧂",
+      "&clubs;": "♣",
+      "&clubsuit;": "♣",
+      "&colon;": ":",
+      "&colone;": "≔",
+      "&coloneq;": "≔",
+      "&comma;": ",",
+      "&commat;": "@",
+      "&comp;": "∁",
+      "&compfn;": "∘",
+      "&complement;": "∁",
+      "&complexes;": "ℂ",
+      "&cong;": "≅",
+      "&congdot;": "⩭",
+      "&conint;": "∮",
+      "&copf;": "𝕔",
+      "&coprod;": "∐",
+      "&copy": "©",
+      "&copy;": "©",
+      "&copysr;": "℗",
+      "&crarr;": "↵",
+      "&cross;": "✗",
+      "&cscr;": "𝒸",
+      "&csub;": "⫏",
+      "&csube;": "⫑",
+      "&csup;": "⫐",
+      "&csupe;": "⫒",
+      "&ctdot;": "⋯",
+      "&cudarrl;": "⤸",
+      "&cudarrr;": "⤵",
+      "&cuepr;": "⋞",
+      "&cuesc;": "⋟",
+      "&cularr;": "↶",
+      "&cularrp;": "⤽",
+      "&cup;": "∪",
+      "&cupbrcap;": "⩈",
+      "&cupcap;": "⩆",
+      "&cupcup;": "⩊",
+      "&cupdot;": "⊍",
+      "&cupor;": "⩅",
+      "&cups;": "∪︀",
+      "&curarr;": "↷",
+      "&curarrm;": "⤼",
+      "&curlyeqprec;": "⋞",
+      "&curlyeqsucc;": "⋟",
+      "&curlyvee;": "⋎",
+      "&curlywedge;": "⋏",
+      "&curren": "¤",
+      "&curren;": "¤",
+      "&curvearrowleft;": "↶",
+      "&curvearrowright;": "↷",
+      "&cuvee;": "⋎",
+      "&cuwed;": "⋏",
+      "&cwconint;": "∲",
+      "&cwint;": "∱",
+      "&cylcty;": "⌭",
+      "&dArr;": "⇓",
+      "&dHar;": "⥥",
+      "&dagger;": "†",
+      "&daleth;": "ℸ",
+      "&darr;": "↓",
+      "&dash;": "‐",
+      "&dashv;": "⊣",
+      "&dbkarow;": "⤏",
+      "&dblac;": "˝",
+      "&dcaron;": "ď",
+      "&dcy;": "д",
+      "&dd;": "ⅆ",
+      "&ddagger;": "‡",
+      "&ddarr;": "⇊",
+      "&ddotseq;": "⩷",
+      "&deg": "°",
+      "&deg;": "°",
+      "&delta;": "δ",
+      "&demptyv;": "⦱",
+      "&dfisht;": "⥿",
+      "&dfr;": "𝔡",
+      "&dharl;": "⇃",
+      "&dharr;": "⇂",
+      "&diam;": "⋄",
+      "&diamond;": "⋄",
+      "&diamondsuit;": "♦",
+      "&diams;": "♦",
+      "&die;": "¨",
+      "&digamma;": "ϝ",
+      "&disin;": "⋲",
+      "&div;": "÷",
+      "&divide": "÷",
+      "&divide;": "÷",
+      "&divideontimes;": "⋇",
+      "&divonx;": "⋇",
+      "&djcy;": "ђ",
+      "&dlcorn;": "⌞",
+      "&dlcrop;": "⌍",
+      "&dollar;": "$",
+      "&dopf;": "𝕕",
+      "&dot;": "˙",
+      "&doteq;": "≐",
+      "&doteqdot;": "≑",
+      "&dotminus;": "∸",
+      "&dotplus;": "∔",
+      "&dotsquare;": "⊡",
+      "&doublebarwedge;": "⌆",
+      "&downarrow;": "↓",
+      "&downdownarrows;": "⇊",
+      "&downharpoonleft;": "⇃",
+      "&downharpoonright;": "⇂",
+      "&drbkarow;": "⤐",
+      "&drcorn;": "⌟",
+      "&drcrop;": "⌌",
+      "&dscr;": "𝒹",
+      "&dscy;": "ѕ",
+      "&dsol;": "⧶",
+      "&dstrok;": "đ",
+      "&dtdot;": "⋱",
+      "&dtri;": "▿",
+      "&dtrif;": "▾",
+      "&duarr;": "⇵",
+      "&duhar;": "⥯",
+      "&dwangle;": "⦦",
+      "&dzcy;": "џ",
+      "&dzigrarr;": "⟿",
+      "&eDDot;": "⩷",
+      "&eDot;": "≑",
+      "&eacute": "é",
+      "&eacute;": "é",
+      "&easter;": "⩮",
+      "&ecaron;": "ě",
+      "&ecir;": "≖",
+      "&ecirc": "ê",
+      "&ecirc;": "ê",
+      "&ecolon;": "≕",
+      "&ecy;": "э",
+      "&edot;": "ė",
+      "&ee;": "ⅇ",
+      "&efDot;": "≒",
+      "&efr;": "𝔢",
+      "&eg;": "⪚",
+      "&egrave": "è",
+      "&egrave;": "è",
+      "&egs;": "⪖",
+      "&egsdot;": "⪘",
+      "&el;": "⪙",
+      "&elinters;": "⏧",
+      "&ell;": "ℓ",
+      "&els;": "⪕",
+      "&elsdot;": "⪗",
+      "&emacr;": "ē",
+      "&empty;": "∅",
+      "&emptyset;": "∅",
+      "&emptyv;": "∅",
+      "&emsp13;": " ",
+      "&emsp14;": " ",
+      "&emsp;": " ",
+      "&eng;": "ŋ",
+      "&ensp;": " ",
+      "&eogon;": "ę",
+      "&eopf;": "𝕖",
+      "&epar;": "⋕",
+      "&eparsl;": "⧣",
+      "&eplus;": "⩱",
+      "&epsi;": "ε",
+      "&epsilon;": "ε",
+      "&epsiv;": "ϵ",
+      "&eqcirc;": "≖",
+      "&eqcolon;": "≕",
+      "&eqsim;": "≂",
+      "&eqslantgtr;": "⪖",
+      "&eqslantless;": "⪕",
+      "&equals;": "=",
+      "&equest;": "≟",
+      "&equiv;": "≡",
+      "&equivDD;": "⩸",
+      "&eqvparsl;": "⧥",
+      "&erDot;": "≓",
+      "&erarr;": "⥱",
+      "&escr;": "ℯ",
+      "&esdot;": "≐",
+      "&esim;": "≂",
+      "&eta;": "η",
+      "&eth": "ð",
+      "&eth;": "ð",
+      "&euml": "ë",
+      "&euml;": "ë",
+      "&euro;": "€",
+      "&excl;": "!",
+      "&exist;": "∃",
+      "&expectation;": "ℰ",
+      "&exponentiale;": "ⅇ",
+      "&fallingdotseq;": "≒",
+      "&fcy;": "ф",
+      "&female;": "♀",
+      "&ffilig;": "ﬃ",
+      "&fflig;": "ﬀ",
+      "&ffllig;": "ﬄ",
+      "&ffr;": "𝔣",
+      "&filig;": "ﬁ",
+      "&fjlig;": "fj",
+      "&flat;": "♭",
+      "&fllig;": "ﬂ",
+      "&fltns;": "▱",
+      "&fnof;": "ƒ",
+      "&fopf;": "𝕗",
+      "&forall;": "∀",
+      "&fork;": "⋔",
+      "&forkv;": "⫙",
+      "&fpartint;": "⨍",
+      "&frac12": "½",
+      "&frac12;": "½",
+      "&frac13;": "⅓",
+      "&frac14": "¼",
+      "&frac14;": "¼",
+      "&frac15;": "⅕",
+      "&frac16;": "⅙",
+      "&frac18;": "⅛",
+      "&frac23;": "⅔",
+      "&frac25;": "⅖",
+      "&frac34": "¾",
+      "&frac34;": "¾",
+      "&frac35;": "⅗",
+      "&frac38;": "⅜",
+      "&frac45;": "⅘",
+      "&frac56;": "⅚",
+      "&frac58;": "⅝",
+      "&frac78;": "⅞",
+      "&frasl;": "⁄",
+      "&frown;": "⌢",
+      "&fscr;": "𝒻",
+      "&gE;": "≧",
+      "&gEl;": "⪌",
+      "&gacute;": "ǵ",
+      "&gamma;": "γ",
+      "&gammad;": "ϝ",
+      "&gap;": "⪆",
+      "&gbreve;": "ğ",
+      "&gcirc;": "ĝ",
+      "&gcy;": "г",
+      "&gdot;": "ġ",
+      "&ge;": "≥",
+      "&gel;": "⋛",
+      "&geq;": "≥",
+      "&geqq;": "≧",
+      "&geqslant;": "⩾",
+      "&ges;": "⩾",
+      "&gescc;": "⪩",
+      "&gesdot;": "⪀",
+      "&gesdoto;": "⪂",
+      "&gesdotol;": "⪄",
+      "&gesl;": "⋛︀",
+      "&gesles;": "⪔",
+      "&gfr;": "𝔤",
+      "&gg;": "≫",
+      "&ggg;": "⋙",
+      "&gimel;": "ℷ",
+      "&gjcy;": "ѓ",
+      "&gl;": "≷",
+      "&glE;": "⪒",
+      "&gla;": "⪥",
+      "&glj;": "⪤",
+      "&gnE;": "≩",
+      "&gnap;": "⪊",
+      "&gnapprox;": "⪊",
+      "&gne;": "⪈",
+      "&gneq;": "⪈",
+      "&gneqq;": "≩",
+      "&gnsim;": "⋧",
+      "&gopf;": "𝕘",
+      "&grave;": "`",
+      "&gscr;": "ℊ",
+      "&gsim;": "≳",
+      "&gsime;": "⪎",
+      "&gsiml;": "⪐",
+      "&gt": ">",
+      "&gt;": ">",
+      "&gtcc;": "⪧",
+      "&gtcir;": "⩺",
+      "&gtdot;": "⋗",
+      "&gtlPar;": "⦕",
+      "&gtquest;": "⩼",
+      "&gtrapprox;": "⪆",
+      "&gtrarr;": "⥸",
+      "&gtrdot;": "⋗",
+      "&gtreqless;": "⋛",
+      "&gtreqqless;": "⪌",
+      "&gtrless;": "≷",
+      "&gtrsim;": "≳",
+      "&gvertneqq;": "≩︀",
+      "&gvnE;": "≩︀",
+      "&hArr;": "⇔",
+      "&hairsp;": " ",
+      "&half;": "½",
+      "&hamilt;": "ℋ",
+      "&hardcy;": "ъ",
+      "&harr;": "↔",
+      "&harrcir;": "⥈",
+      "&harrw;": "↭",
+      "&hbar;": "ℏ",
+      "&hcirc;": "ĥ",
+      "&hearts;": "♥",
+      "&heartsuit;": "♥",
+      "&hellip;": "…",
+      "&hercon;": "⊹",
+      "&hfr;": "𝔥",
+      "&hksearow;": "⤥",
+      "&hkswarow;": "⤦",
+      "&hoarr;": "⇿",
+      "&homtht;": "∻",
+      "&hookleftarrow;": "↩",
+      "&hookrightarrow;": "↪",
+      "&hopf;": "𝕙",
+      "&horbar;": "―",
+      "&hscr;": "𝒽",
+      "&hslash;": "ℏ",
+      "&hstrok;": "ħ",
+      "&hybull;": "⁃",
+      "&hyphen;": "‐",
+      "&iacute": "í",
+      "&iacute;": "í",
+      "&ic;": "⁣",
+      "&icirc": "î",
+      "&icirc;": "î",
+      "&icy;": "и",
+      "&iecy;": "е",
+      "&iexcl": "¡",
+      "&iexcl;": "¡",
+      "&iff;": "⇔",
+      "&ifr;": "𝔦",
+      "&igrave": "ì",
+      "&igrave;": "ì",
+      "&ii;": "ⅈ",
+      "&iiiint;": "⨌",
+      "&iiint;": "∭",
+      "&iinfin;": "⧜",
+      "&iiota;": "℩",
+      "&ijlig;": "ĳ",
+      "&imacr;": "ī",
+      "&image;": "ℑ",
+      "&imagline;": "ℐ",
+      "&imagpart;": "ℑ",
+      "&imath;": "ı",
+      "&imof;": "⊷",
+      "&imped;": "Ƶ",
+      "&in;": "∈",
+      "&incare;": "℅",
+      "&infin;": "∞",
+      "&infintie;": "⧝",
+      "&inodot;": "ı",
+      "&int;": "∫",
+      "&intcal;": "⊺",
+      "&integers;": "ℤ",
+      "&intercal;": "⊺",
+      "&intlarhk;": "⨗",
+      "&intprod;": "⨼",
+      "&iocy;": "ё",
+      "&iogon;": "į",
+      "&iopf;": "𝕚",
+      "&iota;": "ι",
+      "&iprod;": "⨼",
+      "&iquest": "¿",
+      "&iquest;": "¿",
+      "&iscr;": "𝒾",
+      "&isin;": "∈",
+      "&isinE;": "⋹",
+      "&isindot;": "⋵",
+      "&isins;": "⋴",
+      "&isinsv;": "⋳",
+      "&isinv;": "∈",
+      "&it;": "⁢",
+      "&itilde;": "ĩ",
+      "&iukcy;": "і",
+      "&iuml": "ï",
+      "&iuml;": "ï",
+      "&jcirc;": "ĵ",
+      "&jcy;": "й",
+      "&jfr;": "𝔧",
+      "&jmath;": "ȷ",
+      "&jopf;": "𝕛",
+      "&jscr;": "𝒿",
+      "&jsercy;": "ј",
+      "&jukcy;": "є",
+      "&kappa;": "κ",
+      "&kappav;": "ϰ",
+      "&kcedil;": "ķ",
+      "&kcy;": "к",
+      "&kfr;": "𝔨",
+      "&kgreen;": "ĸ",
+      "&khcy;": "х",
+      "&kjcy;": "ќ",
+      "&kopf;": "𝕜",
+      "&kscr;": "𝓀",
+      "&lAarr;": "⇚",
+      "&lArr;": "⇐",
+      "&lAtail;": "⤛",
+      "&lBarr;": "⤎",
+      "&lE;": "≦",
+      "&lEg;": "⪋",
+      "&lHar;": "⥢",
+      "&lacute;": "ĺ",
+      "&laemptyv;": "⦴",
+      "&lagran;": "ℒ",
+      "&lambda;": "λ",
+      "&lang;": "⟨",
+      "&langd;": "⦑",
+      "&langle;": "⟨",
+      "&lap;": "⪅",
+      "&laquo": "«",
+      "&laquo;": "«",
+      "&larr;": "←",
+      "&larrb;": "⇤",
+      "&larrbfs;": "⤟",
+      "&larrfs;": "⤝",
+      "&larrhk;": "↩",
+      "&larrlp;": "↫",
+      "&larrpl;": "⤹",
+      "&larrsim;": "⥳",
+      "&larrtl;": "↢",
+      "&lat;": "⪫",
+      "&latail;": "⤙",
+      "&late;": "⪭",
+      "&lates;": "⪭︀",
+      "&lbarr;": "⤌",
+      "&lbbrk;": "❲",
+      "&lbrace;": "{",
+      "&lbrack;": "[",
+      "&lbrke;": "⦋",
+      "&lbrksld;": "⦏",
+      "&lbrkslu;": "⦍",
+      "&lcaron;": "ľ",
+      "&lcedil;": "ļ",
+      "&lceil;": "⌈",
+      "&lcub;": "{",
+      "&lcy;": "л",
+      "&ldca;": "⤶",
+      "&ldquo;": "“",
+      "&ldquor;": "„",
+      "&ldrdhar;": "⥧",
+      "&ldrushar;": "⥋",
+      "&ldsh;": "↲",
+      "&le;": "≤",
+      "&leftarrow;": "←",
+      "&leftarrowtail;": "↢",
+      "&leftharpoondown;": "↽",
+      "&leftharpoonup;": "↼",
+      "&leftleftarrows;": "⇇",
+      "&leftrightarrow;": "↔",
+      "&leftrightarrows;": "⇆",
+      "&leftrightharpoons;": "⇋",
+      "&leftrightsquigarrow;": "↭",
+      "&leftthreetimes;": "⋋",
+      "&leg;": "⋚",
+      "&leq;": "≤",
+      "&leqq;": "≦",
+      "&leqslant;": "⩽",
+      "&les;": "⩽",
+      "&lescc;": "⪨",
+      "&lesdot;": "⩿",
+      "&lesdoto;": "⪁",
+      "&lesdotor;": "⪃",
+      "&lesg;": "⋚︀",
+      "&lesges;": "⪓",
+      "&lessapprox;": "⪅",
+      "&lessdot;": "⋖",
+      "&lesseqgtr;": "⋚",
+      "&lesseqqgtr;": "⪋",
+      "&lessgtr;": "≶",
+      "&lesssim;": "≲",
+      "&lfisht;": "⥼",
+      "&lfloor;": "⌊",
+      "&lfr;": "𝔩",
+      "&lg;": "≶",
+      "&lgE;": "⪑",
+      "&lhard;": "↽",
+      "&lharu;": "↼",
+      "&lharul;": "⥪",
+      "&lhblk;": "▄",
+      "&ljcy;": "љ",
+      "&ll;": "≪",
+      "&llarr;": "⇇",
+      "&llcorner;": "⌞",
+      "&llhard;": "⥫",
+      "&lltri;": "◺",
+      "&lmidot;": "ŀ",
+      "&lmoust;": "⎰",
+      "&lmoustache;": "⎰",
+      "&lnE;": "≨",
+      "&lnap;": "⪉",
+      "&lnapprox;": "⪉",
+      "&lne;": "⪇",
+      "&lneq;": "⪇",
+      "&lneqq;": "≨",
+      "&lnsim;": "⋦",
+      "&loang;": "⟬",
+      "&loarr;": "⇽",
+      "&lobrk;": "⟦",
+      "&longleftarrow;": "⟵",
+      "&longleftrightarrow;": "⟷",
+      "&longmapsto;": "⟼",
+      "&longrightarrow;": "⟶",
+      "&looparrowleft;": "↫",
+      "&looparrowright;": "↬",
+      "&lopar;": "⦅",
+      "&lopf;": "𝕝",
+      "&loplus;": "⨭",
+      "&lotimes;": "⨴",
+      "&lowast;": "∗",
+      "&lowbar;": "_",
+      "&loz;": "◊",
+      "&lozenge;": "◊",
+      "&lozf;": "⧫",
+      "&lpar;": "(",
+      "&lparlt;": "⦓",
+      "&lrarr;": "⇆",
+      "&lrcorner;": "⌟",
+      "&lrhar;": "⇋",
+      "&lrhard;": "⥭",
+      "&lrm;": "‎",
+      "&lrtri;": "⊿",
+      "&lsaquo;": "‹",
+      "&lscr;": "𝓁",
+      "&lsh;": "↰",
+      "&lsim;": "≲",
+      "&lsime;": "⪍",
+      "&lsimg;": "⪏",
+      "&lsqb;": "[",
+      "&lsquo;": "‘",
+      "&lsquor;": "‚",
+      "&lstrok;": "ł",
+      "&lt": "<",
+      "&lt;": "<",
+      "&ltcc;": "⪦",
+      "&ltcir;": "⩹",
+      "&ltdot;": "⋖",
+      "&lthree;": "⋋",
+      "&ltimes;": "⋉",
+      "&ltlarr;": "⥶",
+      "&ltquest;": "⩻",
+      "&ltrPar;": "⦖",
+      "&ltri;": "◃",
+      "&ltrie;": "⊴",
+      "&ltrif;": "◂",
+      "&lurdshar;": "⥊",
+      "&luruhar;": "⥦",
+      "&lvertneqq;": "≨︀",
+      "&lvnE;": "≨︀",
+      "&mDDot;": "∺",
+      "&macr": "¯",
+      "&macr;": "¯",
+      "&male;": "♂",
+      "&malt;": "✠",
+      "&maltese;": "✠",
+      "&map;": "↦",
+      "&mapsto;": "↦",
+      "&mapstodown;": "↧",
+      "&mapstoleft;": "↤",
+      "&mapstoup;": "↥",
+      "&marker;": "▮",
+      "&mcomma;": "⨩",
+      "&mcy;": "м",
+      "&mdash;": "—",
+      "&measuredangle;": "∡",
+      "&mfr;": "𝔪",
+      "&mho;": "℧",
+      "&micro": "µ",
+      "&micro;": "µ",
+      "&mid;": "∣",
+      "&midast;": "*",
+      "&midcir;": "⫰",
+      "&middot": "·",
+      "&middot;": "·",
+      "&minus;": "−",
+      "&minusb;": "⊟",
+      "&minusd;": "∸",
+      "&minusdu;": "⨪",
+      "&mlcp;": "⫛",
+      "&mldr;": "…",
+      "&mnplus;": "∓",
+      "&models;": "⊧",
+      "&mopf;": "𝕞",
+      "&mp;": "∓",
+      "&mscr;": "𝓂",
+      "&mstpos;": "∾",
+      "&mu;": "μ",
+      "&multimap;": "⊸",
+      "&mumap;": "⊸",
+      "&nGg;": "⋙̸",
+      "&nGt;": "≫⃒",
+      "&nGtv;": "≫̸",
+      "&nLeftarrow;": "⇍",
+      "&nLeftrightarrow;": "⇎",
+      "&nLl;": "⋘̸",
+      "&nLt;": "≪⃒",
+      "&nLtv;": "≪̸",
+      "&nRightarrow;": "⇏",
+      "&nVDash;": "⊯",
+      "&nVdash;": "⊮",
+      "&nabla;": "∇",
+      "&nacute;": "ń",
+      "&nang;": "∠⃒",
+      "&nap;": "≉",
+      "&napE;": "⩰̸",
+      "&napid;": "≋̸",
+      "&napos;": "ŉ",
+      "&napprox;": "≉",
+      "&natur;": "♮",
+      "&natural;": "♮",
+      "&naturals;": "ℕ",
+      "&nbsp": " ",
+      "&nbsp;": " ",
+      "&nbump;": "≎̸",
+      "&nbumpe;": "≏̸",
+      "&ncap;": "⩃",
+      "&ncaron;": "ň",
+      "&ncedil;": "ņ",
+      "&ncong;": "≇",
+      "&ncongdot;": "⩭̸",
+      "&ncup;": "⩂",
+      "&ncy;": "н",
+      "&ndash;": "–",
+      "&ne;": "≠",
+      "&neArr;": "⇗",
+      "&nearhk;": "⤤",
+      "&nearr;": "↗",
+      "&nearrow;": "↗",
+      "&nedot;": "≐̸",
+      "&nequiv;": "≢",
+      "&nesear;": "⤨",
+      "&nesim;": "≂̸",
+      "&nexist;": "∄",
+      "&nexists;": "∄",
+      "&nfr;": "𝔫",
+      "&ngE;": "≧̸",
+      "&nge;": "≱",
+      "&ngeq;": "≱",
+      "&ngeqq;": "≧̸",
+      "&ngeqslant;": "⩾̸",
+      "&nges;": "⩾̸",
+      "&ngsim;": "≵",
+      "&ngt;": "≯",
+      "&ngtr;": "≯",
+      "&nhArr;": "⇎",
+      "&nharr;": "↮",
+      "&nhpar;": "⫲",
+      "&ni;": "∋",
+      "&nis;": "⋼",
+      "&nisd;": "⋺",
+      "&niv;": "∋",
+      "&njcy;": "њ",
+      "&nlArr;": "⇍",
+      "&nlE;": "≦̸",
+      "&nlarr;": "↚",
+      "&nldr;": "‥",
+      "&nle;": "≰",
+      "&nleftarrow;": "↚",
+      "&nleftrightarrow;": "↮",
+      "&nleq;": "≰",
+      "&nleqq;": "≦̸",
+      "&nleqslant;": "⩽̸",
+      "&nles;": "⩽̸",
+      "&nless;": "≮",
+      "&nlsim;": "≴",
+      "&nlt;": "≮",
+      "&nltri;": "⋪",
+      "&nltrie;": "⋬",
+      "&nmid;": "∤",
+      "&nopf;": "𝕟",
+      "&not": "¬",
+      "&not;": "¬",
+      "&notin;": "∉",
+      "&notinE;": "⋹̸",
+      "&notindot;": "⋵̸",
+      "&notinva;": "∉",
+      "&notinvb;": "⋷",
+      "&notinvc;": "⋶",
+      "&notni;": "∌",
+      "&notniva;": "∌",
+      "&notnivb;": "⋾",
+      "&notnivc;": "⋽",
+      "&npar;": "∦",
+      "&nparallel;": "∦",
+      "&nparsl;": "⫽⃥",
+      "&npart;": "∂̸",
+      "&npolint;": "⨔",
+      "&npr;": "⊀",
+      "&nprcue;": "⋠",
+      "&npre;": "⪯̸",
+      "&nprec;": "⊀",
+      "&npreceq;": "⪯̸",
+      "&nrArr;": "⇏",
+      "&nrarr;": "↛",
+      "&nrarrc;": "⤳̸",
+      "&nrarrw;": "↝̸",
+      "&nrightarrow;": "↛",
+      "&nrtri;": "⋫",
+      "&nrtrie;": "⋭",
+      "&nsc;": "⊁",
+      "&nsccue;": "⋡",
+      "&nsce;": "⪰̸",
+      "&nscr;": "𝓃",
+      "&nshortmid;": "∤",
+      "&nshortparallel;": "∦",
+      "&nsim;": "≁",
+      "&nsime;": "≄",
+      "&nsimeq;": "≄",
+      "&nsmid;": "∤",
+      "&nspar;": "∦",
+      "&nsqsube;": "⋢",
+      "&nsqsupe;": "⋣",
+      "&nsub;": "⊄",
+      "&nsubE;": "⫅̸",
+      "&nsube;": "⊈",
+      "&nsubset;": "⊂⃒",
+      "&nsubseteq;": "⊈",
+      "&nsubseteqq;": "⫅̸",
+      "&nsucc;": "⊁",
+      "&nsucceq;": "⪰̸",
+      "&nsup;": "⊅",
+      "&nsupE;": "⫆̸",
+      "&nsupe;": "⊉",
+      "&nsupset;": "⊃⃒",
+      "&nsupseteq;": "⊉",
+      "&nsupseteqq;": "⫆̸",
+      "&ntgl;": "≹",
+      "&ntilde": "ñ",
+      "&ntilde;": "ñ",
+      "&ntlg;": "≸",
+      "&ntriangleleft;": "⋪",
+      "&ntrianglelefteq;": "⋬",
+      "&ntriangleright;": "⋫",
+      "&ntrianglerighteq;": "⋭",
+      "&nu;": "ν",
+      "&num;": "#",
+      "&numero;": "№",
+      "&numsp;": " ",
+      "&nvDash;": "⊭",
+      "&nvHarr;": "⤄",
+      "&nvap;": "≍⃒",
+      "&nvdash;": "⊬",
+      "&nvge;": "≥⃒",
+      "&nvgt;": ">⃒",
+      "&nvinfin;": "⧞",
+      "&nvlArr;": "⤂",
+      "&nvle;": "≤⃒",
+      "&nvlt;": "<⃒",
+      "&nvltrie;": "⊴⃒",
+      "&nvrArr;": "⤃",
+      "&nvrtrie;": "⊵⃒",
+      "&nvsim;": "∼⃒",
+      "&nwArr;": "⇖",
+      "&nwarhk;": "⤣",
+      "&nwarr;": "↖",
+      "&nwarrow;": "↖",
+      "&nwnear;": "⤧",
+      "&oS;": "Ⓢ",
+      "&oacute": "ó",
+      "&oacute;": "ó",
+      "&oast;": "⊛",
+      "&ocir;": "⊚",
+      "&ocirc": "ô",
+      "&ocirc;": "ô",
+      "&ocy;": "о",
+      "&odash;": "⊝",
+      "&odblac;": "ő",
+      "&odiv;": "⨸",
+      "&odot;": "⊙",
+      "&odsold;": "⦼",
+      "&oelig;": "œ",
+      "&ofcir;": "⦿",
+      "&ofr;": "𝔬",
+      "&ogon;": "˛",
+      "&ograve": "ò",
+      "&ograve;": "ò",
+      "&ogt;": "⧁",
+      "&ohbar;": "⦵",
+      "&ohm;": "Ω",
+      "&oint;": "∮",
+      "&olarr;": "↺",
+      "&olcir;": "⦾",
+      "&olcross;": "⦻",
+      "&oline;": "‾",
+      "&olt;": "⧀",
+      "&omacr;": "ō",
+      "&omega;": "ω",
+      "&omicron;": "ο",
+      "&omid;": "⦶",
+      "&ominus;": "⊖",
+      "&oopf;": "𝕠",
+      "&opar;": "⦷",
+      "&operp;": "⦹",
+      "&oplus;": "⊕",
+      "&or;": "∨",
+      "&orarr;": "↻",
+      "&ord;": "⩝",
+      "&order;": "ℴ",
+      "&orderof;": "ℴ",
+      "&ordf": "ª",
+      "&ordf;": "ª",
+      "&ordm": "º",
+      "&ordm;": "º",
+      "&origof;": "⊶",
+      "&oror;": "⩖",
+      "&orslope;": "⩗",
+      "&orv;": "⩛",
+      "&oscr;": "ℴ",
+      "&oslash": "ø",
+      "&oslash;": "ø",
+      "&osol;": "⊘",
+      "&otilde": "õ",
+      "&otilde;": "õ",
+      "&otimes;": "⊗",
+      "&otimesas;": "⨶",
+      "&ouml": "ö",
+      "&ouml;": "ö",
+      "&ovbar;": "⌽",
+      "&par;": "∥",
+      "&para": "¶",
+      "&para;": "¶",
+      "&parallel;": "∥",
+      "&parsim;": "⫳",
+      "&parsl;": "⫽",
+      "&part;": "∂",
+      "&pcy;": "п",
+      "&percnt;": "%",
+      "&period;": ".",
+      "&permil;": "‰",
+      "&perp;": "⊥",
+      "&pertenk;": "‱",
+      "&pfr;": "𝔭",
+      "&phi;": "φ",
+      "&phiv;": "ϕ",
+      "&phmmat;": "ℳ",
+      "&phone;": "☎",
+      "&pi;": "π",
+      "&pitchfork;": "⋔",
+      "&piv;": "ϖ",
+      "&planck;": "ℏ",
+      "&planckh;": "ℎ",
+      "&plankv;": "ℏ",
+      "&plus;": "+",
+      "&plusacir;": "⨣",
+      "&plusb;": "⊞",
+      "&pluscir;": "⨢",
+      "&plusdo;": "∔",
+      "&plusdu;": "⨥",
+      "&pluse;": "⩲",
+      "&plusmn": "±",
+      "&plusmn;": "±",
+      "&plussim;": "⨦",
+      "&plustwo;": "⨧",
+      "&pm;": "±",
+      "&pointint;": "⨕",
+      "&popf;": "𝕡",
+      "&pound": "£",
+      "&pound;": "£",
+      "&pr;": "≺",
+      "&prE;": "⪳",
+      "&prap;": "⪷",
+      "&prcue;": "≼",
+      "&pre;": "⪯",
+      "&prec;": "≺",
+      "&precapprox;": "⪷",
+      "&preccurlyeq;": "≼",
+      "&preceq;": "⪯",
+      "&precnapprox;": "⪹",
+      "&precneqq;": "⪵",
+      "&precnsim;": "⋨",
+      "&precsim;": "≾",
+      "&prime;": "′",
+      "&primes;": "ℙ",
+      "&prnE;": "⪵",
+      "&prnap;": "⪹",
+      "&prnsim;": "⋨",
+      "&prod;": "∏",
+      "&profalar;": "⌮",
+      "&profline;": "⌒",
+      "&profsurf;": "⌓",
+      "&prop;": "∝",
+      "&propto;": "∝",
+      "&prsim;": "≾",
+      "&prurel;": "⊰",
+      "&pscr;": "𝓅",
+      "&psi;": "ψ",
+      "&puncsp;": " ",
+      "&qfr;": "𝔮",
+      "&qint;": "⨌",
+      "&qopf;": "𝕢",
+      "&qprime;": "⁗",
+      "&qscr;": "𝓆",
+      "&quaternions;": "ℍ",
+      "&quatint;": "⨖",
+      "&quest;": "?",
+      "&questeq;": "≟",
+      "&quot": '"',
+      "&quot;": '"',
+      "&rAarr;": "⇛",
+      "&rArr;": "⇒",
+      "&rAtail;": "⤜",
+      "&rBarr;": "⤏",
+      "&rHar;": "⥤",
+      "&race;": "∽̱",
+      "&racute;": "ŕ",
+      "&radic;": "√",
+      "&raemptyv;": "⦳",
+      "&rang;": "⟩",
+      "&rangd;": "⦒",
+      "&range;": "⦥",
+      "&rangle;": "⟩",
+      "&raquo": "»",
+      "&raquo;": "»",
+      "&rarr;": "→",
+      "&rarrap;": "⥵",
+      "&rarrb;": "⇥",
+      "&rarrbfs;": "⤠",
+      "&rarrc;": "⤳",
+      "&rarrfs;": "⤞",
+      "&rarrhk;": "↪",
+      "&rarrlp;": "↬",
+      "&rarrpl;": "⥅",
+      "&rarrsim;": "⥴",
+      "&rarrtl;": "↣",
+      "&rarrw;": "↝",
+      "&ratail;": "⤚",
+      "&ratio;": "∶",
+      "&rationals;": "ℚ",
+      "&rbarr;": "⤍",
+      "&rbbrk;": "❳",
+      "&rbrace;": "}",
+      "&rbrack;": "]",
+      "&rbrke;": "⦌",
+      "&rbrksld;": "⦎",
+      "&rbrkslu;": "⦐",
+      "&rcaron;": "ř",
+      "&rcedil;": "ŗ",
+      "&rceil;": "⌉",
+      "&rcub;": "}",
+      "&rcy;": "р",
+      "&rdca;": "⤷",
+      "&rdldhar;": "⥩",
+      "&rdquo;": "”",
+      "&rdquor;": "”",
+      "&rdsh;": "↳",
+      "&real;": "ℜ",
+      "&realine;": "ℛ",
+      "&realpart;": "ℜ",
+      "&reals;": "ℝ",
+      "&rect;": "▭",
+      "&reg": "®",
+      "&reg;": "®",
+      "&rfisht;": "⥽",
+      "&rfloor;": "⌋",
+      "&rfr;": "𝔯",
+      "&rhard;": "⇁",
+      "&rharu;": "⇀",
+      "&rharul;": "⥬",
+      "&rho;": "ρ",
+      "&rhov;": "ϱ",
+      "&rightarrow;": "→",
+      "&rightarrowtail;": "↣",
+      "&rightharpoondown;": "⇁",
+      "&rightharpoonup;": "⇀",
+      "&rightleftarrows;": "⇄",
+      "&rightleftharpoons;": "⇌",
+      "&rightrightarrows;": "⇉",
+      "&rightsquigarrow;": "↝",
+      "&rightthreetimes;": "⋌",
+      "&ring;": "˚",
+      "&risingdotseq;": "≓",
+      "&rlarr;": "⇄",
+      "&rlhar;": "⇌",
+      "&rlm;": "‏",
+      "&rmoust;": "⎱",
+      "&rmoustache;": "⎱",
+      "&rnmid;": "⫮",
+      "&roang;": "⟭",
+      "&roarr;": "⇾",
+      "&robrk;": "⟧",
+      "&ropar;": "⦆",
+      "&ropf;": "𝕣",
+      "&roplus;": "⨮",
+      "&rotimes;": "⨵",
+      "&rpar;": ")",
+      "&rpargt;": "⦔",
+      "&rppolint;": "⨒",
+      "&rrarr;": "⇉",
+      "&rsaquo;": "›",
+      "&rscr;": "𝓇",
+      "&rsh;": "↱",
+      "&rsqb;": "]",
+      "&rsquo;": "’",
+      "&rsquor;": "’",
+      "&rthree;": "⋌",
+      "&rtimes;": "⋊",
+      "&rtri;": "▹",
+      "&rtrie;": "⊵",
+      "&rtrif;": "▸",
+      "&rtriltri;": "⧎",
+      "&ruluhar;": "⥨",
+      "&rx;": "℞",
+      "&sacute;": "ś",
+      "&sbquo;": "‚",
+      "&sc;": "≻",
+      "&scE;": "⪴",
+      "&scap;": "⪸",
+      "&scaron;": "š",
+      "&sccue;": "≽",
+      "&sce;": "⪰",
+      "&scedil;": "ş",
+      "&scirc;": "ŝ",
+      "&scnE;": "⪶",
+      "&scnap;": "⪺",
+      "&scnsim;": "⋩",
+      "&scpolint;": "⨓",
+      "&scsim;": "≿",
+      "&scy;": "с",
+      "&sdot;": "⋅",
+      "&sdotb;": "⊡",
+      "&sdote;": "⩦",
+      "&seArr;": "⇘",
+      "&searhk;": "⤥",
+      "&searr;": "↘",
+      "&searrow;": "↘",
+      "&sect": "§",
+      "&sect;": "§",
+      "&semi;": ";",
+      "&seswar;": "⤩",
+      "&setminus;": "∖",
+      "&setmn;": "∖",
+      "&sext;": "✶",
+      "&sfr;": "𝔰",
+      "&sfrown;": "⌢",
+      "&sharp;": "♯",
+      "&shchcy;": "щ",
+      "&shcy;": "ш",
+      "&shortmid;": "∣",
+      "&shortparallel;": "∥",
+      "&shy": "­",
+      "&shy;": "­",
+      "&sigma;": "σ",
+      "&sigmaf;": "ς",
+      "&sigmav;": "ς",
+      "&sim;": "∼",
+      "&simdot;": "⩪",
+      "&sime;": "≃",
+      "&simeq;": "≃",
+      "&simg;": "⪞",
+      "&simgE;": "⪠",
+      "&siml;": "⪝",
+      "&simlE;": "⪟",
+      "&simne;": "≆",
+      "&simplus;": "⨤",
+      "&simrarr;": "⥲",
+      "&slarr;": "←",
+      "&smallsetminus;": "∖",
+      "&smashp;": "⨳",
+      "&smeparsl;": "⧤",
+      "&smid;": "∣",
+      "&smile;": "⌣",
+      "&smt;": "⪪",
+      "&smte;": "⪬",
+      "&smtes;": "⪬︀",
+      "&softcy;": "ь",
+      "&sol;": "/",
+      "&solb;": "⧄",
+      "&solbar;": "⌿",
+      "&sopf;": "𝕤",
+      "&spades;": "♠",
+      "&spadesuit;": "♠",
+      "&spar;": "∥",
+      "&sqcap;": "⊓",
+      "&sqcaps;": "⊓︀",
+      "&sqcup;": "⊔",
+      "&sqcups;": "⊔︀",
+      "&sqsub;": "⊏",
+      "&sqsube;": "⊑",
+      "&sqsubset;": "⊏",
+      "&sqsubseteq;": "⊑",
+      "&sqsup;": "⊐",
+      "&sqsupe;": "⊒",
+      "&sqsupset;": "⊐",
+      "&sqsupseteq;": "⊒",
+      "&squ;": "□",
+      "&square;": "□",
+      "&squarf;": "▪",
+      "&squf;": "▪",
+      "&srarr;": "→",
+      "&sscr;": "𝓈",
+      "&ssetmn;": "∖",
+      "&ssmile;": "⌣",
+      "&sstarf;": "⋆",
+      "&star;": "☆",
+      "&starf;": "★",
+      "&straightepsilon;": "ϵ",
+      "&straightphi;": "ϕ",
+      "&strns;": "¯",
+      "&sub;": "⊂",
+      "&subE;": "⫅",
+      "&subdot;": "⪽",
+      "&sube;": "⊆",
+      "&subedot;": "⫃",
+      "&submult;": "⫁",
+      "&subnE;": "⫋",
+      "&subne;": "⊊",
+      "&subplus;": "⪿",
+      "&subrarr;": "⥹",
+      "&subset;": "⊂",
+      "&subseteq;": "⊆",
+      "&subseteqq;": "⫅",
+      "&subsetneq;": "⊊",
+      "&subsetneqq;": "⫋",
+      "&subsim;": "⫇",
+      "&subsub;": "⫕",
+      "&subsup;": "⫓",
+      "&succ;": "≻",
+      "&succapprox;": "⪸",
+      "&succcurlyeq;": "≽",
+      "&succeq;": "⪰",
+      "&succnapprox;": "⪺",
+      "&succneqq;": "⪶",
+      "&succnsim;": "⋩",
+      "&succsim;": "≿",
+      "&sum;": "∑",
+      "&sung;": "♪",
+      "&sup1": "¹",
+      "&sup1;": "¹",
+      "&sup2": "²",
+      "&sup2;": "²",
+      "&sup3": "³",
+      "&sup3;": "³",
+      "&sup;": "⊃",
+      "&supE;": "⫆",
+      "&supdot;": "⪾",
+      "&supdsub;": "⫘",
+      "&supe;": "⊇",
+      "&supedot;": "⫄",
+      "&suphsol;": "⟉",
+      "&suphsub;": "⫗",
+      "&suplarr;": "⥻",
+      "&supmult;": "⫂",
+      "&supnE;": "⫌",
+      "&supne;": "⊋",
+      "&supplus;": "⫀",
+      "&supset;": "⊃",
+      "&supseteq;": "⊇",
+      "&supseteqq;": "⫆",
+      "&supsetneq;": "⊋",
+      "&supsetneqq;": "⫌",
+      "&supsim;": "⫈",
+      "&supsub;": "⫔",
+      "&supsup;": "⫖",
+      "&swArr;": "⇙",
+      "&swarhk;": "⤦",
+      "&swarr;": "↙",
+      "&swarrow;": "↙",
+      "&swnwar;": "⤪",
+      "&szlig": "ß",
+      "&szlig;": "ß",
+      "&target;": "⌖",
+      "&tau;": "τ",
+      "&tbrk;": "⎴",
+      "&tcaron;": "ť",
+      "&tcedil;": "ţ",
+      "&tcy;": "т",
+      "&tdot;": "⃛",
+      "&telrec;": "⌕",
+      "&tfr;": "𝔱",
+      "&there4;": "∴",
+      "&therefore;": "∴",
+      "&theta;": "θ",
+      "&thetasym;": "ϑ",
+      "&thetav;": "ϑ",
+      "&thickapprox;": "≈",
+      "&thicksim;": "∼",
+      "&thinsp;": " ",
+      "&thkap;": "≈",
+      "&thksim;": "∼",
+      "&thorn": "þ",
+      "&thorn;": "þ",
+      "&tilde;": "˜",
+      "&times": "×",
+      "&times;": "×",
+      "&timesb;": "⊠",
+      "&timesbar;": "⨱",
+      "&timesd;": "⨰",
+      "&tint;": "∭",
+      "&toea;": "⤨",
+      "&top;": "⊤",
+      "&topbot;": "⌶",
+      "&topcir;": "⫱",
+      "&topf;": "𝕥",
+      "&topfork;": "⫚",
+      "&tosa;": "⤩",
+      "&tprime;": "‴",
+      "&trade;": "™",
+      "&triangle;": "▵",
+      "&triangledown;": "▿",
+      "&triangleleft;": "◃",
+      "&trianglelefteq;": "⊴",
+      "&triangleq;": "≜",
+      "&triangleright;": "▹",
+      "&trianglerighteq;": "⊵",
+      "&tridot;": "◬",
+      "&trie;": "≜",
+      "&triminus;": "⨺",
+      "&triplus;": "⨹",
+      "&trisb;": "⧍",
+      "&tritime;": "⨻",
+      "&trpezium;": "⏢",
+      "&tscr;": "𝓉",
+      "&tscy;": "ц",
+      "&tshcy;": "ћ",
+      "&tstrok;": "ŧ",
+      "&twixt;": "≬",
+      "&twoheadleftarrow;": "↞",
+      "&twoheadrightarrow;": "↠",
+      "&uArr;": "⇑",
+      "&uHar;": "⥣",
+      "&uacute": "ú",
+      "&uacute;": "ú",
+      "&uarr;": "↑",
+      "&ubrcy;": "ў",
+      "&ubreve;": "ŭ",
+      "&ucirc": "û",
+      "&ucirc;": "û",
+      "&ucy;": "у",
+      "&udarr;": "⇅",
+      "&udblac;": "ű",
+      "&udhar;": "⥮",
+      "&ufisht;": "⥾",
+      "&ufr;": "𝔲",
+      "&ugrave": "ù",
+      "&ugrave;": "ù",
+      "&uharl;": "↿",
+      "&uharr;": "↾",
+      "&uhblk;": "▀",
+      "&ulcorn;": "⌜",
+      "&ulcorner;": "⌜",
+      "&ulcrop;": "⌏",
+      "&ultri;": "◸",
+      "&umacr;": "ū",
+      "&uml": "¨",
+      "&uml;": "¨",
+      "&uogon;": "ų",
+      "&uopf;": "𝕦",
+      "&uparrow;": "↑",
+      "&updownarrow;": "↕",
+      "&upharpoonleft;": "↿",
+      "&upharpoonright;": "↾",
+      "&uplus;": "⊎",
+      "&upsi;": "υ",
+      "&upsih;": "ϒ",
+      "&upsilon;": "υ",
+      "&upuparrows;": "⇈",
+      "&urcorn;": "⌝",
+      "&urcorner;": "⌝",
+      "&urcrop;": "⌎",
+      "&uring;": "ů",
+      "&urtri;": "◹",
+      "&uscr;": "𝓊",
+      "&utdot;": "⋰",
+      "&utilde;": "ũ",
+      "&utri;": "▵",
+      "&utrif;": "▴",
+      "&uuarr;": "⇈",
+      "&uuml": "ü",
+      "&uuml;": "ü",
+      "&uwangle;": "⦧",
+      "&vArr;": "⇕",
+      "&vBar;": "⫨",
+      "&vBarv;": "⫩",
+      "&vDash;": "⊨",
+      "&vangrt;": "⦜",
+      "&varepsilon;": "ϵ",
+      "&varkappa;": "ϰ",
+      "&varnothing;": "∅",
+      "&varphi;": "ϕ",
+      "&varpi;": "ϖ",
+      "&varpropto;": "∝",
+      "&varr;": "↕",
+      "&varrho;": "ϱ",
+      "&varsigma;": "ς",
+      "&varsubsetneq;": "⊊︀",
+      "&varsubsetneqq;": "⫋︀",
+      "&varsupsetneq;": "⊋︀",
+      "&varsupsetneqq;": "⫌︀",
+      "&vartheta;": "ϑ",
+      "&vartriangleleft;": "⊲",
+      "&vartriangleright;": "⊳",
+      "&vcy;": "в",
+      "&vdash;": "⊢",
+      "&vee;": "∨",
+      "&veebar;": "⊻",
+      "&veeeq;": "≚",
+      "&vellip;": "⋮",
+      "&verbar;": "|",
+      "&vert;": "|",
+      "&vfr;": "𝔳",
+      "&vltri;": "⊲",
+      "&vnsub;": "⊂⃒",
+      "&vnsup;": "⊃⃒",
+      "&vopf;": "𝕧",
+      "&vprop;": "∝",
+      "&vrtri;": "⊳",
+      "&vscr;": "𝓋",
+      "&vsubnE;": "⫋︀",
+      "&vsubne;": "⊊︀",
+      "&vsupnE;": "⫌︀",
+      "&vsupne;": "⊋︀",
+      "&vzigzag;": "⦚",
+      "&wcirc;": "ŵ",
+      "&wedbar;": "⩟",
+      "&wedge;": "∧",
+      "&wedgeq;": "≙",
+      "&weierp;": "℘",
+      "&wfr;": "𝔴",
+      "&wopf;": "𝕨",
+      "&wp;": "℘",
+      "&wr;": "≀",
+      "&wreath;": "≀",
+      "&wscr;": "𝓌",
+      "&xcap;": "⋂",
+      "&xcirc;": "◯",
+      "&xcup;": "⋃",
+      "&xdtri;": "▽",
+      "&xfr;": "𝔵",
+      "&xhArr;": "⟺",
+      "&xharr;": "⟷",
+      "&xi;": "ξ",
+      "&xlArr;": "⟸",
+      "&xlarr;": "⟵",
+      "&xmap;": "⟼",
+      "&xnis;": "⋻",
+      "&xodot;": "⨀",
+      "&xopf;": "𝕩",
+      "&xoplus;": "⨁",
+      "&xotime;": "⨂",
+      "&xrArr;": "⟹",
+      "&xrarr;": "⟶",
+      "&xscr;": "𝓍",
+      "&xsqcup;": "⨆",
+      "&xuplus;": "⨄",
+      "&xutri;": "△",
+      "&xvee;": "⋁",
+      "&xwedge;": "⋀",
+      "&yacute": "ý",
+      "&yacute;": "ý",
+      "&yacy;": "я",
+      "&ycirc;": "ŷ",
+      "&ycy;": "ы",
+      "&yen": "¥",
+      "&yen;": "¥",
+      "&yfr;": "𝔶",
+      "&yicy;": "ї",
+      "&yopf;": "𝕪",
+      "&yscr;": "𝓎",
+      "&yucy;": "ю",
+      "&yuml": "ÿ",
+      "&yuml;": "ÿ",
+      "&zacute;": "ź",
+      "&zcaron;": "ž",
+      "&zcy;": "з",
+      "&zdot;": "ż",
+      "&zeetrf;": "ℨ",
+      "&zeta;": "ζ",
+      "&zfr;": "𝔷",
+      "&zhcy;": "ж",
+      "&zigrarr;": "⇝",
+      "&zopf;": "𝕫",
+      "&zscr;": "𝓏",
+      "&zwj;": "‍",
+      "&zwnj;": "‌"
+    },
+    characters: {
+      "Æ": "&AElig;",
+      "&": "&amp;",
+      "Á": "&Aacute;",
+      "Ă": "&Abreve;",
+      "Â": "&Acirc;",
+      "А": "&Acy;",
+      "𝔄": "&Afr;",
+      "À": "&Agrave;",
+      "Α": "&Alpha;",
+      "Ā": "&Amacr;",
+      "⩓": "&And;",
+      "Ą": "&Aogon;",
+      "𝔸": "&Aopf;",
+      "⁡": "&af;",
+      "Å": "&angst;",
+      "𝒜": "&Ascr;",
+      "≔": "&coloneq;",
+      "Ã": "&Atilde;",
+      "Ä": "&Auml;",
+      "∖": "&ssetmn;",
+      "⫧": "&Barv;",
+      "⌆": "&doublebarwedge;",
+      "Б": "&Bcy;",
+      "∵": "&because;",
+      "ℬ": "&bernou;",
+      "Β": "&Beta;",
+      "𝔅": "&Bfr;",
+      "𝔹": "&Bopf;",
+      "˘": "&breve;",
+      "≎": "&bump;",
+      "Ч": "&CHcy;",
+      "©": "&copy;",
+      "Ć": "&Cacute;",
+      "⋒": "&Cap;",
+      "ⅅ": "&DD;",
+      "ℭ": "&Cfr;",
+      "Č": "&Ccaron;",
+      "Ç": "&Ccedil;",
+      "Ĉ": "&Ccirc;",
+      "∰": "&Cconint;",
+      "Ċ": "&Cdot;",
+      "¸": "&cedil;",
+      "·": "&middot;",
+      "Χ": "&Chi;",
+      "⊙": "&odot;",
+      "⊖": "&ominus;",
+      "⊕": "&oplus;",
+      "⊗": "&otimes;",
+      "∲": "&cwconint;",
+      "”": "&rdquor;",
+      "’": "&rsquor;",
+      "∷": "&Proportion;",
+      "⩴": "&Colone;",
+      "≡": "&equiv;",
+      "∯": "&DoubleContourIntegral;",
+      "∮": "&oint;",
+      "ℂ": "&complexes;",
+      "∐": "&coprod;",
+      "∳": "&awconint;",
+      "⨯": "&Cross;",
+      "𝒞": "&Cscr;",
+      "⋓": "&Cup;",
+      "≍": "&asympeq;",
+      "⤑": "&DDotrahd;",
+      "Ђ": "&DJcy;",
+      "Ѕ": "&DScy;",
+      "Џ": "&DZcy;",
+      "‡": "&ddagger;",
+      "↡": "&Darr;",
+      "⫤": "&DoubleLeftTee;",
+      "Ď": "&Dcaron;",
+      "Д": "&Dcy;",
+      "∇": "&nabla;",
+      "Δ": "&Delta;",
+      "𝔇": "&Dfr;",
+      "´": "&acute;",
+      "˙": "&dot;",
+      "˝": "&dblac;",
+      "`": "&grave;",
+      "˜": "&tilde;",
+      "⋄": "&diamond;",
+      "ⅆ": "&dd;",
+      "𝔻": "&Dopf;",
+      "¨": "&uml;",
+      "⃜": "&DotDot;",
+      "≐": "&esdot;",
+      "⇓": "&dArr;",
+      "⇐": "&lArr;",
+      "⇔": "&iff;",
+      "⟸": "&xlArr;",
+      "⟺": "&xhArr;",
+      "⟹": "&xrArr;",
+      "⇒": "&rArr;",
+      "⊨": "&vDash;",
+      "⇑": "&uArr;",
+      "⇕": "&vArr;",
+      "∥": "&spar;",
+      "↓": "&downarrow;",
+      "⤓": "&DownArrowBar;",
+      "⇵": "&duarr;",
+      "̑": "&DownBreve;",
+      "⥐": "&DownLeftRightVector;",
+      "⥞": "&DownLeftTeeVector;",
+      "↽": "&lhard;",
+      "⥖": "&DownLeftVectorBar;",
+      "⥟": "&DownRightTeeVector;",
+      "⇁": "&rightharpoondown;",
+      "⥗": "&DownRightVectorBar;",
+      "⊤": "&top;",
+      "↧": "&mapstodown;",
+      "𝒟": "&Dscr;",
+      "Đ": "&Dstrok;",
+      "Ŋ": "&ENG;",
+      "Ð": "&ETH;",
+      "É": "&Eacute;",
+      "Ě": "&Ecaron;",
+      "Ê": "&Ecirc;",
+      "Э": "&Ecy;",
+      "Ė": "&Edot;",
+      "𝔈": "&Efr;",
+      "È": "&Egrave;",
+      "∈": "&isinv;",
+      "Ē": "&Emacr;",
+      "◻": "&EmptySmallSquare;",
+      "▫": "&EmptyVerySmallSquare;",
+      "Ę": "&Eogon;",
+      "𝔼": "&Eopf;",
+      "Ε": "&Epsilon;",
+      "⩵": "&Equal;",
+      "≂": "&esim;",
+      "⇌": "&rlhar;",
+      "ℰ": "&expectation;",
+      "⩳": "&Esim;",
+      "Η": "&Eta;",
+      "Ë": "&Euml;",
+      "∃": "&exist;",
+      "ⅇ": "&exponentiale;",
+      "Ф": "&Fcy;",
+      "𝔉": "&Ffr;",
+      "◼": "&FilledSmallSquare;",
+      "▪": "&squf;",
+      "𝔽": "&Fopf;",
+      "∀": "&forall;",
+      "ℱ": "&Fscr;",
+      "Ѓ": "&GJcy;",
+      ">": "&gt;",
+      "Γ": "&Gamma;",
+      "Ϝ": "&Gammad;",
+      "Ğ": "&Gbreve;",
+      "Ģ": "&Gcedil;",
+      "Ĝ": "&Gcirc;",
+      "Г": "&Gcy;",
+      "Ġ": "&Gdot;",
+      "𝔊": "&Gfr;",
+      "⋙": "&ggg;",
+      "𝔾": "&Gopf;",
+      "≥": "&geq;",
+      "⋛": "&gtreqless;",
+      "≧": "&geqq;",
+      "⪢": "&GreaterGreater;",
+      "≷": "&gtrless;",
+      "⩾": "&ges;",
+      "≳": "&gtrsim;",
+      "𝒢": "&Gscr;",
+      "≫": "&gg;",
+      "Ъ": "&HARDcy;",
+      "ˇ": "&caron;",
+      "^": "&Hat;",
+      "Ĥ": "&Hcirc;",
+      "ℌ": "&Poincareplane;",
+      "ℋ": "&hamilt;",
+      "ℍ": "&quaternions;",
+      "─": "&boxh;",
+      "Ħ": "&Hstrok;",
+      "≏": "&bumpeq;",
+      "Е": "&IEcy;",
+      "Ĳ": "&IJlig;",
+      "Ё": "&IOcy;",
+      "Í": "&Iacute;",
+      "Î": "&Icirc;",
+      "И": "&Icy;",
+      "İ": "&Idot;",
+      "ℑ": "&imagpart;",
+      "Ì": "&Igrave;",
+      "Ī": "&Imacr;",
+      "ⅈ": "&ii;",
+      "∬": "&Int;",
+      "∫": "&int;",
+      "⋂": "&xcap;",
+      "⁣": "&ic;",
+      "⁢": "&it;",
+      "Į": "&Iogon;",
+      "𝕀": "&Iopf;",
+      "Ι": "&Iota;",
+      "ℐ": "&imagline;",
+      "Ĩ": "&Itilde;",
+      "І": "&Iukcy;",
+      "Ï": "&Iuml;",
+      "Ĵ": "&Jcirc;",
+      "Й": "&Jcy;",
+      "𝔍": "&Jfr;",
+      "𝕁": "&Jopf;",
+      "𝒥": "&Jscr;",
+      "Ј": "&Jsercy;",
+      "Є": "&Jukcy;",
+      "Х": "&KHcy;",
+      "Ќ": "&KJcy;",
+      "Κ": "&Kappa;",
+      "Ķ": "&Kcedil;",
+      "К": "&Kcy;",
+      "𝔎": "&Kfr;",
+      "𝕂": "&Kopf;",
+      "𝒦": "&Kscr;",
+      "Љ": "&LJcy;",
+      "<": "&lt;",
+      "Ĺ": "&Lacute;",
+      "Λ": "&Lambda;",
+      "⟪": "&Lang;",
+      "ℒ": "&lagran;",
+      "↞": "&twoheadleftarrow;",
+      "Ľ": "&Lcaron;",
+      "Ļ": "&Lcedil;",
+      "Л": "&Lcy;",
+      "⟨": "&langle;",
+      "←": "&slarr;",
+      "⇤": "&larrb;",
+      "⇆": "&lrarr;",
+      "⌈": "&lceil;",
+      "⟦": "&lobrk;",
+      "⥡": "&LeftDownTeeVector;",
+      "⇃": "&downharpoonleft;",
+      "⥙": "&LeftDownVectorBar;",
+      "⌊": "&lfloor;",
+      "↔": "&leftrightarrow;",
+      "⥎": "&LeftRightVector;",
+      "⊣": "&dashv;",
+      "↤": "&mapstoleft;",
+      "⥚": "&LeftTeeVector;",
+      "⊲": "&vltri;",
+      "⧏": "&LeftTriangleBar;",
+      "⊴": "&trianglelefteq;",
+      "⥑": "&LeftUpDownVector;",
+      "⥠": "&LeftUpTeeVector;",
+      "↿": "&upharpoonleft;",
+      "⥘": "&LeftUpVectorBar;",
+      "↼": "&lharu;",
+      "⥒": "&LeftVectorBar;",
+      "⋚": "&lesseqgtr;",
+      "≦": "&leqq;",
+      "≶": "&lg;",
+      "⪡": "&LessLess;",
+      "⩽": "&les;",
+      "≲": "&lsim;",
+      "𝔏": "&Lfr;",
+      "⋘": "&Ll;",
+      "⇚": "&lAarr;",
+      "Ŀ": "&Lmidot;",
+      "⟵": "&xlarr;",
+      "⟷": "&xharr;",
+      "⟶": "&xrarr;",
+      "𝕃": "&Lopf;",
+      "↙": "&swarrow;",
+      "↘": "&searrow;",
+      "↰": "&lsh;",
+      "Ł": "&Lstrok;",
+      "≪": "&ll;",
+      "⤅": "&Map;",
+      "М": "&Mcy;",
+      " ": "&MediumSpace;",
+      "ℳ": "&phmmat;",
+      "𝔐": "&Mfr;",
+      "∓": "&mp;",
+      "𝕄": "&Mopf;",
+      "Μ": "&Mu;",
+      "Њ": "&NJcy;",
+      "Ń": "&Nacute;",
+      "Ň": "&Ncaron;",
+      "Ņ": "&Ncedil;",
+      "Н": "&Ncy;",
+      "​": "&ZeroWidthSpace;",
+      "\n": "&NewLine;",
+      "𝔑": "&Nfr;",
+      "⁠": "&NoBreak;",
+      " ": "&nbsp;",
+      "ℕ": "&naturals;",
+      "⫬": "&Not;",
+      "≢": "&nequiv;",
+      "≭": "&NotCupCap;",
+      "∦": "&nspar;",
+      "∉": "&notinva;",
+      "≠": "&ne;",
+      "≂̸": "&nesim;",
+      "∄": "&nexists;",
+      "≯": "&ngtr;",
+      "≱": "&ngeq;",
+      "≧̸": "&ngeqq;",
+      "≫̸": "&nGtv;",
+      "≹": "&ntgl;",
+      "⩾̸": "&nges;",
+      "≵": "&ngsim;",
+      "≎̸": "&nbump;",
+      "≏̸": "&nbumpe;",
+      "⋪": "&ntriangleleft;",
+      "⧏̸": "&NotLeftTriangleBar;",
+      "⋬": "&ntrianglelefteq;",
+      "≮": "&nlt;",
+      "≰": "&nleq;",
+      "≸": "&ntlg;",
+      "≪̸": "&nLtv;",
+      "⩽̸": "&nles;",
+      "≴": "&nlsim;",
+      "⪢̸": "&NotNestedGreaterGreater;",
+      "⪡̸": "&NotNestedLessLess;",
+      "⊀": "&nprec;",
+      "⪯̸": "&npreceq;",
+      "⋠": "&nprcue;",
+      "∌": "&notniva;",
+      "⋫": "&ntriangleright;",
+      "⧐̸": "&NotRightTriangleBar;",
+      "⋭": "&ntrianglerighteq;",
+      "⊏̸": "&NotSquareSubset;",
+      "⋢": "&nsqsube;",
+      "⊐̸": "&NotSquareSuperset;",
+      "⋣": "&nsqsupe;",
+      "⊂⃒": "&vnsub;",
+      "⊈": "&nsubseteq;",
+      "⊁": "&nsucc;",
+      "⪰̸": "&nsucceq;",
+      "⋡": "&nsccue;",
+      "≿̸": "&NotSucceedsTilde;",
+      "⊃⃒": "&vnsup;",
+      "⊉": "&nsupseteq;",
+      "≁": "&nsim;",
+      "≄": "&nsimeq;",
+      "≇": "&ncong;",
+      "≉": "&napprox;",
+      "∤": "&nsmid;",
+      "𝒩": "&Nscr;",
+      "Ñ": "&Ntilde;",
+      "Ν": "&Nu;",
+      "Œ": "&OElig;",
+      "Ó": "&Oacute;",
+      "Ô": "&Ocirc;",
+      "О": "&Ocy;",
+      "Ő": "&Odblac;",
+      "𝔒": "&Ofr;",
+      "Ò": "&Ograve;",
+      "Ō": "&Omacr;",
+      "Ω": "&ohm;",
+      "Ο": "&Omicron;",
+      "𝕆": "&Oopf;",
+      "“": "&ldquo;",
+      "‘": "&lsquo;",
+      "⩔": "&Or;",
+      "𝒪": "&Oscr;",
+      "Ø": "&Oslash;",
+      "Õ": "&Otilde;",
+      "⨷": "&Otimes;",
+      "Ö": "&Ouml;",
+      "‾": "&oline;",
+      "⏞": "&OverBrace;",
+      "⎴": "&tbrk;",
+      "⏜": "&OverParenthesis;",
+      "∂": "&part;",
+      "П": "&Pcy;",
+      "𝔓": "&Pfr;",
+      "Φ": "&Phi;",
+      "Π": "&Pi;",
+      "±": "&pm;",
+      "ℙ": "&primes;",
+      "⪻": "&Pr;",
+      "≺": "&prec;",
+      "⪯": "&preceq;",
+      "≼": "&preccurlyeq;",
+      "≾": "&prsim;",
+      "″": "&Prime;",
+      "∏": "&prod;",
+      "∝": "&vprop;",
+      "𝒫": "&Pscr;",
+      "Ψ": "&Psi;",
+      '"': "&quot;",
+      "𝔔": "&Qfr;",
+      "ℚ": "&rationals;",
+      "𝒬": "&Qscr;",
+      "⤐": "&drbkarow;",
+      "®": "&reg;",
+      "Ŕ": "&Racute;",
+      "⟫": "&Rang;",
+      "↠": "&twoheadrightarrow;",
+      "⤖": "&Rarrtl;",
+      "Ř": "&Rcaron;",
+      "Ŗ": "&Rcedil;",
+      "Р": "&Rcy;",
+      "ℜ": "&realpart;",
+      "∋": "&niv;",
+      "⇋": "&lrhar;",
+      "⥯": "&duhar;",
+      "Ρ": "&Rho;",
+      "⟩": "&rangle;",
+      "→": "&srarr;",
+      "⇥": "&rarrb;",
+      "⇄": "&rlarr;",
+      "⌉": "&rceil;",
+      "⟧": "&robrk;",
+      "⥝": "&RightDownTeeVector;",
+      "⇂": "&downharpoonright;",
+      "⥕": "&RightDownVectorBar;",
+      "⌋": "&rfloor;",
+      "⊢": "&vdash;",
+      "↦": "&mapsto;",
+      "⥛": "&RightTeeVector;",
+      "⊳": "&vrtri;",
+      "⧐": "&RightTriangleBar;",
+      "⊵": "&trianglerighteq;",
+      "⥏": "&RightUpDownVector;",
+      "⥜": "&RightUpTeeVector;",
+      "↾": "&upharpoonright;",
+      "⥔": "&RightUpVectorBar;",
+      "⇀": "&rightharpoonup;",
+      "⥓": "&RightVectorBar;",
+      "ℝ": "&reals;",
+      "⥰": "&RoundImplies;",
+      "⇛": "&rAarr;",
+      "ℛ": "&realine;",
+      "↱": "&rsh;",
+      "⧴": "&RuleDelayed;",
+      "Щ": "&SHCHcy;",
+      "Ш": "&SHcy;",
+      "Ь": "&SOFTcy;",
+      "Ś": "&Sacute;",
+      "⪼": "&Sc;",
+      "Š": "&Scaron;",
+      "Ş": "&Scedil;",
+      "Ŝ": "&Scirc;",
+      "С": "&Scy;",
+      "𝔖": "&Sfr;",
+      "↑": "&uparrow;",
+      "Σ": "&Sigma;",
+      "∘": "&compfn;",
+      "𝕊": "&Sopf;",
+      "√": "&radic;",
+      "□": "&square;",
+      "⊓": "&sqcap;",
+      "⊏": "&sqsubset;",
+      "⊑": "&sqsubseteq;",
+      "⊐": "&sqsupset;",
+      "⊒": "&sqsupseteq;",
+      "⊔": "&sqcup;",
+      "𝒮": "&Sscr;",
+      "⋆": "&sstarf;",
+      "⋐": "&Subset;",
+      "⊆": "&subseteq;",
+      "≻": "&succ;",
+      "⪰": "&succeq;",
+      "≽": "&succcurlyeq;",
+      "≿": "&succsim;",
+      "∑": "&sum;",
+      "⋑": "&Supset;",
+      "⊃": "&supset;",
+      "⊇": "&supseteq;",
+      "Þ": "&THORN;",
+      "™": "&trade;",
+      "Ћ": "&TSHcy;",
+      "Ц": "&TScy;",
+      "\t": "&Tab;",
+      "Τ": "&Tau;",
+      "Ť": "&Tcaron;",
+      "Ţ": "&Tcedil;",
+      "Т": "&Tcy;",
+      "𝔗": "&Tfr;",
+      "∴": "&therefore;",
+      "Θ": "&Theta;",
+      "  ": "&ThickSpace;",
+      " ": "&thinsp;",
+      "∼": "&thksim;",
+      "≃": "&simeq;",
+      "≅": "&cong;",
+      "≈": "&thkap;",
+      "𝕋": "&Topf;",
+      "⃛": "&tdot;",
+      "𝒯": "&Tscr;",
+      "Ŧ": "&Tstrok;",
+      "Ú": "&Uacute;",
+      "↟": "&Uarr;",
+      "⥉": "&Uarrocir;",
+      "Ў": "&Ubrcy;",
+      "Ŭ": "&Ubreve;",
+      "Û": "&Ucirc;",
+      "У": "&Ucy;",
+      "Ű": "&Udblac;",
+      "𝔘": "&Ufr;",
+      "Ù": "&Ugrave;",
+      "Ū": "&Umacr;",
+      _: "&lowbar;",
+      "⏟": "&UnderBrace;",
+      "⎵": "&bbrk;",
+      "⏝": "&UnderParenthesis;",
+      "⋃": "&xcup;",
+      "⊎": "&uplus;",
+      "Ų": "&Uogon;",
+      "𝕌": "&Uopf;",
+      "⤒": "&UpArrowBar;",
+      "⇅": "&udarr;",
+      "↕": "&varr;",
+      "⥮": "&udhar;",
+      "⊥": "&perp;",
+      "↥": "&mapstoup;",
+      "↖": "&nwarrow;",
+      "↗": "&nearrow;",
+      "ϒ": "&upsih;",
+      "Υ": "&Upsilon;",
+      "Ů": "&Uring;",
+      "𝒰": "&Uscr;",
+      "Ũ": "&Utilde;",
+      "Ü": "&Uuml;",
+      "⊫": "&VDash;",
+      "⫫": "&Vbar;",
+      "В": "&Vcy;",
+      "⊩": "&Vdash;",
+      "⫦": "&Vdashl;",
+      "⋁": "&xvee;",
+      "‖": "&Vert;",
+      "∣": "&smid;",
+      "|": "&vert;",
+      "❘": "&VerticalSeparator;",
+      "≀": "&wreath;",
+      " ": "&hairsp;",
+      "𝔙": "&Vfr;",
+      "𝕍": "&Vopf;",
+      "𝒱": "&Vscr;",
+      "⊪": "&Vvdash;",
+      "Ŵ": "&Wcirc;",
+      "⋀": "&xwedge;",
+      "𝔚": "&Wfr;",
+      "𝕎": "&Wopf;",
+      "𝒲": "&Wscr;",
+      "𝔛": "&Xfr;",
+      "Ξ": "&Xi;",
+      "𝕏": "&Xopf;",
+      "𝒳": "&Xscr;",
+      "Я": "&YAcy;",
+      "Ї": "&YIcy;",
+      "Ю": "&YUcy;",
+      "Ý": "&Yacute;",
+      "Ŷ": "&Ycirc;",
+      "Ы": "&Ycy;",
+      "𝔜": "&Yfr;",
+      "𝕐": "&Yopf;",
+      "𝒴": "&Yscr;",
+      "Ÿ": "&Yuml;",
+      "Ж": "&ZHcy;",
+      "Ź": "&Zacute;",
+      "Ž": "&Zcaron;",
+      "З": "&Zcy;",
+      "Ż": "&Zdot;",
+      "Ζ": "&Zeta;",
+      "ℨ": "&zeetrf;",
+      "ℤ": "&integers;",
+      "𝒵": "&Zscr;",
+      "á": "&aacute;",
+      "ă": "&abreve;",
+      "∾": "&mstpos;",
+      "∾̳": "&acE;",
+      "∿": "&acd;",
+      "â": "&acirc;",
+      "а": "&acy;",
+      "æ": "&aelig;",
+      "𝔞": "&afr;",
+      "à": "&agrave;",
+      "ℵ": "&aleph;",
+      "α": "&alpha;",
+      "ā": "&amacr;",
+      "⨿": "&amalg;",
+      "∧": "&wedge;",
+      "⩕": "&andand;",
+      "⩜": "&andd;",
+      "⩘": "&andslope;",
+      "⩚": "&andv;",
+      "∠": "&angle;",
+      "⦤": "&ange;",
+      "∡": "&measuredangle;",
+      "⦨": "&angmsdaa;",
+      "⦩": "&angmsdab;",
+      "⦪": "&angmsdac;",
+      "⦫": "&angmsdad;",
+      "⦬": "&angmsdae;",
+      "⦭": "&angmsdaf;",
+      "⦮": "&angmsdag;",
+      "⦯": "&angmsdah;",
+      "∟": "&angrt;",
+      "⊾": "&angrtvb;",
+      "⦝": "&angrtvbd;",
+      "∢": "&angsph;",
+      "⍼": "&angzarr;",
+      "ą": "&aogon;",
+      "𝕒": "&aopf;",
+      "⩰": "&apE;",
+      "⩯": "&apacir;",
+      "≊": "&approxeq;",
+      "≋": "&apid;",
+      "'": "&apos;",
+      "å": "&aring;",
+      "𝒶": "&ascr;",
+      "*": "&midast;",
+      "ã": "&atilde;",
+      "ä": "&auml;",
+      "⨑": "&awint;",
+      "⫭": "&bNot;",
+      "≌": "&bcong;",
+      "϶": "&bepsi;",
+      "‵": "&bprime;",
+      "∽": "&bsim;",
+      "⋍": "&bsime;",
+      "⊽": "&barvee;",
+      "⌅": "&barwedge;",
+      "⎶": "&bbrktbrk;",
+      "б": "&bcy;",
+      "„": "&ldquor;",
+      "⦰": "&bemptyv;",
+      "β": "&beta;",
+      "ℶ": "&beth;",
+      "≬": "&twixt;",
+      "𝔟": "&bfr;",
+      "◯": "&xcirc;",
+      "⨀": "&xodot;",
+      "⨁": "&xoplus;",
+      "⨂": "&xotime;",
+      "⨆": "&xsqcup;",
+      "★": "&starf;",
+      "▽": "&xdtri;",
+      "△": "&xutri;",
+      "⨄": "&xuplus;",
+      "⤍": "&rbarr;",
+      "⧫": "&lozf;",
+      "▴": "&utrif;",
+      "▾": "&dtrif;",
+      "◂": "&ltrif;",
+      "▸": "&rtrif;",
+      "␣": "&blank;",
+      "▒": "&blk12;",
+      "░": "&blk14;",
+      "▓": "&blk34;",
+      "█": "&block;",
+      "=⃥": "&bne;",
+      "≡⃥": "&bnequiv;",
+      "⌐": "&bnot;",
+      "𝕓": "&bopf;",
+      "⋈": "&bowtie;",
+      "╗": "&boxDL;",
+      "╔": "&boxDR;",
+      "╖": "&boxDl;",
+      "╓": "&boxDr;",
+      "═": "&boxH;",
+      "╦": "&boxHD;",
+      "╩": "&boxHU;",
+      "╤": "&boxHd;",
+      "╧": "&boxHu;",
+      "╝": "&boxUL;",
+      "╚": "&boxUR;",
+      "╜": "&boxUl;",
+      "╙": "&boxUr;",
+      "║": "&boxV;",
+      "╬": "&boxVH;",
+      "╣": "&boxVL;",
+      "╠": "&boxVR;",
+      "╫": "&boxVh;",
+      "╢": "&boxVl;",
+      "╟": "&boxVr;",
+      "⧉": "&boxbox;",
+      "╕": "&boxdL;",
+      "╒": "&boxdR;",
+      "┐": "&boxdl;",
+      "┌": "&boxdr;",
+      "╥": "&boxhD;",
+      "╨": "&boxhU;",
+      "┬": "&boxhd;",
+      "┴": "&boxhu;",
+      "⊟": "&minusb;",
+      "⊞": "&plusb;",
+      "⊠": "&timesb;",
+      "╛": "&boxuL;",
+      "╘": "&boxuR;",
+      "┘": "&boxul;",
+      "└": "&boxur;",
+      "│": "&boxv;",
+      "╪": "&boxvH;",
+      "╡": "&boxvL;",
+      "╞": "&boxvR;",
+      "┼": "&boxvh;",
+      "┤": "&boxvl;",
+      "├": "&boxvr;",
+      "¦": "&brvbar;",
+      "𝒷": "&bscr;",
+      "⁏": "&bsemi;",
+      "\\": "&bsol;",
+      "⧅": "&bsolb;",
+      "⟈": "&bsolhsub;",
+      "•": "&bullet;",
+      "⪮": "&bumpE;",
+      "ć": "&cacute;",
+      "∩": "&cap;",
+      "⩄": "&capand;",
+      "⩉": "&capbrcup;",
+      "⩋": "&capcap;",
+      "⩇": "&capcup;",
+      "⩀": "&capdot;",
+      "∩︀": "&caps;",
+      "⁁": "&caret;",
+      "⩍": "&ccaps;",
+      "č": "&ccaron;",
+      "ç": "&ccedil;",
+      "ĉ": "&ccirc;",
+      "⩌": "&ccups;",
+      "⩐": "&ccupssm;",
+      "ċ": "&cdot;",
+      "⦲": "&cemptyv;",
+      "¢": "&cent;",
+      "𝔠": "&cfr;",
+      "ч": "&chcy;",
+      "✓": "&checkmark;",
+      "χ": "&chi;",
+      "○": "&cir;",
+      "⧃": "&cirE;",
+      "ˆ": "&circ;",
+      "≗": "&cire;",
+      "↺": "&olarr;",
+      "↻": "&orarr;",
+      "Ⓢ": "&oS;",
+      "⊛": "&oast;",
+      "⊚": "&ocir;",
+      "⊝": "&odash;",
+      "⨐": "&cirfnint;",
+      "⫯": "&cirmid;",
+      "⧂": "&cirscir;",
+      "♣": "&clubsuit;",
+      ":": "&colon;",
+      ",": "&comma;",
+      "@": "&commat;",
+      "∁": "&complement;",
+      "⩭": "&congdot;",
+      "𝕔": "&copf;",
+      "℗": "&copysr;",
+      "↵": "&crarr;",
+      "✗": "&cross;",
+      "𝒸": "&cscr;",
+      "⫏": "&csub;",
+      "⫑": "&csube;",
+      "⫐": "&csup;",
+      "⫒": "&csupe;",
+      "⋯": "&ctdot;",
+      "⤸": "&cudarrl;",
+      "⤵": "&cudarrr;",
+      "⋞": "&curlyeqprec;",
+      "⋟": "&curlyeqsucc;",
+      "↶": "&curvearrowleft;",
+      "⤽": "&cularrp;",
+      "∪": "&cup;",
+      "⩈": "&cupbrcap;",
+      "⩆": "&cupcap;",
+      "⩊": "&cupcup;",
+      "⊍": "&cupdot;",
+      "⩅": "&cupor;",
+      "∪︀": "&cups;",
+      "↷": "&curvearrowright;",
+      "⤼": "&curarrm;",
+      "⋎": "&cuvee;",
+      "⋏": "&cuwed;",
+      "¤": "&curren;",
+      "∱": "&cwint;",
+      "⌭": "&cylcty;",
+      "⥥": "&dHar;",
+      "†": "&dagger;",
+      "ℸ": "&daleth;",
+      "‐": "&hyphen;",
+      "⤏": "&rBarr;",
+      "ď": "&dcaron;",
+      "д": "&dcy;",
+      "⇊": "&downdownarrows;",
+      "⩷": "&eDDot;",
+      "°": "&deg;",
+      "δ": "&delta;",
+      "⦱": "&demptyv;",
+      "⥿": "&dfisht;",
+      "𝔡": "&dfr;",
+      "♦": "&diams;",
+      "ϝ": "&gammad;",
+      "⋲": "&disin;",
+      "÷": "&divide;",
+      "⋇": "&divonx;",
+      "ђ": "&djcy;",
+      "⌞": "&llcorner;",
+      "⌍": "&dlcrop;",
+      $: "&dollar;",
+      "𝕕": "&dopf;",
+      "≑": "&eDot;",
+      "∸": "&minusd;",
+      "∔": "&plusdo;",
+      "⊡": "&sdotb;",
+      "⌟": "&lrcorner;",
+      "⌌": "&drcrop;",
+      "𝒹": "&dscr;",
+      "ѕ": "&dscy;",
+      "⧶": "&dsol;",
+      "đ": "&dstrok;",
+      "⋱": "&dtdot;",
+      "▿": "&triangledown;",
+      "⦦": "&dwangle;",
+      "џ": "&dzcy;",
+      "⟿": "&dzigrarr;",
+      "é": "&eacute;",
+      "⩮": "&easter;",
+      "ě": "&ecaron;",
+      "≖": "&eqcirc;",
+      "ê": "&ecirc;",
+      "≕": "&eqcolon;",
+      "э": "&ecy;",
+      "ė": "&edot;",
+      "≒": "&fallingdotseq;",
+      "𝔢": "&efr;",
+      "⪚": "&eg;",
+      "è": "&egrave;",
+      "⪖": "&eqslantgtr;",
+      "⪘": "&egsdot;",
+      "⪙": "&el;",
+      "⏧": "&elinters;",
+      "ℓ": "&ell;",
+      "⪕": "&eqslantless;",
+      "⪗": "&elsdot;",
+      "ē": "&emacr;",
+      "∅": "&varnothing;",
+      " ": "&emsp13;",
+      " ": "&emsp14;",
+      " ": "&emsp;",
+      "ŋ": "&eng;",
+      " ": "&ensp;",
+      "ę": "&eogon;",
+      "𝕖": "&eopf;",
+      "⋕": "&epar;",
+      "⧣": "&eparsl;",
+      "⩱": "&eplus;",
+      "ε": "&epsilon;",
+      "ϵ": "&varepsilon;",
+      "=": "&equals;",
+      "≟": "&questeq;",
+      "⩸": "&equivDD;",
+      "⧥": "&eqvparsl;",
+      "≓": "&risingdotseq;",
+      "⥱": "&erarr;",
+      "ℯ": "&escr;",
+      "η": "&eta;",
+      "ð": "&eth;",
+      "ë": "&euml;",
+      "€": "&euro;",
+      "!": "&excl;",
+      "ф": "&fcy;",
+      "♀": "&female;",
+      "ﬃ": "&ffilig;",
+      "ﬀ": "&fflig;",
+      "ﬄ": "&ffllig;",
+      "𝔣": "&ffr;",
+      "ﬁ": "&filig;",
+      fj: "&fjlig;",
+      "♭": "&flat;",
+      "ﬂ": "&fllig;",
+      "▱": "&fltns;",
+      "ƒ": "&fnof;",
+      "𝕗": "&fopf;",
+      "⋔": "&pitchfork;",
+      "⫙": "&forkv;",
+      "⨍": "&fpartint;",
+      "½": "&half;",
+      "⅓": "&frac13;",
+      "¼": "&frac14;",
+      "⅕": "&frac15;",
+      "⅙": "&frac16;",
+      "⅛": "&frac18;",
+      "⅔": "&frac23;",
+      "⅖": "&frac25;",
+      "¾": "&frac34;",
+      "⅗": "&frac35;",
+      "⅜": "&frac38;",
+      "⅘": "&frac45;",
+      "⅚": "&frac56;",
+      "⅝": "&frac58;",
+      "⅞": "&frac78;",
+      "⁄": "&frasl;",
+      "⌢": "&sfrown;",
+      "𝒻": "&fscr;",
+      "⪌": "&gtreqqless;",
+      "ǵ": "&gacute;",
+      "γ": "&gamma;",
+      "⪆": "&gtrapprox;",
+      "ğ": "&gbreve;",
+      "ĝ": "&gcirc;",
+      "г": "&gcy;",
+      "ġ": "&gdot;",
+      "⪩": "&gescc;",
+      "⪀": "&gesdot;",
+      "⪂": "&gesdoto;",
+      "⪄": "&gesdotol;",
+      "⋛︀": "&gesl;",
+      "⪔": "&gesles;",
+      "𝔤": "&gfr;",
+      "ℷ": "&gimel;",
+      "ѓ": "&gjcy;",
+      "⪒": "&glE;",
+      "⪥": "&gla;",
+      "⪤": "&glj;",
+      "≩": "&gneqq;",
+      "⪊": "&gnapprox;",
+      "⪈": "&gneq;",
+      "⋧": "&gnsim;",
+      "𝕘": "&gopf;",
+      "ℊ": "&gscr;",
+      "⪎": "&gsime;",
+      "⪐": "&gsiml;",
+      "⪧": "&gtcc;",
+      "⩺": "&gtcir;",
+      "⋗": "&gtrdot;",
+      "⦕": "&gtlPar;",
+      "⩼": "&gtquest;",
+      "⥸": "&gtrarr;",
+      "≩︀": "&gvnE;",
+      "ъ": "&hardcy;",
+      "⥈": "&harrcir;",
+      "↭": "&leftrightsquigarrow;",
+      "ℏ": "&plankv;",
+      "ĥ": "&hcirc;",
+      "♥": "&heartsuit;",
+      "…": "&mldr;",
+      "⊹": "&hercon;",
+      "𝔥": "&hfr;",
+      "⤥": "&searhk;",
+      "⤦": "&swarhk;",
+      "⇿": "&hoarr;",
+      "∻": "&homtht;",
+      "↩": "&larrhk;",
+      "↪": "&rarrhk;",
+      "𝕙": "&hopf;",
+      "―": "&horbar;",
+      "𝒽": "&hscr;",
+      "ħ": "&hstrok;",
+      "⁃": "&hybull;",
+      "í": "&iacute;",
+      "î": "&icirc;",
+      "и": "&icy;",
+      "е": "&iecy;",
+      "¡": "&iexcl;",
+      "𝔦": "&ifr;",
+      "ì": "&igrave;",
+      "⨌": "&qint;",
+      "∭": "&tint;",
+      "⧜": "&iinfin;",
+      "℩": "&iiota;",
+      "ĳ": "&ijlig;",
+      "ī": "&imacr;",
+      "ı": "&inodot;",
+      "⊷": "&imof;",
+      "Ƶ": "&imped;",
+      "℅": "&incare;",
+      "∞": "&infin;",
+      "⧝": "&infintie;",
+      "⊺": "&intercal;",
+      "⨗": "&intlarhk;",
+      "⨼": "&iprod;",
+      "ё": "&iocy;",
+      "į": "&iogon;",
+      "𝕚": "&iopf;",
+      "ι": "&iota;",
+      "¿": "&iquest;",
+      "𝒾": "&iscr;",
+      "⋹": "&isinE;",
+      "⋵": "&isindot;",
+      "⋴": "&isins;",
+      "⋳": "&isinsv;",
+      "ĩ": "&itilde;",
+      "і": "&iukcy;",
+      "ï": "&iuml;",
+      "ĵ": "&jcirc;",
+      "й": "&jcy;",
+      "𝔧": "&jfr;",
+      "ȷ": "&jmath;",
+      "𝕛": "&jopf;",
+      "𝒿": "&jscr;",
+      "ј": "&jsercy;",
+      "є": "&jukcy;",
+      "κ": "&kappa;",
+      "ϰ": "&varkappa;",
+      "ķ": "&kcedil;",
+      "к": "&kcy;",
+      "𝔨": "&kfr;",
+      "ĸ": "&kgreen;",
+      "х": "&khcy;",
+      "ќ": "&kjcy;",
+      "𝕜": "&kopf;",
+      "𝓀": "&kscr;",
+      "⤛": "&lAtail;",
+      "⤎": "&lBarr;",
+      "⪋": "&lesseqqgtr;",
+      "⥢": "&lHar;",
+      "ĺ": "&lacute;",
+      "⦴": "&laemptyv;",
+      "λ": "&lambda;",
+      "⦑": "&langd;",
+      "⪅": "&lessapprox;",
+      "«": "&laquo;",
+      "⤟": "&larrbfs;",
+      "⤝": "&larrfs;",
+      "↫": "&looparrowleft;",
+      "⤹": "&larrpl;",
+      "⥳": "&larrsim;",
+      "↢": "&leftarrowtail;",
+      "⪫": "&lat;",
+      "⤙": "&latail;",
+      "⪭": "&late;",
+      "⪭︀": "&lates;",
+      "⤌": "&lbarr;",
+      "❲": "&lbbrk;",
+      "{": "&lcub;",
+      "[": "&lsqb;",
+      "⦋": "&lbrke;",
+      "⦏": "&lbrksld;",
+      "⦍": "&lbrkslu;",
+      "ľ": "&lcaron;",
+      "ļ": "&lcedil;",
+      "л": "&lcy;",
+      "⤶": "&ldca;",
+      "⥧": "&ldrdhar;",
+      "⥋": "&ldrushar;",
+      "↲": "&ldsh;",
+      "≤": "&leq;",
+      "⇇": "&llarr;",
+      "⋋": "&lthree;",
+      "⪨": "&lescc;",
+      "⩿": "&lesdot;",
+      "⪁": "&lesdoto;",
+      "⪃": "&lesdotor;",
+      "⋚︀": "&lesg;",
+      "⪓": "&lesges;",
+      "⋖": "&ltdot;",
+      "⥼": "&lfisht;",
+      "𝔩": "&lfr;",
+      "⪑": "&lgE;",
+      "⥪": "&lharul;",
+      "▄": "&lhblk;",
+      "љ": "&ljcy;",
+      "⥫": "&llhard;",
+      "◺": "&lltri;",
+      "ŀ": "&lmidot;",
+      "⎰": "&lmoustache;",
+      "≨": "&lneqq;",
+      "⪉": "&lnapprox;",
+      "⪇": "&lneq;",
+      "⋦": "&lnsim;",
+      "⟬": "&loang;",
+      "⇽": "&loarr;",
+      "⟼": "&xmap;",
+      "↬": "&rarrlp;",
+      "⦅": "&lopar;",
+      "𝕝": "&lopf;",
+      "⨭": "&loplus;",
+      "⨴": "&lotimes;",
+      "∗": "&lowast;",
+      "◊": "&lozenge;",
+      "(": "&lpar;",
+      "⦓": "&lparlt;",
+      "⥭": "&lrhard;",
+      "‎": "&lrm;",
+      "⊿": "&lrtri;",
+      "‹": "&lsaquo;",
+      "𝓁": "&lscr;",
+      "⪍": "&lsime;",
+      "⪏": "&lsimg;",
+      "‚": "&sbquo;",
+      "ł": "&lstrok;",
+      "⪦": "&ltcc;",
+      "⩹": "&ltcir;",
+      "⋉": "&ltimes;",
+      "⥶": "&ltlarr;",
+      "⩻": "&ltquest;",
+      "⦖": "&ltrPar;",
+      "◃": "&triangleleft;",
+      "⥊": "&lurdshar;",
+      "⥦": "&luruhar;",
+      "≨︀": "&lvnE;",
+      "∺": "&mDDot;",
+      "¯": "&strns;",
+      "♂": "&male;",
+      "✠": "&maltese;",
+      "▮": "&marker;",
+      "⨩": "&mcomma;",
+      "м": "&mcy;",
+      "—": "&mdash;",
+      "𝔪": "&mfr;",
+      "℧": "&mho;",
+      "µ": "&micro;",
+      "⫰": "&midcir;",
+      "−": "&minus;",
+      "⨪": "&minusdu;",
+      "⫛": "&mlcp;",
+      "⊧": "&models;",
+      "𝕞": "&mopf;",
+      "𝓂": "&mscr;",
+      "μ": "&mu;",
+      "⊸": "&mumap;",
+      "⋙̸": "&nGg;",
+      "≫⃒": "&nGt;",
+      "⇍": "&nlArr;",
+      "⇎": "&nhArr;",
+      "⋘̸": "&nLl;",
+      "≪⃒": "&nLt;",
+      "⇏": "&nrArr;",
+      "⊯": "&nVDash;",
+      "⊮": "&nVdash;",
+      "ń": "&nacute;",
+      "∠⃒": "&nang;",
+      "⩰̸": "&napE;",
+      "≋̸": "&napid;",
+      "ŉ": "&napos;",
+      "♮": "&natural;",
+      "⩃": "&ncap;",
+      "ň": "&ncaron;",
+      "ņ": "&ncedil;",
+      "⩭̸": "&ncongdot;",
+      "⩂": "&ncup;",
+      "н": "&ncy;",
+      "–": "&ndash;",
+      "⇗": "&neArr;",
+      "⤤": "&nearhk;",
+      "≐̸": "&nedot;",
+      "⤨": "&toea;",
+      "𝔫": "&nfr;",
+      "↮": "&nleftrightarrow;",
+      "⫲": "&nhpar;",
+      "⋼": "&nis;",
+      "⋺": "&nisd;",
+      "њ": "&njcy;",
+      "≦̸": "&nleqq;",
+      "↚": "&nleftarrow;",
+      "‥": "&nldr;",
+      "𝕟": "&nopf;",
+      "¬": "&not;",
+      "⋹̸": "&notinE;",
+      "⋵̸": "&notindot;",
+      "⋷": "&notinvb;",
+      "⋶": "&notinvc;",
+      "⋾": "&notnivb;",
+      "⋽": "&notnivc;",
+      "⫽⃥": "&nparsl;",
+      "∂̸": "&npart;",
+      "⨔": "&npolint;",
+      "↛": "&nrightarrow;",
+      "⤳̸": "&nrarrc;",
+      "↝̸": "&nrarrw;",
+      "𝓃": "&nscr;",
+      "⊄": "&nsub;",
+      "⫅̸": "&nsubseteqq;",
+      "⊅": "&nsup;",
+      "⫆̸": "&nsupseteqq;",
+      "ñ": "&ntilde;",
+      "ν": "&nu;",
+      "#": "&num;",
+      "№": "&numero;",
+      " ": "&numsp;",
+      "⊭": "&nvDash;",
+      "⤄": "&nvHarr;",
+      "≍⃒": "&nvap;",
+      "⊬": "&nvdash;",
+      "≥⃒": "&nvge;",
+      ">⃒": "&nvgt;",
+      "⧞": "&nvinfin;",
+      "⤂": "&nvlArr;",
+      "≤⃒": "&nvle;",
+      "<⃒": "&nvlt;",
+      "⊴⃒": "&nvltrie;",
+      "⤃": "&nvrArr;",
+      "⊵⃒": "&nvrtrie;",
+      "∼⃒": "&nvsim;",
+      "⇖": "&nwArr;",
+      "⤣": "&nwarhk;",
+      "⤧": "&nwnear;",
+      "ó": "&oacute;",
+      "ô": "&ocirc;",
+      "о": "&ocy;",
+      "ő": "&odblac;",
+      "⨸": "&odiv;",
+      "⦼": "&odsold;",
+      "œ": "&oelig;",
+      "⦿": "&ofcir;",
+      "𝔬": "&ofr;",
+      "˛": "&ogon;",
+      "ò": "&ograve;",
+      "⧁": "&ogt;",
+      "⦵": "&ohbar;",
+      "⦾": "&olcir;",
+      "⦻": "&olcross;",
+      "⧀": "&olt;",
+      "ō": "&omacr;",
+      "ω": "&omega;",
+      "ο": "&omicron;",
+      "⦶": "&omid;",
+      "𝕠": "&oopf;",
+      "⦷": "&opar;",
+      "⦹": "&operp;",
+      "∨": "&vee;",
+      "⩝": "&ord;",
+      "ℴ": "&oscr;",
+      "ª": "&ordf;",
+      "º": "&ordm;",
+      "⊶": "&origof;",
+      "⩖": "&oror;",
+      "⩗": "&orslope;",
+      "⩛": "&orv;",
+      "ø": "&oslash;",
+      "⊘": "&osol;",
+      "õ": "&otilde;",
+      "⨶": "&otimesas;",
+      "ö": "&ouml;",
+      "⌽": "&ovbar;",
+      "¶": "&para;",
+      "⫳": "&parsim;",
+      "⫽": "&parsl;",
+      "п": "&pcy;",
+      "%": "&percnt;",
+      ".": "&period;",
+      "‰": "&permil;",
+      "‱": "&pertenk;",
+      "𝔭": "&pfr;",
+      "φ": "&phi;",
+      "ϕ": "&varphi;",
+      "☎": "&phone;",
+      "π": "&pi;",
+      "ϖ": "&varpi;",
+      "ℎ": "&planckh;",
+      "+": "&plus;",
+      "⨣": "&plusacir;",
+      "⨢": "&pluscir;",
+      "⨥": "&plusdu;",
+      "⩲": "&pluse;",
+      "⨦": "&plussim;",
+      "⨧": "&plustwo;",
+      "⨕": "&pointint;",
+      "𝕡": "&popf;",
+      "£": "&pound;",
+      "⪳": "&prE;",
+      "⪷": "&precapprox;",
+      "⪹": "&prnap;",
+      "⪵": "&prnE;",
+      "⋨": "&prnsim;",
+      "′": "&prime;",
+      "⌮": "&profalar;",
+      "⌒": "&profline;",
+      "⌓": "&profsurf;",
+      "⊰": "&prurel;",
+      "𝓅": "&pscr;",
+      "ψ": "&psi;",
+      " ": "&puncsp;",
+      "𝔮": "&qfr;",
+      "𝕢": "&qopf;",
+      "⁗": "&qprime;",
+      "𝓆": "&qscr;",
+      "⨖": "&quatint;",
+      "?": "&quest;",
+      "⤜": "&rAtail;",
+      "⥤": "&rHar;",
+      "∽̱": "&race;",
+      "ŕ": "&racute;",
+      "⦳": "&raemptyv;",
+      "⦒": "&rangd;",
+      "⦥": "&range;",
+      "»": "&raquo;",
+      "⥵": "&rarrap;",
+      "⤠": "&rarrbfs;",
+      "⤳": "&rarrc;",
+      "⤞": "&rarrfs;",
+      "⥅": "&rarrpl;",
+      "⥴": "&rarrsim;",
+      "↣": "&rightarrowtail;",
+      "↝": "&rightsquigarrow;",
+      "⤚": "&ratail;",
+      "∶": "&ratio;",
+      "❳": "&rbbrk;",
+      "}": "&rcub;",
+      "]": "&rsqb;",
+      "⦌": "&rbrke;",
+      "⦎": "&rbrksld;",
+      "⦐": "&rbrkslu;",
+      "ř": "&rcaron;",
+      "ŗ": "&rcedil;",
+      "р": "&rcy;",
+      "⤷": "&rdca;",
+      "⥩": "&rdldhar;",
+      "↳": "&rdsh;",
+      "▭": "&rect;",
+      "⥽": "&rfisht;",
+      "𝔯": "&rfr;",
+      "⥬": "&rharul;",
+      "ρ": "&rho;",
+      "ϱ": "&varrho;",
+      "⇉": "&rrarr;",
+      "⋌": "&rthree;",
+      "˚": "&ring;",
+      "‏": "&rlm;",
+      "⎱": "&rmoustache;",
+      "⫮": "&rnmid;",
+      "⟭": "&roang;",
+      "⇾": "&roarr;",
+      "⦆": "&ropar;",
+      "𝕣": "&ropf;",
+      "⨮": "&roplus;",
+      "⨵": "&rotimes;",
+      ")": "&rpar;",
+      "⦔": "&rpargt;",
+      "⨒": "&rppolint;",
+      "›": "&rsaquo;",
+      "𝓇": "&rscr;",
+      "⋊": "&rtimes;",
+      "▹": "&triangleright;",
+      "⧎": "&rtriltri;",
+      "⥨": "&ruluhar;",
+      "℞": "&rx;",
+      "ś": "&sacute;",
+      "⪴": "&scE;",
+      "⪸": "&succapprox;",
+      "š": "&scaron;",
+      "ş": "&scedil;",
+      "ŝ": "&scirc;",
+      "⪶": "&succneqq;",
+      "⪺": "&succnapprox;",
+      "⋩": "&succnsim;",
+      "⨓": "&scpolint;",
+      "с": "&scy;",
+      "⋅": "&sdot;",
+      "⩦": "&sdote;",
+      "⇘": "&seArr;",
+      "§": "&sect;",
+      ";": "&semi;",
+      "⤩": "&tosa;",
+      "✶": "&sext;",
+      "𝔰": "&sfr;",
+      "♯": "&sharp;",
+      "щ": "&shchcy;",
+      "ш": "&shcy;",
+      "­": "&shy;",
+      "σ": "&sigma;",
+      "ς": "&varsigma;",
+      "⩪": "&simdot;",
+      "⪞": "&simg;",
+      "⪠": "&simgE;",
+      "⪝": "&siml;",
+      "⪟": "&simlE;",
+      "≆": "&simne;",
+      "⨤": "&simplus;",
+      "⥲": "&simrarr;",
+      "⨳": "&smashp;",
+      "⧤": "&smeparsl;",
+      "⌣": "&ssmile;",
+      "⪪": "&smt;",
+      "⪬": "&smte;",
+      "⪬︀": "&smtes;",
+      "ь": "&softcy;",
+      "/": "&sol;",
+      "⧄": "&solb;",
+      "⌿": "&solbar;",
+      "𝕤": "&sopf;",
+      "♠": "&spadesuit;",
+      "⊓︀": "&sqcaps;",
+      "⊔︀": "&sqcups;",
+      "𝓈": "&sscr;",
+      "☆": "&star;",
+      "⊂": "&subset;",
+      "⫅": "&subseteqq;",
+      "⪽": "&subdot;",
+      "⫃": "&subedot;",
+      "⫁": "&submult;",
+      "⫋": "&subsetneqq;",
+      "⊊": "&subsetneq;",
+      "⪿": "&subplus;",
+      "⥹": "&subrarr;",
+      "⫇": "&subsim;",
+      "⫕": "&subsub;",
+      "⫓": "&subsup;",
+      "♪": "&sung;",
+      "¹": "&sup1;",
+      "²": "&sup2;",
+      "³": "&sup3;",
+      "⫆": "&supseteqq;",
+      "⪾": "&supdot;",
+      "⫘": "&supdsub;",
+      "⫄": "&supedot;",
+      "⟉": "&suphsol;",
+      "⫗": "&suphsub;",
+      "⥻": "&suplarr;",
+      "⫂": "&supmult;",
+      "⫌": "&supsetneqq;",
+      "⊋": "&supsetneq;",
+      "⫀": "&supplus;",
+      "⫈": "&supsim;",
+      "⫔": "&supsub;",
+      "⫖": "&supsup;",
+      "⇙": "&swArr;",
+      "⤪": "&swnwar;",
+      "ß": "&szlig;",
+      "⌖": "&target;",
+      "τ": "&tau;",
+      "ť": "&tcaron;",
+      "ţ": "&tcedil;",
+      "т": "&tcy;",
+      "⌕": "&telrec;",
+      "𝔱": "&tfr;",
+      "θ": "&theta;",
+      "ϑ": "&vartheta;",
+      "þ": "&thorn;",
+      "×": "&times;",
+      "⨱": "&timesbar;",
+      "⨰": "&timesd;",
+      "⌶": "&topbot;",
+      "⫱": "&topcir;",
+      "𝕥": "&topf;",
+      "⫚": "&topfork;",
+      "‴": "&tprime;",
+      "▵": "&utri;",
+      "≜": "&trie;",
+      "◬": "&tridot;",
+      "⨺": "&triminus;",
+      "⨹": "&triplus;",
+      "⧍": "&trisb;",
+      "⨻": "&tritime;",
+      "⏢": "&trpezium;",
+      "𝓉": "&tscr;",
+      "ц": "&tscy;",
+      "ћ": "&tshcy;",
+      "ŧ": "&tstrok;",
+      "⥣": "&uHar;",
+      "ú": "&uacute;",
+      "ў": "&ubrcy;",
+      "ŭ": "&ubreve;",
+      "û": "&ucirc;",
+      "у": "&ucy;",
+      "ű": "&udblac;",
+      "⥾": "&ufisht;",
+      "𝔲": "&ufr;",
+      "ù": "&ugrave;",
+      "▀": "&uhblk;",
+      "⌜": "&ulcorner;",
+      "⌏": "&ulcrop;",
+      "◸": "&ultri;",
+      "ū": "&umacr;",
+      "ų": "&uogon;",
+      "𝕦": "&uopf;",
+      "υ": "&upsilon;",
+      "⇈": "&uuarr;",
+      "⌝": "&urcorner;",
+      "⌎": "&urcrop;",
+      "ů": "&uring;",
+      "◹": "&urtri;",
+      "𝓊": "&uscr;",
+      "⋰": "&utdot;",
+      "ũ": "&utilde;",
+      "ü": "&uuml;",
+      "⦧": "&uwangle;",
+      "⫨": "&vBar;",
+      "⫩": "&vBarv;",
+      "⦜": "&vangrt;",
+      "⊊︀": "&vsubne;",
+      "⫋︀": "&vsubnE;",
+      "⊋︀": "&vsupne;",
+      "⫌︀": "&vsupnE;",
+      "в": "&vcy;",
+      "⊻": "&veebar;",
+      "≚": "&veeeq;",
+      "⋮": "&vellip;",
+      "𝔳": "&vfr;",
+      "𝕧": "&vopf;",
+      "𝓋": "&vscr;",
+      "⦚": "&vzigzag;",
+      "ŵ": "&wcirc;",
+      "⩟": "&wedbar;",
+      "≙": "&wedgeq;",
+      "℘": "&wp;",
+      "𝔴": "&wfr;",
+      "𝕨": "&wopf;",
+      "𝓌": "&wscr;",
+      "𝔵": "&xfr;",
+      "ξ": "&xi;",
+      "⋻": "&xnis;",
+      "𝕩": "&xopf;",
+      "𝓍": "&xscr;",
+      "ý": "&yacute;",
+      "я": "&yacy;",
+      "ŷ": "&ycirc;",
+      "ы": "&ycy;",
+      "¥": "&yen;",
+      "𝔶": "&yfr;",
+      "ї": "&yicy;",
+      "𝕪": "&yopf;",
+      "𝓎": "&yscr;",
+      "ю": "&yucy;",
+      "ÿ": "&yuml;",
+      "ź": "&zacute;",
+      "ž": "&zcaron;",
+      "з": "&zcy;",
+      "ż": "&zdot;",
+      "ζ": "&zeta;",
+      "𝔷": "&zfr;",
+      "ж": "&zhcy;",
+      "⇝": "&zigrarr;",
+      "𝕫": "&zopf;",
+      "𝓏": "&zscr;",
+      "‍": "&zwj;",
+      "‌": "&zwnj;"
+    }
+  }
+};
+
+/***/ }),
+
+/***/ 255:
+/***/ ((__unused_webpack_module, exports) => {
+
+
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+exports.numericUnicodeMap = {
+  0: 65533,
+  128: 8364,
+  130: 8218,
+  131: 402,
+  132: 8222,
+  133: 8230,
+  134: 8224,
+  135: 8225,
+  136: 710,
+  137: 8240,
+  138: 352,
+  139: 8249,
+  140: 338,
+  142: 381,
+  145: 8216,
+  146: 8217,
+  147: 8220,
+  148: 8221,
+  149: 8226,
+  150: 8211,
+  151: 8212,
+  152: 732,
+  153: 8482,
+  154: 353,
+  155: 8250,
+  156: 339,
+  158: 382,
+  159: 376
+};
+
+/***/ }),
+
+/***/ 608:
+/***/ ((__unused_webpack_module, exports) => {
+
+
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+
+exports.fromCodePoint = String.fromCodePoint || function (astralCodePoint) {
+  return String.fromCharCode(Math.floor((astralCodePoint - 65536) / 1024) + 55296, (astralCodePoint - 65536) % 1024 + 56320);
+};
+
+exports.getCodePoint = String.prototype.codePointAt ? function (input, position) {
+  return input.codePointAt(position);
+} : function (input, position) {
+  return (input.charCodeAt(position) - 55296) * 1024 + input.charCodeAt(position + 1) - 56320 + 65536;
+};
+exports.highSurrogateFrom = 55296;
+exports.highSurrogateTo = 56319;
+
+/***/ })
+
+/******/ 	});
+/************************************************************************/
+/******/ 	// The module cache
+/******/ 	var __webpack_module_cache__ = {};
+/******/ 	
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/ 		// Check if module is in cache
+/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		if (cachedModule !== undefined) {
+/******/ 			return cachedModule.exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
+/******/ 			// no module.id needed
+/******/ 			// no module.loaded needed
+/******/ 			exports: {}
+/******/ 		};
+/******/ 	
+/******/ 		// Execute the module function
+/******/ 		__webpack_modules__[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/ 	
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
 /******/ 	
 /************************************************************************/
 /******/ 	/* webpack/runtime/define property getters */
@@ -34,6 +4750,8 @@
 /******/ 	
 /************************************************************************/
 var __webpack_exports__ = {};
+// This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
+(() => {
 // ESM COMPAT FLAG
 __webpack_require__.r(__webpack_exports__);
 
@@ -357,13 +5075,13 @@ function makeByXFunction(source) {
  * Flattens an array. Basically replacing Array.prototype.flat for which Rhino doesn't yet have an implementation
  *
  * @param arr Array to flatten
- * @param depth Level to flatten
+ * @param depth Number of layers to flatten by; Infinity for a fully flat array
  * @returns Flattened array
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 
 function flat(arr) {
-  var depth = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1;
+  var depth = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : Infinity;
   var flatArray = [];
 
   var _iterator3 = _createForOfIteratorHelper(arr),
@@ -387,14 +5105,30 @@ function flat(arr) {
 
   return flatArray;
 }
+/**
+ * @param array Array to select from
+ * @returns Random item from array
+ */
+
+function random(array) {
+  return array[Math.floor(Math.random() * array.length)];
+}
+/**
+ * Title cases a single word
+ *
+ * @param word Word to transform
+ * @returns Word in title case
+ */
+
+var tc = word => word.charAt(0).toUpperCase() + word.slice(1);
 ;// CONCATENATED MODULE: ./node_modules/libram/dist/propertyTypes.js
 /** THIS FILE IS AUTOMATICALLY GENERATED. See tools/parseDefaultProperties.ts for more information */
-var booleanProperties = ["abortOnChoiceWhenNotInChoice", "addChatCommandLine", "addCreationQueue", "addStatusBarToFrames", "allowCloseableDesktopTabs", "allowNegativeTally", "allowNonMoodBurning", "allowSummonBurning", "autoHighlightOnFocus", "broadcastEvents", "cacheMallSearches", "chatBeep", "chatLinksUseRelay", "compactChessboard", "copyAsHTML", "customizedTabs", "debugBuy", "debugConsequences", "debugFoxtrotRemoval", "debugPathnames", "gapProtection", "gitInstallDependencies", "gitShowCommitMessages", "gitUpdateOnLogin", "greenScreenProtection", "guiUsesOneWindow", "hideServerDebugText", "logAcquiredItems", "logBattleAction", "logBrowserInteractions", "logChatMessages", "logChatRequests", "logCleanedHTML", "logDecoratedResponses", "logFamiliarActions", "logGainMessages", "logReadableHTML", "logPreferenceChange", "logMonsterHealth", "logReverseOrder", "logStatGains", "logStatusEffects", "logStatusOnLogin", "macroDebug", "macroLens", "mementoListActive", "mergeHobopolisChat", "printStackOnAbort", "proxySet", "relayAddSounds", "relayAddsCustomCombat", "relayAddsDiscoHelper", "relayAddsGraphicalCLI", "relayAddsQuickScripts", "relayAddsRestoreLinks", "relayAddsUpArrowLinks", "relayAddsUseLinks", "relayAddsWikiLinks", "relayAllowRemoteAccess", "relayBrowserOnly", "relayCacheUncacheable", "relayFormatsChatText", "relayHidesJunkMallItems", "relayMaintainsEffects", "relayMaintainsHealth", "relayMaintainsMana", "relayOverridesImages", "relayRunsAfterAdventureScript", "relayRunsBeforeBattleScript", "relayRunsBeforePVPScript", "relayScriptButtonFirst", "relayTextualizesEffects", "relayTrimsZapList", "relayUsesInlineLinks", "relayUsesIntegratedChat", "relayWarnOnRecoverFailure", "removeMalignantEffects", "saveSettingsOnSet", "sharePriceData", "showAllRequests", "showExceptionalRequests", "stealthLogin", "svnInstallDependencies", "svnShowCommitMessages", "svnUpdateOnLogin", "switchEquipmentForBuffs", "syncAfterSvnUpdate", "useChatToolbar", "useContactsFrame", "useDevProxyServer", "useDockIconBadge", "useHugglerChannel", "useImageCache", "useLastUserAgent", "useSystemTrayIcon", "useTabbedChatFrame", "useToolbars", "useCachedVolcanoMaps", "useZoneComboBox", "verboseSpeakeasy", "verboseFloundry", "wrapLongLines", "_gitUpdated", "_svnRepoFileFetched", "_svnUpdated", "antagonisticSnowmanKitAvailable", "arcadeGameHints", "armoryUnlocked", "autoForbidIgnoringStores", "autoCraft", "autoQuest", "autoEntangle", "autoGarish", "autoManaRestore", "autoFillMayoMinder", "autoPinkyRing", "autoPlantHardcore", "autoPlantSoftcore", "autoPotionID", "autoRepairBoxServants", "autoSatisfyWithCloset", "autoSatisfyWithCoinmasters", "autoSatisfyWithMall", "autoSatisfyWithNPCs", "autoSatisfyWithStash", "autoSatisfyWithStorage", "autoSetConditions", "autoSteal", "autoTuxedo", "backupCameraReverserEnabled", "badMoonEncounter01", "badMoonEncounter02", "badMoonEncounter03", "badMoonEncounter04", "badMoonEncounter05", "badMoonEncounter06", "badMoonEncounter07", "badMoonEncounter08", "badMoonEncounter09", "badMoonEncounter10", "badMoonEncounter11", "badMoonEncounter12", "badMoonEncounter13", "badMoonEncounter14", "badMoonEncounter15", "badMoonEncounter16", "badMoonEncounter17", "badMoonEncounter18", "badMoonEncounter19", "badMoonEncounter20", "badMoonEncounter21", "badMoonEncounter22", "badMoonEncounter23", "badMoonEncounter24", "badMoonEncounter25", "badMoonEncounter26", "badMoonEncounter27", "badMoonEncounter28", "badMoonEncounter29", "badMoonEncounter30", "badMoonEncounter31", "badMoonEncounter32", "badMoonEncounter33", "badMoonEncounter34", "badMoonEncounter35", "badMoonEncounter36", "badMoonEncounter37", "badMoonEncounter38", "badMoonEncounter39", "badMoonEncounter40", "badMoonEncounter41", "badMoonEncounter42", "badMoonEncounter43", "badMoonEncounter44", "badMoonEncounter45", "badMoonEncounter46", "badMoonEncounter47", "badMoonEncounter48", "barrelShrineUnlocked", "bigBrotherRescued", "blackBartsBootyAvailable", "bondAdv", "bondBeach", "bondBeat", "bondBooze", "bondBridge", "bondDesert", "bondDR", "bondDrunk1", "bondDrunk2", "bondHoney", "bondHP", "bondInit", "bondItem1", "bondItem2", "bondItem3", "bondJetpack", "bondMartiniDelivery", "bondMartiniPlus", "bondMartiniTurn", "bondMeat", "bondMox1", "bondMox2", "bondMPregen", "bondMus1", "bondMus2", "bondMys1", "bondMys2", "bondSpleen", "bondStat", "bondStat2", "bondStealth", "bondStealth2", "bondSymbols", "bondWar", "bondWeapon2", "bondWpn", "booPeakLit", "bootsCharged", "breakfastCompleted", "burrowgrubHiveUsed", "calzoneOfLegendEaten", "canteenUnlocked", "chaosButterflyThrown", "chatbotScriptExecuted", "chateauAvailable", "chatLiterate", "chatServesUpdates", "checkJackassHardcore", "checkJackassSoftcore", "clanAttacksEnabled", "coldAirportAlways", "considerShadowNoodles", "controlRoomUnlock", "concertVisited", "controlPanel1", "controlPanel2", "controlPanel3", "controlPanel4", "controlPanel5", "controlPanel6", "controlPanel7", "controlPanel8", "controlPanel9", "corralUnlocked", "dailyDungeonDone", "dampOldBootPurchased", "daycareOpen", "deepDishOfLegendEaten", "demonSummoned", "dinseyAudienceEngagement", "dinseyGarbagePirate", "dinseyRapidPassEnabled", "dinseyRollercoasterNext", "dinseySafetyProtocolsLoose", "doghouseBoarded", "dontStopForCounters", "drippingHallUnlocked", "drippyShieldUnlocked", "edUsedLash", "eldritchFissureAvailable", "eldritchHorrorAvailable", "essenceOfAnnoyanceAvailable", "essenceOfBearAvailable", "expressCardUsed", "falloutShelterChronoUsed", "falloutShelterCoolingTankUsed", "fireExtinguisherBatHoleUsed", "fireExtinguisherChasmUsed", "fireExtinguisherCyrptUsed", "fireExtinguisherDesertUsed", "fireExtinguisherHaremUsed", "fistTeachingsHaikuDungeon", "fistTeachingsPokerRoom", "fistTeachingsBarroomBrawl", "fistTeachingsConservatory", "fistTeachingsBatHole", "fistTeachingsFunHouse", "fistTeachingsMenagerie", "fistTeachingsSlums", "fistTeachingsFratHouse", "fistTeachingsRoad", "fistTeachingsNinjaSnowmen", "flickeringPixel1", "flickeringPixel2", "flickeringPixel3", "flickeringPixel4", "flickeringPixel5", "flickeringPixel6", "flickeringPixel7", "flickeringPixel8", "frAlways", "frCemetaryUnlocked", "friarsBlessingReceived", "frMountainsUnlocked", "frSwampUnlocked", "frVillageUnlocked", "frWoodUnlocked", "getawayCampsiteUnlocked", "ghostPencil1", "ghostPencil2", "ghostPencil3", "ghostPencil4", "ghostPencil5", "ghostPencil6", "ghostPencil7", "ghostPencil8", "ghostPencil9", "gingerAdvanceClockUnlocked", "gingerBlackmailAccomplished", "gingerbreadCityAvailable", "gingerExtraAdventures", "gingerNegativesDropped", "gingerSewersUnlocked", "gingerSubwayLineUnlocked", "gingerRetailUnlocked", "glitchItemAvailable", "grabCloversHardcore", "grabCloversSoftcore", "guideToSafariAvailable", "guyMadeOfBeesDefeated", "hallowienerDefiledNook", "hallowienerGuanoJunction", "hallowienerKnollGym", "hallowienerMadnessBakery", "hallowienerMiddleChamber", "hallowienerOvergrownLot", "hallowienerSkeletonStore", "hallowienerSmutOrcs", "hallowienerSonofaBeach", "hallowienerVolcoino", "hardcorePVPWarning", "harvestBatteriesHardcore", "harvestBatteriesSoftcore", "hasAutumnaton", "hasBartender", "hasChef", "hasCocktailKit", "hasCosmicBowlingBall", "hasDetectiveSchool", "hasMaydayContract", "hasOven", "hasRange", "hasShaker", "hasSushiMat", "haveBoxingDaydreamHardcore", "haveBoxingDaydreamSoftcore", "hermitHax0red", "holidayHalsBookAvailable", "horseryAvailable", "hotAirportAlways", "implementGlitchItem", "intenseCurrents", "itemBoughtPerAscension637", "itemBoughtPerAscension8266", "itemBoughtPerAscension10790", "itemBoughtPerAscension10794", "itemBoughtPerAscension10795", "itemBoughtPerCharacter6423", "itemBoughtPerCharacter6428", "itemBoughtPerCharacter6429", "kingLiberated", "lastPirateInsult1", "lastPirateInsult2", "lastPirateInsult3", "lastPirateInsult4", "lastPirateInsult5", "lastPirateInsult6", "lastPirateInsult7", "lastPirateInsult8", "lawOfAveragesAvailable", "leafletCompleted", "libraryCardUsed", "lockPicked", "logBastilleBattalionBattles", "loginRecoveryHardcore", "loginRecoverySoftcore", "lovebugsUnlocked", "loveTunnelAvailable", "lowerChamberUnlock", "madnessBakeryAvailable", "makePocketWishesHardcore", "makePocketWishesSoftcore", "manualOfNumberologyAvailable", "mappingMonsters", "mapToAnemoneMinePurchased", "mapToKokomoAvailable", "mapToMadnessReefPurchased", "mapToTheDiveBarPurchased", "mapToTheMarinaraTrenchPurchased", "mapToTheSkateParkPurchased", "maraisBeaverUnlock", "maraisCorpseUnlock", "maraisDarkUnlock", "maraisVillageUnlock", "maraisWildlifeUnlock", "maraisWizardUnlock", "maximizerAlwaysCurrent", "maximizerCreateOnHand", "maximizerCurrentMallPrices", "maximizerFoldables", "maximizerIncludeAll", "maximizerNoAdventures", "middleChamberUnlock", "milkOfMagnesiumActive", "moonTuned", "neverendingPartyAlways", "oasisAvailable", "odeBuffbotCheck", "oilPeakLit", "oscusSodaUsed", "outrageousSombreroUsed", "overgrownLotAvailable", "ownsSpeakeasy", "pathedSummonsHardcore", "pathedSummonsSoftcore", "pizzaOfLegendEaten", "popularTartUnlocked", "potatoAlarmClockUsed", "prAlways", "prayedForGlamour", "prayedForProtection", "prayedForVigor", "primaryLabCheerCoreGrabbed", "pyramidBombUsed", "ROMOfOptimalityAvailable", "rageGlandVented", "readManualHardcore", "readManualSoftcore", "relayShowSpoilers", "relayShowWarnings", "rememberDesktopSize", "restUsingChateau", "restUsingCampAwayTent", "requireBoxServants", "requireSewerTestItems", "safePickpocket", "schoolOfHardKnocksDiplomaAvailable", "scriptCascadingMenus", "serverAddsCustomCombat", "SHAWARMAInitiativeUnlocked", "showForbiddenStores", "showGainsPerUnit", "showIgnoringStorePrices", "showNoSummonOnly", "showTurnFreeOnly", "skeletonStoreAvailable", "sleazeAirportAlways", "snojoAvailable", "sortByEffect", "sortByRoom", "spacegateAlways", "spacegateVaccine1", "spacegateVaccine2", "spacegateVaccine3", "spaceInvaderDefeated", "spelunkyHints", "spiceMelangeUsed", "spookyAirportAlways", "stenchAirportAlways", "stopForFixedWanderer", "stopForUltraRare", "styxPixieVisited", "superconductorDefeated", "suppressInappropriateNags", "suppressPowerPixellation", "suppressMallPriceCacheMessages", "telegraphOfficeAvailable", "telescopeLookedHigh", "timeTowerAvailable", "trackLightsOut", "uneffectWithHotTub", "universalSeasoningActive", "universalSeasoningAvailable", "useBookOfEverySkillHardcore", "useBookOfEverySkillSoftcore", "useCrimboToysHardcore", "useCrimboToysSoftcore", "verboseMaximizer", "visitLoungeHardcore", "visitLoungeSoftcore", "visitRumpusHardcore", "visitRumpusSoftcore", "voteAlways", "wildfireBarrelCaulked", "wildfireDusted", "wildfireFracked", "wildfirePumpGreased", "wildfireSprinkled", "yearbookCameraPending", "youRobotScavenged", "_affirmationCookieEaten", "_affirmationHateUsed", "_airFryerUsed", "_akgyxothUsed", "_alienAnimalMilkUsed", "_alienPlantPodUsed", "_allYearSucker", "_aprilShower", "_armyToddlerCast", "_authorsInkUsed", "_baconMachineUsed", "_bagOfCandy", "_bagOfCandyUsed", "_bagOTricksUsed", "_ballastTurtleUsed", "_ballInACupUsed", "_ballpit", "_barrelPrayer", "_bastilleLastBattleWon", "_beachCombing", "_bendHellUsed", "_blankoutUsed", "_bonersSummoned", "_bookOfEverySkillUsed", "_borrowedTimeUsed", "_bowleggedSwaggerUsed", "_bowlFullOfJellyUsed", "_boxOfHammersUsed", "_brainPreservationFluidUsed", "_brassDreadFlaskUsed", "_cameraUsed", "_canSeekBirds", "_carboLoaded", "_cargoPocketEmptied", "_ceciHatUsed", "_chateauDeskHarvested", "_chateauMonsterFought", "_chronerCrossUsed", "_chronerTriggerUsed", "_chubbyAndPlumpUsed", "_circleDrumUsed", "_clanFortuneBuffUsed", "_claraBellUsed", "_coalPaperweightUsed", "_cocoaDispenserUsed", "_cocktailShakerUsed", "_coldAirportToday", "_coldOne", "_communismUsed", "_confusingLEDClockUsed", "_controlPanelUsed", "_cookbookbatRecipeDrops", "_corruptedStardustUsed", "_cosmicSixPackConjured", "_crappyCameraUsed", "_creepyVoodooDollUsed", "_crimboTraining", "_crimboTree", "_cursedKegUsed", "_cursedMicrowaveUsed", "_dailyDungeonMalwareUsed", "_darkChocolateHeart", "_daycareFights", "_daycareNap", "_daycareSpa", "_daycareToday", "_defectiveTokenChecked", "_defectiveTokenUsed", "_dinseyGarbageDisposed", "_discoKnife", "_distentionPillUsed", "_dnaHybrid", "_docClocksThymeCocktailDrunk", "_drippingHallDoor1", "_drippingHallDoor2", "_drippingHallDoor3", "_drippingHallDoor4", "_drippyCaviarUsed", "_drippyNuggetUsed", "_drippyPilsnerUsed", "_drippyPlumUsed", "_drippyWineUsed", "_eldritchHorrorEvoked", "_eldritchTentacleFought", "_entauntaunedToday", "_envyfishEggUsed", "_essentialTofuUsed", "_etchedHourglassUsed", "_eternalCarBatteryUsed", "_everfullGlassUsed", "_eyeAndATwistUsed", "_fancyChessSetUsed", "_falloutShelterSpaUsed", "_fancyHotDogEaten", "_farmerItemsCollected", "_favoriteBirdVisited", "_firedJokestersGun", "_fireExtinguisherRefilled", "_fireStartingKitUsed", "_fireworksShop", "_fireworksShopHatBought", "_fireworksShopEquipmentBought", "_fireworkUsed", "_fishyPipeUsed", "_floundryItemCreated", "_floundryItemUsed", "_freePillKeeperUsed", "_frToday", "_fudgeSporkUsed", "_garbageItemChanged", "_gingerBiggerAlligators", "_gingerbreadCityToday", "_gingerbreadClockAdvanced", "_gingerbreadClockVisited", "_gingerbreadColumnDestroyed", "_gingerbreadMobHitUsed", "_glennGoldenDiceUsed", "_glitchItemImplemented", "_gnollEyeUsed", "_governmentPerDiemUsed", "_grimBuff", "_guildManualUsed", "_guzzlrQuestAbandoned", "_hardKnocksDiplomaUsed", "_hippyMeatCollected", "_hobbyHorseUsed", "_holidayFunUsed", "_holoWristCrystal", "_hotAirportToday", "_hungerSauceUsed", "_hyperinflatedSealLungUsed", "_iceHotelRoomsRaided", "_iceSculptureUsed", "_incredibleSelfEsteemCast", "_infernoDiscoVisited", "_internetDailyDungeonMalwareBought", "_internetGallonOfMilkBought", "_internetPlusOneBought", "_internetPrintScreenButtonBought", "_internetViralVideoBought", "_interviewIsabella", "_interviewMasquerade", "_interviewVlad", "_inquisitorsUnidentifiableObjectUsed", "_ironicMoustache", "_jackassPlumberGame", "_jarlsCheeseSummoned", "_jarlsCreamSummoned", "_jarlsDoughSummoned", "_jarlsEggsSummoned", "_jarlsFruitSummoned", "_jarlsMeatSummoned", "_jarlsPotatoSummoned", "_jarlsVeggiesSummoned", "_jingleBellUsed", "_jukebox", "_kgbFlywheelCharged", "_kgbLeftDrawerUsed", "_kgbOpened", "_kgbRightDrawerUsed", "_kolConSixPackUsed", "_kolhsCutButNotDried", "_kolhsIsskayLikeAnAshtray", "_kolhsPoeticallyLicenced", "_kolhsSchoolSpirited", "_kudzuSaladEaten", "_lastCombatWon", "_latteBanishUsed", "_latteCopyUsed", "_latteDrinkUsed", "_legendaryBeat", "_licenseToChillUsed", "_lodestoneUsed", "_lookingGlass", "_loveTunnelToday", "_loveTunnelUsed", "_luckyGoldRingVolcoino", "_lunchBreak", "_lupineHormonesUsed", "_lyleFavored", "_madLiquorDrunk", "_madTeaParty", "_mafiaMiddleFingerRingUsed", "_managerialManipulationUsed", "_mansquitoSerumUsed", "_maydayDropped", "_mayoDeviceRented", "_mayoTankSoaked", "_meatballMachineUsed", "_meatifyMatterUsed", "_milkOfMagnesiumUsed", "_mimeArmyShotglassUsed", "_missGravesVermouthDrunk", "_missileLauncherUsed", "_molehillMountainUsed", "_momFoodReceived", "_mrBurnsgerEaten", "_muffinOrderedToday", "_mushroomGardenVisited", "_neverendingPartyToday", "_newYouQuestCompleted", "_olympicSwimmingPool", "_olympicSwimmingPoolItemFound", "_overflowingGiftBasketUsed", "_partyHard", "_pastaAdditive", "_perfectFreezeUsed", "_perfectlyFairCoinUsed", "_petePartyThrown", "_peteRiotIncited", "_photocopyUsed", "_pickyTweezersUsed", "_pingPongGame", "_pirateBellowUsed", "_pirateForkUsed", "_pixelOrbUsed", "_plumbersMushroomStewEaten", "_pneumaticityPotionUsed", "_portableSteamUnitUsed", "_pottedTeaTreeUsed", "_prToday", "_psychoJarFilled", "_psychoJarUsed", "_psychokineticHugUsed", "_rainStickUsed", "_redwoodRainStickUsed", "_requestSandwichSucceeded", "_rhinestonesAcquired", "_seaJellyHarvested", "_setOfJacksUsed", "_sewingKitUsed", "_sexChanged", "_shadowAffinityToday", "_shadowForestLooted", "_shrubDecorated", "_silverDreadFlaskUsed", "_sitCourseCompleted", "_skateBuff1", "_skateBuff2", "_skateBuff3", "_skateBuff4", "_skateBuff5", "_sleazeAirportToday", "_sobrieTeaUsed", "_softwareGlitchTurnReceived", "_spacegateMurderbot", "_spacegateRuins", "_spacegateSpant", "_spacegateToday", "_spacegateVaccine", "_spaghettiBreakfast", "_spaghettiBreakfastEaten", "_spinmasterLatheVisited", "_spinningWheel", "_spookyAirportToday", "_stabonicScrollUsed", "_steelyEyedSquintUsed", "_stenchAirportToday", "_stinkyCheeseBanisherUsed", "_strangeStalagmiteUsed", "_streamsCrossed", "_stuffedPocketwatchUsed", "_styxSprayUsed", "_summonAnnoyanceUsed", "_summonCarrotUsed", "_summonResortPassUsed", "_sweetToothUsed", "_syntheticDogHairPillUsed", "_tacoFlierUsed", "_telegraphOfficeToday", "_templeHiddenPower", "_tempuraAirUsed", "_thesisDelivered", "_timeSpinnerReplicatorUsed", "_toastSummoned", "_tonicDjinn", "_treasuryEliteMeatCollected", "_treasuryHaremMeatCollected", "_trivialAvocationsGame", "_tryptophanDartUsed", "_turtlePowerCast", "_twelveNightEnergyUsed", "_ultraMegaSourBallUsed", "_victorSpoilsUsed", "_villainLairCanLidUsed", "_villainLairColorChoiceUsed", "_villainLairDoorChoiceUsed", "_villainLairFirecrackerUsed", "_villainLairSymbologyChoiceUsed", "_villainLairWebUsed", "_vmaskBanisherUsed", "_voraciTeaUsed", "_volcanoItemRedeemed", "_volcanoSuperduperheatedMetal", "_voteToday", "_VYKEACafeteriaRaided", "_VYKEALoungeRaided", "_walfordQuestStartedToday", "_warbearBankUsed", "_warbearBreakfastMachineUsed", "_warbearGyrocopterUsed", "_warbearSodaMachineUsed", "_wildfireBarrelHarvested", "_witchessBuff", "_workshedItemUsed", "_zombieClover", "_preventScurvy", "lockedItem4637", "lockedItem4638", "lockedItem4639", "lockedItem4646", "lockedItem4647", "unknownRecipe3542", "unknownRecipe3543", "unknownRecipe3544", "unknownRecipe3545", "unknownRecipe3546", "unknownRecipe3547", "unknownRecipe3548", "unknownRecipe3749", "unknownRecipe3751", "unknownRecipe4172", "unknownRecipe4173", "unknownRecipe4174", "unknownRecipe5060", "unknownRecipe5061", "unknownRecipe5062", "unknownRecipe5063", "unknownRecipe5064", "unknownRecipe5066", "unknownRecipe5067", "unknownRecipe5069", "unknownRecipe5070", "unknownRecipe5072", "unknownRecipe5073", "unknownRecipe5670", "unknownRecipe5671", "unknownRecipe6501", "unknownRecipe6564", "unknownRecipe6565", "unknownRecipe6566", "unknownRecipe6567", "unknownRecipe6568", "unknownRecipe6569", "unknownRecipe6570", "unknownRecipe6571", "unknownRecipe6572", "unknownRecipe6573", "unknownRecipe6574", "unknownRecipe6575", "unknownRecipe6576", "unknownRecipe6577", "unknownRecipe6578", "unknownRecipe7752", "unknownRecipe7753", "unknownRecipe7754", "unknownRecipe7755", "unknownRecipe7756", "unknownRecipe7757", "unknownRecipe7758", "unknownRecipe10970", "unknownRecipe10971", "unknownRecipe10972", "unknownRecipe10973", "unknownRecipe10974", "unknownRecipe10975", "unknownRecipe10976", "unknownRecipe10977", "unknownRecipe10978", "unknownRecipe10988", "unknownRecipe10989", "unknownRecipe10990", "unknownRecipe10991", "unknownRecipe10992", "unknownRecipe11000"];
-var numericProperties = ["coinMasterIndex", "dailyDeedsVersion", "defaultDropdown1", "defaultDropdown2", "defaultDropdownSplit", "defaultLimit", "fixedThreadPoolSize", "itemManagerIndex", "lastBuffRequestType", "lastGlobalCounterDay", "lastImageCacheClear", "previousUpdateRevision", "relayDelayForSVN", "relaySkillButtonCount", "scriptButtonPosition", "statusDropdown", "svnThreadPoolSize", "toolbarPosition", "_g9Effect", "8BitBonusTurns", "8BitScore", "addingScrolls", "affirmationCookiesEaten", "aminoAcidsUsed", "antagonisticSnowmanKitCost", "ascensionsToday", "asolDeferredPoints", "asolPointsPigSkinner", "asolPointsCheeseWizard", "asolPointsJazzAgent", "autoAbortThreshold", "autoAntidote", "autoBuyPriceLimit", "autumnatonQuestTurn", "availableCandyCredits", "availableDimes", "availableFunPoints", "availableQuarters", "availableStoreCredits", "availableSwagger", "averageSwagger", "awolMedicine", "awolPointsBeanslinger", "awolPointsCowpuncher", "awolPointsSnakeoiler", "awolDeferredPointsBeanslinger", "awolDeferredPointsCowpuncher", "awolDeferredPointsSnakeoiler", "awolVenom", "bagOTricksCharges", "ballpitBonus", "bankedKarma", "bartenderTurnsUsed", "basementMallPrices", "basementSafetyMargin", "batmanFundsAvailable", "batmanBonusInitialFunds", "batmanTimeLeft", "bearSwagger", "beeCounter", "beGregariousCharges", "beGregariousFightsLeft", "birdformCold", "birdformHot", "birdformRoc", "birdformSleaze", "birdformSpooky", "birdformStench", "blackBartsBootyCost", "blackPuddingsDefeated", "blackForestProgress", "blankOutUsed", "bloodweiserDrunk", "bondPoints", "bondVillainsDefeated", "boneAbacusVictories", "booPeakProgress", "borisPoints", "breakableHandling", "breakableHandling1964", "breakableHandling9691", "breakableHandling9692", "breakableHandling9699", "breathitinCharges", "brodenBacteria", "brodenSprinkles", "buffBotMessageDisposal", "buffBotPhilanthropyType", "buffJimmyIngredients", "burnoutsDefeated", "burrowgrubSummonsRemaining", "camelSpit", "camerasUsed", "campAwayDecoration", "candyWitchTurnsUsed", "candyWitchCandyTotal", "carboLoading", "catBurglarBankHeists", "cellarLayout", "charitableDonations", "chasmBridgeProgress", "chefTurnsUsed", "chessboardsCleared", "chilledToTheBone", "cinderellaMinutesToMidnight", "cinderellaScore", "cocktailSummons", "commerceGhostCombats", "controlPanelOmega", "cornucopiasOpened", "cosmicBowlingBallReturnCombats", "cozyCounter6332", "cozyCounter6333", "cozyCounter6334", "craftingClay", "craftingLeather", "craftingStraw", "crimbo16BeardChakraCleanliness", "crimbo16BootsChakraCleanliness", "crimbo16BungChakraCleanliness", "crimbo16CrimboHatChakraCleanliness", "crimbo16GutsChakraCleanliness", "crimbo16HatChakraCleanliness", "crimbo16JellyChakraCleanliness", "crimbo16LiverChakraCleanliness", "crimbo16NippleChakraCleanliness", "crimbo16NoseChakraCleanliness", "crimbo16ReindeerChakraCleanliness", "crimbo16SackChakraCleanliness", "crimboTrainingSkill", "crimboTreeDays", "cubelingProgress", "currentExtremity", "currentHedgeMazeRoom", "currentMojoFilters", "currentNunneryMeat", "currentPortalEnergy", "cursedMagnifyingGlassCount", "cyrptAlcoveEvilness", "cyrptCrannyEvilness", "cyrptNicheEvilness", "cyrptNookEvilness", "cyrptTotalEvilness", "darkGyfftePoints", "daycareEquipment", "daycareInstructors", "daycareLastScavenge", "daycareToddlers", "dbNemesisSkill1", "dbNemesisSkill2", "dbNemesisSkill3", "desertExploration", "desktopHeight", "desktopWidth", "dinseyFilthLevel", "dinseyFunProgress", "dinseyNastyBearsDefeated", "dinseySocialJusticeIProgress", "dinseySocialJusticeIIProgress", "dinseyTouristsFed", "dinseyToxicMultiplier", "doctorBagQuestLights", "doctorBagUpgrades", "dreadScroll1", "dreadScroll2", "dreadScroll3", "dreadScroll4", "dreadScroll5", "dreadScroll6", "dreadScroll7", "dreadScroll8", "dripAdventuresSinceAscension", "drippingHallAdventuresSinceAscension", "drippingTreesAdventuresSinceAscension", "drippyBatsUnlocked", "drippyJuice", "drippyOrbsClaimed", "drunkenSwagger", "edDefeatAbort", "edPoints", "eldritchTentaclesFought", "electricKoolAidEaten", "elfGratitude", "encountersUntilDMTChoice", "encountersUntilNEPChoice", "encountersUntilSRChoice", "ensorceleeLevel", "entauntaunedColdRes", "essenceOfAnnoyanceCost", "essenceOfBearCost", "extraRolloverAdventures", "falloutShelterLevel", "familiarSweat", "fingernailsClipped", "fistSkillsKnown", "flyeredML", "fossilB", "fossilD", "fossilN", "fossilP", "fossilS", "fossilW", "fratboysDefeated", "frenchGuardTurtlesFreed", "funGuyMansionKills", "garbageChampagneCharge", "garbageFireProgress", "garbageShirtCharge", "garbageTreeCharge", "garlandUpgrades", "gingerDigCount", "gingerLawChoice", "gingerMuscleChoice", "gingerTrainScheduleStudies", "gladiatorBallMovesKnown", "gladiatorBladeMovesKnown", "gladiatorNetMovesKnown", "glitchItemCost", "glitchItemImplementationCount", "glitchItemImplementationLevel", "glitchSwagger", "gloverPoints", "gnasirProgress", "goldenMrAccessories", "gongPath", "gooseDronesRemaining", "goreCollected", "gourdItemCount", "greyYouPoints", "grimoire1Summons", "grimoire2Summons", "grimoire3Summons", "grimstoneCharge", "guardTurtlesFreed", "guideToSafariCost", "guyMadeOfBeesCount", "guzzlrBronzeDeliveries", "guzzlrDeliveryProgress", "guzzlrGoldDeliveries", "guzzlrPlatinumDeliveries", "haciendaLayout", "hallowiener8BitRealm", "hallowienerCoinspiracy", "hareMillisecondsSaved", "hareTurnsUsed", "heavyRainsStartingThunder", "heavyRainsStartingRain", "heavyRainsStartingLightning", "heroDonationBoris", "heroDonationJarlsberg", "heroDonationSneakyPete", "hiddenApartmentProgress", "hiddenBowlingAlleyProgress", "hiddenHospitalProgress", "hiddenOfficeProgress", "hiddenTavernUnlock", "highTopPumped", "hippiesDefeated", "holidayHalsBookCost", "holidaySwagger", "homemadeRobotUpgrades", "homebodylCharges", "hpAutoRecovery", "hpAutoRecoveryTarget", "iceSwagger", "jarlsbergPoints", "jungCharge", "junglePuns", "knownAscensions", "kolhsTotalSchoolSpirited", "lastAnticheeseDay", "lastArcadeAscension", "lastBadMoonReset", "lastBangPotionReset", "lastBattlefieldReset", "lastBeardBuff", "lastBreakfast", "lastCartographyBooPeak", "lastCartographyCastleTop", "lastCartographyDarkNeck", "lastCartographyDefiledNook", "lastCartographyFratHouse", "lastCartographyFratHouseVerge", "lastCartographyGuanoJunction", "lastCartographyHauntedBilliards", "lastCartographyHippyCampVerge", "lastCartographyZeppelinProtesters", "lastCastleGroundUnlock", "lastCastleTopUnlock", "lastCellarReset", "lastChanceThreshold", "lastChasmReset", "lastColosseumRoundWon", "lastCouncilVisit", "lastCounterDay", "lastDesertUnlock", "lastDispensaryOpen", "lastDMTDuplication", "lastDwarfFactoryReset", "lastEVHelmetValue", "lastEVHelmetReset", "lastEmptiedStorage", "lastFilthClearance", "lastGoofballBuy", "lastGuildStoreOpen", "lastGuyMadeOfBeesReset", "lastFratboyCall", "lastFriarCeremonyAscension", "lastFriarElbowNC", "lastFriarHeartNC", "lastFriarNeckNC", "lastHippyCall", "lastIslandUnlock", "lastKeyotronUse", "lastKingLiberation", "lastLightsOutTurn", "lastMushroomPlot", "lastMiningReset", "lastNemesisReset", "lastPaperStripReset", "lastPirateEphemeraReset", "lastPirateInsultReset", "lastPlusSignUnlock", "lastQuartetAscension", "lastQuartetRequest", "lastSecondFloorUnlock", "lastShadowForgeUnlockAdventure", "lastSkateParkReset", "lastStillBeatingSpleen", "lastTavernAscension", "lastTavernSquare", "lastTelescopeReset", "lastTempleAdventures", "lastTempleButtonsUnlock", "lastTempleUnlock", "lastThingWithNoNameDefeated", "lastTowelAscension", "lastTr4pz0rQuest", "lastTrainsetConfiguration", "lastVioletFogMap", "lastVoteMonsterTurn", "lastWartDinseyDefeated", "lastWuTangDefeated", "lastYearbookCameraAscension", "lastZapperWand", "lastZapperWandExplosionDay", "lawOfAveragesCost", "libramSummons", "lightsOutAutomation", "louvreDesiredGoal", "louvreGoal", "lovebugsAridDesert", "lovebugsBeachBuck", "lovebugsBooze", "lovebugsChroner", "lovebugsCoinspiracy", "lovebugsCyrpt", "lovebugsFreddy", "lovebugsFunFunds", "lovebugsHoboNickel", "lovebugsItemDrop", "lovebugsMeat", "lovebugsMeatDrop", "lovebugsMoxie", "lovebugsMuscle", "lovebugsMysticality", "lovebugsOilPeak", "lovebugsOrcChasm", "lovebugsPowder", "lovebugsWalmart", "lttQuestDifficulty", "lttQuestStageCount", "manaBurnSummonThreshold", "manaBurningThreshold", "manaBurningTrigger", "manorDrawerCount", "manualOfNumberologyCost", "mapToKokomoCost", "masksUnlocked", "maximizerMRUSize", "maximizerCombinationLimit", "maximizerEquipmentLevel", "maximizerEquipmentScope", "maximizerMaxPrice", "maximizerPriceLevel", "maxManaBurn", "mayflyExperience", "mayoLevel", "meansuckerPrice", "merkinVocabularyMastery", "miniAdvClass", "miniMartinisDrunk", "moleTunnelLevel", "mothershipProgress", "mpAutoRecovery", "mpAutoRecoveryTarget", "munchiesPillsUsed", "mushroomGardenCropLevel", "nextParanormalActivity", "nextQuantumFamiliarOwnerId", "nextQuantumFamiliarTurn", "noobPoints", "noobDeferredPoints", "noodleSummons", "nsContestants1", "nsContestants2", "nsContestants3", "nuclearAutumnPoints", "numericSwagger", "nunsVisits", "oilPeakProgress", "optimalSwagger", "optimisticCandleProgress", "palindomeDudesDefeated", "parasolUsed", "pendingMapReflections", "pingpongSkill", "pirateSwagger", "plantingDay", "plumberBadgeCost", "plumberCostumeCost", "plumberPoints", "poolSharkCount", "poolSkill", "primaryLabGooIntensity", "prismaticSummons", "procrastinatorLanguageFluency", "promptAboutCrafting", "puzzleChampBonus", "pyramidPosition", "rockinRobinProgress", "ROMOfOptimalityCost", "quantumPoints", "reagentSummons", "reanimatorArms", "reanimatorLegs", "reanimatorSkulls", "reanimatorWeirdParts", "reanimatorWings", "recentLocations", "redSnapperProgress", "relayPort", "relocatePygmyJanitor", "relocatePygmyLawyer", "rumpelstiltskinTurnsUsed", "rumpelstiltskinKidsRescued", "safariSwagger", "sausageGrinderUnits", "schoolOfHardKnocksDiplomaCost", "schoolSwagger", "scrapbookCharges", "scriptMRULength", "seaodesFound", "SeasoningSwagger", "sexChanges", "shadowRiftLastNC", "shadowRiftTotalTurns", "shenInitiationDay", "shockingLickCharges", "singleFamiliarRun", "skillBurn3", "skillBurn90", "skillBurn153", "skillBurn154", "skillBurn155", "skillBurn1019", "skillBurn5017", "skillBurn6014", "skillBurn6015", "skillBurn6016", "skillBurn6020", "skillBurn6021", "skillBurn6022", "skillBurn6023", "skillBurn6024", "skillBurn6026", "skillBurn6028", "skillBurn7323", "skillBurn14008", "skillBurn14028", "skillBurn14038", "skillBurn15011", "skillBurn15028", "skillBurn17005", "skillBurn22034", "skillBurn22035", "skillBurn23301", "skillBurn23302", "skillBurn23303", "skillBurn23304", "skillBurn23305", "skillBurn23306", "skillLevel46", "skillLevel47", "skillLevel48", "skillLevel117", "skillLevel118", "skillLevel121", "skillLevel128", "skillLevel134", "skillLevel144", "skillLevel180", "skillLevel188", "skillLevel7254", "slimelingFullness", "slimelingStacksDropped", "slimelingStacksDue", "smoresEaten", "smutOrcNoncombatProgress", "sneakyPetePoints", "snojoMoxieWins", "snojoMuscleWins", "snojoMysticalityWins", "sourceAgentsDefeated", "sourceEnlightenment", "sourceInterval", "sourcePoints", "sourceTerminalGram", "sourceTerminalPram", "sourceTerminalSpam", "spaceBabyLanguageFluency", "spacePirateLanguageFluency", "spelunkyNextNoncombat", "spelunkySacrifices", "spelunkyWinCount", "spookyPuttyCopiesMade", "statbotUses", "sugarCounter4178", "sugarCounter4179", "sugarCounter4180", "sugarCounter4181", "sugarCounter4182", "sugarCounter4183", "sugarCounter4191", "summonAnnoyanceCost", "sweat", "tacoDanCocktailSauce", "tacoDanFishMeat", "tavernLayout", "telescopeUpgrades", "tempuraSummons", "timeSpinnerMedals", "timesRested", "tomeSummons", "totalCharitableDonations", "trainsetPosition", "turtleBlessingTurns", "twinPeakProgress", "twoCRSPoints", "unicornHornInflation", "universalSeasoningCost", "usable1HWeapons", "usable1xAccs", "usable2HWeapons", "usable3HWeapons", "usableAccessories", "usableHats", "usableOffhands", "usableOther", "usablePants", "usableShirts", "valueOfAdventure", "valueOfInventory", "valueOfStill", "valueOfTome", "vintnerCharge", "vintnerWineLevel", "violetFogGoal", "walfordBucketProgress", "warehouseProgress", "welcomeBackAdv", "whetstonesUsed", "wolfPigsEvicted", "wolfTurnsUsed", "writingDesksDefeated", "xoSkeleltonXProgress", "xoSkeleltonOProgress", "yearbookCameraAscensions", "yearbookCameraUpgrades", "youRobotBody", "youRobotBottom", "youRobotLeft", "youRobotPoints", "youRobotRight", "youRobotTop", "zeppelinProtestors", "zigguratLianas", "zombiePoints", "_absintheDrops", "_abstractionDropsCrown", "_aguaDrops", "_xenomorphCharge", "_ancestralRecallCasts", "_antihangoverBonus", "_astralDrops", "_autumnatonQuests", "_backUpUses", "_badlyRomanticArrows", "_badgerCharge", "_balefulHowlUses", "_banderRunaways", "_bastilleCheese", "_bastilleGames", "_bastilleGameTurn", "_bastilleLastCheese", "_beanCannonUses", "_bearHugs", "_beerLensDrops", "_bellydancerPickpockets", "_benettonsCasts", "_birdsSoughtToday", "_boomBoxFights", "_boomBoxSongsLeft", "_bootStomps", "_boxingGloveArrows", "_brickoEyeSummons", "_brickoFights", "_campAwayCloudBuffs", "_campAwaySmileBuffs", "_candySummons", "_captainHagnkUsed", "_carnieCandyDrops", "_carrotNoseDrops", "_catBurglarCharge", "_catBurglarHeistsComplete", "_cheerleaderSteam", "_chestXRayUsed", "_chipBags", "_chocolateCigarsUsed", "_chocolateCoveredPingPongBallsUsed", "_chocolateSculpturesUsed", "_chocolatesUsed", "_chronolithActivations", "_chronolithNextCost", "_clanFortuneConsultUses", "_clipartSummons", "_cloversPurchased", "_coldMedicineConsults", "_coldMedicineEquipmentTaken", "_companionshipCasts", "_cookbookbatCrafting", "_cosmicBowlingSkillsUsed", "_crimbo21ColdResistance", "_dailySpecialPrice", "_daycareGymScavenges", "_daycareRecruits", "_deckCardsDrawn", "_deluxeKlawSummons", "_demandSandwich", "_detectiveCasesCompleted", "_disavowed", "_dnaPotionsMade", "_donhosCasts", "_dreamJarDrops", "_drunkPygmyBanishes", "_edDefeats", "_edLashCount", "_elronsCasts", "_enamorangs", "_energyCollected", "_expertCornerCutterUsed", "_favorRareSummons", "_feastUsed", "_feelinTheRhythm", "_feelPrideUsed", "_feelExcitementUsed", "_feelHatredUsed", "_feelLonelyUsed", "_feelNervousUsed", "_feelEnvyUsed", "_feelDisappointedUsed", "_feelSuperiorUsed", "_feelLostUsed", "_feelNostalgicUsed", "_feelPeacefulUsed", "_fingertrapArrows", "_fireExtinguisherCharge", "_fragrantHerbsUsed", "_freeBeachWalksUsed", "_frButtonsPressed", "_fudgeWaspFights", "_gapBuffs", "_garbageFireDrops", "_garbageFireDropsCrown", "_genieFightsUsed", "_genieWishesUsed", "_gibbererAdv", "_gibbererCharge", "_gingerbreadCityTurns", "_glarkCableUses", "_glitchMonsterFights", "_gnomeAdv", "_godLobsterFights", "_goldenMoneyCharge", "_gongDrops", "_gothKidCharge", "_gothKidFights", "_greyYouAdventures", "_grimBrotherCharge", "_grimFairyTaleDrops", "_grimFairyTaleDropsCrown", "_grimoireConfiscatorSummons", "_grimoireGeekySummons", "_grimstoneMaskDrops", "_grimstoneMaskDropsCrown", "_grooseCharge", "_grooseDrops", "_grubbyWoolDrops", "_guzzlrDeliveries", "_guzzlrGoldDeliveries", "_guzzlrPlatinumDeliveries", "_hareAdv", "_hareCharge", "_highTopPumps", "_hipsterAdv", "_hoardedCandyDropsCrown", "_hoboUnderlingSummons", "_holoWristDrops", "_holoWristProgress", "_hotAshesDrops", "_hotJellyUses", "_hotTubSoaks", "_humanMuskUses", "_iceballUses", "_inigosCasts", "_jerksHealthMagazinesUsed", "_jiggleCheese", "_jiggleCream", "_jiggleLife", "_jiggleSteak", "_jitbCharge", "_juneCleaverFightsLeft", "_juneCleaverEncounters", "_juneCleaverStench", "_juneCleaverSpooky", "_juneCleaverSleaze", "_juneCleaverHot", "_juneCleaverCold", "_juneCleaverSkips", "_jungDrops", "_kgbClicksUsed", "_kgbDispenserUses", "_kgbTranquilizerDartUses", "_klawSummons", "_kloopCharge", "_kloopDrops", "_kolhsAdventures", "_kolhsSavedByTheBell", "_lastDailyDungeonRoom", "_lastSausageMonsterTurn", "_lastZomboEye", "_latteRefillsUsed", "_leafblowerML", "_legionJackhammerCrafting", "_llamaCharge", "_longConUsed", "_lovebugsBeachBuck", "_lovebugsChroner", "_lovebugsCoinspiracy", "_lovebugsFreddy", "_lovebugsFunFunds", "_lovebugsHoboNickel", "_lovebugsWalmart", "_loveChocolatesUsed", "_lynyrdSnareUses", "_machineTunnelsAdv", "_macrometeoriteUses", "_mafiaThumbRingAdvs", "_mayflowerDrops", "_mayflySummons", "_mediumSiphons", "_meteoriteAdesUsed", "_meteorShowerUses", "_micrometeoriteUses", "_miniMartiniDrops", "_monstersMapped", "_mushroomGardenFights", "_nanorhinoCharge", "_navelRunaways", "_neverendingPartyFreeTurns", "_newYouQuestSharpensDone", "_newYouQuestSharpensToDo", "_nextColdMedicineConsult", "_nextQuantumAlignment", "_nightmareFuelCharges", "_noobSkillCount", "_nuclearStockpileUsed", "_oilExtracted", "_olfactionsUsed", "_optimisticCandleDropsCrown", "_oreDropsCrown", "_otoscopeUsed", "_oysterEggsFound", "_pantsgivingBanish", "_pantsgivingCount", "_pantsgivingCrumbs", "_pantsgivingFullness", "_pasteDrops", "_peteJukeboxFixed", "_peteJumpedShark", "_petePeeledOut", "_pieDrops", "_piePartsCount", "_pixieCharge", "_pocketProfessorLectures", "_poisonArrows", "_pokeGrowFertilizerDrops", "_poolGames", "_powderedGoldDrops", "_powderedMadnessUses", "_powerfulGloveBatteryPowerUsed", "_powerPillDrops", "_powerPillUses", "_precisionCasts", "_radlibSummons", "_raindohCopiesMade", "_rapidPrototypingUsed", "_raveStealCount", "_reflexHammerUsed", "_resolutionAdv", "_resolutionRareSummons", "_riftletAdv", "_robinEggDrops", "_roboDrops", "_rogueProgramCharge", "_romanticFightsLeft", "_saberForceMonsterCount", "_saberForceUses", "_saberMod", "_saltGrainsConsumed", "_sandwormCharge", "_saplingsPlanted", "_sausageFights", "_sausagesEaten", "_sausagesMade", "_sealFigurineUses", "_sealScreeches", "_sealsSummoned", "_shadowBricksUsed", "_shadowRiftCombats", "_shatteringPunchUsed", "_shortOrderCookCharge", "_shrubCharge", "_sloppyDinerBeachBucks", "_smilesOfMrA", "_smithsnessSummons", "_snojoFreeFights", "_snojoParts", "_snokebombUsed", "_snowconeSummons", "_snowglobeDrops", "_snowSuitCount", "_sourceTerminalDigitizeMonsterCount", "_sourceTerminalDigitizeUses", "_sourceTerminalDuplicateUses", "_sourceTerminalEnhanceUses", "_sourceTerminalExtrudes", "_sourceTerminalPortscanUses", "_spaceFurDropsCrown", "_spacegatePlanetIndex", "_spacegateTurnsLeft", "_spaceJellyfishDrops", "_speakeasyDrinksDrunk", "_speakeasyFreeFights", "_spelunkerCharges", "_spelunkingTalesDrops", "_spikolodonSpikeUses", "_spookyJellyUses", "_stackLumpsUses", "_steamCardDrops", "_stickerSummons", "_stinkyCheeseCount", "_stressBallSqueezes", "_sugarSummons", "_sweatOutSomeBoozeUsed", "_taffyRareSummons", "_taffyYellowSummons", "_thanksgettingFoodsEaten", "_thingfinderCasts", "_thinknerdPackageDrops", "_thorsPliersCrafting", "_timeHelmetAdv", "_timeSpinnerMinutesUsed", "_tokenDrops", "_transponderDrops", "_turkeyBlastersUsed", "_turkeyBooze", "_turkeyMuscle", "_turkeyMyst", "_turkeyMoxie", "_unaccompaniedMinerUsed", "_unconsciousCollectiveCharge", "_universalSeasoningsUsed", "_universeCalculated", "_universeImploded", "_usedReplicaBatoomerang", "_vampyreCloakeFormUses", "_villainLairProgress", "_vitachocCapsulesUsed", "_vmaskAdv", "_voidFreeFights", "_volcanoItem1", "_volcanoItem2", "_volcanoItem3", "_volcanoItemCount1", "_volcanoItemCount2", "_volcanoItemCount3", "_voteFreeFights", "_VYKEACompanionLevel", "_warbearAutoAnvilCrafting", "_waxGlobDrops", "_whiteRiceDrops", "_witchessFights", "_xoHugsUsed", "_yellowPixelDropsCrown", "_zapCount", "_zombieSmashPocketsUsed"];
-var monsterProperties = ["beGregariousMonster", "cameraMonster", "chateauMonster", "clumsinessGroveBoss", "crappyCameraMonster", "crudeMonster", "enamorangMonster", "envyfishMonster", "glacierOfJerksBoss", "iceSculptureMonster", "lastCopyableMonster", "longConMonster", "maelstromOfLoversBoss", "makeFriendsMonster", "merkinLockkeyMonster", "motifMonster", "nosyNoseMonster", "olfactedMonster", "photocopyMonster", "rainDohMonster", "romanticTarget", "screencappedMonster", "spookyPuttyMonster", "stenchCursedMonster", "superficiallyInterestedMonster", "waxMonster", "yearbookCameraTarget", "_gallapagosMonster", "_jiggleCreamedMonster", "_latteMonster", "_nanorhinoBanishedMonster", "_newYouQuestMonster", "_relativityMonster", "_saberForceMonster", "_sourceTerminalDigitizeMonster", "_voteMonster"];
+var booleanProperties = ["abortOnChoiceWhenNotInChoice", "addChatCommandLine", "addCreationQueue", "addStatusBarToFrames", "allowCloseableDesktopTabs", "allowNegativeTally", "allowNonMoodBurning", "allowSummonBurning", "autoHighlightOnFocus", "broadcastEvents", "cacheMallSearches", "chatBeep", "chatLinksUseRelay", "compactChessboard", "copyAsHTML", "customizedTabs", "debugBuy", "debugConsequences", "debugFoxtrotRemoval", "debugPathnames", "gapProtection", "gitInstallDependencies", "gitShowCommitMessages", "gitUpdateOnLogin", "greenScreenProtection", "guiUsesOneWindow", "hideServerDebugText", "logAcquiredItems", "logBattleAction", "logBrowserInteractions", "logChatMessages", "logChatRequests", "logCleanedHTML", "logDecoratedResponses", "logFamiliarActions", "logGainMessages", "logReadableHTML", "logPreferenceChange", "logMonsterHealth", "logReverseOrder", "logStatGains", "logStatusEffects", "logStatusOnLogin", "macroDebug", "macroLens", "mementoListActive", "mergeHobopolisChat", "pingLogin", "printStackOnAbort", "proxySet", "relayAddSounds", "relayAddsCustomCombat", "relayAddsDiscoHelper", "relayAddsGraphicalCLI", "relayAddsQuickScripts", "relayAddsRestoreLinks", "relayAddsUpArrowLinks", "relayAddsUseLinks", "relayAddsWikiLinks", "relayAllowRemoteAccess", "relayBrowserOnly", "relayCacheUncacheable", "relayFormatsChatText", "relayHidesJunkMallItems", "relayMaintainsEffects", "relayMaintainsHealth", "relayMaintainsMana", "relayOverridesImages", "relayRunsAfterAdventureScript", "relayRunsBeforeBattleScript", "relayRunsBeforePVPScript", "relayScriptButtonFirst", "relayTextualizesEffects", "relayTrimsZapList", "relayUsesInlineLinks", "relayUsesIntegratedChat", "relayWarnOnRecoverFailure", "removeMalignantEffects", "saveSettingsOnSet", "sharePriceData", "showAllRequests", "showExceptionalRequests", "stealthLogin", "svnInstallDependencies", "svnShowCommitMessages", "svnUpdateOnLogin", "switchEquipmentForBuffs", "syncAfterSvnUpdate", "useChatToolbar", "useContactsFrame", "useDevProxyServer", "useDockIconBadge", "useHugglerChannel", "useImageCache", "useLastUserAgent", "useSystemTrayIcon", "useTabbedChatFrame", "useToolbars", "useCachedVolcanoMaps", "useZoneComboBox", "verboseSpeakeasy", "verboseFloundry", "wrapLongLines", "_gitUpdated", "_svnRepoFileFetched", "_svnUpdated", "antagonisticSnowmanKitAvailable", "arcadeGameHints", "armoryUnlocked", "autoForbidIgnoringStores", "autoCraft", "autoQuest", "autoEntangle", "autoGarish", "autoManaRestore", "autoFillMayoMinder", "autoPinkyRing", "autoPlantHardcore", "autoPlantSoftcore", "autoPotionID", "autoRepairBoxServants", "autoSatisfyWithCloset", "autoSatisfyWithCoinmasters", "autoSatisfyWithMall", "autoSatisfyWithNPCs", "autoSatisfyWithStash", "autoSatisfyWithStorage", "autoSetConditions", "autoSteal", "autoTuxedo", "backupCameraReverserEnabled", "badMoonEncounter01", "badMoonEncounter02", "badMoonEncounter03", "badMoonEncounter04", "badMoonEncounter05", "badMoonEncounter06", "badMoonEncounter07", "badMoonEncounter08", "badMoonEncounter09", "badMoonEncounter10", "badMoonEncounter11", "badMoonEncounter12", "badMoonEncounter13", "badMoonEncounter14", "badMoonEncounter15", "badMoonEncounter16", "badMoonEncounter17", "badMoonEncounter18", "badMoonEncounter19", "badMoonEncounter20", "badMoonEncounter21", "badMoonEncounter22", "badMoonEncounter23", "badMoonEncounter24", "badMoonEncounter25", "badMoonEncounter26", "badMoonEncounter27", "badMoonEncounter28", "badMoonEncounter29", "badMoonEncounter30", "badMoonEncounter31", "badMoonEncounter32", "badMoonEncounter33", "badMoonEncounter34", "badMoonEncounter35", "badMoonEncounter36", "badMoonEncounter37", "badMoonEncounter38", "badMoonEncounter39", "badMoonEncounter40", "badMoonEncounter41", "badMoonEncounter42", "badMoonEncounter43", "badMoonEncounter44", "badMoonEncounter45", "badMoonEncounter46", "badMoonEncounter47", "badMoonEncounter48", "barrelShrineUnlocked", "bigBrotherRescued", "blackBartsBootyAvailable", "bondAdv", "bondBeach", "bondBeat", "bondBooze", "bondBridge", "bondDesert", "bondDR", "bondDrunk1", "bondDrunk2", "bondHoney", "bondHP", "bondInit", "bondItem1", "bondItem2", "bondItem3", "bondJetpack", "bondMartiniDelivery", "bondMartiniPlus", "bondMartiniTurn", "bondMeat", "bondMox1", "bondMox2", "bondMPregen", "bondMus1", "bondMus2", "bondMys1", "bondMys2", "bondSpleen", "bondStat", "bondStat2", "bondStealth", "bondStealth2", "bondSymbols", "bondWar", "bondWeapon2", "bondWpn", "booPeakLit", "bootsCharged", "breakfastCompleted", "burrowgrubHiveUsed", "calzoneOfLegendEaten", "canteenUnlocked", "chaosButterflyThrown", "chatbotScriptExecuted", "chateauAvailable", "chatLiterate", "chatServesUpdates", "checkJackassHardcore", "checkJackassSoftcore", "clanAttacksEnabled", "coldAirportAlways", "considerShadowNoodles", "controlRoomUnlock", "concertVisited", "controlPanel1", "controlPanel2", "controlPanel3", "controlPanel4", "controlPanel5", "controlPanel6", "controlPanel7", "controlPanel8", "controlPanel9", "corralUnlocked", "dailyDungeonDone", "dampOldBootPurchased", "daycareOpen", "deepDishOfLegendEaten", "demonSummoned", "dinseyAudienceEngagement", "dinseyGarbagePirate", "dinseyRapidPassEnabled", "dinseyRollercoasterNext", "dinseySafetyProtocolsLoose", "doghouseBoarded", "dontStopForCounters", "drippingHallUnlocked", "drippyShieldUnlocked", "edUsedLash", "eldritchFissureAvailable", "eldritchHorrorAvailable", "errorOnAmbiguousFold", "essenceOfAnnoyanceAvailable", "essenceOfBearAvailable", "expressCardUsed", "falloutShelterChronoUsed", "falloutShelterCoolingTankUsed", "fireExtinguisherBatHoleUsed", "fireExtinguisherChasmUsed", "fireExtinguisherCyrptUsed", "fireExtinguisherDesertUsed", "fireExtinguisherHaremUsed", "fistTeachingsHaikuDungeon", "fistTeachingsPokerRoom", "fistTeachingsBarroomBrawl", "fistTeachingsConservatory", "fistTeachingsBatHole", "fistTeachingsFunHouse", "fistTeachingsMenagerie", "fistTeachingsSlums", "fistTeachingsFratHouse", "fistTeachingsRoad", "fistTeachingsNinjaSnowmen", "flickeringPixel1", "flickeringPixel2", "flickeringPixel3", "flickeringPixel4", "flickeringPixel5", "flickeringPixel6", "flickeringPixel7", "flickeringPixel8", "frAlways", "frCemetaryUnlocked", "friarsBlessingReceived", "frMountainsUnlocked", "frSwampUnlocked", "frVillageUnlocked", "frWoodUnlocked", "getawayCampsiteUnlocked", "ghostPencil1", "ghostPencil2", "ghostPencil3", "ghostPencil4", "ghostPencil5", "ghostPencil6", "ghostPencil7", "ghostPencil8", "ghostPencil9", "gingerAdvanceClockUnlocked", "gingerBlackmailAccomplished", "gingerbreadCityAvailable", "gingerExtraAdventures", "gingerNegativesDropped", "gingerSewersUnlocked", "gingerSubwayLineUnlocked", "gingerRetailUnlocked", "glitchItemAvailable", "grabCloversHardcore", "grabCloversSoftcore", "guideToSafariAvailable", "guyMadeOfBeesDefeated", "hallowienerDefiledNook", "hallowienerGuanoJunction", "hallowienerKnollGym", "hallowienerMadnessBakery", "hallowienerMiddleChamber", "hallowienerOvergrownLot", "hallowienerSkeletonStore", "hallowienerSmutOrcs", "hallowienerSonofaBeach", "hallowienerVolcoino", "hardcorePVPWarning", "harvestBatteriesHardcore", "harvestBatteriesSoftcore", "hasAutumnaton", "hasBartender", "hasChef", "hasCocktailKit", "hasCosmicBowlingBall", "hasDetectiveSchool", "hasMaydayContract", "hasOven", "hasRange", "hasShaker", "hasSushiMat", "haveBoxingDaydreamHardcore", "haveBoxingDaydreamSoftcore", "hermitHax0red", "holidayHalsBookAvailable", "horseryAvailable", "hotAirportAlways", "implementGlitchItem", "intenseCurrents", "itemBoughtPerAscension637", "itemBoughtPerAscension8266", "itemBoughtPerAscension10790", "itemBoughtPerAscension10794", "itemBoughtPerAscension10795", "itemBoughtPerCharacter6423", "itemBoughtPerCharacter6428", "itemBoughtPerCharacter6429", "kingLiberated", "lastPirateInsult1", "lastPirateInsult2", "lastPirateInsult3", "lastPirateInsult4", "lastPirateInsult5", "lastPirateInsult6", "lastPirateInsult7", "lastPirateInsult8", "lawOfAveragesAvailable", "leafletCompleted", "libraryCardUsed", "lockPicked", "logBastilleBattalionBattles", "loginRecoveryHardcore", "loginRecoverySoftcore", "lovebugsUnlocked", "loveTunnelAvailable", "lowerChamberUnlock", "madnessBakeryAvailable", "makePocketWishesHardcore", "makePocketWishesSoftcore", "manualOfNumberologyAvailable", "mappingMonsters", "mapToAnemoneMinePurchased", "mapToKokomoAvailable", "mapToMadnessReefPurchased", "mapToTheDiveBarPurchased", "mapToTheMarinaraTrenchPurchased", "mapToTheSkateParkPurchased", "maraisBeaverUnlock", "maraisCorpseUnlock", "maraisDarkUnlock", "maraisVillageUnlock", "maraisWildlifeUnlock", "maraisWizardUnlock", "maximizerAlwaysCurrent", "maximizerCreateOnHand", "maximizerCurrentMallPrices", "maximizerFoldables", "maximizerIncludeAll", "maximizerNoAdventures", "middleChamberUnlock", "milkOfMagnesiumActive", "moonTuned", "neverendingPartyAlways", "noncombatForcerActive", "oasisAvailable", "odeBuffbotCheck", "oilPeakLit", "oscusSodaUsed", "outrageousSombreroUsed", "overgrownLotAvailable", "ownsSpeakeasy", "pathedSummonsHardcore", "pathedSummonsSoftcore", "pizzaOfLegendEaten", "popularTartUnlocked", "potatoAlarmClockUsed", "prAlways", "prayedForGlamour", "prayedForProtection", "prayedForVigor", "primaryLabCheerCoreGrabbed", "pyramidBombUsed", "replicaChateauAvailable", "replicaNeverendingPartyAlways", "replicaWitchessSetAvailable", "ROMOfOptimalityAvailable", "rageGlandVented", "readManualHardcore", "readManualSoftcore", "relayShowSpoilers", "relayShowWarnings", "rememberDesktopSize", "restUsingChateau", "restUsingCampAwayTent", "requireBoxServants", "requireSewerTestItems", "safePickpocket", "schoolOfHardKnocksDiplomaAvailable", "scriptCascadingMenus", "serverAddsCustomCombat", "SHAWARMAInitiativeUnlocked", "showForbiddenStores", "showGainsPerUnit", "showIgnoringStorePrices", "showNoSummonOnly", "showTurnFreeOnly", "skeletonStoreAvailable", "sleazeAirportAlways", "snojoAvailable", "sortByEffect", "sortByRoom", "spacegateAlways", "spacegateVaccine1", "spacegateVaccine2", "spacegateVaccine3", "spaceInvaderDefeated", "spelunkyHints", "spiceMelangeUsed", "spookyAirportAlways", "stenchAirportAlways", "stopForFixedWanderer", "stopForUltraRare", "styxPixieVisited", "superconductorDefeated", "suppressInappropriateNags", "suppressPowerPixellation", "suppressMallPriceCacheMessages", "telegraphOfficeAvailable", "telescopeLookedHigh", "timeTowerAvailable", "trackLightsOut", "uneffectWithHotTub", "universalSeasoningActive", "universalSeasoningAvailable", "useBookOfEverySkillHardcore", "useBookOfEverySkillSoftcore", "useCrimboToysHardcore", "useCrimboToysSoftcore", "verboseMaximizer", "visitLoungeHardcore", "visitLoungeSoftcore", "visitRumpusHardcore", "visitRumpusSoftcore", "voteAlways", "wildfireBarrelCaulked", "wildfireDusted", "wildfireFracked", "wildfirePumpGreased", "wildfireSprinkled", "yearbookCameraPending", "youRobotScavenged", "_2002MrStoreCreditsCollected", "_affirmationCookieEaten", "_affirmationHateUsed", "_airFryerUsed", "_akgyxothUsed", "_alienAnimalMilkUsed", "_alienPlantPodUsed", "_allYearSucker", "_aprilShower", "_armyToddlerCast", "_authorsInkUsed", "_baconMachineUsed", "_bagOfCandy", "_bagOfCandyUsed", "_bagOTricksUsed", "_ballastTurtleUsed", "_ballInACupUsed", "_ballpit", "_barrelPrayer", "_bastilleLastBattleWon", "_beachCombing", "_bendHellUsed", "_blackMonolithUsed", "_blankoutUsed", "_bonersSummoned", "_bookOfEverySkillUsed", "_borrowedTimeUsed", "_bowleggedSwaggerUsed", "_bowlFullOfJellyUsed", "_boxOfHammersUsed", "_brainPreservationFluidUsed", "_brassDreadFlaskUsed", "_cameraUsed", "_canSeekBirds", "_carboLoaded", "_cargoPocketEmptied", "_ceciHatUsed", "_chateauDeskHarvested", "_chateauMonsterFought", "_chibiChanged", "_chronerCrossUsed", "_chronerTriggerUsed", "_chubbyAndPlumpUsed", "_circleDrumUsed", "_clanFortuneBuffUsed", "_claraBellUsed", "_coalPaperweightUsed", "_cocoaDispenserUsed", "_cocktailShakerUsed", "_coldAirportToday", "_coldOne", "_communismUsed", "_confusingLEDClockUsed", "_controlPanelUsed", "_cookbookbatRecipeDrops", "_corruptedStardustUsed", "_cosmicSixPackConjured", "_crappyCameraUsed", "_creepyVoodooDollUsed", "_crimboTraining", "_crimboTree", "_cursedKegUsed", "_cursedMicrowaveUsed", "_dailyDungeonMalwareUsed", "_darkChocolateHeart", "_daycareFights", "_daycareNap", "_daycareSpa", "_daycareToday", "_defectiveTokenChecked", "_defectiveTokenUsed", "_dinseyGarbageDisposed", "_discoKnife", "_distentionPillUsed", "_dnaHybrid", "_docClocksThymeCocktailDrunk", "_drippingHallDoor1", "_drippingHallDoor2", "_drippingHallDoor3", "_drippingHallDoor4", "_drippyCaviarUsed", "_drippyNuggetUsed", "_drippyPilsnerUsed", "_drippyPlumUsed", "_drippyWineUsed", "_eldritchHorrorEvoked", "_eldritchTentacleFought", "_entauntaunedToday", "_envyfishEggUsed", "_epicMcTwistUsed", "_essentialTofuUsed", "_etchedHourglassUsed", "_eternalCarBatteryUsed", "_everfullGlassUsed", "_eyeAndATwistUsed", "_fancyChessSetUsed", "_falloutShelterSpaUsed", "_fancyHotDogEaten", "_farmerItemsCollected", "_favoriteBirdVisited", "_firedJokestersGun", "_fireExtinguisherRefilled", "_fireStartingKitUsed", "_fireworksShop", "_fireworksShopHatBought", "_fireworksShopEquipmentBought", "_fireworkUsed", "_fishyPipeUsed", "_floundryItemCreated", "_floundryItemUsed", "_freePillKeeperUsed", "_frToday", "_fudgeSporkUsed", "_garbageItemChanged", "_gingerBiggerAlligators", "_gingerbreadCityToday", "_gingerbreadClockAdvanced", "_gingerbreadClockVisited", "_gingerbreadColumnDestroyed", "_gingerbreadMobHitUsed", "_glennGoldenDiceUsed", "_glitchItemImplemented", "_gnollEyeUsed", "_governmentPerDiemUsed", "_grimBuff", "_guildManualUsed", "_guzzlrQuestAbandoned", "_hardKnocksDiplomaUsed", "_hippyMeatCollected", "_hobbyHorseUsed", "_holidayFunUsed", "_holoWristCrystal", "_hotAirportToday", "_hungerSauceUsed", "_hyperinflatedSealLungUsed", "_iceHotelRoomsRaided", "_iceSculptureUsed", "_incredibleSelfEsteemCast", "_infernoDiscoVisited", "_internetDailyDungeonMalwareBought", "_internetGallonOfMilkBought", "_internetPlusOneBought", "_internetPrintScreenButtonBought", "_internetViralVideoBought", "_interviewIsabella", "_interviewMasquerade", "_interviewVlad", "_inquisitorsUnidentifiableObjectUsed", "_ironicMoustache", "_jackassPlumberGame", "_jarlsCheeseSummoned", "_jarlsCreamSummoned", "_jarlsDoughSummoned", "_jarlsEggsSummoned", "_jarlsFruitSummoned", "_jarlsMeatSummoned", "_jarlsPotatoSummoned", "_jarlsVeggiesSummoned", "_jingleBellUsed", "_jukebox", "_kgbFlywheelCharged", "_kgbLeftDrawerUsed", "_kgbOpened", "_kgbRightDrawerUsed", "_kolConSixPackUsed", "_kolhsCutButNotDried", "_kolhsIsskayLikeAnAshtray", "_kolhsPoeticallyLicenced", "_kolhsSchoolSpirited", "_kudzuSaladEaten", "_lastCombatLost", "_lastCombatWon", "_latteBanishUsed", "_latteCopyUsed", "_latteDrinkUsed", "_legendaryBeat", "_licenseToChillUsed", "_lodestoneUsed", "_lookingGlass", "_loveTunnelToday", "_loveTunnelUsed", "_luckyGoldRingVolcoino", "_lunchBreak", "_lupineHormonesUsed", "_lyleFavored", "_madLiquorDrunk", "_madTeaParty", "_mafiaMiddleFingerRingUsed", "_managerialManipulationUsed", "_mansquitoSerumUsed", "_maydayDropped", "_mayoDeviceRented", "_mayoTankSoaked", "_meatballMachineUsed", "_meatifyMatterUsed", "_milkOfMagnesiumUsed", "_mimeArmyShotglassUsed", "_missGravesVermouthDrunk", "_missileLauncherUsed", "_molehillMountainUsed", "_momFoodReceived", "_mrBurnsgerEaten", "_muffinOrderedToday", "_mushroomGardenVisited", "_neverendingPartyToday", "_newYouQuestCompleted", "_olympicSwimmingPool", "_olympicSwimmingPoolItemFound", "_overflowingGiftBasketUsed", "_partyHard", "_pastaAdditive", "_perfectFreezeUsed", "_perfectlyFairCoinUsed", "_petePartyThrown", "_peteRiotIncited", "_photocopyUsed", "_pickyTweezersUsed", "_pingPongGame", "_pirateBellowUsed", "_pirateForkUsed", "_pixelOrbUsed", "_plumbersMushroomStewEaten", "_pneumaticityPotionUsed", "_portableSteamUnitUsed", "_pottedTeaTreeUsed", "_prToday", "_psychoJarFilled", "_psychoJarUsed", "_psychokineticHugUsed", "_rainStickUsed", "_redwoodRainStickUsed", "_replicaSnowconeTomeUsed", "_replicaResolutionLibramUsed", "_replicaSmithsTomeUsed", "_requestSandwichSucceeded", "_rhinestonesAcquired", "_seaJellyHarvested", "_setOfJacksUsed", "_sewingKitUsed", "_sexChanged", "_shadowAffinityToday", "_shadowForestLooted", "_shrubDecorated", "_silverDreadFlaskUsed", "_sitCourseCompleted", "_skateBuff1", "_skateBuff2", "_skateBuff3", "_skateBuff4", "_skateBuff5", "_sleazeAirportToday", "_sobrieTeaUsed", "_softwareGlitchTurnReceived", "_sotParcelReturned", "_spacegateMurderbot", "_spacegateRuins", "_spacegateSpant", "_spacegateToday", "_spacegateVaccine", "_spaghettiBreakfast", "_spaghettiBreakfastEaten", "_spinmasterLatheVisited", "_spinningWheel", "_spookyAirportToday", "_stabonicScrollUsed", "_steelyEyedSquintUsed", "_stenchAirportToday", "_stinkyCheeseBanisherUsed", "_strangeStalagmiteUsed", "_streamsCrossed", "_stuffedPocketwatchUsed", "_styxSprayUsed", "_summonAnnoyanceUsed", "_summonCarrotUsed", "_summonResortPassUsed", "_sweetToothUsed", "_syntheticDogHairPillUsed", "_tacoFlierUsed", "_telegraphOfficeToday", "_templeHiddenPower", "_tempuraAirUsed", "_thesisDelivered", "_timeSpinnerReplicatorUsed", "_toastSummoned", "_tonicDjinn", "_treasuryEliteMeatCollected", "_treasuryHaremMeatCollected", "_trivialAvocationsGame", "_tryptophanDartUsed", "_turtlePowerCast", "_twelveNightEnergyUsed", "_ultraMegaSourBallUsed", "_victorSpoilsUsed", "_villainLairCanLidUsed", "_villainLairColorChoiceUsed", "_villainLairDoorChoiceUsed", "_villainLairFirecrackerUsed", "_villainLairSymbologyChoiceUsed", "_villainLairWebUsed", "_vmaskBanisherUsed", "_voraciTeaUsed", "_volcanoItemRedeemed", "_volcanoSuperduperheatedMetal", "_voteToday", "_VYKEACafeteriaRaided", "_VYKEALoungeRaided", "_walfordQuestStartedToday", "_warbearBankUsed", "_warbearBreakfastMachineUsed", "_warbearGyrocopterUsed", "_warbearSodaMachineUsed", "_wildfireBarrelHarvested", "_witchessBuff", "_workshedItemUsed", "_zombieClover", "_preventScurvy", "lockedItem4637", "lockedItem4638", "lockedItem4639", "lockedItem4646", "lockedItem4647", "unknownRecipe3542", "unknownRecipe3543", "unknownRecipe3544", "unknownRecipe3545", "unknownRecipe3546", "unknownRecipe3547", "unknownRecipe3548", "unknownRecipe3749", "unknownRecipe3751", "unknownRecipe4172", "unknownRecipe4173", "unknownRecipe4174", "unknownRecipe5060", "unknownRecipe5061", "unknownRecipe5062", "unknownRecipe5063", "unknownRecipe5064", "unknownRecipe5066", "unknownRecipe5067", "unknownRecipe5069", "unknownRecipe5070", "unknownRecipe5072", "unknownRecipe5073", "unknownRecipe5670", "unknownRecipe5671", "unknownRecipe6501", "unknownRecipe6564", "unknownRecipe6565", "unknownRecipe6566", "unknownRecipe6567", "unknownRecipe6568", "unknownRecipe6569", "unknownRecipe6570", "unknownRecipe6571", "unknownRecipe6572", "unknownRecipe6573", "unknownRecipe6574", "unknownRecipe6575", "unknownRecipe6576", "unknownRecipe6577", "unknownRecipe6578", "unknownRecipe7752", "unknownRecipe7753", "unknownRecipe7754", "unknownRecipe7755", "unknownRecipe7756", "unknownRecipe7757", "unknownRecipe7758", "unknownRecipe10970", "unknownRecipe10971", "unknownRecipe10972", "unknownRecipe10973", "unknownRecipe10974", "unknownRecipe10975", "unknownRecipe10976", "unknownRecipe10977", "unknownRecipe10978", "unknownRecipe10988", "unknownRecipe10989", "unknownRecipe10990", "unknownRecipe10991", "unknownRecipe10992", "unknownRecipe11000"];
+var numericProperties = ["coinMasterIndex", "dailyDeedsVersion", "defaultDropdown1", "defaultDropdown2", "defaultDropdownSplit", "defaultLimit", "fixedThreadPoolSize", "itemManagerIndex", "lastBuffRequestType", "lastGlobalCounterDay", "lastImageCacheClear", "pingLoginCount", "pingLoginGoal", "pingLoginThreshold", "previousUpdateRevision", "relayDelayForSVN", "relaySkillButtonCount", "scriptButtonPosition", "statusDropdown", "svnThreadPoolSize", "toolbarPosition", "_g9Effect", "8BitBonusTurns", "8BitScore", "addingScrolls", "affirmationCookiesEaten", "aminoAcidsUsed", "antagonisticSnowmanKitCost", "ascensionsToday", "asolDeferredPoints", "asolPointsPigSkinner", "asolPointsCheeseWizard", "asolPointsJazzAgent", "autoAbortThreshold", "autoAntidote", "autoBuyPriceLimit", "autumnatonQuestTurn", "availableCandyCredits", "availableDimes", "availableFunPoints", "availableMrStore2002Credits", "availableQuarters", "availableStoreCredits", "availableSwagger", "averageSwagger", "awolMedicine", "awolPointsBeanslinger", "awolPointsCowpuncher", "awolPointsSnakeoiler", "awolDeferredPointsBeanslinger", "awolDeferredPointsCowpuncher", "awolDeferredPointsSnakeoiler", "awolVenom", "bagOTricksCharges", "ballpitBonus", "bankedKarma", "bartenderTurnsUsed", "basementMallPrices", "basementSafetyMargin", "batmanFundsAvailable", "batmanBonusInitialFunds", "batmanTimeLeft", "bearSwagger", "beeCounter", "beGregariousCharges", "beGregariousFightsLeft", "birdformCold", "birdformHot", "birdformRoc", "birdformSleaze", "birdformSpooky", "birdformStench", "blackBartsBootyCost", "blackPuddingsDefeated", "blackForestProgress", "blankOutUsed", "bloodweiserDrunk", "bondPoints", "bondVillainsDefeated", "boneAbacusVictories", "booPeakProgress", "borisPoints", "breakableHandling", "breakableHandling1964", "breakableHandling9691", "breakableHandling9692", "breakableHandling9699", "breathitinCharges", "brodenBacteria", "brodenSprinkles", "buffBotMessageDisposal", "buffBotPhilanthropyType", "buffJimmyIngredients", "burnoutsDefeated", "burrowgrubSummonsRemaining", "camelSpit", "camerasUsed", "campAwayDecoration", "candyWitchTurnsUsed", "candyWitchCandyTotal", "carboLoading", "catBurglarBankHeists", "cellarLayout", "charitableDonations", "chasmBridgeProgress", "chefTurnsUsed", "chessboardsCleared", "chibiAlignment", "chibiBirthday", "chibiFitness", "chibiIntelligence", "chibiLastVisit", "chibiSocialization", "chilledToTheBone", "cinchoSaltAndLime", "cinderellaMinutesToMidnight", "cinderellaScore", "cocktailSummons", "commerceGhostCombats", "controlPanelOmega", "cornucopiasOpened", "cosmicBowlingBallReturnCombats", "cozyCounter6332", "cozyCounter6333", "cozyCounter6334", "craftingClay", "craftingLeather", "craftingStraw", "crimbo16BeardChakraCleanliness", "crimbo16BootsChakraCleanliness", "crimbo16BungChakraCleanliness", "crimbo16CrimboHatChakraCleanliness", "crimbo16GutsChakraCleanliness", "crimbo16HatChakraCleanliness", "crimbo16JellyChakraCleanliness", "crimbo16LiverChakraCleanliness", "crimbo16NippleChakraCleanliness", "crimbo16NoseChakraCleanliness", "crimbo16ReindeerChakraCleanliness", "crimbo16SackChakraCleanliness", "crimboTrainingSkill", "crimboTreeDays", "cubelingProgress", "currentExtremity", "currentHedgeMazeRoom", "currentMojoFilters", "currentNunneryMeat", "currentPortalEnergy", "currentReplicaStoreYear", "cursedMagnifyingGlassCount", "cyrptAlcoveEvilness", "cyrptCrannyEvilness", "cyrptNicheEvilness", "cyrptNookEvilness", "cyrptTotalEvilness", "darkGyfftePoints", "daycareEquipment", "daycareInstructors", "daycareLastScavenge", "daycareToddlers", "dbNemesisSkill1", "dbNemesisSkill2", "dbNemesisSkill3", "desertExploration", "desktopHeight", "desktopWidth", "dinseyFilthLevel", "dinseyFunProgress", "dinseyNastyBearsDefeated", "dinseySocialJusticeIProgress", "dinseySocialJusticeIIProgress", "dinseyTouristsFed", "dinseyToxicMultiplier", "doctorBagQuestLights", "doctorBagUpgrades", "dreadScroll1", "dreadScroll2", "dreadScroll3", "dreadScroll4", "dreadScroll5", "dreadScroll6", "dreadScroll7", "dreadScroll8", "dripAdventuresSinceAscension", "drippingHallAdventuresSinceAscension", "drippingTreesAdventuresSinceAscension", "drippyBatsUnlocked", "drippyJuice", "drippyOrbsClaimed", "drunkenSwagger", "edDefeatAbort", "edPoints", "eldritchTentaclesFought", "electricKoolAidEaten", "elfGratitude", "encountersUntilDMTChoice", "encountersUntilNEPChoice", "encountersUntilSRChoice", "ensorceleeLevel", "entauntaunedColdRes", "essenceOfAnnoyanceCost", "essenceOfBearCost", "extraRolloverAdventures", "falloutShelterLevel", "familiarSweat", "fingernailsClipped", "fistSkillsKnown", "flyeredML", "fossilB", "fossilD", "fossilN", "fossilP", "fossilS", "fossilW", "fratboysDefeated", "frenchGuardTurtlesFreed", "funGuyMansionKills", "garbageChampagneCharge", "garbageFireProgress", "garbageShirtCharge", "garbageTreeCharge", "garlandUpgrades", "getsYouDrunkTurnsLeft", "ghostPepperTurnsLeft", "gingerDigCount", "gingerLawChoice", "gingerMuscleChoice", "gingerTrainScheduleStudies", "gladiatorBallMovesKnown", "gladiatorBladeMovesKnown", "gladiatorNetMovesKnown", "glitchItemCost", "glitchItemImplementationCount", "glitchItemImplementationLevel", "glitchSwagger", "gloverPoints", "gnasirProgress", "goldenMrAccessories", "gongPath", "gooseDronesRemaining", "goreCollected", "gourdItemCount", "greyYouPoints", "grimoire1Summons", "grimoire2Summons", "grimoire3Summons", "grimstoneCharge", "guardTurtlesFreed", "guideToSafariCost", "guyMadeOfBeesCount", "guzzlrBronzeDeliveries", "guzzlrDeliveryProgress", "guzzlrGoldDeliveries", "guzzlrPlatinumDeliveries", "haciendaLayout", "hallowiener8BitRealm", "hallowienerCoinspiracy", "hareMillisecondsSaved", "hareTurnsUsed", "heavyRainsStartingThunder", "heavyRainsStartingRain", "heavyRainsStartingLightning", "heroDonationBoris", "heroDonationJarlsberg", "heroDonationSneakyPete", "hiddenApartmentProgress", "hiddenBowlingAlleyProgress", "hiddenHospitalProgress", "hiddenOfficeProgress", "hiddenTavernUnlock", "highTopPumped", "hippiesDefeated", "holidayHalsBookCost", "holidaySwagger", "homemadeRobotUpgrades", "homebodylCharges", "hpAutoRecovery", "hpAutoRecoveryTarget", "iceSwagger", "jarlsbergPoints", "jungCharge", "junglePuns", "knownAscensions", "kolhsTotalSchoolSpirited", "lastAnticheeseDay", "lastArcadeAscension", "lastBadMoonReset", "lastBangPotionReset", "lastBattlefieldReset", "lastBeardBuff", "lastBreakfast", "lastCartographyBooPeak", "lastCartographyCastleTop", "lastCartographyDarkNeck", "lastCartographyDefiledNook", "lastCartographyFratHouse", "lastCartographyFratHouseVerge", "lastCartographyGuanoJunction", "lastCartographyHauntedBilliards", "lastCartographyHippyCampVerge", "lastCartographyZeppelinProtesters", "lastCastleGroundUnlock", "lastCastleTopUnlock", "lastCellarReset", "lastChanceThreshold", "lastChasmReset", "lastColosseumRoundWon", "lastCouncilVisit", "lastCounterDay", "lastDesertUnlock", "lastDispensaryOpen", "lastDMTDuplication", "lastDwarfFactoryReset", "lastEVHelmetValue", "lastEVHelmetReset", "lastEmptiedStorage", "lastFilthClearance", "lastGoofballBuy", "lastGuildStoreOpen", "lastGuyMadeOfBeesReset", "lastFratboyCall", "lastFriarCeremonyAscension", "lastFriarsElbowNC", "lastFriarsHeartNC", "lastFriarsNeckNC", "lastHippyCall", "lastIslandUnlock", "lastKeyotronUse", "lastKingLiberation", "lastLightsOutTurn", "lastMushroomPlot", "lastMiningReset", "lastNemesisReset", "lastPaperStripReset", "lastPirateEphemeraReset", "lastPirateInsultReset", "lastPlusSignUnlock", "lastQuartetAscension", "lastQuartetRequest", "lastSecondFloorUnlock", "lastShadowForgeUnlockAdventure", "lastSkateParkReset", "lastStillBeatingSpleen", "lastTavernAscension", "lastTavernSquare", "lastTelescopeReset", "lastTempleAdventures", "lastTempleButtonsUnlock", "lastTempleUnlock", "lastThingWithNoNameDefeated", "lastTowelAscension", "lastTr4pz0rQuest", "lastTrainsetConfiguration", "lastVioletFogMap", "lastVoteMonsterTurn", "lastWartDinseyDefeated", "lastWuTangDefeated", "lastYearbookCameraAscension", "lastZapperWand", "lastZapperWandExplosionDay", "lawOfAveragesCost", "legacyPoints", "libramSummons", "lightsOutAutomation", "louvreDesiredGoal", "louvreGoal", "lovebugsAridDesert", "lovebugsBeachBuck", "lovebugsBooze", "lovebugsChroner", "lovebugsCoinspiracy", "lovebugsCyrpt", "lovebugsFreddy", "lovebugsFunFunds", "lovebugsHoboNickel", "lovebugsItemDrop", "lovebugsMeat", "lovebugsMeatDrop", "lovebugsMoxie", "lovebugsMuscle", "lovebugsMysticality", "lovebugsOilPeak", "lovebugsOrcChasm", "lovebugsPowder", "lovebugsWalmart", "lttQuestDifficulty", "lttQuestStageCount", "manaBurnSummonThreshold", "manaBurningThreshold", "manaBurningTrigger", "manorDrawerCount", "manualOfNumberologyCost", "mapToKokomoCost", "masksUnlocked", "maximizerMRUSize", "maximizerCombinationLimit", "maximizerEquipmentLevel", "maximizerEquipmentScope", "maximizerMaxPrice", "maximizerPriceLevel", "maxManaBurn", "mayflyExperience", "mayoLevel", "meansuckerPrice", "merkinVocabularyMastery", "miniAdvClass", "miniMartinisDrunk", "moleTunnelLevel", "mothershipProgress", "mpAutoRecovery", "mpAutoRecoveryTarget", "munchiesPillsUsed", "mushroomGardenCropLevel", "nextParanormalActivity", "nextQuantumFamiliarOwnerId", "nextQuantumFamiliarTurn", "noobPoints", "noobDeferredPoints", "noodleSummons", "nsContestants1", "nsContestants2", "nsContestants3", "nuclearAutumnPoints", "numericSwagger", "nunsVisits", "oilPeakProgress", "optimalSwagger", "optimisticCandleProgress", "palindomeDudesDefeated", "parasolUsed", "pendingMapReflections", "pingpongSkill", "pirateSwagger", "plantingDay", "plumberBadgeCost", "plumberCostumeCost", "plumberPoints", "poolSharkCount", "poolSkill", "primaryLabGooIntensity", "prismaticSummons", "procrastinatorLanguageFluency", "promptAboutCrafting", "puzzleChampBonus", "pyramidPosition", "rockinRobinProgress", "ROMOfOptimalityCost", "quantumPoints", "reagentSummons", "reanimatorArms", "reanimatorLegs", "reanimatorSkulls", "reanimatorWeirdParts", "reanimatorWings", "recentLocations", "redSnapperProgress", "relayPort", "relocatePygmyJanitor", "relocatePygmyLawyer", "rumpelstiltskinTurnsUsed", "rumpelstiltskinKidsRescued", "safariSwagger", "sausageGrinderUnits", "schoolOfHardKnocksDiplomaCost", "schoolSwagger", "scrapbookCharges", "scriptMRULength", "seaodesFound", "SeasoningSwagger", "sexChanges", "shenInitiationDay", "shockingLickCharges", "singleFamiliarRun", "skillBurn3", "skillBurn90", "skillBurn153", "skillBurn154", "skillBurn155", "skillBurn1019", "skillBurn5017", "skillBurn6014", "skillBurn6015", "skillBurn6016", "skillBurn6020", "skillBurn6021", "skillBurn6022", "skillBurn6023", "skillBurn6024", "skillBurn6026", "skillBurn6028", "skillBurn7323", "skillBurn14008", "skillBurn14028", "skillBurn14038", "skillBurn15011", "skillBurn15028", "skillBurn17005", "skillBurn22034", "skillBurn22035", "skillBurn23301", "skillBurn23302", "skillBurn23303", "skillBurn23304", "skillBurn23305", "skillBurn23306", "skillLevel46", "skillLevel47", "skillLevel48", "skillLevel117", "skillLevel118", "skillLevel121", "skillLevel128", "skillLevel134", "skillLevel144", "skillLevel180", "skillLevel188", "skillLevel7254", "slimelingFullness", "slimelingStacksDropped", "slimelingStacksDue", "smoresEaten", "smutOrcNoncombatProgress", "sneakyPetePoints", "snojoMoxieWins", "snojoMuscleWins", "snojoMysticalityWins", "sourceAgentsDefeated", "sourceEnlightenment", "sourceInterval", "sourcePoints", "sourceTerminalGram", "sourceTerminalPram", "sourceTerminalSpam", "spaceBabyLanguageFluency", "spacePirateLanguageFluency", "spelunkyNextNoncombat", "spelunkySacrifices", "spelunkyWinCount", "spookyPuttyCopiesMade", "spookyVHSTapeMonsterTurn", "statbotUses", "sugarCounter4178", "sugarCounter4179", "sugarCounter4180", "sugarCounter4181", "sugarCounter4182", "sugarCounter4183", "sugarCounter4191", "summonAnnoyanceCost", "sweat", "tacoDanCocktailSauce", "tacoDanFishMeat", "tavernLayout", "telescopeUpgrades", "tempuraSummons", "timeSpinnerMedals", "timesRested", "tomeSummons", "totalCharitableDonations", "trainsetPosition", "turtleBlessingTurns", "twinPeakProgress", "twoCRSPoints", "unicornHornInflation", "universalSeasoningCost", "usable1HWeapons", "usable1xAccs", "usable2HWeapons", "usable3HWeapons", "usableAccessories", "usableHats", "usableOffhands", "usableOther", "usablePants", "usableShirts", "valueOfAdventure", "valueOfInventory", "valueOfStill", "valueOfTome", "vintnerCharge", "vintnerWineLevel", "violetFogGoal", "walfordBucketProgress", "warehouseProgress", "welcomeBackAdv", "whetstonesUsed", "wolfPigsEvicted", "wolfTurnsUsed", "writingDesksDefeated", "xoSkeleltonXProgress", "xoSkeleltonOProgress", "yearbookCameraAscensions", "yearbookCameraUpgrades", "youRobotBody", "youRobotBottom", "youRobotLeft", "youRobotPoints", "youRobotRight", "youRobotTop", "zeppelinProtestors", "zigguratLianas", "zombiePoints", "_absintheDrops", "_abstractionDropsCrown", "_aguaDrops", "_xenomorphCharge", "_ancestralRecallCasts", "_antihangoverBonus", "_astralDrops", "_autumnatonQuests", "_backUpUses", "_badlyRomanticArrows", "_badgerCharge", "_balefulHowlUses", "_banderRunaways", "_bastilleCheese", "_bastilleGames", "_bastilleGameTurn", "_bastilleLastCheese", "_beanCannonUses", "_bearHugs", "_beerLensDrops", "_bellydancerPickpockets", "_benettonsCasts", "_birdsSoughtToday", "_boomBoxFights", "_boomBoxSongsLeft", "_bootStomps", "_boxingGloveArrows", "_brickoEyeSummons", "_brickoFights", "_campAwayCloudBuffs", "_campAwaySmileBuffs", "_candySummons", "_captainHagnkUsed", "_carnieCandyDrops", "_carrotNoseDrops", "_catBurglarCharge", "_catBurglarHeistsComplete", "_cheerleaderSteam", "_chestXRayUsed", "_chibiAdventures", "_chipBags", "_chocolateCigarsUsed", "_chocolateCoveredPingPongBallsUsed", "_chocolateSculpturesUsed", "_chocolatesUsed", "_chronolithActivations", "_chronolithNextCost", "_cinchUsed", "_cinchoRests", "_clanFortuneConsultUses", "_clipartSummons", "_cloversPurchased", "_coldMedicineConsults", "_coldMedicineEquipmentTaken", "_companionshipCasts", "_cookbookbatCrafting", "_cosmicBowlingSkillsUsed", "_crimbo21ColdResistance", "_dailySpecialPrice", "_daycareGymScavenges", "_daycareRecruits", "_deckCardsDrawn", "_deluxeKlawSummons", "_demandSandwich", "_detectiveCasesCompleted", "_disavowed", "_dnaPotionsMade", "_donhosCasts", "_douseFoeUses", "_dreamJarDrops", "_drunkPygmyBanishes", "_edDefeats", "_edLashCount", "_elronsCasts", "_enamorangs", "_energyCollected", "_expertCornerCutterUsed", "_favorRareSummons", "_feastUsed", "_feelinTheRhythm", "_feelPrideUsed", "_feelExcitementUsed", "_feelHatredUsed", "_feelLonelyUsed", "_feelNervousUsed", "_feelEnvyUsed", "_feelDisappointedUsed", "_feelSuperiorUsed", "_feelLostUsed", "_feelNostalgicUsed", "_feelPeacefulUsed", "_fingertrapArrows", "_fireExtinguisherCharge", "_fragrantHerbsUsed", "_freeBeachWalksUsed", "_frButtonsPressed", "_fudgeWaspFights", "_gapBuffs", "_garbageFireDrops", "_garbageFireDropsCrown", "_genieFightsUsed", "_genieWishesUsed", "_gibbererAdv", "_gibbererCharge", "_gingerbreadCityTurns", "_glarkCableUses", "_glitchMonsterFights", "_gnomeAdv", "_godLobsterFights", "_goldenMoneyCharge", "_gongDrops", "_gothKidCharge", "_gothKidFights", "_greyYouAdventures", "_grimBrotherCharge", "_grimFairyTaleDrops", "_grimFairyTaleDropsCrown", "_grimoireConfiscatorSummons", "_grimoireGeekySummons", "_grimstoneMaskDrops", "_grimstoneMaskDropsCrown", "_grooseCharge", "_grooseDrops", "_grubbyWoolDrops", "_guzzlrDeliveries", "_guzzlrGoldDeliveries", "_guzzlrPlatinumDeliveries", "_hareAdv", "_hareCharge", "_highTopPumps", "_hipsterAdv", "_hoardedCandyDropsCrown", "_hoboUnderlingSummons", "_holoWristDrops", "_holoWristProgress", "_hotAshesDrops", "_hotJellyUses", "_hotTubSoaks", "_humanMuskUses", "_iceballUses", "_inigosCasts", "_jerksHealthMagazinesUsed", "_jiggleCheese", "_jiggleCream", "_jiggleLife", "_jiggleSteak", "_jitbCharge", "_juneCleaverFightsLeft", "_juneCleaverEncounters", "_juneCleaverStench", "_juneCleaverSpooky", "_juneCleaverSleaze", "_juneCleaverHot", "_juneCleaverCold", "_juneCleaverSkips", "_jungDrops", "_kgbClicksUsed", "_kgbDispenserUses", "_kgbTranquilizerDartUses", "_klawSummons", "_kloopCharge", "_kloopDrops", "_kolhsAdventures", "_kolhsSavedByTheBell", "_lastDailyDungeonRoom", "_lastSausageMonsterTurn", "_lastZomboEye", "_latteRefillsUsed", "_leafblowerML", "_legionJackhammerCrafting", "_llamaCharge", "_longConUsed", "_lovebugsBeachBuck", "_lovebugsChroner", "_lovebugsCoinspiracy", "_lovebugsFreddy", "_lovebugsFunFunds", "_lovebugsHoboNickel", "_lovebugsWalmart", "_loveChocolatesUsed", "_lynyrdSnareUses", "_machineTunnelsAdv", "_macrometeoriteUses", "_mafiaThumbRingAdvs", "_mayflowerDrops", "_mayflySummons", "_mediumSiphons", "_meteoriteAdesUsed", "_meteorShowerUses", "_micrometeoriteUses", "_miniMartiniDrops", "_monkeyPawWishesUsed", "_monstersMapped", "_mushroomGardenFights", "_nanorhinoCharge", "_navelRunaways", "_neverendingPartyFreeTurns", "_newYouQuestSharpensDone", "_newYouQuestSharpensToDo", "_nextColdMedicineConsult", "_nextQuantumAlignment", "_nightmareFuelCharges", "_noobSkillCount", "_nuclearStockpileUsed", "_oilExtracted", "_olfactionsUsed", "_optimisticCandleDropsCrown", "_oreDropsCrown", "_otoscopeUsed", "_oysterEggsFound", "_pantsgivingBanish", "_pantsgivingCount", "_pantsgivingCrumbs", "_pantsgivingFullness", "_pasteDrops", "_peteJukeboxFixed", "_peteJumpedShark", "_petePeeledOut", "_pieDrops", "_piePartsCount", "_pixieCharge", "_pocketProfessorLectures", "_poisonArrows", "_pokeGrowFertilizerDrops", "_poolGames", "_powderedGoldDrops", "_powderedMadnessUses", "_powerfulGloveBatteryPowerUsed", "_powerPillDrops", "_powerPillUses", "_precisionCasts", "_radlibSummons", "_raindohCopiesMade", "_rapidPrototypingUsed", "_raveStealCount", "_reflexHammerUsed", "_resolutionAdv", "_resolutionRareSummons", "_riftletAdv", "_robinEggDrops", "_roboDrops", "_rogueProgramCharge", "_romanticFightsLeft", "_saberForceMonsterCount", "_saberForceUses", "_saberMod", "_saltGrainsConsumed", "_sandwormCharge", "_saplingsPlanted", "_sausageFights", "_sausagesEaten", "_sausagesMade", "_sealFigurineUses", "_sealScreeches", "_sealsSummoned", "_shadowBricksUsed", "_shadowRiftCombats", "_shatteringPunchUsed", "_shortOrderCookCharge", "_shrubCharge", "_sloppyDinerBeachBucks", "_smilesOfMrA", "_smithsnessSummons", "_snojoFreeFights", "_snojoParts", "_snokebombUsed", "_snowconeSummons", "_snowglobeDrops", "_snowSuitCount", "_sourceTerminalDigitizeMonsterCount", "_sourceTerminalDigitizeUses", "_sourceTerminalDuplicateUses", "_sourceTerminalEnhanceUses", "_sourceTerminalExtrudes", "_sourceTerminalPortscanUses", "_spaceFurDropsCrown", "_spacegatePlanetIndex", "_spacegateTurnsLeft", "_spaceJellyfishDrops", "_speakeasyDrinksDrunk", "_speakeasyFreeFights", "_spelunkerCharges", "_spelunkingTalesDrops", "_spikolodonSpikeUses", "_spookyJellyUses", "_stackLumpsUses", "_steamCardDrops", "_stickerSummons", "_stinkyCheeseCount", "_stressBallSqueezes", "_sugarSummons", "_sweatOutSomeBoozeUsed", "_taffyRareSummons", "_taffyYellowSummons", "_thanksgettingFoodsEaten", "_thingfinderCasts", "_thinknerdPackageDrops", "_thorsPliersCrafting", "_timeHelmetAdv", "_timeSpinnerMinutesUsed", "_tokenDrops", "_transponderDrops", "_turkeyBlastersUsed", "_turkeyBooze", "_turkeyMuscle", "_turkeyMyst", "_turkeyMoxie", "_unaccompaniedMinerUsed", "_unconsciousCollectiveCharge", "_universalSeasoningsUsed", "_universeCalculated", "_universeImploded", "_usedReplicaBatoomerang", "_vampyreCloakeFormUses", "_villainLairProgress", "_vitachocCapsulesUsed", "_vmaskAdv", "_voidFreeFights", "_volcanoItem1", "_volcanoItem2", "_volcanoItem3", "_volcanoItemCount1", "_volcanoItemCount2", "_volcanoItemCount3", "_voteFreeFights", "_VYKEACompanionLevel", "_warbearAutoAnvilCrafting", "_waxGlobDrops", "_whiteRiceDrops", "_witchessFights", "_xoHugsUsed", "_yellowPixelDropsCrown", "_zapCount", "_zombieSmashPocketsUsed"];
+var monsterProperties = ["beGregariousMonster", "cameraMonster", "chateauMonster", "clumsinessGroveBoss", "crappyCameraMonster", "crudeMonster", "enamorangMonster", "envyfishMonster", "glacierOfJerksBoss", "iceSculptureMonster", "lastCopyableMonster", "longConMonster", "maelstromOfLoversBoss", "makeFriendsMonster", "merkinLockkeyMonster", "monkeyPointMonster", "motifMonster", "nosyNoseMonster", "olfactedMonster", "photocopyMonster", "rainDohMonster", "romanticTarget", "rufusDesiredEntity", "screencappedMonster", "spookyPuttyMonster", "spookyVHSTapeMonster", "stenchCursedMonster", "superficiallyInterestedMonster", "waxMonster", "yearbookCameraTarget", "_gallapagosMonster", "_jiggleCreamedMonster", "_latteMonster", "_nanorhinoBanishedMonster", "_newYouQuestMonster", "_relativityMonster", "_saberForceMonster", "_sourceTerminalDigitizeMonster", "_voteMonster"];
 var locationProperties = ["autumnatonQuestLocation", "currentJunkyardLocation", "doctorBagQuestLocation", "ghostLocation", "guzzlrQuestLocation", "nextSpookyravenElizabethRoom", "nextSpookyravenStephenRoom", "sourceOracleTarget", "_floundryBassLocation", "_floundryCarpLocation", "_floundryCodLocation", "_floundryHatchetfishLocation", "_floundryTroutLocation", "_floundryTunaLocation", "_sotParcelLocation"];
-var stringProperties = ["autoLogin", "browserBookmarks", "chatFontSize", "combatHotkey0", "combatHotkey1", "combatHotkey2", "combatHotkey3", "combatHotkey4", "combatHotkey5", "combatHotkey6", "combatHotkey7", "combatHotkey8", "combatHotkey9", "commandLineNamespace", "dailyDeedsOptions", "defaultBorderColor", "displayName", "externalEditor", "getBreakfast", "headerStates", "highlightList", "http.proxyHost", "http.proxyPassword", "http.proxyPort", "http.proxyUser", "https.proxyHost", "https.proxyPassword", "https.proxyPort", "https.proxyUser", "initialDesktop", "initialFrames", "lastRelayUpdate", "lastUserAgent", "lastUsername", "logPreferenceChangeFilter", "loginScript", "loginServerName", "loginWindowLogo", "logoutScript", "previousNotifyList", "previousUpdateVersion", "saveState", "saveStateActive", "scriptList", "swingLookAndFeel", "userAgent", "8BitColor", "afterAdventureScript", "autoOlfact", "autoPutty", "autumnatonUpgrades", "backupCameraMode", "banishedMonsters", "banishingShoutMonsters", "batmanStats", "batmanZone", "batmanUpgrades", "battleAction", "beachHeadsUnlocked", "beforePVPScript", "betweenBattleScript", "boomBoxSong", "breakfastAlways", "breakfastHardcore", "breakfastSoftcore", "buffBotCasting", "buyScript", "cargoPocketsEmptied", "cargoPocketScraps", "chatbotScript", "chatPlayerScript", "choiceAdventureScript", "chosenTrip", "clanFortuneReply1", "clanFortuneReply2", "clanFortuneReply3", "clanFortuneWord1", "clanFortuneWord2", "clanFortuneWord3", "commerceGhostItem", "counterScript", "copperheadClubHazard", "crimbotChassis", "crimbotArm", "crimbotPropulsion", "crystalBallPredictions", "csServicesPerformed", "currentAstralTrip", "currentDistillateMods", "currentEasyBountyItem", "currentHardBountyItem", "currentHippyStore", "currentJunkyardTool", "currentLlamaForm", "currentMood", "currentPVPSeason", "currentPvpVictories", "currentSpecialBountyItem", "currentSITSkill", "customCombatScript", "cyrusAdjectives", "defaultFlowerLossMessage", "defaultFlowerWinMessage", "demonName1", "demonName2", "demonName3", "demonName4", "demonName5", "demonName6", "demonName7", "demonName8", "demonName9", "demonName10", "demonName11", "demonName12", "demonName13", "dinseyGatorStenchDamage", "dinseyRollercoasterStats", "doctorBagQuestItem", "dolphinItem", "duckAreasCleared", "duckAreasSelected", "edPiece", "enamorangMonsterTurn", "ensorcelee", "EVEDirections", "extraCosmeticModifiers", "familiarScript", "forbiddenStores", "gameProBossSpecialPower", "gooseReprocessed", "grimoireSkillsHardcore", "grimoireSkillsSoftcore", "grimstoneMaskPath", "guzzlrQuestClient", "guzzlrQuestBooze", "guzzlrQuestTier", "harvestGardenHardcore", "harvestGardenSoftcore", "hpAutoRecoveryItems", "invalidBuffMessage", "jickSwordModifier", "juneCleaverQueue", "kingLiberatedScript", "lassoTraining", "lastAdventure", "lastBangPotion819", "lastBangPotion820", "lastBangPotion821", "lastBangPotion822", "lastBangPotion823", "lastBangPotion824", "lastBangPotion825", "lastBangPotion826", "lastBangPotion827", "lastChanceBurn", "lastChessboard", "lastCombatEnvironments", "lastDwarfDiceRolls", "lastDwarfDigitRunes", "lastDwarfEquipmentRunes", "lastDwarfFactoryItem118", "lastDwarfFactoryItem119", "lastDwarfFactoryItem120", "lastDwarfFactoryItem360", "lastDwarfFactoryItem361", "lastDwarfFactoryItem362", "lastDwarfFactoryItem363", "lastDwarfFactoryItem364", "lastDwarfFactoryItem365", "lastDwarfFactoryItem910", "lastDwarfFactoryItem3199", "lastDwarfOfficeItem3208", "lastDwarfOfficeItem3209", "lastDwarfOfficeItem3210", "lastDwarfOfficeItem3211", "lastDwarfOfficeItem3212", "lastDwarfOfficeItem3213", "lastDwarfOfficeItem3214", "lastDwarfOreRunes", "lastDwarfHopper1", "lastDwarfHopper2", "lastDwarfHopper3", "lastDwarfHopper4", "lastEncounter", "lastMacroError", "lastMessageId", "lastPaperStrip3144", "lastPaperStrip4138", "lastPaperStrip4139", "lastPaperStrip4140", "lastPaperStrip4141", "lastPaperStrip4142", "lastPaperStrip4143", "lastPaperStrip4144", "lastPirateEphemera", "lastPorkoBoard", "lastPorkoPayouts", "lastPorkoExpected", "lastSlimeVial3885", "lastSlimeVial3886", "lastSlimeVial3887", "lastSlimeVial3888", "lastSlimeVial3889", "lastSlimeVial3890", "lastSlimeVial3891", "lastSlimeVial3892", "lastSlimeVial3893", "lastSlimeVial3894", "lastSlimeVial3895", "lastSlimeVial3896", "latteIngredients", "latteModifier", "latteUnlocks", "libramSkillsHardcore", "libramSkillsSoftcore", "louvreOverride", "lovePotion", "lttQuestName", "maximizerList", "maximizerMRUList", "mayoInMouth", "mayoMinderSetting", "merkinQuestPath", "mineLayout1", "mineLayout2", "mineLayout3", "mineLayout4", "mineLayout5", "mineLayout6", "mpAutoRecoveryItems", "muffinOnOrder", "nextAdventure", "nextDistillateMods", "nextQuantumFamiliarName", "nextQuantumFamiliarOwner", "nsChallenge2", "nsChallenge3", "nsChallenge4", "nsChallenge5", "nsTowerDoorKeysUsed", "oceanAction", "oceanDestination", "parkaMode", "pastaThrall1", "pastaThrall2", "pastaThrall3", "pastaThrall4", "pastaThrall5", "pastaThrall6", "pastaThrall7", "pastaThrall8", "peteMotorbikeTires", "peteMotorbikeGasTank", "peteMotorbikeHeadlight", "peteMotorbikeCowling", "peteMotorbikeMuffler", "peteMotorbikeSeat", "pieStuffing", "plantingDate", "plantingLength", "plantingScript", "plumberCostumeWorn", "pokefamBoosts", "postAscensionScript", "preAscensionScript", "retroCapeSuperhero", "retroCapeWashingInstructions", "questClumsinessGrove", "questDoctorBag", "questECoBucket", "questESlAudit", "questESlBacteria", "questESlCheeseburger", "questESlCocktail", "questESlDebt", "questESlFish", "questESlMushStash", "questESlSalt", "questESlSprinkles", "questESpEVE", "questESpJunglePun", "questESpGore", "questESpClipper", "questESpFakeMedium", "questESpSerum", "questESpSmokes", "questESpOutOfOrder", "questEStFishTrash", "questEStGiveMeFuel", "questEStNastyBears", "questEStSocialJusticeI", "questEStSocialJusticeII", "questEStSuperLuber", "questEStWorkWithFood", "questEStZippityDooDah", "questEUNewYou", "questF01Primordial", "questF02Hyboria", "questF03Future", "questF04Elves", "questF05Clancy", "questG01Meatcar", "questG02Whitecastle", "questG03Ego", "questG04Nemesis", "questG05Dark", "questG06Delivery", "questG07Myst", "questG08Moxie", "questG09Muscle", "questGlacierOfJerks", "questGuzzlr", "questI01Scapegoat", "questI02Beat", "questL02Larva", "questL03Rat", "questL04Bat", "questL05Goblin", "questL06Friar", "questL07Cyrptic", "questL08Trapper", "questL09Topping", "questL10Garbage", "questL11MacGuffin", "questL11Black", "questL11Business", "questL11Curses", "questL11Desert", "questL11Doctor", "questL11Manor", "questL11Palindome", "questL11Pyramid", "questL11Ron", "questL11Shen", "questL11Spare", "questL11Worship", "questL12War", "questL12HippyFrat", "questL13Final", "questL13Warehouse", "questLTTQuestByWire", "questM01Untinker", "questM02Artist", "questM03Bugbear", "questM05Toot", "questM06Gourd", "questM07Hammer", "questM08Baker", "questM09Rocks", "questM10Azazel", "questM11Postal", "questM12Pirate", "questM13Escape", "questM14Bounty", "questM15Lol", "questM16Temple", "questM17Babies", "questM18Swamp", "questM19Hippy", "questM20Necklace", "questM21Dance", "questM22Shirt", "questM23Meatsmith", "questM24Doc", "questM25Armorer", "questM26Oracle", "questMaelstromOfLovers", "questPAGhost", "questRufus", "questS01OldGuy", "questS02Monkees", "raveCombo1", "raveCombo2", "raveCombo3", "raveCombo4", "raveCombo5", "raveCombo6", "recoveryScript", "relayCounters", "royalty", "rufusDesiredArtifact", "rufusDesiredEntity", "rufusDesiredItems", "rufusQuestTarget", "rufusQuestType", "scriptMRUList", "seahorseName", "shadowLabyrinthGoal", "shadowRiftIngress", "shenQuestItem", "shrubGarland", "shrubGifts", "shrubLights", "shrubTopper", "sideDefeated", "sidequestArenaCompleted", "sidequestFarmCompleted", "sidequestJunkyardCompleted", "sidequestLighthouseCompleted", "sidequestNunsCompleted", "sidequestOrchardCompleted", "skateParkStatus", "snowsuit", "sourceTerminalChips", "sourceTerminalEducate1", "sourceTerminalEducate2", "sourceTerminalEnquiry", "sourceTerminalEducateKnown", "sourceTerminalEnhanceKnown", "sourceTerminalEnquiryKnown", "sourceTerminalExtrudeKnown", "spadingData", "spadingScript", "speakeasyName", "spelunkyStatus", "spelunkyUpgrades", "spookyravenRecipeUsed", "stationaryButton1", "stationaryButton2", "stationaryButton3", "stationaryButton4", "stationaryButton5", "streamCrossDefaultTarget", "sweetSynthesisBlacklist", "telescope1", "telescope2", "telescope3", "telescope4", "telescope5", "testudinalTeachings", "textColors", "thanksMessage", "tomeSkillsHardcore", "tomeSkillsSoftcore", "trackVoteMonster", "trainsetConfiguration", "trapperOre", "umbrellaState", "umdLastObtained", "vintnerWineEffect", "vintnerWineName", "vintnerWineType", "violetFogLayout", "volcanoMaze1", "volcanoMaze2", "volcanoMaze3", "volcanoMaze4", "volcanoMaze5", "walfordBucketItem", "warProgress", "watchedPreferences", "workteaClue", "yourFavoriteBird", "yourFavoriteBirdMods", "youRobotCPUUpgrades", "_bastilleBoosts", "_bastilleChoice1", "_bastilleChoice2", "_bastilleChoice3", "_bastilleCurrentStyles", "_bastilleEnemyCastle", "_bastilleEnemyName", "_bastilleLastBattleResults", "_bastilleLastEncounter", "_bastilleStats", "_beachHeadsUsed", "_beachLayout", "_beachMinutes", "_birdOfTheDay", "_birdOfTheDayMods", "_bittycar", "_campAwaySmileBuffSign", "_cloudTalkMessage", "_cloudTalkSmoker", "_coatOfPaintModifier", "_dailySpecial", "_deckCardsSeen", "_feastedFamiliars", "_floristPlantsUsed", "_frAreasUnlocked", "_frHoursLeft", "_frMonstersKilled", "_horsery", "_horseryCrazyMox", "_horseryCrazyMus", "_horseryCrazyMys", "_horseryCrazyName", "_horseryCurrentName", "_horseryDarkName", "_horseryNormalName", "_horseryPaleName", "_jickJarAvailable", "_jiggleCheesedMonsters", "_lastCombatStarted", "_LastPirateRealmIsland", "_locketMonstersFought", "_mummeryMods", "_mummeryUses", "_newYouQuestSkill", "_noHatModifier", "_pantogramModifier", "_pottedPowerPlant", "_questESp", "_questPartyFair", "_questPartyFairProgress", "_questPartyFairQuest", "_roboDrinks", "_roninStoragePulls", "_sotParcelReturned  false", "_spacegateAnimalLife", "_spacegateCoordinates", "_spacegateGear", "_spacegateHazards", "_spacegateIntelligentLife", "_spacegatePlanetName", "_spacegatePlantLife", "_stolenAccordions", "_tempRelayCounters", "_timeSpinnerFoodAvailable", "_unknownEasyBountyItem", "_unknownHardBountyItem", "_unknownSpecialBountyItem", "_untakenEasyBountyItem", "_untakenHardBountyItem", "_untakenSpecialBountyItem", "_userMods", "_villainLairColor", "_villainLairKey", "_voteLocal1", "_voteLocal2", "_voteLocal3", "_voteLocal4", "_voteMonster1", "_voteMonster2", "_voteModifier", "_VYKEACompanionType", "_VYKEACompanionRune", "_VYKEACompanionName"];
-var numericOrStringProperties = ["statusEngineering", "statusGalley", "statusMedbay", "statusMorgue", "statusNavigation", "statusScienceLab", "statusSonar", "statusSpecialOps", "statusWasteProcessing", "choiceAdventure2", "choiceAdventure3", "choiceAdventure4", "choiceAdventure5", "choiceAdventure6", "choiceAdventure7", "choiceAdventure8", "choiceAdventure9", "choiceAdventure10", "choiceAdventure11", "choiceAdventure12", "choiceAdventure14", "choiceAdventure15", "choiceAdventure16", "choiceAdventure17", "choiceAdventure18", "choiceAdventure19", "choiceAdventure20", "choiceAdventure21", "choiceAdventure22", "choiceAdventure23", "choiceAdventure24", "choiceAdventure25", "choiceAdventure26", "choiceAdventure27", "choiceAdventure28", "choiceAdventure29", "choiceAdventure40", "choiceAdventure41", "choiceAdventure42", "choiceAdventure45", "choiceAdventure46", "choiceAdventure47", "choiceAdventure71", "choiceAdventure72", "choiceAdventure73", "choiceAdventure74", "choiceAdventure75", "choiceAdventure76", "choiceAdventure77", "choiceAdventure86", "choiceAdventure87", "choiceAdventure88", "choiceAdventure89", "choiceAdventure90", "choiceAdventure91", "choiceAdventure105", "choiceAdventure106", "choiceAdventure107", "choiceAdventure108", "choiceAdventure109", "choiceAdventure110", "choiceAdventure111", "choiceAdventure112", "choiceAdventure113", "choiceAdventure114", "choiceAdventure115", "choiceAdventure116", "choiceAdventure117", "choiceAdventure118", "choiceAdventure120", "choiceAdventure123", "choiceAdventure125", "choiceAdventure126", "choiceAdventure127", "choiceAdventure129", "choiceAdventure131", "choiceAdventure132", "choiceAdventure135", "choiceAdventure136", "choiceAdventure137", "choiceAdventure138", "choiceAdventure139", "choiceAdventure140", "choiceAdventure141", "choiceAdventure142", "choiceAdventure143", "choiceAdventure144", "choiceAdventure145", "choiceAdventure146", "choiceAdventure147", "choiceAdventure148", "choiceAdventure149", "choiceAdventure151", "choiceAdventure152", "choiceAdventure153", "choiceAdventure154", "choiceAdventure155", "choiceAdventure156", "choiceAdventure157", "choiceAdventure158", "choiceAdventure159", "choiceAdventure160", "choiceAdventure161", "choiceAdventure162", "choiceAdventure163", "choiceAdventure164", "choiceAdventure165", "choiceAdventure166", "choiceAdventure167", "choiceAdventure168", "choiceAdventure169", "choiceAdventure170", "choiceAdventure171", "choiceAdventure172", "choiceAdventure177", "choiceAdventure178", "choiceAdventure180", "choiceAdventure181", "choiceAdventure182", "choiceAdventure184", "choiceAdventure185", "choiceAdventure186", "choiceAdventure187", "choiceAdventure188", "choiceAdventure189", "choiceAdventure191", "choiceAdventure197", "choiceAdventure198", "choiceAdventure199", "choiceAdventure200", "choiceAdventure201", "choiceAdventure202", "choiceAdventure203", "choiceAdventure204", "choiceAdventure205", "choiceAdventure206", "choiceAdventure207", "choiceAdventure208", "choiceAdventure211", "choiceAdventure212", "choiceAdventure213", "choiceAdventure214", "choiceAdventure215", "choiceAdventure216", "choiceAdventure217", "choiceAdventure218", "choiceAdventure219", "choiceAdventure220", "choiceAdventure221", "choiceAdventure222", "choiceAdventure223", "choiceAdventure224", "choiceAdventure225", "choiceAdventure230", "choiceAdventure272", "choiceAdventure273", "choiceAdventure276", "choiceAdventure277", "choiceAdventure278", "choiceAdventure279", "choiceAdventure280", "choiceAdventure281", "choiceAdventure282", "choiceAdventure283", "choiceAdventure284", "choiceAdventure285", "choiceAdventure286", "choiceAdventure287", "choiceAdventure288", "choiceAdventure289", "choiceAdventure290", "choiceAdventure291", "choiceAdventure292", "choiceAdventure293", "choiceAdventure294", "choiceAdventure295", "choiceAdventure296", "choiceAdventure297", "choiceAdventure298", "choiceAdventure299", "choiceAdventure302", "choiceAdventure303", "choiceAdventure304", "choiceAdventure305", "choiceAdventure306", "choiceAdventure307", "choiceAdventure308", "choiceAdventure309", "choiceAdventure310", "choiceAdventure311", "choiceAdventure317", "choiceAdventure318", "choiceAdventure319", "choiceAdventure320", "choiceAdventure321", "choiceAdventure322", "choiceAdventure326", "choiceAdventure327", "choiceAdventure328", "choiceAdventure329", "choiceAdventure330", "choiceAdventure331", "choiceAdventure332", "choiceAdventure333", "choiceAdventure334", "choiceAdventure335", "choiceAdventure336", "choiceAdventure337", "choiceAdventure338", "choiceAdventure339", "choiceAdventure340", "choiceAdventure341", "choiceAdventure342", "choiceAdventure343", "choiceAdventure344", "choiceAdventure345", "choiceAdventure346", "choiceAdventure347", "choiceAdventure348", "choiceAdventure349", "choiceAdventure350", "choiceAdventure351", "choiceAdventure352", "choiceAdventure353", "choiceAdventure354", "choiceAdventure355", "choiceAdventure356", "choiceAdventure357", "choiceAdventure358", "choiceAdventure360", "choiceAdventure361", "choiceAdventure362", "choiceAdventure363", "choiceAdventure364", "choiceAdventure365", "choiceAdventure366", "choiceAdventure367", "choiceAdventure372", "choiceAdventure376", "choiceAdventure387", "choiceAdventure388", "choiceAdventure389", "choiceAdventure390", "choiceAdventure391", "choiceAdventure392", "choiceAdventure393", "choiceAdventure395", "choiceAdventure396", "choiceAdventure397", "choiceAdventure398", "choiceAdventure399", "choiceAdventure400", "choiceAdventure401", "choiceAdventure402", "choiceAdventure403", "choiceAdventure423", "choiceAdventure424", "choiceAdventure425", "choiceAdventure426", "choiceAdventure427", "choiceAdventure428", "choiceAdventure429", "choiceAdventure430", "choiceAdventure431", "choiceAdventure432", "choiceAdventure433", "choiceAdventure435", "choiceAdventure438", "choiceAdventure439", "choiceAdventure442", "choiceAdventure444", "choiceAdventure445", "choiceAdventure446", "choiceAdventure447", "choiceAdventure448", "choiceAdventure449", "choiceAdventure451", "choiceAdventure452", "choiceAdventure453", "choiceAdventure454", "choiceAdventure455", "choiceAdventure456", "choiceAdventure457", "choiceAdventure458", "choiceAdventure460", "choiceAdventure461", "choiceAdventure462", "choiceAdventure463", "choiceAdventure464", "choiceAdventure465", "choiceAdventure467", "choiceAdventure468", "choiceAdventure469", "choiceAdventure470", "choiceAdventure471", "choiceAdventure472", "choiceAdventure473", "choiceAdventure474", "choiceAdventure475", "choiceAdventure477", "choiceAdventure478", "choiceAdventure480", "choiceAdventure483", "choiceAdventure484", "choiceAdventure485", "choiceAdventure486", "choiceAdventure488", "choiceAdventure489", "choiceAdventure490", "choiceAdventure491", "choiceAdventure496", "choiceAdventure497", "choiceAdventure502", "choiceAdventure503", "choiceAdventure504", "choiceAdventure505", "choiceAdventure506", "choiceAdventure507", "choiceAdventure509", "choiceAdventure510", "choiceAdventure511", "choiceAdventure512", "choiceAdventure513", "choiceAdventure514", "choiceAdventure515", "choiceAdventure517", "choiceAdventure518", "choiceAdventure519", "choiceAdventure521", "choiceAdventure522", "choiceAdventure523", "choiceAdventure527", "choiceAdventure528", "choiceAdventure529", "choiceAdventure530", "choiceAdventure531", "choiceAdventure532", "choiceAdventure533", "choiceAdventure534", "choiceAdventure535", "choiceAdventure536", "choiceAdventure538", "choiceAdventure539", "choiceAdventure542", "choiceAdventure543", "choiceAdventure544", "choiceAdventure546", "choiceAdventure548", "choiceAdventure549", "choiceAdventure550", "choiceAdventure551", "choiceAdventure552", "choiceAdventure553", "choiceAdventure554", "choiceAdventure556", "choiceAdventure557", "choiceAdventure558", "choiceAdventure559", "choiceAdventure560", "choiceAdventure561", "choiceAdventure562", "choiceAdventure563", "choiceAdventure564", "choiceAdventure565", "choiceAdventure566", "choiceAdventure567", "choiceAdventure568", "choiceAdventure569", "choiceAdventure571", "choiceAdventure572", "choiceAdventure573", "choiceAdventure574", "choiceAdventure575", "choiceAdventure576", "choiceAdventure577", "choiceAdventure578", "choiceAdventure579", "choiceAdventure581", "choiceAdventure582", "choiceAdventure583", "choiceAdventure584", "choiceAdventure594", "choiceAdventure595", "choiceAdventure596", "choiceAdventure597", "choiceAdventure598", "choiceAdventure599", "choiceAdventure600", "choiceAdventure603", "choiceAdventure604", "choiceAdventure616", "choiceAdventure634", "choiceAdventure640", "choiceAdventure654", "choiceAdventure655", "choiceAdventure656", "choiceAdventure657", "choiceAdventure658", "choiceAdventure664", "choiceAdventure669", "choiceAdventure670", "choiceAdventure671", "choiceAdventure672", "choiceAdventure673", "choiceAdventure674", "choiceAdventure675", "choiceAdventure676", "choiceAdventure677", "choiceAdventure678", "choiceAdventure679", "choiceAdventure681", "choiceAdventure683", "choiceAdventure684", "choiceAdventure685", "choiceAdventure686", "choiceAdventure687", "choiceAdventure688", "choiceAdventure689", "choiceAdventure690", "choiceAdventure691", "choiceAdventure692", "choiceAdventure693", "choiceAdventure694", "choiceAdventure695", "choiceAdventure696", "choiceAdventure697", "choiceAdventure698", "choiceAdventure700", "choiceAdventure701", "choiceAdventure705", "choiceAdventure706", "choiceAdventure707", "choiceAdventure708", "choiceAdventure709", "choiceAdventure710", "choiceAdventure711", "choiceAdventure712", "choiceAdventure713", "choiceAdventure714", "choiceAdventure715", "choiceAdventure716", "choiceAdventure717", "choiceAdventure721", "choiceAdventure725", "choiceAdventure729", "choiceAdventure733", "choiceAdventure737", "choiceAdventure741", "choiceAdventure745", "choiceAdventure749", "choiceAdventure753", "choiceAdventure771", "choiceAdventure778", "choiceAdventure780", "choiceAdventure781", "choiceAdventure783", "choiceAdventure784", "choiceAdventure785", "choiceAdventure786", "choiceAdventure787", "choiceAdventure788", "choiceAdventure789", "choiceAdventure791", "choiceAdventure793", "choiceAdventure794", "choiceAdventure795", "choiceAdventure796", "choiceAdventure797", "choiceAdventure803", "choiceAdventure805", "choiceAdventure808", "choiceAdventure809", "choiceAdventure813", "choiceAdventure815", "choiceAdventure830", "choiceAdventure832", "choiceAdventure833", "choiceAdventure834", "choiceAdventure835", "choiceAdventure837", "choiceAdventure838", "choiceAdventure839", "choiceAdventure840", "choiceAdventure841", "choiceAdventure842", "choiceAdventure851", "choiceAdventure852", "choiceAdventure853", "choiceAdventure854", "choiceAdventure855", "choiceAdventure856", "choiceAdventure857", "choiceAdventure858", "choiceAdventure866", "choiceAdventure873", "choiceAdventure875", "choiceAdventure876", "choiceAdventure877", "choiceAdventure878", "choiceAdventure879", "choiceAdventure880", "choiceAdventure881", "choiceAdventure882", "choiceAdventure888", "choiceAdventure889", "choiceAdventure918", "choiceAdventure919", "choiceAdventure920", "choiceAdventure921", "choiceAdventure923", "choiceAdventure924", "choiceAdventure925", "choiceAdventure926", "choiceAdventure927", "choiceAdventure928", "choiceAdventure929", "choiceAdventure930", "choiceAdventure931", "choiceAdventure932", "choiceAdventure940", "choiceAdventure941", "choiceAdventure942", "choiceAdventure943", "choiceAdventure944", "choiceAdventure945", "choiceAdventure946", "choiceAdventure950", "choiceAdventure955", "choiceAdventure957", "choiceAdventure958", "choiceAdventure959", "choiceAdventure960", "choiceAdventure961", "choiceAdventure962", "choiceAdventure963", "choiceAdventure964", "choiceAdventure965", "choiceAdventure966", "choiceAdventure970", "choiceAdventure973", "choiceAdventure974", "choiceAdventure975", "choiceAdventure976", "choiceAdventure977", "choiceAdventure979", "choiceAdventure980", "choiceAdventure981", "choiceAdventure982", "choiceAdventure983", "choiceAdventure988", "choiceAdventure989", "choiceAdventure993", "choiceAdventure998", "choiceAdventure1000", "choiceAdventure1003", "choiceAdventure1005", "choiceAdventure1006", "choiceAdventure1007", "choiceAdventure1008", "choiceAdventure1009", "choiceAdventure1010", "choiceAdventure1011", "choiceAdventure1012", "choiceAdventure1013", "choiceAdventure1015", "choiceAdventure1016", "choiceAdventure1017", "choiceAdventure1018", "choiceAdventure1019", "choiceAdventure1020", "choiceAdventure1021", "choiceAdventure1022", "choiceAdventure1023", "choiceAdventure1026", "choiceAdventure1027", "choiceAdventure1028", "choiceAdventure1029", "choiceAdventure1030", "choiceAdventure1031", "choiceAdventure1032", "choiceAdventure1033", "choiceAdventure1034", "choiceAdventure1035", "choiceAdventure1036", "choiceAdventure1037", "choiceAdventure1038", "choiceAdventure1039", "choiceAdventure1040", "choiceAdventure1041", "choiceAdventure1042", "choiceAdventure1044", "choiceAdventure1045", "choiceAdventure1046", "choiceAdventure1048", "choiceAdventure1051", "choiceAdventure1052", "choiceAdventure1053", "choiceAdventure1054", "choiceAdventure1055", "choiceAdventure1056", "choiceAdventure1057", "choiceAdventure1059", "choiceAdventure1060", "choiceAdventure1061", "choiceAdventure1062", "choiceAdventure1065", "choiceAdventure1067", "choiceAdventure1068", "choiceAdventure1069", "choiceAdventure1070", "choiceAdventure1071", "choiceAdventure1073", "choiceAdventure1077", "choiceAdventure1080", "choiceAdventure1081", "choiceAdventure1082", "choiceAdventure1083", "choiceAdventure1084", "choiceAdventure1085", "choiceAdventure1091", "choiceAdventure1094", "choiceAdventure1095", "choiceAdventure1096", "choiceAdventure1097", "choiceAdventure1102", "choiceAdventure1106", "choiceAdventure1107", "choiceAdventure1108", "choiceAdventure1110", "choiceAdventure1114", "choiceAdventure1115", "choiceAdventure1116", "choiceAdventure1118", "choiceAdventure1119", "choiceAdventure1120", "choiceAdventure1121", "choiceAdventure1122", "choiceAdventure1123", "choiceAdventure1171", "choiceAdventure1172", "choiceAdventure1173", "choiceAdventure1174", "choiceAdventure1175", "choiceAdventure1193", "choiceAdventure1195", "choiceAdventure1196", "choiceAdventure1197", "choiceAdventure1198", "choiceAdventure1199", "choiceAdventure1202", "choiceAdventure1203", "choiceAdventure1204", "choiceAdventure1205", "choiceAdventure1206", "choiceAdventure1207", "choiceAdventure1208", "choiceAdventure1209", "choiceAdventure1210", "choiceAdventure1211", "choiceAdventure1212", "choiceAdventure1213", "choiceAdventure1214", "choiceAdventure1215", "choiceAdventure1219", "choiceAdventure1222", "choiceAdventure1223", "choiceAdventure1224", "choiceAdventure1225", "choiceAdventure1226", "choiceAdventure1227", "choiceAdventure1228", "choiceAdventure1229", "choiceAdventure1236", "choiceAdventure1237", "choiceAdventure1238", "choiceAdventure1239", "choiceAdventure1240", "choiceAdventure1241", "choiceAdventure1242", "choiceAdventure1243", "choiceAdventure1244", "choiceAdventure1245", "choiceAdventure1246", "choiceAdventure1247", "choiceAdventure1248", "choiceAdventure1249", "choiceAdventure1250", "choiceAdventure1251", "choiceAdventure1252", "choiceAdventure1253", "choiceAdventure1254", "choiceAdventure1255", "choiceAdventure1256", "choiceAdventure1266", "choiceAdventure1280", "choiceAdventure1281", "choiceAdventure1282", "choiceAdventure1283", "choiceAdventure1284", "choiceAdventure1285", "choiceAdventure1286", "choiceAdventure1287", "choiceAdventure1288", "choiceAdventure1289", "choiceAdventure1290", "choiceAdventure1291", "choiceAdventure1292", "choiceAdventure1293", "choiceAdventure1294", "choiceAdventure1295", "choiceAdventure1296", "choiceAdventure1297", "choiceAdventure1298", "choiceAdventure1299", "choiceAdventure1300", "choiceAdventure1301", "choiceAdventure1302", "choiceAdventure1303", "choiceAdventure1304", "choiceAdventure1305", "choiceAdventure1307", "choiceAdventure1310", "choiceAdventure1312", "choiceAdventure1313", "choiceAdventure1314", "choiceAdventure1315", "choiceAdventure1316", "choiceAdventure1317", "choiceAdventure1318", "choiceAdventure1319", "choiceAdventure1321", "choiceAdventure1322", "choiceAdventure1323", "choiceAdventure1324", "choiceAdventure1325", "choiceAdventure1326", "choiceAdventure1327", "choiceAdventure1328", "choiceAdventure1332", "choiceAdventure1333", "choiceAdventure1335", "choiceAdventure1340", "choiceAdventure1341", "choiceAdventure1345", "choiceAdventure1389", "choiceAdventure1392", "choiceAdventure1397", "choiceAdventure1399", "choiceAdventure1405", "choiceAdventure1411", "choiceAdventure1415", "choiceAdventure1427", "choiceAdventure1428", "choiceAdventure1429", "choiceAdventure1430", "choiceAdventure1431", "choiceAdventure1432", "choiceAdventure1433", "choiceAdventure1434", "choiceAdventure1436", "choiceAdventure1460", "choiceAdventure1461", "choiceAdventure1467", "choiceAdventure1468", "choiceAdventure1469", "choiceAdventure1470", "choiceAdventure1471", "choiceAdventure1472", "choiceAdventure1473", "choiceAdventure1474", "choiceAdventure1475", "choiceAdventure1486", "choiceAdventure1487", "choiceAdventure1488", "choiceAdventure1489", "choiceAdventure1491", "choiceAdventure1494"];
+var stringProperties = ["autoLogin", "browserBookmarks", "chatFontSize", "combatHotkey0", "combatHotkey1", "combatHotkey2", "combatHotkey3", "combatHotkey4", "combatHotkey5", "combatHotkey6", "combatHotkey7", "combatHotkey8", "combatHotkey9", "commandLineNamespace", "dailyDeedsOptions", "defaultBorderColor", "displayName", "externalEditor", "getBreakfast", "headerStates", "highlightList", "http.proxyHost", "http.proxyPassword", "http.proxyPort", "http.proxyUser", "https.proxyHost", "https.proxyPassword", "https.proxyPort", "https.proxyUser", "initialDesktop", "initialFrames", "lastRelayUpdate", "lastUserAgent", "lastUsername", "logPreferenceChangeFilter", "loginScript", "loginServerName", "loginWindowLogo", "logoutScript", "pingLatest", "pingLoginCheck", "pingLoginFail", "pingLongest", "pingShortest", "previousNotifyList", "previousUpdateVersion", "saveState", "saveStateActive", "scriptList", "swingLookAndFeel", "userAgent", "8BitColor", "afterAdventureScript", "autoOlfact", "autoPutty", "autumnatonUpgrades", "backupCameraMode", "banishedMonsters", "banishingShoutMonsters", "batmanStats", "batmanZone", "batmanUpgrades", "battleAction", "beachHeadsUnlocked", "beforePVPScript", "betweenBattleScript", "boomBoxSong", "breakfastAlways", "breakfastHardcore", "breakfastSoftcore", "buffBotCasting", "buyScript", "cargoPocketsEmptied", "cargoPocketScraps", "chatbotScript", "chatPlayerScript", "chibiName", "choiceAdventureScript", "chosenTrip", "clanFortuneReply1", "clanFortuneReply2", "clanFortuneReply3", "clanFortuneWord1", "clanFortuneWord2", "clanFortuneWord3", "commerceGhostItem", "counterScript", "copperheadClubHazard", "crimbotChassis", "crimbotArm", "crimbotPropulsion", "crystalBallPredictions", "csServicesPerformed", "currentAstralTrip", "currentDistillateMods", "currentEasyBountyItem", "currentHardBountyItem", "currentHippyStore", "currentJunkyardTool", "currentLlamaForm", "currentMood", "currentPVPSeason", "currentPvpVictories", "currentSpecialBountyItem", "currentSITSkill", "customCombatScript", "cyrusAdjectives", "defaultFlowerLossMessage", "defaultFlowerWinMessage", "demonName1", "demonName2", "demonName3", "demonName4", "demonName5", "demonName6", "demonName7", "demonName8", "demonName9", "demonName10", "demonName11", "demonName12", "demonName13", "dinseyGatorStenchDamage", "dinseyRollercoasterStats", "doctorBagQuestItem", "dolphinItem", "duckAreasCleared", "duckAreasSelected", "edPiece", "enamorangMonsterTurn", "ensorcelee", "EVEDirections", "extraCosmeticModifiers", "familiarScript", "forbiddenStores", "gameProBossSpecialPower", "gooseReprocessed", "grimoireSkillsHardcore", "grimoireSkillsSoftcore", "grimstoneMaskPath", "guzzlrQuestClient", "guzzlrQuestBooze", "guzzlrQuestTier", "harvestGardenHardcore", "harvestGardenSoftcore", "hpAutoRecoveryItems", "invalidBuffMessage", "jickSwordModifier", "juneCleaverQueue", "kingLiberatedScript", "lassoTraining", "lastAdventure", "lastBangPotion819", "lastBangPotion820", "lastBangPotion821", "lastBangPotion822", "lastBangPotion823", "lastBangPotion824", "lastBangPotion825", "lastBangPotion826", "lastBangPotion827", "lastChanceBurn", "lastChessboard", "lastCombatEnvironments", "lastDwarfDiceRolls", "lastDwarfDigitRunes", "lastDwarfEquipmentRunes", "lastDwarfFactoryItem118", "lastDwarfFactoryItem119", "lastDwarfFactoryItem120", "lastDwarfFactoryItem360", "lastDwarfFactoryItem361", "lastDwarfFactoryItem362", "lastDwarfFactoryItem363", "lastDwarfFactoryItem364", "lastDwarfFactoryItem365", "lastDwarfFactoryItem910", "lastDwarfFactoryItem3199", "lastDwarfOfficeItem3208", "lastDwarfOfficeItem3209", "lastDwarfOfficeItem3210", "lastDwarfOfficeItem3211", "lastDwarfOfficeItem3212", "lastDwarfOfficeItem3213", "lastDwarfOfficeItem3214", "lastDwarfOreRunes", "lastDwarfHopper1", "lastDwarfHopper2", "lastDwarfHopper3", "lastDwarfHopper4", "lastEncounter", "lastMacroError", "lastMessageId", "lastPaperStrip3144", "lastPaperStrip4138", "lastPaperStrip4139", "lastPaperStrip4140", "lastPaperStrip4141", "lastPaperStrip4142", "lastPaperStrip4143", "lastPaperStrip4144", "lastPirateEphemera", "lastPorkoBoard", "lastPorkoPayouts", "lastPorkoExpected", "lastSlimeVial3885", "lastSlimeVial3886", "lastSlimeVial3887", "lastSlimeVial3888", "lastSlimeVial3889", "lastSlimeVial3890", "lastSlimeVial3891", "lastSlimeVial3892", "lastSlimeVial3893", "lastSlimeVial3894", "lastSlimeVial3895", "lastSlimeVial3896", "latteIngredients", "latteModifier", "latteUnlocks", "libramSkillsHardcore", "libramSkillsSoftcore", "louvreOverride", "lovePotion", "lttQuestName", "maximizerList", "maximizerMRUList", "mayoInMouth", "mayoMinderSetting", "merkinQuestPath", "mineLayout1", "mineLayout2", "mineLayout3", "mineLayout4", "mineLayout5", "mineLayout6", "mpAutoRecoveryItems", "muffinOnOrder", "nextAdventure", "nextDistillateMods", "nextQuantumFamiliarName", "nextQuantumFamiliarOwner", "nsChallenge2", "nsChallenge3", "nsChallenge4", "nsChallenge5", "nsTowerDoorKeysUsed", "oceanAction", "oceanDestination", "parkaMode", "pastaThrall1", "pastaThrall2", "pastaThrall3", "pastaThrall4", "pastaThrall5", "pastaThrall6", "pastaThrall7", "pastaThrall8", "peteMotorbikeTires", "peteMotorbikeGasTank", "peteMotorbikeHeadlight", "peteMotorbikeCowling", "peteMotorbikeMuffler", "peteMotorbikeSeat", "pieStuffing", "plantingDate", "plantingLength", "plantingScript", "plumberCostumeWorn", "pokefamBoosts", "postAscensionScript", "preAscensionScript", "retroCapeSuperhero", "retroCapeWashingInstructions", "questClumsinessGrove", "questDoctorBag", "questECoBucket", "questESlAudit", "questESlBacteria", "questESlCheeseburger", "questESlCocktail", "questESlDebt", "questESlFish", "questESlMushStash", "questESlSalt", "questESlSprinkles", "questESpEVE", "questESpJunglePun", "questESpGore", "questESpClipper", "questESpFakeMedium", "questESpSerum", "questESpSmokes", "questESpOutOfOrder", "questEStFishTrash", "questEStGiveMeFuel", "questEStNastyBears", "questEStSocialJusticeI", "questEStSocialJusticeII", "questEStSuperLuber", "questEStWorkWithFood", "questEStZippityDooDah", "questEUNewYou", "questF01Primordial", "questF02Hyboria", "questF03Future", "questF04Elves", "questF05Clancy", "questG01Meatcar", "questG02Whitecastle", "questG03Ego", "questG04Nemesis", "questG05Dark", "questG06Delivery", "questG07Myst", "questG08Moxie", "questG09Muscle", "questGlacierOfJerks", "questGuzzlr", "questI01Scapegoat", "questI02Beat", "questL02Larva", "questL03Rat", "questL04Bat", "questL05Goblin", "questL06Friar", "questL07Cyrptic", "questL08Trapper", "questL09Topping", "questL10Garbage", "questL11MacGuffin", "questL11Black", "questL11Business", "questL11Curses", "questL11Desert", "questL11Doctor", "questL11Manor", "questL11Palindome", "questL11Pyramid", "questL11Ron", "questL11Shen", "questL11Spare", "questL11Worship", "questL12War", "questL12HippyFrat", "questL13Final", "questL13Warehouse", "questLTTQuestByWire", "questM01Untinker", "questM02Artist", "questM03Bugbear", "questM05Toot", "questM06Gourd", "questM07Hammer", "questM08Baker", "questM09Rocks", "questM10Azazel", "questM11Postal", "questM12Pirate", "questM13Escape", "questM14Bounty", "questM15Lol", "questM16Temple", "questM17Babies", "questM18Swamp", "questM19Hippy", "questM20Necklace", "questM21Dance", "questM22Shirt", "questM23Meatsmith", "questM24Doc", "questM25Armorer", "questM26Oracle", "questMaelstromOfLovers", "questPAGhost", "questRufus", "questS01OldGuy", "questS02Monkees", "raveCombo1", "raveCombo2", "raveCombo3", "raveCombo4", "raveCombo5", "raveCombo6", "recoveryScript", "relayCounters", "royalty", "rufusDesiredArtifact", "rufusDesiredItems", "rufusQuestTarget", "rufusQuestType", "scriptMRUList", "seahorseName", "shadowLabyrinthGoal", "shadowRiftIngress", "shenQuestItem", "shrubGarland", "shrubGifts", "shrubLights", "shrubTopper", "sideDefeated", "sidequestArenaCompleted", "sidequestFarmCompleted", "sidequestJunkyardCompleted", "sidequestLighthouseCompleted", "sidequestNunsCompleted", "sidequestOrchardCompleted", "skateParkStatus", "snowsuit", "sourceTerminalChips", "sourceTerminalEducate1", "sourceTerminalEducate2", "sourceTerminalEnquiry", "sourceTerminalEducateKnown", "sourceTerminalEnhanceKnown", "sourceTerminalEnquiryKnown", "sourceTerminalExtrudeKnown", "spadingData", "spadingScript", "speakeasyName", "spelunkyStatus", "spelunkyUpgrades", "spookyravenRecipeUsed", "stationaryButton1", "stationaryButton2", "stationaryButton3", "stationaryButton4", "stationaryButton5", "streamCrossDefaultTarget", "sweetSynthesisBlacklist", "telescope1", "telescope2", "telescope3", "telescope4", "telescope5", "testudinalTeachings", "textColors", "thanksMessage", "tomeSkillsHardcore", "tomeSkillsSoftcore", "trackVoteMonster", "trainsetConfiguration", "trapperOre", "umbrellaState", "umdLastObtained", "vintnerWineEffect", "vintnerWineName", "vintnerWineType", "violetFogLayout", "volcanoMaze1", "volcanoMaze2", "volcanoMaze3", "volcanoMaze4", "volcanoMaze5", "walfordBucketItem", "warProgress", "watchedPreferences", "workteaClue", "yourFavoriteBird", "yourFavoriteBirdMods", "youRobotCPUUpgrades", "_bastilleBoosts", "_bastilleChoice1", "_bastilleChoice2", "_bastilleChoice3", "_bastilleCurrentStyles", "_bastilleEnemyCastle", "_bastilleEnemyName", "_bastilleLastBattleResults", "_bastilleLastEncounter", "_bastilleStats", "_beachHeadsUsed", "_beachLayout", "_beachMinutes", "_birdOfTheDay", "_birdOfTheDayMods", "_bittycar", "_campAwaySmileBuffSign", "_citizenZone", "_citizenZoneMods", "_cloudTalkMessage", "_cloudTalkSmoker", "_coatOfPaintModifier", "_dailySpecial", "_deckCardsSeen", "_feastedFamiliars", "_floristPlantsUsed", "_frAreasUnlocked", "_frHoursLeft", "_frMonstersKilled", "_horsery", "_horseryCrazyMox", "_horseryCrazyMus", "_horseryCrazyMys", "_horseryCrazyName", "_horseryCurrentName", "_horseryDarkName", "_horseryNormalName", "_horseryPaleName", "_jickJarAvailable", "_jiggleCheesedMonsters", "_lastCombatStarted", "_lastPirateRealmIsland", "_locketMonstersFought", "_mummeryMods", "_mummeryUses", "_newYouQuestSkill", "_noHatModifier", "_pantogramModifier", "_pottedPowerPlant", "_questESp", "_questPartyFair", "_questPartyFairProgress", "_questPartyFairQuest", "_roboDrinks", "_roninStoragePulls", "_spacegateAnimalLife", "_spacegateCoordinates", "_spacegateGear", "_spacegateHazards", "_spacegateIntelligentLife", "_spacegatePlanetName", "_spacegatePlantLife", "_stolenAccordions", "_tempRelayCounters", "_timeSpinnerFoodAvailable", "_unknownEasyBountyItem", "_unknownHardBountyItem", "_unknownSpecialBountyItem", "_untakenEasyBountyItem", "_untakenHardBountyItem", "_untakenSpecialBountyItem", "_userMods", "_villainLairColor", "_villainLairKey", "_voteLocal1", "_voteLocal2", "_voteLocal3", "_voteLocal4", "_voteMonster1", "_voteMonster2", "_voteModifier", "_VYKEACompanionType", "_VYKEACompanionRune", "_VYKEACompanionName"];
+var numericOrStringProperties = ["statusEngineering", "statusGalley", "statusMedbay", "statusMorgue", "statusNavigation", "statusScienceLab", "statusSonar", "statusSpecialOps", "statusWasteProcessing", "choiceAdventure2", "choiceAdventure3", "choiceAdventure4", "choiceAdventure5", "choiceAdventure6", "choiceAdventure7", "choiceAdventure8", "choiceAdventure9", "choiceAdventure10", "choiceAdventure11", "choiceAdventure12", "choiceAdventure14", "choiceAdventure15", "choiceAdventure16", "choiceAdventure17", "choiceAdventure18", "choiceAdventure19", "choiceAdventure20", "choiceAdventure21", "choiceAdventure22", "choiceAdventure23", "choiceAdventure24", "choiceAdventure25", "choiceAdventure26", "choiceAdventure27", "choiceAdventure28", "choiceAdventure29", "choiceAdventure40", "choiceAdventure41", "choiceAdventure42", "choiceAdventure45", "choiceAdventure46", "choiceAdventure47", "choiceAdventure71", "choiceAdventure72", "choiceAdventure73", "choiceAdventure74", "choiceAdventure75", "choiceAdventure76", "choiceAdventure77", "choiceAdventure86", "choiceAdventure87", "choiceAdventure88", "choiceAdventure89", "choiceAdventure90", "choiceAdventure91", "choiceAdventure105", "choiceAdventure106", "choiceAdventure107", "choiceAdventure108", "choiceAdventure109", "choiceAdventure110", "choiceAdventure111", "choiceAdventure112", "choiceAdventure113", "choiceAdventure114", "choiceAdventure115", "choiceAdventure116", "choiceAdventure117", "choiceAdventure118", "choiceAdventure120", "choiceAdventure123", "choiceAdventure125", "choiceAdventure126", "choiceAdventure127", "choiceAdventure129", "choiceAdventure131", "choiceAdventure132", "choiceAdventure135", "choiceAdventure136", "choiceAdventure137", "choiceAdventure138", "choiceAdventure139", "choiceAdventure140", "choiceAdventure141", "choiceAdventure142", "choiceAdventure143", "choiceAdventure144", "choiceAdventure145", "choiceAdventure146", "choiceAdventure147", "choiceAdventure148", "choiceAdventure149", "choiceAdventure151", "choiceAdventure152", "choiceAdventure153", "choiceAdventure154", "choiceAdventure155", "choiceAdventure156", "choiceAdventure157", "choiceAdventure158", "choiceAdventure159", "choiceAdventure160", "choiceAdventure161", "choiceAdventure162", "choiceAdventure163", "choiceAdventure164", "choiceAdventure165", "choiceAdventure166", "choiceAdventure167", "choiceAdventure168", "choiceAdventure169", "choiceAdventure170", "choiceAdventure171", "choiceAdventure172", "choiceAdventure177", "choiceAdventure178", "choiceAdventure180", "choiceAdventure181", "choiceAdventure182", "choiceAdventure184", "choiceAdventure185", "choiceAdventure186", "choiceAdventure187", "choiceAdventure188", "choiceAdventure189", "choiceAdventure191", "choiceAdventure197", "choiceAdventure198", "choiceAdventure199", "choiceAdventure200", "choiceAdventure201", "choiceAdventure202", "choiceAdventure203", "choiceAdventure204", "choiceAdventure205", "choiceAdventure206", "choiceAdventure207", "choiceAdventure208", "choiceAdventure211", "choiceAdventure212", "choiceAdventure213", "choiceAdventure214", "choiceAdventure215", "choiceAdventure216", "choiceAdventure217", "choiceAdventure218", "choiceAdventure219", "choiceAdventure220", "choiceAdventure221", "choiceAdventure222", "choiceAdventure223", "choiceAdventure224", "choiceAdventure225", "choiceAdventure230", "choiceAdventure272", "choiceAdventure273", "choiceAdventure276", "choiceAdventure277", "choiceAdventure278", "choiceAdventure279", "choiceAdventure280", "choiceAdventure281", "choiceAdventure282", "choiceAdventure283", "choiceAdventure284", "choiceAdventure285", "choiceAdventure286", "choiceAdventure287", "choiceAdventure288", "choiceAdventure289", "choiceAdventure290", "choiceAdventure291", "choiceAdventure292", "choiceAdventure293", "choiceAdventure294", "choiceAdventure295", "choiceAdventure296", "choiceAdventure297", "choiceAdventure298", "choiceAdventure299", "choiceAdventure302", "choiceAdventure303", "choiceAdventure304", "choiceAdventure305", "choiceAdventure306", "choiceAdventure307", "choiceAdventure308", "choiceAdventure309", "choiceAdventure310", "choiceAdventure311", "choiceAdventure317", "choiceAdventure318", "choiceAdventure319", "choiceAdventure320", "choiceAdventure321", "choiceAdventure322", "choiceAdventure326", "choiceAdventure327", "choiceAdventure328", "choiceAdventure329", "choiceAdventure330", "choiceAdventure331", "choiceAdventure332", "choiceAdventure333", "choiceAdventure334", "choiceAdventure335", "choiceAdventure336", "choiceAdventure337", "choiceAdventure338", "choiceAdventure339", "choiceAdventure340", "choiceAdventure341", "choiceAdventure342", "choiceAdventure343", "choiceAdventure344", "choiceAdventure345", "choiceAdventure346", "choiceAdventure347", "choiceAdventure348", "choiceAdventure349", "choiceAdventure350", "choiceAdventure351", "choiceAdventure352", "choiceAdventure353", "choiceAdventure354", "choiceAdventure355", "choiceAdventure356", "choiceAdventure357", "choiceAdventure358", "choiceAdventure360", "choiceAdventure361", "choiceAdventure362", "choiceAdventure363", "choiceAdventure364", "choiceAdventure365", "choiceAdventure366", "choiceAdventure367", "choiceAdventure372", "choiceAdventure376", "choiceAdventure387", "choiceAdventure388", "choiceAdventure389", "choiceAdventure390", "choiceAdventure391", "choiceAdventure392", "choiceAdventure393", "choiceAdventure395", "choiceAdventure396", "choiceAdventure397", "choiceAdventure398", "choiceAdventure399", "choiceAdventure400", "choiceAdventure401", "choiceAdventure402", "choiceAdventure403", "choiceAdventure423", "choiceAdventure424", "choiceAdventure425", "choiceAdventure426", "choiceAdventure427", "choiceAdventure428", "choiceAdventure429", "choiceAdventure430", "choiceAdventure431", "choiceAdventure432", "choiceAdventure433", "choiceAdventure435", "choiceAdventure438", "choiceAdventure439", "choiceAdventure442", "choiceAdventure444", "choiceAdventure445", "choiceAdventure446", "choiceAdventure447", "choiceAdventure448", "choiceAdventure449", "choiceAdventure451", "choiceAdventure452", "choiceAdventure453", "choiceAdventure454", "choiceAdventure455", "choiceAdventure456", "choiceAdventure457", "choiceAdventure458", "choiceAdventure460", "choiceAdventure461", "choiceAdventure462", "choiceAdventure463", "choiceAdventure464", "choiceAdventure465", "choiceAdventure467", "choiceAdventure468", "choiceAdventure469", "choiceAdventure470", "choiceAdventure471", "choiceAdventure472", "choiceAdventure473", "choiceAdventure474", "choiceAdventure475", "choiceAdventure477", "choiceAdventure478", "choiceAdventure480", "choiceAdventure483", "choiceAdventure484", "choiceAdventure485", "choiceAdventure486", "choiceAdventure488", "choiceAdventure489", "choiceAdventure490", "choiceAdventure491", "choiceAdventure496", "choiceAdventure497", "choiceAdventure502", "choiceAdventure503", "choiceAdventure504", "choiceAdventure505", "choiceAdventure506", "choiceAdventure507", "choiceAdventure509", "choiceAdventure510", "choiceAdventure511", "choiceAdventure512", "choiceAdventure513", "choiceAdventure514", "choiceAdventure515", "choiceAdventure517", "choiceAdventure518", "choiceAdventure519", "choiceAdventure521", "choiceAdventure522", "choiceAdventure523", "choiceAdventure527", "choiceAdventure528", "choiceAdventure529", "choiceAdventure530", "choiceAdventure531", "choiceAdventure532", "choiceAdventure533", "choiceAdventure534", "choiceAdventure535", "choiceAdventure536", "choiceAdventure538", "choiceAdventure539", "choiceAdventure542", "choiceAdventure543", "choiceAdventure544", "choiceAdventure546", "choiceAdventure548", "choiceAdventure549", "choiceAdventure550", "choiceAdventure551", "choiceAdventure552", "choiceAdventure553", "choiceAdventure554", "choiceAdventure556", "choiceAdventure557", "choiceAdventure558", "choiceAdventure559", "choiceAdventure560", "choiceAdventure561", "choiceAdventure562", "choiceAdventure563", "choiceAdventure564", "choiceAdventure565", "choiceAdventure566", "choiceAdventure567", "choiceAdventure568", "choiceAdventure569", "choiceAdventure571", "choiceAdventure572", "choiceAdventure573", "choiceAdventure574", "choiceAdventure575", "choiceAdventure576", "choiceAdventure577", "choiceAdventure578", "choiceAdventure579", "choiceAdventure581", "choiceAdventure582", "choiceAdventure583", "choiceAdventure584", "choiceAdventure594", "choiceAdventure595", "choiceAdventure596", "choiceAdventure597", "choiceAdventure598", "choiceAdventure599", "choiceAdventure600", "choiceAdventure603", "choiceAdventure604", "choiceAdventure616", "choiceAdventure634", "choiceAdventure640", "choiceAdventure654", "choiceAdventure655", "choiceAdventure656", "choiceAdventure657", "choiceAdventure658", "choiceAdventure664", "choiceAdventure669", "choiceAdventure670", "choiceAdventure671", "choiceAdventure672", "choiceAdventure673", "choiceAdventure674", "choiceAdventure675", "choiceAdventure676", "choiceAdventure677", "choiceAdventure678", "choiceAdventure679", "choiceAdventure681", "choiceAdventure683", "choiceAdventure684", "choiceAdventure685", "choiceAdventure686", "choiceAdventure687", "choiceAdventure688", "choiceAdventure689", "choiceAdventure690", "choiceAdventure691", "choiceAdventure692", "choiceAdventure693", "choiceAdventure694", "choiceAdventure695", "choiceAdventure696", "choiceAdventure697", "choiceAdventure698", "choiceAdventure700", "choiceAdventure701", "choiceAdventure705", "choiceAdventure706", "choiceAdventure707", "choiceAdventure708", "choiceAdventure709", "choiceAdventure710", "choiceAdventure711", "choiceAdventure712", "choiceAdventure713", "choiceAdventure714", "choiceAdventure715", "choiceAdventure716", "choiceAdventure717", "choiceAdventure721", "choiceAdventure725", "choiceAdventure729", "choiceAdventure733", "choiceAdventure737", "choiceAdventure741", "choiceAdventure745", "choiceAdventure749", "choiceAdventure753", "choiceAdventure771", "choiceAdventure778", "choiceAdventure780", "choiceAdventure781", "choiceAdventure783", "choiceAdventure784", "choiceAdventure785", "choiceAdventure786", "choiceAdventure787", "choiceAdventure788", "choiceAdventure789", "choiceAdventure791", "choiceAdventure793", "choiceAdventure794", "choiceAdventure795", "choiceAdventure796", "choiceAdventure797", "choiceAdventure803", "choiceAdventure805", "choiceAdventure808", "choiceAdventure809", "choiceAdventure813", "choiceAdventure815", "choiceAdventure830", "choiceAdventure832", "choiceAdventure833", "choiceAdventure834", "choiceAdventure835", "choiceAdventure837", "choiceAdventure838", "choiceAdventure839", "choiceAdventure840", "choiceAdventure841", "choiceAdventure842", "choiceAdventure851", "choiceAdventure852", "choiceAdventure853", "choiceAdventure854", "choiceAdventure855", "choiceAdventure856", "choiceAdventure857", "choiceAdventure858", "choiceAdventure866", "choiceAdventure873", "choiceAdventure875", "choiceAdventure876", "choiceAdventure877", "choiceAdventure878", "choiceAdventure879", "choiceAdventure880", "choiceAdventure881", "choiceAdventure882", "choiceAdventure888", "choiceAdventure889", "choiceAdventure918", "choiceAdventure919", "choiceAdventure920", "choiceAdventure921", "choiceAdventure923", "choiceAdventure924", "choiceAdventure925", "choiceAdventure926", "choiceAdventure927", "choiceAdventure928", "choiceAdventure929", "choiceAdventure930", "choiceAdventure931", "choiceAdventure932", "choiceAdventure940", "choiceAdventure941", "choiceAdventure942", "choiceAdventure943", "choiceAdventure944", "choiceAdventure945", "choiceAdventure946", "choiceAdventure950", "choiceAdventure955", "choiceAdventure957", "choiceAdventure958", "choiceAdventure959", "choiceAdventure960", "choiceAdventure961", "choiceAdventure962", "choiceAdventure963", "choiceAdventure964", "choiceAdventure965", "choiceAdventure966", "choiceAdventure970", "choiceAdventure973", "choiceAdventure974", "choiceAdventure975", "choiceAdventure976", "choiceAdventure977", "choiceAdventure979", "choiceAdventure980", "choiceAdventure981", "choiceAdventure982", "choiceAdventure983", "choiceAdventure988", "choiceAdventure989", "choiceAdventure993", "choiceAdventure998", "choiceAdventure1000", "choiceAdventure1003", "choiceAdventure1005", "choiceAdventure1006", "choiceAdventure1007", "choiceAdventure1008", "choiceAdventure1009", "choiceAdventure1010", "choiceAdventure1011", "choiceAdventure1012", "choiceAdventure1013", "choiceAdventure1015", "choiceAdventure1016", "choiceAdventure1017", "choiceAdventure1018", "choiceAdventure1019", "choiceAdventure1020", "choiceAdventure1021", "choiceAdventure1022", "choiceAdventure1023", "choiceAdventure1026", "choiceAdventure1027", "choiceAdventure1028", "choiceAdventure1029", "choiceAdventure1030", "choiceAdventure1031", "choiceAdventure1032", "choiceAdventure1033", "choiceAdventure1034", "choiceAdventure1035", "choiceAdventure1036", "choiceAdventure1037", "choiceAdventure1038", "choiceAdventure1039", "choiceAdventure1040", "choiceAdventure1041", "choiceAdventure1042", "choiceAdventure1044", "choiceAdventure1045", "choiceAdventure1046", "choiceAdventure1048", "choiceAdventure1051", "choiceAdventure1052", "choiceAdventure1053", "choiceAdventure1054", "choiceAdventure1055", "choiceAdventure1056", "choiceAdventure1057", "choiceAdventure1059", "choiceAdventure1060", "choiceAdventure1061", "choiceAdventure1062", "choiceAdventure1065", "choiceAdventure1067", "choiceAdventure1068", "choiceAdventure1069", "choiceAdventure1070", "choiceAdventure1071", "choiceAdventure1073", "choiceAdventure1077", "choiceAdventure1080", "choiceAdventure1081", "choiceAdventure1082", "choiceAdventure1083", "choiceAdventure1084", "choiceAdventure1085", "choiceAdventure1091", "choiceAdventure1094", "choiceAdventure1095", "choiceAdventure1096", "choiceAdventure1097", "choiceAdventure1102", "choiceAdventure1106", "choiceAdventure1107", "choiceAdventure1108", "choiceAdventure1110", "choiceAdventure1114", "choiceAdventure1115", "choiceAdventure1116", "choiceAdventure1118", "choiceAdventure1119", "choiceAdventure1120", "choiceAdventure1121", "choiceAdventure1122", "choiceAdventure1123", "choiceAdventure1171", "choiceAdventure1172", "choiceAdventure1173", "choiceAdventure1174", "choiceAdventure1175", "choiceAdventure1193", "choiceAdventure1195", "choiceAdventure1196", "choiceAdventure1197", "choiceAdventure1198", "choiceAdventure1199", "choiceAdventure1202", "choiceAdventure1203", "choiceAdventure1204", "choiceAdventure1205", "choiceAdventure1206", "choiceAdventure1207", "choiceAdventure1208", "choiceAdventure1209", "choiceAdventure1210", "choiceAdventure1211", "choiceAdventure1212", "choiceAdventure1213", "choiceAdventure1214", "choiceAdventure1215", "choiceAdventure1219", "choiceAdventure1222", "choiceAdventure1223", "choiceAdventure1224", "choiceAdventure1225", "choiceAdventure1226", "choiceAdventure1227", "choiceAdventure1228", "choiceAdventure1229", "choiceAdventure1236", "choiceAdventure1237", "choiceAdventure1238", "choiceAdventure1239", "choiceAdventure1240", "choiceAdventure1241", "choiceAdventure1242", "choiceAdventure1243", "choiceAdventure1244", "choiceAdventure1245", "choiceAdventure1246", "choiceAdventure1247", "choiceAdventure1248", "choiceAdventure1249", "choiceAdventure1250", "choiceAdventure1251", "choiceAdventure1252", "choiceAdventure1253", "choiceAdventure1254", "choiceAdventure1255", "choiceAdventure1256", "choiceAdventure1266", "choiceAdventure1280", "choiceAdventure1281", "choiceAdventure1282", "choiceAdventure1283", "choiceAdventure1284", "choiceAdventure1285", "choiceAdventure1286", "choiceAdventure1287", "choiceAdventure1288", "choiceAdventure1289", "choiceAdventure1290", "choiceAdventure1291", "choiceAdventure1292", "choiceAdventure1293", "choiceAdventure1294", "choiceAdventure1295", "choiceAdventure1296", "choiceAdventure1297", "choiceAdventure1298", "choiceAdventure1299", "choiceAdventure1300", "choiceAdventure1301", "choiceAdventure1302", "choiceAdventure1303", "choiceAdventure1304", "choiceAdventure1305", "choiceAdventure1307", "choiceAdventure1310", "choiceAdventure1312", "choiceAdventure1313", "choiceAdventure1314", "choiceAdventure1315", "choiceAdventure1316", "choiceAdventure1317", "choiceAdventure1318", "choiceAdventure1319", "choiceAdventure1321", "choiceAdventure1322", "choiceAdventure1323", "choiceAdventure1324", "choiceAdventure1325", "choiceAdventure1326", "choiceAdventure1327", "choiceAdventure1328", "choiceAdventure1332", "choiceAdventure1333", "choiceAdventure1335", "choiceAdventure1340", "choiceAdventure1341", "choiceAdventure1345", "choiceAdventure1389", "choiceAdventure1392", "choiceAdventure1397", "choiceAdventure1399", "choiceAdventure1405", "choiceAdventure1411", "choiceAdventure1415", "choiceAdventure1427", "choiceAdventure1428", "choiceAdventure1429", "choiceAdventure1430", "choiceAdventure1431", "choiceAdventure1432", "choiceAdventure1433", "choiceAdventure1434", "choiceAdventure1436", "choiceAdventure1460", "choiceAdventure1461", "choiceAdventure1467", "choiceAdventure1468", "choiceAdventure1469", "choiceAdventure1470", "choiceAdventure1471", "choiceAdventure1472", "choiceAdventure1473", "choiceAdventure1474", "choiceAdventure1475", "choiceAdventure1486", "choiceAdventure1487", "choiceAdventure1488", "choiceAdventure1489", "choiceAdventure1491", "choiceAdventure1494", "choiceAdventure1505"];
 var familiarProperties = ["commaFamiliar", "nextQuantumFamiliar", "stillsuitFamiliar"];
 var statProperties = ["nsChallenge1", "snojoSetting"];
 var phylumProperties = ["dnaSyringe", "locketPhylum", "redSnapperPhylum"];
@@ -426,7 +5160,7 @@ function isBooleanProperty(property) {
  * @returns Whether the supplied property has a numeric value
  */
 
-function isNumericProperty(property) {
+function propertyTyping_isNumericProperty(property) {
   return numericPropertiesSet.has(property);
 }
 /**
@@ -577,7 +5311,7 @@ function property_get(property, _default) {
     var _getBoolean;
 
     return (_getBoolean = getBoolean(property, _default)) !== null && _getBoolean !== void 0 ? _getBoolean : false;
-  } else if (isNumericProperty(property)) {
+  } else if (propertyTyping_isNumericProperty(property)) {
     var _getNumber;
 
     return (_getNumber = getNumber(property, _default)) !== null && _getNumber !== void 0 ? _getNumber : 0;
@@ -623,19 +5357,55 @@ function property_get(property, _default) {
  *
  * @param property Name of the property
  * @param value Value to give the property
+ * @returns Value that was set
  */
 
 function _set(property, value) {
   var stringValue = value === null ? "" : value.toString();
   (0,external_kolmafia_namespaceObject.setProperty)(property, stringValue);
+  return value;
+}
+/**
+ * Increment a property
+ *
+ * @param property Numeric property to increment
+ * @param delta Number by which to increment
+ * @param max Maximum value to set
+ * @returns New value
+ */
+
+
+
+function increment(property) {
+  var delta = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1;
+  var max = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : Infinity;
+  var value = property_get(property);
+  if (!isNumericProperty(property)) return value;
+  var nextValue = Math.min(max, value + delta);
+  return _set(property, nextValue);
+}
+/**
+ * Decrement a property
+ *
+ * @param property Numeric property to decrement
+ * @param delta Number by which to decrement
+ * @param min Maximum value to set
+ * @returns New value
+ */
+
+function decrement(property) {
+  var delta = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1;
+  var min = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : Infinity;
+  var value = property_get(property);
+  if (!isNumericProperty(property)) return value;
+  var nextValue = Math.max(min, value - delta);
+  return _set(property, nextValue);
 }
 /**
  * Sets the value of a set of mafia properties
  *
  * @param properties Set of properties
  */
-
-
 
 function setProperties(properties) {
   for (var _i = 0, _Object$entries = Object.entries(properties); _i < _Object$entries.length; _i++) {
@@ -1140,6 +5910,21 @@ baseModifier) {
   });
   print("Total ".concat(baseModifier, ": ").concat(total.toFixed(1)), totalColor);
 }
+/**
+ * Take the sum of a modifier over an array of Skills, Effects, and Items
+ *
+ * @param modifier A NumericModifier that we want to find the total value of
+ * @param subjects A rested array of Skills, Effects, and Items that we want to find the total value of
+ * @returns The sum of the appropriate modifier for all of the subjects
+ */
+
+function getTotalModifier(modifier) {
+  for (var _len2 = arguments.length, subjects = new Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
+    subjects[_key2 - 1] = arguments[_key2];
+  }
+
+  return sum(subjects, subject => modifier_get(modifier, subject));
+}
 ;// CONCATENATED MODULE: ./node_modules/libram/dist/template-string.js
 
 
@@ -1156,6 +5941,17 @@ var concatTemplateString = function concatTemplateString(literals) {
   }, "");
 };
 
+var handleTypeGetError = (Type, error) => {
+  var message = "".concat(error);
+  var match = message.match(RegExp("Bad ".concat(Type.name.toLowerCase(), " value: .*")));
+
+  if (match) {
+    (0,external_kolmafia_namespaceObject.print)("".concat(match[0], "; if you're certain that this ").concat(Type.name, " exists and is spelled correctly, please update KoLMafia"), "red");
+  } else {
+    (0,external_kolmafia_namespaceObject.print)(message);
+  }
+};
+
 var createSingleConstant = Type => {
   var tagFunction = function tagFunction(literals) {
     for (var _len2 = arguments.length, placeholders = new Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
@@ -1163,25 +5959,44 @@ var createSingleConstant = Type => {
     }
 
     var input = concatTemplateString.apply(void 0, [literals].concat(placeholders));
-    return Type.get(input);
+
+    try {
+      return Type.get(input);
+    } catch (error) {
+      handleTypeGetError(Type, error);
+    }
+
+    (0,external_kolmafia_namespaceObject.abort)();
   };
 
   tagFunction.none = Type.none;
   return tagFunction;
 };
 
-var createPluralConstant = Type => function (literals) {
-  for (var _len3 = arguments.length, placeholders = new Array(_len3 > 1 ? _len3 - 1 : 0), _key3 = 1; _key3 < _len3; _key3++) {
-    placeholders[_key3 - 1] = arguments[_key3];
-  }
+var createPluralConstant = Type => {
+  var tagFunction = function tagFunction(literals) {
+    for (var _len3 = arguments.length, placeholders = new Array(_len3 > 1 ? _len3 - 1 : 0), _key3 = 1; _key3 < _len3; _key3++) {
+      placeholders[_key3 - 1] = arguments[_key3];
+    }
 
-  var input = concatTemplateString.apply(void 0, [literals].concat(placeholders));
+    var input = concatTemplateString.apply(void 0, [literals].concat(placeholders));
 
-  if (input === "") {
-    return Type.all();
-  }
+    if (input === "") {
+      return Type.all();
+    }
 
-  return Type.get(splitByCommasWithEscapes(input));
+    try {
+      return Type.get(splitByCommasWithEscapes(input));
+    } catch (error) {
+      handleTypeGetError(Type, error);
+    }
+
+    (0,external_kolmafia_namespaceObject.abort)();
+  };
+
+  tagFunction.all = () => Type.all();
+
+  return tagFunction;
 };
 /**
  * A Bounty specified by name.
@@ -1304,6 +6119,21 @@ var $location = createSingleConstant(external_kolmafia_namespaceObject.Location)
  */
 
 var $locations = createPluralConstant(external_kolmafia_namespaceObject.Location);
+/**
+ * A Modifier specified by name.
+ *
+ * @category In-game constant
+ */
+
+var $modifier = createSingleConstant(external_kolmafia_namespaceObject.Modifier);
+/**
+ * A list of Modifiers specified by a comma-separated list of names.
+ * For a list of all possible Modifiers, leave the template string blank.
+ *
+ * @category In-game constant
+ */
+
+var $modifiers = createPluralConstant(external_kolmafia_namespaceObject.Modifier);
 /**
  * A Monster specified by name.
  *
@@ -2220,7 +7050,7 @@ function telescope() {
  */
 
 function examine(thing) {
-  var url = thing instanceof Item ? "desc_item.php?whichitem=".concat(thing.descid) : thing instanceof Familiar ? "desc_familiar.php?which=".concat(toInt(thing)) : thing instanceof Effect ? "desc_effect.php?whicheffect=".concat(thing.descid) : "desc_skill.php?whichskill=".concat(toInt(thing));
+  var url = thing instanceof Item ? "desc_item.php?whichitem=".concat(thing.descid) : thing instanceof Familiar ? "desc_familiar.php?which=".concat(thing.id) : thing instanceof Effect ? "desc_effect.php?whicheffect=".concat(thing.descid) : "desc_skill.php?whichskill=".concat(thing.id);
   return visitUrl(url);
 }
 /**
@@ -2239,6 +7069,34 @@ var byStat = makeByXFunction(() => (0,external_kolmafia_namespaceObject.myPrimes
  */
 
 var byClass = makeByXFunction(() => (0,external_kolmafia_namespaceObject.myClass)().toString());
+/**
+ * Use an item with visitUrl instead of `use`; this is sometimes useful
+ *
+ * @param item The item you want to use
+ * @returns The html of the resulting page
+ */
+
+function lib_directlyUse(item) {
+  return (0,external_kolmafia_namespaceObject.visitUrl)("inv_use.php?which=3&whichitem=".concat(item.id, "&pwd"));
+}
+/**
+ * Empty a slot, or unequip all instances of a given equipped item
+ *
+ * @param thing The slot or item in question
+ * @returns Whether we succeeded completely--`false` if we unequip some but not all instances of the item.
+ */
+
+function unequip(thing) {
+  if (thing instanceof Slot) return equip(thing, $item.none);
+  var failedSlots = Slot.all().filter(s => {
+    // Filter the slot out if it doesn't contain the relevant item
+    if (equippedItem(s) !== thing) return false; // Filter the slot out if we succeed at unequipping it
+
+    return !unequip(thing); // This leaves only slots that do contain the item but that we failed to unequip
+  });
+  if (failedSlots.length) logger.debug("Failed to unequip ".concat(thing, " from slots ").concat(failedSlots.join(", ")));
+  return failedSlots.length === 0;
+}
 ;// CONCATENATED MODULE: ./node_modules/libram/dist/resources/2007/CandyHearts.js
 var CandyHearts_templateObject, CandyHearts_templateObject2, CandyHearts_templateObject3, CandyHearts_templateObject4, CandyHearts_templateObject5, CandyHearts_templateObject6, CandyHearts_templateObject7;
 
@@ -2419,6 +7277,8 @@ function PulledTaffy_expected() {
   return new Map([[template_string_$item(PulledTaffy_templateObject2 || (PulledTaffy_templateObject2 = PulledTaffy_taggedTemplateLiteral(["pulled blue taffy"]))), commonChance], [template_string_$item(PulledTaffy_templateObject3 || (PulledTaffy_templateObject3 = PulledTaffy_taggedTemplateLiteral(["pulled orange taffy"]))), commonChance], [template_string_$item(PulledTaffy_templateObject4 || (PulledTaffy_templateObject4 = PulledTaffy_taggedTemplateLiteral(["pulled violet taffy"]))), commonChance], [template_string_$item(PulledTaffy_templateObject5 || (PulledTaffy_templateObject5 = PulledTaffy_taggedTemplateLiteral(["pulled red taffy"]))), commonChance], [template_string_$item(PulledTaffy_templateObject6 || (PulledTaffy_templateObject6 = PulledTaffy_taggedTemplateLiteral(["pulled indigo taffy"]))), rareChance], [template_string_$item(PulledTaffy_templateObject7 || (PulledTaffy_templateObject7 = PulledTaffy_taggedTemplateLiteral(["pulled green taffy"]))), rareChance], [template_string_$item(PulledTaffy_templateObject8 || (PulledTaffy_templateObject8 = PulledTaffy_taggedTemplateLiteral(["pulled yellow taffy"]))), yellowChance]]);
 }
 ;// CONCATENATED MODULE: ./node_modules/libram/dist/resources/LibramSummon.js
+var LibramSummon_templateObject, LibramSummon_templateObject2, LibramSummon_templateObject3, LibramSummon_templateObject4, LibramSummon_templateObject5, LibramSummon_templateObject6, LibramSummon_templateObject7, LibramSummon_templateObject8, LibramSummon_templateObject9, LibramSummon_templateObject10, LibramSummon_templateObject11, LibramSummon_templateObject12, LibramSummon_templateObject13, LibramSummon_templateObject14;
+
 function LibramSummon_slicedToArray(arr, i) { return LibramSummon_arrayWithHoles(arr) || LibramSummon_iterableToArrayLimit(arr, i) || LibramSummon_unsupportedIterableToArray(arr, i) || LibramSummon_nonIterableRest(); }
 
 function LibramSummon_nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -2430,6 +7290,9 @@ function LibramSummon_arrayLikeToArray(arr, len) { if (len == null || len > arr.
 function LibramSummon_iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"]; if (_i == null) return; var _arr = []; var _n = true; var _d = false; var _s, _e; try { for (_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
 
 function LibramSummon_arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+function LibramSummon_taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(0); } return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
+
 
 
 
@@ -2448,25 +7311,25 @@ function LibramSummon_arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; 
 
 function expectedLibramSummon(summonSkill) {
   switch (summonSkill) {
-    case candyHeartsSkill:
+    case $skill(LibramSummon_templateObject || (LibramSummon_templateObject = LibramSummon_taggedTemplateLiteral(["Summon Candy Heart"]))):
       return candyHeartsExpected();
 
-    case divineFavorsSkill:
+    case $skill(LibramSummon_templateObject2 || (LibramSummon_templateObject2 = LibramSummon_taggedTemplateLiteral(["Summon Party Favor"]))):
       return divineFavorsExpected();
 
-    case loveSongsSkill:
+    case $skill(LibramSummon_templateObject3 || (LibramSummon_templateObject3 = LibramSummon_taggedTemplateLiteral(["Summon Love Song"]))):
       return loveSongsExpected();
 
-    case brickosSkill:
+    case $skill(LibramSummon_templateObject4 || (LibramSummon_templateObject4 = LibramSummon_taggedTemplateLiteral(["Summon BRICKOs"]))):
       return brickosExpected();
 
-    case diceSkill:
+    case $skill(LibramSummon_templateObject5 || (LibramSummon_templateObject5 = LibramSummon_taggedTemplateLiteral(["Summon Dice"]))):
       return diceExpected();
 
-    case resolutionsSkill:
+    case $skill(LibramSummon_templateObject6 || (LibramSummon_templateObject6 = LibramSummon_taggedTemplateLiteral(["Summon Resolutions"]))):
       return resolutionsExpected();
 
-    case taffySkill:
+    case $skill(LibramSummon_templateObject7 || (LibramSummon_templateObject7 = LibramSummon_taggedTemplateLiteral(["Summon Taffy"]))):
       return taffyExpected();
   }
 
@@ -2481,31 +7344,31 @@ function possibleLibramSummons() {
   var results = new Map();
 
   if (CandyHearts_have()) {
-    results.set(summonSkill, expected());
+    results.set(template_string_$skill(LibramSummon_templateObject8 || (LibramSummon_templateObject8 = LibramSummon_taggedTemplateLiteral(["Summon Candy Heart"]))), expected());
   }
 
   if (DivineFavors_have()) {
-    results.set(DivineFavors_summonSkill, DivineFavors_expected());
+    results.set(template_string_$skill(LibramSummon_templateObject9 || (LibramSummon_templateObject9 = LibramSummon_taggedTemplateLiteral(["Summon Party Favor"]))), DivineFavors_expected());
   }
 
   if (LoveSongs_have()) {
-    results.set(LoveSongs_summonSkill, LoveSongs_expected());
+    results.set(template_string_$skill(LibramSummon_templateObject10 || (LibramSummon_templateObject10 = LibramSummon_taggedTemplateLiteral(["Summon Love Song"]))), LoveSongs_expected());
   }
 
   if (Brickos_have()) {
-    results.set(Brickos_summonSkill, Brickos_expected());
+    results.set(template_string_$skill(LibramSummon_templateObject11 || (LibramSummon_templateObject11 = LibramSummon_taggedTemplateLiteral(["Summon BRICKOs"]))), Brickos_expected());
   }
 
   if (Gygaxian_have()) {
-    results.set(Gygaxian_summonSkill, Gygaxian_expected());
+    results.set(template_string_$skill(LibramSummon_templateObject12 || (LibramSummon_templateObject12 = LibramSummon_taggedTemplateLiteral(["Summon Dice"]))), Gygaxian_expected());
   }
 
   if (Resolutions_have()) {
-    results.set(Resolutions_summonSkill, Resolutions_expected());
+    results.set(template_string_$skill(LibramSummon_templateObject13 || (LibramSummon_templateObject13 = LibramSummon_taggedTemplateLiteral(["Summon Resolutions"]))), Resolutions_expected());
   }
 
   if (PulledTaffy_have()) {
-    results.set(PulledTaffy_summonSkill, PulledTaffy_expected());
+    results.set(template_string_$skill(LibramSummon_templateObject14 || (LibramSummon_templateObject14 = LibramSummon_taggedTemplateLiteral(["Summon Taffy"]))), PulledTaffy_expected());
   }
 
   return results;
@@ -2681,6 +7544,12 @@ function maximize_arrayLikeToArray(arr, len) { if (len == null || len > arr.leng
 
 
 
+
+function toMaximizerName(_ref) {
+  var name = _ref.name,
+      id = _ref.id;
+  return name.includes(";") ? "\xB6".concat(id) : name;
+}
 /**
  * Merges a partial set of maximizer options onto a full set maximizer options. We merge via overriding for all boolean properties and for onlySlot, and concat all other array properties.
  *
@@ -2688,6 +7557,7 @@ function maximize_arrayLikeToArray(arr, len) { if (len == null || len > arr.leng
  * @param addendums Options to attempt to merge onto defaultOptions.
  * @returns Merged maximizer options
  */
+
 
 function mergeMaximizeOptions(defaultOptions, addendums) {
   var _addendums$updateOnFa, _addendums$updateOnCa, _addendums$useOutfitC, _addendums$forceEquip, _addendums$preventEqu, _addendums$bonusEquip, _addendums$onlySlot, _addendums$preventSlo, _addendums$forceUpdat, _addendums$modes;
@@ -3063,21 +7933,21 @@ function verifyCached(entry) {
         var _entry$equipment$get;
 
         return [slot, (_entry$equipment$get = entry.equipment.get(slot)) !== null && _entry$equipment$get !== void 0 ? _entry$equipment$get : null];
-      }).filter(_ref => {
-        var _ref2 = maximize_slicedToArray(_ref, 2),
-            item = _ref2[1];
+      }).filter(_ref2 => {
+        var _ref3 = maximize_slicedToArray(_ref2, 2),
+            item = _ref3[1];
 
         return item !== null;
       });
-      var desiredSet = desiredSlots.map(_ref3 => {
-        var _ref4 = maximize_slicedToArray(_ref3, 2),
-            item = _ref4[1];
+      var desiredSet = desiredSlots.map(_ref4 => {
+        var _ref5 = maximize_slicedToArray(_ref4, 2),
+            item = _ref5[1];
 
         return item;
       });
-      var equippedSet = desiredSlots.map(_ref5 => {
-        var _ref6 = maximize_slicedToArray(_ref5, 1),
-            slot = _ref6[0];
+      var equippedSet = desiredSlots.map(_ref6 => {
+        var _ref7 = maximize_slicedToArray(_ref6, 1),
+            slot = _ref7[0];
 
         return (0,external_kolmafia_namespaceObject.equippedItem)(slot);
       });
@@ -3240,17 +8110,17 @@ function maximizeCached(objectives) {
       preventSlot = fullOptions.preventSlot,
       forceUpdate = fullOptions.forceUpdate; // Sort each group in objective to ensure consistent ordering in string
 
-  var objective = maximize_toConsumableArray(new Set([].concat(maximize_toConsumableArray(objectives.sort()), maximize_toConsumableArray(forceEquip.map(item => "equip ".concat(item)).sort()), maximize_toConsumableArray(preventEquip.map(item => "-equip ".concat(item)).sort()), maximize_toConsumableArray(onlySlot.map(slot => "".concat(slot)).sort()), maximize_toConsumableArray(preventSlot.map(slot => "-".concat(slot)).sort()), maximize_toConsumableArray(Array.from(bonusEquip.entries()).filter(_ref7 => {
-    var _ref8 = maximize_slicedToArray(_ref7, 2),
-        bonus = _ref8[1];
+  var objective = maximize_toConsumableArray(new Set([].concat(maximize_toConsumableArray(objectives.sort()), maximize_toConsumableArray(forceEquip.map(item => "\"equip ".concat(toMaximizerName(item), "\"")).sort()), maximize_toConsumableArray(preventEquip.map(item => "-\"equip ".concat(toMaximizerName(item), "\"")).sort()), maximize_toConsumableArray(onlySlot.map(slot => "".concat(slot)).sort()), maximize_toConsumableArray(preventSlot.map(slot => "-".concat(slot)).sort()), maximize_toConsumableArray(Array.from(bonusEquip.entries()).filter(_ref8 => {
+    var _ref9 = maximize_slicedToArray(_ref8, 2),
+        bonus = _ref9[1];
 
     return bonus !== 0;
-  }).map(_ref9 => {
-    var _ref10 = maximize_slicedToArray(_ref9, 2),
-        item = _ref10[0],
-        bonus = _ref10[1];
+  }).map(_ref10 => {
+    var _ref11 = maximize_slicedToArray(_ref10, 2),
+        item = _ref11[0],
+        bonus = _ref11[1];
 
-    return "".concat(Math.round(bonus * 100) / 100, " bonus ").concat(item);
+    return "".concat(Math.round(bonus * 100) / 100, " \"bonus ").concat(toMaximizerName(item), "\"");
   }).sort())))).join(", "); // Items equipped in slots not touched by the maximizer must be in the cache key
 
 
@@ -3519,6 +8389,8 @@ var CommunityService = /*#__PURE__*/function () {
 
     CommunityService_defineProperty(this, "maximizeRequirements", void 0);
 
+    CommunityService_defineProperty(this, "timer", null);
+
     this.choice = id;
     this.stat = stat;
     this.property = property;
@@ -3571,6 +8443,20 @@ var CommunityService = /*#__PURE__*/function () {
     get: function get() {
       return this.maximizeRequirements;
     }
+    /**
+     * Start the time & turn counter for the Test in question.
+     */
+
+  }, {
+    key: "startTimer",
+    value: function startTimer() {
+      var _this$timer;
+
+      (_this$timer = this.timer) !== null && _this$timer !== void 0 ? _this$timer : this.timer = {
+        time: Date.now(),
+        turns: (0,external_kolmafia_namespaceObject.myTurncount)()
+      };
+    }
   }, {
     key: "isDone",
     value:
@@ -3616,16 +8502,23 @@ var CommunityService = /*#__PURE__*/function () {
   }, {
     key: "run",
     value: function run(prepare) {
+      var _this$timer2;
+
       var maxTurns = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : Infinity;
       if (this.isDone()) return "already completed";
-      var startTime = Date.now();
-      var startTurns = (0,external_kolmafia_namespaceObject.myTurncount)();
+
+      var _ref = (_this$timer2 = this.timer) !== null && _this$timer2 !== void 0 ? _this$timer2 : {
+        time: Date.now(),
+        turns: (0,external_kolmafia_namespaceObject.myTurncount)()
+      },
+          time = _ref.time,
+          turns = _ref.turns;
+
       var additionalTurns;
 
       try {
-        var _prepare;
-
-        additionalTurns = (_prepare = prepare()) !== null && _prepare !== void 0 ? _prepare : 0;
+        var result = prepare();
+        additionalTurns = typeof result === "number" ? result : 0;
       } catch (e) {
         (0,external_kolmafia_namespaceObject.print)("".concat(e), "red");
         return "failed";
@@ -3634,19 +8527,19 @@ var CommunityService = /*#__PURE__*/function () {
       var prediction = this.predictor();
       var council = visitCouncil();
 
-      var turns = this._actualCost(council);
+      var turnCost = this._actualCost(council);
 
-      if (!turns) return "already completed";
+      if (!turnCost) return "already completed";
 
-      if (turns > Math.min(maxTurns, (0,external_kolmafia_namespaceObject.myAdventures)())) {
+      if (turnCost > Math.min(maxTurns, (0,external_kolmafia_namespaceObject.myAdventures)())) {
         return "failed";
       }
 
       if (!this.do()) return "failed";
       CommunityService.log[this.property] = {
         predictedTurns: prediction + additionalTurns,
-        turnCost: (0,external_kolmafia_namespaceObject.myTurncount)() - startTurns,
-        seconds: (Date.now() - startTime) / 1000,
+        turnCost: (0,external_kolmafia_namespaceObject.myTurncount)() - turns,
+        seconds: (Date.now() - time) / 1000,
         type: "test"
       };
       return "completed";
@@ -3689,18 +8582,40 @@ var CommunityService = /*#__PURE__*/function () {
      */
 
   }], [{
+    key: "startTimer",
+    value:
+    /**
+     * Start the time & turn counter for the given task
+     *
+     * @param name The name of the task to start the counter of
+     */
+    function startTimer(name) {
+      if (!this.taskTimers.has(name)) {
+        this.taskTimers.set(name, {
+          time: Date.now(),
+          turns: (0,external_kolmafia_namespaceObject.myTurncount)()
+        });
+      }
+    }
+  }, {
     key: "logTask",
     value: function logTask(name, action) {
-      var _action;
+      var _action, _this$taskTimers$get;
 
-      var startTime = Date.now();
-      var startTurns = (0,external_kolmafia_namespaceObject.myTurncount)();
       var estimatedTurns = (_action = action()) !== null && _action !== void 0 ? _action : 0;
+
+      var _ref2 = (_this$taskTimers$get = this.taskTimers.get(name)) !== null && _this$taskTimers$get !== void 0 ? _this$taskTimers$get : {
+        time: Date.now(),
+        turns: (0,external_kolmafia_namespaceObject.myTurncount)()
+      },
+          time = _ref2.time,
+          turns = _ref2.turns;
+
       CommunityService.log[name] = {
         type: "task",
-        turnCost: (0,external_kolmafia_namespaceObject.myTurncount)() - startTurns,
+        turnCost: (0,external_kolmafia_namespaceObject.myTurncount)() - turns,
         predictedTurns: estimatedTurns,
-        seconds: (Date.now() - startTime) / 1000
+        seconds: (Date.now() - time) / 1000
       };
     }
   }, {
@@ -3737,9 +8652,9 @@ var CommunityService = /*#__PURE__*/function () {
         }
       }
 
-      var totalTime = utils_sum(logEntries, _ref => {
-        var _ref2 = CommunityService_slicedToArray(_ref, 2),
-            testEntry = _ref2[1];
+      var totalTime = utils_sum(logEntries, _ref3 => {
+        var _ref4 = CommunityService_slicedToArray(_ref3, 2),
+            testEntry = _ref4[1];
 
         return testEntry.seconds;
       });
@@ -3750,6 +8665,8 @@ var CommunityService = /*#__PURE__*/function () {
 
   return CommunityService;
 }();
+
+CommunityService_defineProperty(CommunityService, "taskTimers", new Map());
 
 CommunityService_defineProperty(CommunityService, "log", {});
 
@@ -4741,9 +9658,11 @@ var CommandParser = /*#__PURE__*/function () {
 
   return CommandParser;
 }();
+;// CONCATENATED MODULE: ./node_modules/libram/dist/overlappingNames.js
+/** THIS FILE IS AUTOMATICALLY GENERATED. See tools/parseItemSkillNames.ts for more information */
+var overlappingItemNames = ["spider web", "really sticky spider web", "dictionary", "NG", "Cloaca-Cola", "yo-yo", "top", "ball", "kite", "yo", "red potion", "blue potion", "bowling ball", "adder", "red button", "pile of sand", "mushroom", "deluxe mushroom"];
+var overlappingSkillNames = ["Shoot", "Thrust-Smack", "Headbutt", "Toss", "Knife in the Dark", "Sing", "Disarm", "LIGHT", "BURN", "Extract", "Meteor Shower", "Snipe", "Cleave", "Boil", "Slice", "Rainbow"];
 ;// CONCATENATED MODULE: ./node_modules/libram/dist/combat.js
-var combat_templateObject, combat_templateObject2;
-
 function _get(target, property, receiver) { if (typeof Reflect !== "undefined" && Reflect.get) { _get = Reflect.get; } else { _get = function _get(target, property, receiver) { var base = _superPropBase(target, property); if (!base) return; var desc = Object.getOwnPropertyDescriptor(base, property); if (desc.get) { return desc.get.call(receiver); } return desc.value; }; } return _get(target, property, receiver || target); }
 
 function _superPropBase(object, property) { while (!Object.prototype.hasOwnProperty.call(object, property)) { object = combat_getPrototypeOf(object); if (object === null) break; } return object; }
@@ -4790,8 +9709,6 @@ function combat_setPrototypeOf(o, p) { combat_setPrototypeOf = Object.setPrototy
 
 function combat_getPrototypeOf(o) { combat_getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return combat_getPrototypeOf(o); }
 
-function combat_taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(0); } return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
-
 
 
 
@@ -4826,12 +9743,7 @@ function getMacroId() {
 
 function itemOrNameToItem(itemOrName) {
   return typeof itemOrName === "string" ? external_kolmafia_namespaceObject.Item.get(itemOrName) : itemOrName;
-} // The list of all combat items whose name is a strict substring of another combat item
-
-
-var substringCombatItems = template_string_$items(combat_templateObject || (combat_templateObject = combat_taggedTemplateLiteral(["spider web, really sticky spider web, dictionary, NG, Cloaca-Cola, yo-yo, top, ball, kite, yo, red potion, blue potion, bowling ball, adder, red button, pile of sand, mushroom, deluxe mushroom"]))); // The list of all combat skills whose name is a strict substring of another combat skill
-
-var substringCombatSkills = $skills(combat_templateObject2 || (combat_templateObject2 = combat_taggedTemplateLiteral(["Shoot, Thrust-Smack, Headbutt, Toss, Sing, Disarm, LIGHT, BURN, Extract, Meteor Shower, Snipe, Cleave, Boil, Slice, Rainbow"])));
+}
 /**
  * Create a string of the item or items provided that is compatible with BALLS syntax and is non-ambiguous
  *
@@ -4839,12 +9751,13 @@ var substringCombatSkills = $skills(combat_templateObject2 || (combat_templateOb
  * @returns BALLS macro-compatible value for item or items provided
  */
 
+
 function itemOrItemsBallsMacroName(itemOrItems) {
   if (Array.isArray(itemOrItems)) {
     return itemOrItems.map(itemOrItemsBallsMacroName).join(", ");
   } else {
     var item = itemOrNameToItem(itemOrItems);
-    return !substringCombatItems.includes(item) ? item.name : (0,external_kolmafia_namespaceObject.toInt)(item).toString();
+    return !overlappingItemNames.includes(item.name) ? item.name : item.id.toFixed(0);
   }
 }
 /**
@@ -4887,7 +9800,7 @@ function skillOrNameToSkill(skillOrName) {
 
 function skillBallsMacroName(skillOrName) {
   var skill = skillOrNameToSkill(skillOrName);
-  return skill.name.match(/^[A-Za-z ]+$/) && !substringCombatSkills.includes(skill) ? skill.name : (0,external_kolmafia_namespaceObject.toInt)(skill);
+  return skill.name.match(/^[A-Za-z ]+$/) && !overlappingSkillNames.includes(skill.name) ? skill.name : skill.id;
 }
 
 var InvalidMacroError = /*#__PURE__*/function (_Error) {
@@ -5061,6 +9974,25 @@ var Macro = /*#__PURE__*/function () {
      * Create a new macro with an "abort" step.
      *
      * @returns {Macro} This object itself.
+     */
+
+  }, {
+    key: "abortWithWarning",
+    value:
+    /**
+     * Adds an "abort" step to this macro, with a warning message to print
+     *
+     * @param warning The warning message to print
+     * @returns  {Macro} This object itself.
+     */
+    function abortWithWarning(warning) {
+      return this.step("abort \"".concat(warning, "\""));
+    }
+    /**
+     * Create a new macro with an "abort" step to this macro, with a warning message to print
+     *
+     * @param warning The warning message to print
+     * @returns  {Macro} This object itself.
      */
 
   }, {
@@ -5417,6 +10349,11 @@ var Macro = /*#__PURE__*/function () {
       return new this().abort();
     }
   }, {
+    key: "abortWithWarning",
+    value: function abortWithWarning(warning) {
+      return new this().abortWithWarning(warning);
+    }
+  }, {
     key: "runaway",
     value: function runaway() {
       return new this().runaway();
@@ -5432,7 +10369,7 @@ var Macro = /*#__PURE__*/function () {
         ballsCondition = condition.map(mon => "monsterid ".concat(mon.id)).join(" || ");
         ballsCondition = "(".concat(ballsCondition, ")");
       } else if (condition instanceof external_kolmafia_namespaceObject.Effect) {
-        ballsCondition = "haseffect ".concat((0,external_kolmafia_namespaceObject.toInt)(condition));
+        ballsCondition = "haseffect ".concat(condition.id);
       } else if (condition instanceof external_kolmafia_namespaceObject.Skill) {
         ballsCondition = "hasskill ".concat(skillBallsMacroName(condition));
       } else if (condition instanceof external_kolmafia_namespaceObject.Item) {
@@ -5450,7 +10387,7 @@ var Macro = /*#__PURE__*/function () {
 
         ballsCondition = "snarfblat ".concat(snarfblat);
       } else if (condition instanceof external_kolmafia_namespaceObject.Class) {
-        if ((0,external_kolmafia_namespaceObject.toInt)(condition) > 6) {
+        if (condition.id > 6) {
           throw new InvalidMacroError("Class ".concat(condition, " cannot be made a valid BALLS predicate (it is not a standard class)"));
         }
 
@@ -5775,10 +10712,6 @@ var StrictMacro = /*#__PURE__*/function (_Macro) {
 
   return StrictMacro;
 }(Macro);
-;// CONCATENATED MODULE: ./node_modules/grimoire-kolmafia/dist/lib.js
-function lib_undelay(delayedObject) {
-  return typeof delayedObject === "function" ? delayedObject() : delayedObject;
-}
 ;// CONCATENATED MODULE: ./node_modules/grimoire-kolmafia/dist/combat.js
 function dist_combat_inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) dist_combat_setPrototypeOf(subClass, superClass); }
 
@@ -5813,7 +10746,6 @@ function dist_combat_classCallCheck(instance, Constructor) { if (!(instance inst
 function dist_combat_defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function dist_combat_createClass(Constructor, protoProps, staticProps) { if (protoProps) dist_combat_defineProperties(Constructor.prototype, protoProps); if (staticProps) dist_combat_defineProperties(Constructor, staticProps); return Constructor; }
-
 
 
 
@@ -6165,7 +11097,7 @@ var CombatStrategy = /*#__PURE__*/function () {
       var result = new Macro(); // If there is macro precursor, do it now
 
       if (this.starting_macro) {
-        result.step.apply(result, dist_combat_toConsumableArray(this.starting_macro.map(lib_undelay)));
+        result.step.apply(result, dist_combat_toConsumableArray(this.starting_macro.map(undelay)));
       } // Perform any monster-specific macros (these may or may not end the fight)
 
 
@@ -6173,11 +11105,11 @@ var CombatStrategy = /*#__PURE__*/function () {
       this.macros.forEach((value, key) => {
         var _Macro;
 
-        monster_macros.add(key, (_Macro = new Macro()).step.apply(_Macro, dist_combat_toConsumableArray(value.map(lib_undelay))));
+        monster_macros.add(key, (_Macro = new Macro()).step.apply(_Macro, dist_combat_toConsumableArray(value.map(undelay))));
       });
       result.step(monster_macros.compile()); // Perform the non-monster specific macro
 
-      if (this.default_macro) result.step.apply(result, dist_combat_toConsumableArray(this.default_macro.map(lib_undelay))); // Perform any monster-specific actions (these should end the fight)
+      if (this.default_macro) result.step.apply(result, dist_combat_toConsumableArray(this.default_macro.map(undelay))); // Perform any monster-specific actions (these should end the fight)
 
       var monster_actions = new CompressedMacro();
       this.actions.forEach((action, key) => {
@@ -6210,11 +11142,11 @@ var CombatStrategy = /*#__PURE__*/function () {
       this.autoattacks.forEach((value, key) => {
         var _Macro2;
 
-        monster_macros.add(key, (_Macro2 = new Macro()).step.apply(_Macro2, dist_combat_toConsumableArray(value.map(lib_undelay))));
+        monster_macros.add(key, (_Macro2 = new Macro()).step.apply(_Macro2, dist_combat_toConsumableArray(value.map(undelay))));
       });
       result.step(monster_macros.compile()); // Perform the non-monster specific macro
 
-      if (this.default_autoattack) result.step.apply(result, dist_combat_toConsumableArray(this.default_autoattack.map(lib_undelay)));
+      if (this.default_autoattack) result.step.apply(result, dist_combat_toConsumableArray(this.default_autoattack.map(undelay)));
       return result;
     }
     /**
@@ -6404,14 +11336,14 @@ var CombatResources = /*#__PURE__*/function () {
       if (resource === undefined) return undefined;
       if (resource.do instanceof external_kolmafia_namespaceObject.Item) return new Macro().item(resource.do);
       if (resource.do instanceof external_kolmafia_namespaceObject.Skill) return new Macro().skill(resource.do);
-      return lib_undelay(resource.do);
+      return undelay(resource.do);
     }
   }]);
 
   return CombatResources;
 }();
 ;// CONCATENATED MODULE: ./node_modules/grimoire-kolmafia/dist/outfit.js
-var outfit_templateObject, outfit_templateObject2, outfit_templateObject3, outfit_templateObject4, outfit_templateObject5, outfit_templateObject6, outfit_templateObject7, outfit_templateObject8, outfit_templateObject9, outfit_templateObject10, outfit_templateObject11, outfit_templateObject12, outfit_templateObject13, outfit_templateObject14, outfit_templateObject15, outfit_templateObject16, outfit_templateObject17, outfit_templateObject18, outfit_templateObject19, outfit_templateObject20, outfit_templateObject21, outfit_templateObject22, outfit_templateObject23, outfit_templateObject24, outfit_templateObject25, outfit_templateObject26, outfit_templateObject27, outfit_templateObject28, outfit_templateObject29, outfit_templateObject30, outfit_templateObject31, outfit_templateObject32, outfit_templateObject33, outfit_templateObject34, outfit_templateObject35, outfit_templateObject36, outfit_templateObject37, outfit_templateObject38, outfit_templateObject39, outfit_templateObject40, outfit_templateObject41, outfit_templateObject42, outfit_templateObject43, outfit_templateObject44, outfit_templateObject45, outfit_templateObject46, outfit_templateObject47, outfit_templateObject48, _templateObject49, _templateObject50, _templateObject51, _templateObject52, _templateObject53, _templateObject54, _templateObject55, _templateObject56, _templateObject57, _templateObject58, _templateObject59, _templateObject60;
+var outfit_templateObject, outfit_templateObject2, outfit_templateObject3, outfit_templateObject4, outfit_templateObject5, outfit_templateObject6, outfit_templateObject7, outfit_templateObject8, outfit_templateObject9, outfit_templateObject10, outfit_templateObject11, outfit_templateObject12, outfit_templateObject13, outfit_templateObject14, outfit_templateObject15, outfit_templateObject16, outfit_templateObject17, outfit_templateObject18, outfit_templateObject19, outfit_templateObject20, outfit_templateObject21, outfit_templateObject22, outfit_templateObject23, outfit_templateObject24, outfit_templateObject25, outfit_templateObject26, outfit_templateObject27, outfit_templateObject28, outfit_templateObject29, outfit_templateObject30, outfit_templateObject31, outfit_templateObject32, outfit_templateObject33, outfit_templateObject34, outfit_templateObject35, outfit_templateObject36, outfit_templateObject37, outfit_templateObject38, outfit_templateObject39, outfit_templateObject40, outfit_templateObject41, outfit_templateObject42, outfit_templateObject43, outfit_templateObject44, outfit_templateObject45, outfit_templateObject46, outfit_templateObject47, outfit_templateObject48, _templateObject49, _templateObject50, _templateObject51, _templateObject52, _templateObject53, _templateObject54, _templateObject55, _templateObject56, _templateObject57, _templateObject58, _templateObject59, _templateObject60, _templateObject61, _templateObject62, _templateObject63, _templateObject64, _templateObject65, _templateObject66, _templateObject67;
 
 function outfit_ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
 
@@ -6471,6 +11403,8 @@ var Outfit = /*#__PURE__*/function () {
     this.modifier = [];
     this.avoid = [];
     this.bonuses = new Map();
+    this.postActions = [];
+    this.preActions = [];
   }
   /**
    * Create an outfit from your current player state.
@@ -6590,6 +11524,7 @@ var Outfit = /*#__PURE__*/function () {
     }
     /**
      * Returns the bonus value associated with a given item.
+     *
      * @param item The item to check the bonus of.
      * @returns The bonus assigned to that item.
      */
@@ -6602,25 +11537,37 @@ var Outfit = /*#__PURE__*/function () {
       return (_a = this.bonuses.get(item)) !== null && _a !== void 0 ? _a : 0;
     }
     /**
-     * Sets the bonus value of an item equal to a given value, overriding any current bonus assigned.
+     * Applies a value to any existing bonus this item has, using a rule assigned by the `reducer` parameter
      *
-     * Only triggers on items that may be equipped to this outfit.
      * @param item The item to try to apply a bonus to.
      * @param value The value to try to apply.
-     * @returns Whether the bonus was successfully asigned.
+     * @param reducer Function that combines new and current bonus
+     * @returns The total assigned bonus to that item.
+     */
+
+  }, {
+    key: "applyBonus",
+    value: function applyBonus(item, value, reducer) {
+      var previous = this.getBonus(item);
+      return this.setBonus(item, reducer(value, previous));
+    }
+    /**
+     * Sets the bonus value of an item equal to a given value, overriding any current bonus assigned.
+     *
+     * @param item The item to try to apply a bonus to.
+     * @param value The value to try to apply.
+     * @returns The total assigned bonus to that item.
      */
 
   }, {
     key: "setBonus",
     value: function setBonus(item, value) {
-      var can = this.canEquip(item);
-      if (can) this.bonuses.set(item, value);
-      return can;
+      this.bonuses.set(item, value);
+      return value;
     }
     /**
-     * Adds a value to any existing bonus this item has; if it started without a bonus, sets the bonus equal to that value.
+     * Adds a value to any existing bonus this item has
      *
-     * Only triggers on items that may be equipped to this outfit.
      * @param item The item to try to add a bonus to.
      * @param value The value to try to add.
      * @returns The total assigned bonus to that item.
@@ -6629,9 +11576,56 @@ var Outfit = /*#__PURE__*/function () {
   }, {
     key: "addBonus",
     value: function addBonus(item, value) {
-      var previous = this.getBonus(item);
-      this.setBonus(item, previous + value);
-      return this.getBonus(item);
+      return this.applyBonus(item, value, (a, b) => a + b);
+    }
+    /**
+     * Apply the given items' bonuses to the outfit, using a rule given by the reducer
+     *
+     * @param items A map containing items and their bonuses
+     * @param reducer A way of combining new bonuses with existing bonuses
+     */
+
+  }, {
+    key: "applyBonuses",
+    value: function applyBonuses(items, reducer) {
+      var _iterator = outfit_createForOfIteratorHelper(items),
+          _step;
+
+      try {
+        for (_iterator.s(); !(_step = _iterator.n()).done;) {
+          var _step$value = outfit_slicedToArray(_step.value, 2),
+              item = _step$value[0],
+              value = _step$value[1];
+
+          this.applyBonus(item, value, reducer);
+        }
+      } catch (err) {
+        _iterator.e(err);
+      } finally {
+        _iterator.f();
+      }
+    }
+    /**
+     * Sets the bonuses of the given items, overriding existing bonuses
+     *
+     * @param items Map containing items and bonuses
+     */
+
+  }, {
+    key: "setBonuses",
+    value: function setBonuses(items) {
+      this.applyBonuses(items, a => a);
+    }
+    /**
+     * Adds the bonuses of the given items to any existing bonuses they ahave
+     *
+     * @param items Map containing items and bonuses
+     */
+
+  }, {
+    key: "addBonuses",
+    value: function addBonuses(items) {
+      this.applyBonuses(items, (a, b) => a + b);
     }
   }, {
     key: "equipUsingFamiliar",
@@ -6670,38 +11664,38 @@ var Outfit = /*#__PURE__*/function () {
     value: function equipSpec(spec) {
       var _this$avoid;
 
-      var _a, _b, _c, _d;
+      var _a, _b, _c, _d, _e, _f;
 
       var succeeded = true;
 
-      var _iterator = outfit_createForOfIteratorHelper(outfitSlots),
-          _step;
+      var _iterator2 = outfit_createForOfIteratorHelper(outfitSlots),
+          _step2;
 
       try {
-        for (_iterator.s(); !(_step = _iterator.n()).done;) {
-          var slotName = _step.value;
+        for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
+          var slotName = _step2.value;
           var slot = (_a = new Map([["famequip", $slot(outfit_templateObject25 || (outfit_templateObject25 = outfit_taggedTemplateLiteral(["familiar"])))], ["offhand", $slot(outfit_templateObject26 || (outfit_templateObject26 = outfit_taggedTemplateLiteral(["off-hand"])))]]).get(slotName)) !== null && _a !== void 0 ? _a : (0,external_kolmafia_namespaceObject.toSlot)(slotName);
           var itemOrItems = spec[slotName];
           if (itemOrItems !== undefined && !this.equip(itemOrItems, slot)) succeeded = false;
         }
       } catch (err) {
-        _iterator.e(err);
-      } finally {
-        _iterator.f();
-      }
-
-      var _iterator2 = outfit_createForOfIteratorHelper((_b = spec === null || spec === void 0 ? void 0 : spec.equip) !== null && _b !== void 0 ? _b : []),
-          _step2;
-
-      try {
-        for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
-          var _item = _step2.value;
-          if (!this.equip(_item)) succeeded = false;
-        }
-      } catch (err) {
         _iterator2.e(err);
       } finally {
         _iterator2.f();
+      }
+
+      var _iterator3 = outfit_createForOfIteratorHelper((_b = spec === null || spec === void 0 ? void 0 : spec.equip) !== null && _b !== void 0 ? _b : []),
+          _step3;
+
+      try {
+        for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
+          var item = _step3.value;
+          if (!this.equip(item)) succeeded = false;
+        }
+      } catch (err) {
+        _iterator3.e(err);
+      } finally {
+        _iterator3.f();
       }
 
       if ((spec === null || spec === void 0 ? void 0 : spec.familiar) !== undefined) {
@@ -6730,24 +11724,11 @@ var Outfit = /*#__PURE__*/function () {
       }
 
       if (spec.bonuses) {
-        var _iterator3 = outfit_createForOfIteratorHelper(spec.bonuses),
-            _step3;
-
-        try {
-          for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
-            var _step3$value = outfit_slicedToArray(_step3.value, 2),
-                item = _step3$value[0],
-                value = _step3$value[1];
-
-            succeeded && (succeeded = value + this.getBonus(item) === this.addBonus(item, value));
-          }
-        } catch (err) {
-          _iterator3.e(err);
-        } finally {
-          _iterator3.f();
-        }
+        this.addBonuses(spec.bonuses);
       }
 
+      this.beforeDress.apply(this, outfit_toConsumableArray((_e = spec.beforeDress) !== null && _e !== void 0 ? _e : []));
+      this.afterDress.apply(this, outfit_toConsumableArray((_f = spec.afterDress) !== null && _f !== void 0 ? _f : []));
       return succeeded;
     }
     /**
@@ -6761,6 +11742,9 @@ var Outfit = /*#__PURE__*/function () {
   }, {
     key: "equipFirst",
     value: function equipFirst(things, slot) {
+      // some() returns false on an empty array, yet every() returns true.
+      // This keeps behavior consistent between slotful and slotless equipping.
+      if (things.length === 0) return true;
       return things.some(val => this.equip(val, slot));
     }
     /**
@@ -6968,6 +11952,20 @@ var Outfit = /*#__PURE__*/function () {
     value: function tryEquip(thing, slot) {
       return this.canEquip(thing, slot) && this.equip(thing, slot);
     }
+  }, {
+    key: "afterDress",
+    value: function afterDress() {
+      var _this$postActions;
+
+      (_this$postActions = this.postActions).push.apply(_this$postActions, arguments);
+    }
+  }, {
+    key: "beforeDress",
+    value: function beforeDress() {
+      var _this$preActions;
+
+      (_this$preActions = this.preActions).push.apply(_this$preActions, arguments);
+    }
     /**
      * Equip this outfit.
      */
@@ -7003,7 +12001,7 @@ var Outfit = /*#__PURE__*/function () {
       try {
         for (_iterator5.s(); !(_step5 = _iterator5.n()).done;) {
           var slot = _step5.value;
-          if (targetEquipment.includes((0,external_kolmafia_namespaceObject.equippedItem)(slot)) && this.equips.get(slot) !== (0,external_kolmafia_namespaceObject.equippedItem)(slot) || this.avoid.includes((0,external_kolmafia_namespaceObject.equippedItem)(slot))) (0,external_kolmafia_namespaceObject.equip)(slot, template_string_$item.none);
+          if (targetEquipment.includes((0,external_kolmafia_namespaceObject.equippedItem)(slot)) && this.equips.get(slot) !== (0,external_kolmafia_namespaceObject.equippedItem)(slot) || this.avoid.includes((0,external_kolmafia_namespaceObject.equippedItem)(slot)) || slot === $slot(_templateObject55 || (_templateObject55 = outfit_taggedTemplateLiteral(["weapon"]))) && weaponHands((0,external_kolmafia_namespaceObject.equippedItem)(slot)) !== 1 && this.equips.has($slot(_templateObject56 || (_templateObject56 = outfit_taggedTemplateLiteral(["offhand"])))) && !this.equips.has($slot(_templateObject57 || (_templateObject57 = outfit_taggedTemplateLiteral(["weapon"]))))) (0,external_kolmafia_namespaceObject.equip)(slot, template_string_$item.none);
         } // Then we equip all the non-accessory equipment.
 
       } catch (err) {
@@ -7106,12 +12104,12 @@ var Outfit = /*#__PURE__*/function () {
 
       applyModes(modes); // Handle the rider slots next
 
-      if (bjorn) {
+      if (bjorn && (0,external_kolmafia_namespaceObject.haveEquipped)(template_string_$item(_templateObject49 || (_templateObject49 = outfit_taggedTemplateLiteral(["Buddy Bjorn"]))))) {
         if ((0,external_kolmafia_namespaceObject.myEnthronedFamiliar)() === bjorn) (0,external_kolmafia_namespaceObject.enthroneFamiliar)(template_string_$familiar.none);
         if ((0,external_kolmafia_namespaceObject.myBjornedFamiliar)() !== bjorn) (0,external_kolmafia_namespaceObject.bjornifyFamiliar)(bjorn);
       }
 
-      if (crown) {
+      if (crown && (0,external_kolmafia_namespaceObject.haveEquipped)(template_string_$item(_templateObject50 || (_templateObject50 = outfit_taggedTemplateLiteral(["Crown of Thrones"]))))) {
         if ((0,external_kolmafia_namespaceObject.myBjornedFamiliar)() === crown) (0,external_kolmafia_namespaceObject.bjornifyFamiliar)(template_string_$familiar.none);
         if ((0,external_kolmafia_namespaceObject.myEnthronedFamiliar)() !== crown) (0,external_kolmafia_namespaceObject.enthroneFamiliar)(crown);
       } // Verify that all equipment was indeed equipped
@@ -7157,14 +12155,15 @@ var Outfit = /*#__PURE__*/function () {
         _iterator9.f();
       }
 
-      for (var _i3 = 0, _arr2 = [[$slot(_templateObject49 || (_templateObject49 = outfit_taggedTemplateLiteral(["buddy-bjorn"]))), external_kolmafia_namespaceObject.myBjornedFamiliar], [$slot(_templateObject50 || (_templateObject50 = outfit_taggedTemplateLiteral(["crown-of-thrones"]))), external_kolmafia_namespaceObject.myEnthronedFamiliar]]; _i3 < _arr2.length; _i3++) {
-        var _arr2$_i = outfit_slicedToArray(_arr2[_i3], 2),
+      for (var _i3 = 0, _arr2 = [[$slot(_templateObject51 || (_templateObject51 = outfit_taggedTemplateLiteral(["buddy-bjorn"]))), template_string_$item(_templateObject52 || (_templateObject52 = outfit_taggedTemplateLiteral(["Buddy Bjorn"]))), external_kolmafia_namespaceObject.myBjornedFamiliar], [$slot(_templateObject53 || (_templateObject53 = outfit_taggedTemplateLiteral(["crown-of-thrones"]))), template_string_$item(_templateObject54 || (_templateObject54 = outfit_taggedTemplateLiteral(["Crown of Thrones"]))), external_kolmafia_namespaceObject.myEnthronedFamiliar]]; _i3 < _arr2.length; _i3++) {
+        var _arr2$_i = outfit_slicedToArray(_arr2[_i3], 3),
             rider = _arr2$_i[0],
-            checkingFunction = _arr2$_i[1];
+            throne = _arr2$_i[1],
+            checkingFunction = _arr2$_i[2];
 
         var wanted = this.riders.get(rider);
 
-        if (wanted && checkingFunction() !== wanted) {
+        if (outfit_toConsumableArray(this.equips.values()).includes(throne) && wanted && checkingFunction() !== wanted) {
           throw "Failed to fully dress: (expected ".concat(rider, " ").concat(wanted, ")");
         }
       }
@@ -7172,7 +12171,36 @@ var Outfit = /*#__PURE__*/function () {
   }, {
     key: "dress",
     value: function dress() {
+      var _iterator10 = outfit_createForOfIteratorHelper(this.preActions),
+          _step10;
+
+      try {
+        for (_iterator10.s(); !(_step10 = _iterator10.n()).done;) {
+          var action = _step10.value;
+          action();
+        }
+      } catch (err) {
+        _iterator10.e(err);
+      } finally {
+        _iterator10.f();
+      }
+
       this._dress(false);
+
+      var _iterator11 = outfit_createForOfIteratorHelper(this.postActions),
+          _step11;
+
+      try {
+        for (_iterator11.s(); !(_step11 = _iterator11.n()).done;) {
+          var _action = _step11.value;
+
+          _action();
+        }
+      } catch (err) {
+        _iterator11.e(err);
+      } finally {
+        _iterator11.f();
+      }
     }
     /**
      * Build an Outfit identical to this outfit.
@@ -7190,6 +12218,8 @@ var Outfit = /*#__PURE__*/function () {
       result.modes = outfit_objectSpread({}, this.modes);
       result.riders = new Map(this.riders);
       result.bonuses = new Map(this.bonuses);
+      result.beforeDress.apply(result, outfit_toConsumableArray(this.preActions));
+      result.afterDress.apply(result, outfit_toConsumableArray(this.postActions));
       return result;
     }
     /**
@@ -7203,34 +12233,37 @@ var Outfit = /*#__PURE__*/function () {
 
       var result = {
         modifier: outfit_toConsumableArray(this.modifier),
-        familiar: this.familiar,
         avoid: outfit_toConsumableArray(this.avoid),
         skipDefaults: this.skipDefaults,
         modes: outfit_objectSpread({}, this.modes),
         bonuses: new Map(this.bonuses)
-      }; // Add all equipment forced in a particular slot
+      };
+      if (this.familiar) result.familiar = this.familiar; // Add all equipment forced in a particular slot
 
-      var _iterator10 = outfit_createForOfIteratorHelper(outfitSlots),
-          _step10;
+      var _iterator12 = outfit_createForOfIteratorHelper(outfitSlots),
+          _step12;
 
       try {
-        for (_iterator10.s(); !(_step10 = _iterator10.n()).done;) {
-          var slotName = _step10.value;
-          result[slotName] = this.equips.get((_a = new Map([["famequip", $slot(_templateObject53 || (_templateObject53 = outfit_taggedTemplateLiteral(["familiar"])))], ["offhand", $slot(_templateObject54 || (_templateObject54 = outfit_taggedTemplateLiteral(["off-hand"])))]]).get(slotName)) !== null && _a !== void 0 ? _a : (0,external_kolmafia_namespaceObject.toSlot)(slotName));
+        for (_iterator12.s(); !(_step12 = _iterator12.n()).done;) {
+          var slotName = _step12.value;
+          var entry = this.equips.get((_a = new Map([["famequip", $slot(_templateObject60 || (_templateObject60 = outfit_taggedTemplateLiteral(["familiar"])))], ["offhand", $slot(_templateObject61 || (_templateObject61 = outfit_taggedTemplateLiteral(["off-hand"])))]]).get(slotName)) !== null && _a !== void 0 ? _a : (0,external_kolmafia_namespaceObject.toSlot)(slotName));
+          if (entry) result[slotName] = entry;
         } // Include the riders
 
       } catch (err) {
-        _iterator10.e(err);
+        _iterator12.e(err);
       } finally {
-        _iterator10.f();
+        _iterator12.f();
       }
 
       var riders = {};
-      var buddyRider = this.riders.get($slot(_templateObject51 || (_templateObject51 = outfit_taggedTemplateLiteral(["buddy-bjorn"]))));
+      var buddyRider = this.riders.get($slot(_templateObject58 || (_templateObject58 = outfit_taggedTemplateLiteral(["buddy-bjorn"]))));
       if (buddyRider !== undefined) riders["buddy-bjorn"] = buddyRider;
-      var throneRider = this.riders.get($slot(_templateObject52 || (_templateObject52 = outfit_taggedTemplateLiteral(["crown-of-thrones"]))));
+      var throneRider = this.riders.get($slot(_templateObject59 || (_templateObject59 = outfit_taggedTemplateLiteral(["crown-of-thrones"]))));
       if (throneRider !== undefined) riders["crown-of-thrones"] = throneRider;
       if (buddyRider !== undefined || throneRider !== undefined) result.riders = riders;
+      if (this.preActions.length) result.beforeDress = this.preActions;
+      if (this.postActions.length) result.afterDress = this.postActions;
       return result;
     }
   }], [{
@@ -7245,13 +12278,13 @@ var Outfit = /*#__PURE__*/function () {
         throw "Failed to create outfit from current state (expected: familiar ".concat(familiar, ")");
       }
 
-      var _iterator11 = outfit_createForOfIteratorHelper(outfitSlots),
-          _step11;
+      var _iterator13 = outfit_createForOfIteratorHelper(outfitSlots),
+          _step13;
 
       try {
-        for (_iterator11.s(); !(_step11 = _iterator11.n()).done;) {
-          var slotName = _step11.value;
-          var slot = (_a = new Map([["famequip", $slot(_templateObject59 || (_templateObject59 = outfit_taggedTemplateLiteral(["familiar"])))], ["offhand", $slot(_templateObject60 || (_templateObject60 = outfit_taggedTemplateLiteral(["off-hand"])))]]).get(slotName)) !== null && _a !== void 0 ? _a : (0,external_kolmafia_namespaceObject.toSlot)(slotName);
+        for (_iterator13.s(); !(_step13 = _iterator13.n()).done;) {
+          var slotName = _step13.value;
+          var slot = (_a = new Map([["famequip", $slot(_templateObject66 || (_templateObject66 = outfit_taggedTemplateLiteral(["familiar"])))], ["offhand", $slot(_templateObject67 || (_templateObject67 = outfit_taggedTemplateLiteral(["off-hand"])))]]).get(slotName)) !== null && _a !== void 0 ? _a : (0,external_kolmafia_namespaceObject.toSlot)(slotName);
           var item = (0,external_kolmafia_namespaceObject.equippedItem)(slot);
 
           if (!outfit.equip(item, slot)) {
@@ -7259,13 +12292,13 @@ var Outfit = /*#__PURE__*/function () {
           }
         }
       } catch (err) {
-        _iterator11.e(err);
+        _iterator13.e(err);
       } finally {
-        _iterator11.f();
+        _iterator13.f();
       }
 
-      if ((0,external_kolmafia_namespaceObject.haveEquipped)(template_string_$item(_templateObject55 || (_templateObject55 = outfit_taggedTemplateLiteral(["Crown of Thrones"]))))) outfit.riders.set($slot(_templateObject56 || (_templateObject56 = outfit_taggedTemplateLiteral(["crown-of-thrones"]))), (0,external_kolmafia_namespaceObject.myEnthronedFamiliar)());
-      if ((0,external_kolmafia_namespaceObject.haveEquipped)(template_string_$item(_templateObject57 || (_templateObject57 = outfit_taggedTemplateLiteral(["Buddy Bjorn"]))))) outfit.riders.set($slot(_templateObject58 || (_templateObject58 = outfit_taggedTemplateLiteral(["buddy-bjorn"]))), (0,external_kolmafia_namespaceObject.myBjornedFamiliar)());
+      if ((0,external_kolmafia_namespaceObject.haveEquipped)(template_string_$item(_templateObject62 || (_templateObject62 = outfit_taggedTemplateLiteral(["Crown of Thrones"]))))) outfit.riders.set($slot(_templateObject63 || (_templateObject63 = outfit_taggedTemplateLiteral(["crown-of-thrones"]))), (0,external_kolmafia_namespaceObject.myEnthronedFamiliar)());
+      if ((0,external_kolmafia_namespaceObject.haveEquipped)(template_string_$item(_templateObject64 || (_templateObject64 = outfit_taggedTemplateLiteral(["Buddy Bjorn"]))))) outfit.riders.set($slot(_templateObject65 || (_templateObject65 = outfit_taggedTemplateLiteral(["buddy-bjorn"]))), (0,external_kolmafia_namespaceObject.myBjornedFamiliar)());
       outfit.setModes(outfit_getCurrentModes());
       return outfit;
     }
@@ -7273,7 +12306,36 @@ var Outfit = /*#__PURE__*/function () {
     key: "from",
     value: function from(spec) {
       var error = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+
+      var _a;
+
       var outfit = new Outfit();
+
+      if (spec instanceof Requirement) {
+        var result = {};
+        result.modifier = spec.maximizeParameters;
+
+        if ((_a = spec.maximizeOptions.forceEquip) === null || _a === void 0 ? void 0 : _a.length) {
+          result.equip = spec.maximizeOptions.forceEquip;
+        }
+
+        result.avoid = spec.maximizeOptions.preventEquip;
+        result.bonuses = spec.maximizeOptions.bonusEquip;
+
+        if (spec.maximizeOptions.modes) {
+          result.modes = convertFromLibramModes(spec.maximizeOptions.modes);
+        } // Not sure if this is necessary
+
+
+        var cleanedResult = Object.fromEntries(outfit_toConsumableArray(Object.entries(result)).filter(_ref => {
+          var _ref2 = outfit_slicedToArray(_ref, 2),
+              v = _ref2[1];
+
+          return v !== undefined;
+        }));
+        return Outfit.from(cleanedResult);
+      }
+
       var success = outfit.equip(spec);
       if (!success && error) throw error;
       return success ? outfit : null;
@@ -7302,6 +12364,11 @@ function convertToLibramModes(modes) {
     retrocape: (_a = modes["retrocape"]) === null || _a === void 0 ? void 0 : _a.filter(s => s !== undefined).join(" "),
     parka: modes["parka"]
   };
+}
+function convertFromLibramModes(modes) {
+  return modes.retrocape ? outfit_objectSpread(outfit_objectSpread({}, modes), {}, {
+    retrocape: modes.retrocape.split(" ")
+  }) : modes;
 }
 /**
  * Get the current modes of all items.
@@ -7344,18 +12411,31 @@ function engine_iterableToArray(iter) { if (typeof Symbol !== "undefined" && ite
 
 function engine_arrayWithoutHoles(arr) { if (Array.isArray(arr)) return engine_arrayLikeToArray(arr); }
 
+function engine_slicedToArray(arr, i) { return engine_arrayWithHoles(arr) || engine_iterableToArrayLimit(arr, i) || engine_unsupportedIterableToArray(arr, i) || engine_nonIterableRest(); }
+
+function engine_nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function engine_iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"]; if (_i == null) return; var _arr = []; var _n = true; var _d = false; var _s, _e; try { for (_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function engine_arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
 function engine_createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = engine_unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e2) { throw _e2; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e3) { didErr = true; err = _e3; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
 
 function engine_unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return engine_arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return engine_arrayLikeToArray(o, minLen); }
 
 function engine_arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
+function engine_ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
+
+function engine_objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { engine_ownKeys(Object(source), true).forEach(function (key) { engine_defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { engine_ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function engine_defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 function engine_defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function engine_createClass(Constructor, protoProps, staticProps) { if (protoProps) engine_defineProperties(Constructor.prototype, protoProps); if (staticProps) engine_defineProperties(Constructor, staticProps); return Constructor; }
 
 function engine_classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
 
 
 
@@ -7378,10 +12458,10 @@ var Engine = /*#__PURE__*/function () {
     this.propertyManager = new PropertiesManager();
     this.tasks_by_name = new Map();
     this.cachedCcsContents = "";
-    this.tasks = tasks;
     this.options = options !== null && options !== void 0 ? options : {};
+    this.tasks = tasks.map(task => engine_objectSpread(engine_objectSpread({}, this.options.default_task_options), task));
 
-    var _iterator = engine_createForOfIteratorHelper(tasks),
+    var _iterator = engine_createForOfIteratorHelper(this.tasks),
         _step;
 
     try {
@@ -7445,9 +12525,11 @@ var Engine = /*#__PURE__*/function () {
   }, {
     key: "available",
     value: function available(task) {
-      var _a;
+      var _a, _b;
 
-      var _iterator2 = engine_createForOfIteratorHelper((_a = task.after) !== null && _a !== void 0 ? _a : []),
+      if (((_a = task.limit) === null || _a === void 0 ? void 0 : _a.skip) !== undefined && this.attempts[task.name] >= task.limit.skip) return false;
+
+      var _iterator2 = engine_createForOfIteratorHelper((_b = task.after) !== null && _b !== void 0 ? _b : []),
           _step2;
 
       try {
@@ -7532,7 +12614,7 @@ var Engine = /*#__PURE__*/function () {
     value: function acquireItems(task) {
       var _a;
 
-      var acquire = lib_undelay(task.acquire);
+      var acquire = undelay(task.acquire);
 
       var _iterator4 = engine_createForOfIteratorHelper(acquire || []),
           _step4;
@@ -7575,7 +12657,7 @@ var Engine = /*#__PURE__*/function () {
     value: function acquireEffects(task) {
       var _a;
 
-      var effects = (_a = lib_undelay(task.effects)) !== null && _a !== void 0 ? _a : [];
+      var effects = (_a = undelay(task.effects)) !== null && _a !== void 0 ? _a : [];
       var songs = effects.filter(effect => isSong(effect));
       if (songs.length > maxSongs()) throw "Too many AT songs";
       var extraSongs = Object.keys((0,external_kolmafia_namespaceObject.myEffects)()).map(effectName => (0,external_kolmafia_namespaceObject.toEffect)(effectName)).filter(effect => isSong(effect) && !songs.includes(effect));
@@ -7612,12 +12694,12 @@ var Engine = /*#__PURE__*/function () {
   }, {
     key: "createOutfit",
     value: function createOutfit(task) {
-      var spec = lib_undelay(task.outfit);
+      var spec = undelay(task.outfit);
       if (spec instanceof Outfit) return spec.clone();
       var outfit = new Outfit();
 
       if (spec !== undefined) {
-        if (!outfit.equip(spec)) {
+        if (!outfit.equip(spec) && !this.options.allow_partial_outfits) {
           throw "Unable to equip all items for ".concat(task.name);
         }
       }
@@ -7666,15 +12748,16 @@ var Engine = /*#__PURE__*/function () {
   }, {
     key: "setChoices",
     value: function setChoices(task, manager) {
-      var choices = {};
+      var _a;
 
-      for (var choice_id_str in task.choices) {
-        var choice_id = parseInt(choice_id_str);
-        var choice = task.choices[choice_id];
-        choices[choice_id] = lib_undelay(choice);
+      for (var _i = 0, _Object$entries = Object.entries((_a = task.choices) !== null && _a !== void 0 ? _a : {}); _i < _Object$entries.length; _i++) {
+        var _Object$entries$_i = engine_slicedToArray(_Object$entries[_i], 2),
+            key = _Object$entries$_i[0],
+            func = _Object$entries$_i[1];
+
+        if (func === undefined) continue;
+        manager.setChoice(parseInt(key), undelay(func));
       }
-
-      manager.setChoices(choices);
     }
     /**
      * Save the combat macro for this task.
@@ -7737,12 +12820,8 @@ var Engine = /*#__PURE__*/function () {
   }, {
     key: "do",
     value: function _do(task) {
-      if (typeof task.do === "function") {
-        task.do();
-      } else {
-        (0,external_kolmafia_namespaceObject.adv1)(task.do, 0, "");
-      }
-
+      var result = typeof task.do === "function" ? task.do() : task.do;
+      if (result instanceof external_kolmafia_namespaceObject.Location) (0,external_kolmafia_namespaceObject.adv1)(result, -1, "");
       (0,external_kolmafia_namespaceObject.runCombat)();
 
       while ((0,external_kolmafia_namespaceObject.inMultiFight)()) {
@@ -7756,8 +12835,9 @@ var Engine = /*#__PURE__*/function () {
      *
      * By default, this is only used to repeat a task if we hit one of:
      *   1. Halloweener dog noncombats,
-     *   2. June cleaver noncombats, or
-     *   3. Lil' Doctor™ bag noncombt.
+     *   2. June cleaver noncombats,
+     *   3. Lil' Doctor™ bag noncombat, or
+     *   4. Turtle taming noncombats.
      * @param task The current executing task.
      * @returns True if the task should be immediately repeated.
      */
@@ -7809,11 +12889,17 @@ var Engine = /*#__PURE__*/function () {
         if (task.limit.soft && this.attempts[task.name] >= task.limit.soft) throw "Task ".concat(task.name, " did not complete within ").concat(task.limit.soft, " attempts. Please check what went wrong (you may just be unlucky).").concat(failureMessage);
         if (task.limit.turns && task.do instanceof external_kolmafia_namespaceObject.Location && task.do.turnsSpent >= task.limit.turns) throw "Task ".concat(task.name, " did not complete within ").concat(task.limit.turns, " turns. Please check what went wrong.").concat(failureMessage);
         if (task.limit.unready && ((_a = task.ready) === null || _a === void 0 ? void 0 : _a.call(task))) throw "Task ".concat(task.name, " is still ready, but it should not be. Please check what went wrong.").concat(failureMessage);
+        if (task.limit.completed) throw "Task ".concat(task.name, " is not completed, but it should be. Please check what went wrong.").concat(failureMessage);
       }
 
       if (postcondition && !postcondition()) {
         throw "Task ".concat(task.name, " failed its guard. Please check what went wrong.").concat(failureMessage);
       }
+    }
+  }, {
+    key: "getDefaultSettings",
+    value: function getDefaultSettings() {
+      return this.constructor.defaultSettings;
     }
     /**
      * Initialize properties for the script.
@@ -7826,32 +12912,7 @@ var Engine = /*#__PURE__*/function () {
       var _a; // Properties adapted from garbo
 
 
-      manager.set({
-        logPreferenceChange: true,
-        logPreferenceChangeFilter: engine_toConsumableArray(new Set([].concat(engine_toConsumableArray(property_get("logPreferenceChangeFilter").split(",")), ["libram_savedMacro", "maximizerMRUList", "testudinalTeachings", "_lastCombatStarted"]))).sort().filter(a => a).join(","),
-        battleAction: "custom combat script",
-        autoSatisfyWithMall: true,
-        autoSatisfyWithNPCs: true,
-        autoSatisfyWithCoinmasters: true,
-        autoSatisfyWithStash: false,
-        dontStopForCounters: true,
-        maximizerFoldables: true,
-        hpAutoRecovery: "-0.05",
-        hpAutoRecoveryTarget: "0.0",
-        mpAutoRecovery: "-0.05",
-        mpAutoRecoveryTarget: "0.0",
-        afterAdventureScript: "",
-        betweenBattleScript: "",
-        choiceAdventureScript: "",
-        familiarScript: "",
-        currentMood: "apathetic",
-        autoTuxedo: true,
-        autoPinkyRing: true,
-        autoGarish: true,
-        allowNonMoodBurning: false,
-        allowSummonBurning: true,
-        libramSkillsSoftcore: "none"
-      });
+      manager.set(this.getDefaultSettings());
 
       if (this.options.ccs !== "") {
         if (this.options.ccs === undefined && (0,external_kolmafia_namespaceObject.readCcs)(grimoireCCS) === "") {
@@ -7868,19 +12929,62 @@ var Engine = /*#__PURE__*/function () {
 
   return Engine;
 }();
+Engine.defaultSettings = {
+  logPreferenceChange: true,
+  logPreferenceChangeFilter: engine_toConsumableArray(new Set([].concat(engine_toConsumableArray(property_get("logPreferenceChangeFilter").split(",")), ["libram_savedMacro", "maximizerMRUList", "testudinalTeachings", "_lastCombatStarted"]))).sort().filter(a => a).join(","),
+  battleAction: "custom combat script",
+  autoSatisfyWithMall: true,
+  autoSatisfyWithNPCs: true,
+  autoSatisfyWithCoinmasters: true,
+  autoSatisfyWithStash: false,
+  dontStopForCounters: true,
+  maximizerFoldables: true,
+  hpAutoRecovery: "-0.05",
+  hpAutoRecoveryTarget: "0.0",
+  mpAutoRecovery: "-0.05",
+  mpAutoRecoveryTarget: "0.0",
+  afterAdventureScript: "",
+  betweenBattleScript: "",
+  choiceAdventureScript: "",
+  familiarScript: "",
+  currentMood: "apathetic",
+  autoTuxedo: true,
+  autoPinkyRing: true,
+  autoGarish: true,
+  allowNonMoodBurning: false,
+  allowSummonBurning: true,
+  libramSkillsSoftcore: "none"
+};
 function maxSongs() {
   return lib_have(template_string_$skill(engine_templateObject || (engine_templateObject = engine_taggedTemplateLiteral(["Mariachi Memory"])))) ? 4 : 3;
 }
-var wanderingNCs = new Set(["Wooof! Wooooooof!", "Playing Fetch*", "A Pound of Cure", "Aunts not Ants", "Bath Time", "Beware of Aligator", "Delicious Sprouts", "Hypnotic Master", "Lost and Found", "Poetic Justice", "Summer Days", "Teacher's Pet"]);
+var wanderingNCs = new Set([// Halloweener dog noncombats
+"Wooof! Wooooooof!", "Playing Fetch*", // June cleaver noncombats
+"Aunts not Ants", "Bath Time", "Beware of Aligator", "Delicious Sprouts", "Hypnotic Master", "Lost and Found", "Poetic Justice", "Summer Days", "Teacher's Pet", // Lil' Doctor™ bag noncombat
+"A Pound of Cure", // Turtle taming noncombats
+"Nantucket Snapper", "Blue Monday", "Capital!", "Training Day", "Boxed In", "Duel Nature", "Slow Food", "A Rolling Turtle Gathers No Moss", "Slow Road to Hell", "C'mere, Little Fella", "The Real Victims", "Like That Time in Tortuga", "Cleansing your Palette", "Harem Scarum", "Turtle in peril", "No Man, No Hole", "Slow and Steady Wins the Brawl", "Stormy Weather", "Turtles of the Universe", "O Turtle Were Art Thou", "Allow 6-8 Weeks For Delivery", "Kick the Can", "Turtles All The Way Around", "More eXtreme Than Usual", "Jewel in the Rough", "The worst kind of drowning", "Even Tamer Than Usual", "Never Break the Chain", "Close, but Yes Cigar", "Armchair Quarterback", "This Turtle Rocks!", "Really Sticking Her Neck Out", "It Came from Beneath the Sewer? Great!", "Don't Be Alarmed, Now", "Puttin' it on Wax", "More Like... Hurtle", "Musk! Musk! Musk!", "Silent Strolling"]);
+var zoneSpecificNCs = new Map([["The Horror...", ["Frat House"]] // Duplicate choice name
+]);
 /**
  * Return true if the last adv was one of:
  *   1. Halloweener dog noncombats,
- *   2. June cleaver noncombats, or
- *   3. Lil' Doctor™ bag noncombt.
+ *   2. June cleaver noncombats,
+ *   3. Lil' Doctor™ bag noncombat, or
+ *   4. Turtle taming noncombats.
  */
 
 function lastEncounterWasWanderingNC() {
-  return wanderingNCs.has(property_get("lastEncounter"));
+  var _a;
+
+  var last = property_get("lastEncounter");
+
+  if (zoneSpecificNCs.has(last)) {
+    // Handle NCs with a duplicated name
+    var zones = (_a = zoneSpecificNCs.get(last)) !== null && _a !== void 0 ? _a : [];
+    return zones.includes(property_get("lastAdventure"));
+  } else {
+    return wanderingNCs.has(last);
+  }
 }
 ;// CONCATENATED MODULE: ./node_modules/grimoire-kolmafia/dist/route.js
 function route_ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
@@ -8062,7 +13166,6 @@ function orderByRoute(tasks, routing, ignore_missing_tasks) {
 
 
 
-
 ;// CONCATENATED MODULE: ./src/engine/outfit.ts
 var engine_outfit_templateObject, engine_outfit_templateObject2, engine_outfit_templateObject3, engine_outfit_templateObject4, engine_outfit_templateObject5, engine_outfit_templateObject6, engine_outfit_templateObject7, engine_outfit_templateObject8, engine_outfit_templateObject9, engine_outfit_templateObject10, engine_outfit_templateObject11, engine_outfit_templateObject12, engine_outfit_templateObject13, engine_outfit_templateObject14, engine_outfit_templateObject15, engine_outfit_templateObject16, engine_outfit_templateObject17, engine_outfit_templateObject18, engine_outfit_templateObject19, engine_outfit_templateObject20, engine_outfit_templateObject21, engine_outfit_templateObject22, engine_outfit_templateObject23, engine_outfit_templateObject24, engine_outfit_templateObject25, engine_outfit_templateObject26;
 
@@ -8131,7 +13234,7 @@ function engine_isNativeReflectConstruct() { if (typeof Reflect === "undefined" 
 
 function engine_getPrototypeOf(o) { engine_getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return engine_getPrototypeOf(o); }
 
-function engine_defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+function engine_engine_defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 
 
@@ -8154,7 +13257,7 @@ var engine_Engine = /*#__PURE__*/function (_BaseEngine) {
     tasks = tasks.filter(task => !task.class || task.class.includes((0,external_kolmafia_namespaceObject.myClass)()));
     _this = _super.call(this, tasks);
 
-    engine_defineProperty(engine_assertThisInitialized(_this), "confirmed", void 0);
+    engine_engine_defineProperty(engine_assertThisInitialized(_this), "confirmed", void 0);
 
     _this.confirmed = new Set();
     return _this;
@@ -8579,6 +13682,8 @@ function set(counter, duration) {
   cliExecute("counters add ".concat(duration, " ").concat(counter));
   return counter_get(counter) !== null;
 }
+// EXTERNAL MODULE: ./node_modules/libram/node_modules/html-entities/lib/index.js
+var lib = __webpack_require__(607);
 ;// CONCATENATED MODULE: ./node_modules/libram/dist/Clan.js
 function Clan_toConsumableArray(arr) { return Clan_arrayWithoutHoles(arr) || Clan_iterableToArray(arr) || Clan_unsupportedIterableToArray(arr) || Clan_nonIterableSpread(); }
 
@@ -8615,6 +13720,7 @@ function _wrapRegExp() { _wrapRegExp = function _wrapRegExp(re, groups) { return
 function Clan_inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) Clan_setPrototypeOf(subClass, superClass); }
 
 function Clan_setPrototypeOf(o, p) { Clan_setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return Clan_setPrototypeOf(o, p); }
+
 
 
 
@@ -8714,11 +13820,11 @@ var Clan = /*#__PURE__*/function () {
         if (!match || !id) return null;
 
         var _match = Clan_slicedToArray(match, 3),
-            name = _match[1],
+            encodedName = _match[1],
             degree = _match[2];
 
         return {
-          name: name,
+          name: (0,lib.decode)(encodedName),
           degree: Number.parseInt(degree),
           id: Number.parseInt(id)
         };
@@ -9010,7 +14116,7 @@ var Clan = /*#__PURE__*/function () {
       return (0,external_kolmafia_namespaceObject.xpath)(page, '//select[@name="whichclan"]//option').map(option => {
         var validHtml = "<select>".concat(option, "</select>");
         var id = Number.parseInt((0,external_kolmafia_namespaceObject.xpath)(validHtml, "//@value")[0]);
-        var name = (0,external_kolmafia_namespaceObject.xpath)(validHtml, "//text()")[0];
+        var name = (0,lib.decode)((0,external_kolmafia_namespaceObject.xpath)(validHtml, "//text()")[0]);
         return new Clan(id, name);
       });
     }
@@ -9036,6 +14142,15 @@ function BeachComb_taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strin
 
 function BeachComb_have() {
   return have_(Item.get("Beach Comb"));
+}
+/**
+ * Determines whether we `have` the beach comb or the driftwood beach comb
+ *
+ * @returns Whether we `have` either the beach comb or the driftwood beach comb
+ */
+
+function available() {
+  return BeachComb_have() || have_(Item.get("driftwood beach comb"));
 }
 var headBuffs = [template_string_$effect(BeachComb_templateObject || (BeachComb_templateObject = BeachComb_taggedTemplateLiteral(["Hot-Headed"]))), template_string_$effect(BeachComb_templateObject2 || (BeachComb_templateObject2 = BeachComb_taggedTemplateLiteral(["Cold as Nice"]))), template_string_$effect(BeachComb_templateObject3 || (BeachComb_templateObject3 = BeachComb_taggedTemplateLiteral(["A Brush with Grossness"]))), template_string_$effect(BeachComb_templateObject4 || (BeachComb_templateObject4 = BeachComb_taggedTemplateLiteral(["Does It Have a Skull In There??"]))), template_string_$effect(BeachComb_templateObject5 || (BeachComb_templateObject5 = BeachComb_taggedTemplateLiteral(["Oiled, Slick"]))), template_string_$effect(BeachComb_templateObject6 || (BeachComb_templateObject6 = BeachComb_taggedTemplateLiteral(["Lack of Body-Building"]))), template_string_$effect(BeachComb_templateObject7 || (BeachComb_templateObject7 = BeachComb_taggedTemplateLiteral(["We're All Made of Starfish"]))), template_string_$effect(BeachComb_templateObject8 || (BeachComb_templateObject8 = BeachComb_taggedTemplateLiteral(["Pomp & Circumsands"]))), template_string_$effect(BeachComb_templateObject9 || (BeachComb_templateObject9 = BeachComb_taggedTemplateLiteral(["Resting Beach Face"]))), template_string_$effect(BeachComb_templateObject10 || (BeachComb_templateObject10 = BeachComb_taggedTemplateLiteral(["Do I Know You From Somewhere?"]))), template_string_$effect(BeachComb_templateObject11 || (BeachComb_templateObject11 = BeachComb_taggedTemplateLiteral(["You Learned Something Maybe!"])))];
 var head = {
@@ -9077,7 +14192,7 @@ function canComb(tile) {
  */
 
 function freeCombs() {
-  return BeachComb_have() ? clamp(11 - get("_freeBeachWalksUsed"), 0, 11) : 0;
+  return available() ? clamp(11 - get("_freeBeachWalksUsed"), 0, 11) : 0;
 }
 /**
  * Comb a tile or tiles; skips any presently uncombablle tiles
@@ -9090,7 +14205,7 @@ function comb() {
     tiles[_key] = arguments[_key];
   }
 
-  if (!BeachComb_have() || !tiles.length) return;
+  if (!available() || !tiles.length) return;
 
   for (var _i = 0, _tiles = tiles; _i < _tiles.length; _i++) {
     var tile = _tiles[_i];
@@ -9311,7 +14426,7 @@ function getBestFuels() {
 
 function insertFuel(it) {
   var quantity = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1;
-  var result = (0,external_kolmafia_namespaceObject.visitUrl)("campground.php?action=fuelconvertor&pwd&qty=".concat(quantity, "&iid=").concat((0,external_kolmafia_namespaceObject.toInt)(it), "&go=Convert%21"));
+  var result = (0,external_kolmafia_namespaceObject.visitUrl)("campground.php?action=fuelconvertor&pwd&qty=".concat(quantity, "&iid=").concat(it.id, "&go=Convert%21"));
   return result.includes("The display updates with a");
 }
 /**
@@ -9419,9 +14534,9 @@ function drive(style) {
   return (0,external_kolmafia_namespaceObject.haveEffect)(style) >= turns;
 }
 ;// CONCATENATED MODULE: ./src/combat.ts
-var src_combat_templateObject, src_combat_templateObject2, combat_templateObject3, combat_templateObject4, combat_templateObject5, combat_templateObject6, combat_templateObject7, combat_templateObject8, combat_templateObject9, combat_templateObject10;
+var combat_templateObject, combat_templateObject2, combat_templateObject3, combat_templateObject4, combat_templateObject5, combat_templateObject6, combat_templateObject7, combat_templateObject8, combat_templateObject9, combat_templateObject10;
 
-function src_combat_taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(0); } return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
+function combat_taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(0); } return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
 
 function src_combat_classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -9460,17 +14575,17 @@ var combat_Macro = /*#__PURE__*/function (_StrictMacro) {
   src_combat_createClass(Macro, [{
     key: "delevel",
     value: function delevel() {
-      return this.trySkill(template_string_$skill(src_combat_templateObject || (src_combat_templateObject = src_combat_taggedTemplateLiteral(["Curse of Weaksauce"])))).trySkill(template_string_$skill(src_combat_templateObject2 || (src_combat_templateObject2 = src_combat_taggedTemplateLiteral(["Micrometeorite"])))).tryItem(template_string_$item(combat_templateObject3 || (combat_templateObject3 = src_combat_taggedTemplateLiteral(["Time-Spinner"])))).trySkill(template_string_$skill(combat_templateObject4 || (combat_templateObject4 = src_combat_taggedTemplateLiteral(["Summon Love Gnats"]))));
+      return this.trySkill(template_string_$skill(combat_templateObject || (combat_templateObject = combat_taggedTemplateLiteral(["Curse of Weaksauce"])))).trySkill(template_string_$skill(combat_templateObject2 || (combat_templateObject2 = combat_taggedTemplateLiteral(["Micrometeorite"])))).tryItem(template_string_$item(combat_templateObject3 || (combat_templateObject3 = combat_taggedTemplateLiteral(["Time-Spinner"])))).trySkill(template_string_$skill(combat_templateObject4 || (combat_templateObject4 = combat_taggedTemplateLiteral(["Summon Love Gnats"]))));
     }
   }, {
     key: "sing",
     value: function sing() {
-      return this.skill(template_string_$skill(combat_templateObject5 || (combat_templateObject5 = src_combat_taggedTemplateLiteral(["Sing Along"]))));
+      return this.skill(template_string_$skill(combat_templateObject5 || (combat_templateObject5 = combat_taggedTemplateLiteral(["Sing Along"]))));
     }
   }, {
     key: "kill",
     value: function kill() {
-      return this.externalIf((0,external_kolmafia_namespaceObject.myClass)().primestat === $stat(combat_templateObject6 || (combat_templateObject6 = src_combat_taggedTemplateLiteral(["Muscle"]))), Macro.while_("!mpbelow ".concat((0,external_kolmafia_namespaceObject.mpCost)(template_string_$skill(combat_templateObject7 || (combat_templateObject7 = src_combat_taggedTemplateLiteral(["Lunging Thrust-Smack"]))))), Macro.skill(template_string_$skill(combat_templateObject8 || (combat_templateObject8 = src_combat_taggedTemplateLiteral(["Lunging Thrust-Smack"]))))), Macro.while_("!mpbelow ".concat((0,external_kolmafia_namespaceObject.mpCost)(template_string_$skill(combat_templateObject9 || (combat_templateObject9 = src_combat_taggedTemplateLiteral(["Saucestorm"]))))), Macro.skill(template_string_$skill(combat_templateObject10 || (combat_templateObject10 = src_combat_taggedTemplateLiteral(["Saucestorm"])))))).attack().repeat();
+      return this.externalIf((0,external_kolmafia_namespaceObject.myClass)().primestat === $stat(combat_templateObject6 || (combat_templateObject6 = combat_taggedTemplateLiteral(["Muscle"]))), Macro.while_("!mpbelow ".concat((0,external_kolmafia_namespaceObject.mpCost)(template_string_$skill(combat_templateObject7 || (combat_templateObject7 = combat_taggedTemplateLiteral(["Lunging Thrust-Smack"]))))), Macro.skill(template_string_$skill(combat_templateObject8 || (combat_templateObject8 = combat_taggedTemplateLiteral(["Lunging Thrust-Smack"]))))), Macro.while_("!mpbelow ".concat((0,external_kolmafia_namespaceObject.mpCost)(template_string_$skill(combat_templateObject9 || (combat_templateObject9 = combat_taggedTemplateLiteral(["Saucestorm"]))))), Macro.skill(template_string_$skill(combat_templateObject10 || (combat_templateObject10 = combat_taggedTemplateLiteral(["Saucestorm"])))))).attack().repeat();
     }
   }, {
     key: "default",
@@ -9846,12 +14961,12 @@ function decorate(topper, lights, garland, gifts) {
     (0,external_kolmafia_namespaceObject.useFamiliar)(template_string_$familiar(CrimboShrub_templateObject3 || (CrimboShrub_templateObject3 = CrimboShrub_taggedTemplateLiteral(["Crimbo Shrub"]))));
   }
 
-  (0,external_kolmafia_namespaceObject.visitUrl)("inv_use.php?pwd=&which=99&whichitem=".concat((0,external_kolmafia_namespaceObject.toInt)(template_string_$item(CrimboShrub_templateObject4 || (CrimboShrub_templateObject4 = CrimboShrub_taggedTemplateLiteral(["box of old Crimbo decorations"]))))));
+  lib_directlyUse(template_string_$item(CrimboShrub_templateObject4 || (CrimboShrub_templateObject4 = CrimboShrub_taggedTemplateLiteral(["box of old Crimbo decorations"]))));
   (0,external_kolmafia_namespaceObject.visitUrl)("choice.php?whichchoice=999&pwd=&option=1&topper=".concat(Toppers[topper], "&lights=").concat(Lights[lights], "&garland=").concat(Garland[garland], "&gift=").concat(Gifts[gifts]));
   return isDecoratedWith(topper, lights, garland, gifts);
 }
 ;// CONCATENATED MODULE: ./node_modules/libram/dist/resources/2020/Cartography.js
-var Cartography_templateObject, Cartography_templateObject2, Cartography_templateObject3;
+var Cartography_templateObject, Cartography_templateObject2;
 
 function Cartography_taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(0); } return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
 
@@ -9860,7 +14975,6 @@ function Cartography_taggedTemplateLiteral(strings, raw) { if (!raw) { raw = str
 
 
 var passive = template_string_$skill(Cartography_templateObject || (Cartography_templateObject = Cartography_taggedTemplateLiteral(["Comprehensive Cartography"])));
-var skill = template_string_$skill(Cartography_templateObject2 || (Cartography_templateObject2 = Cartography_taggedTemplateLiteral(["Map the Monsters"])));
 /**
  * Determines whether you `have` the skill Comprehensive Cartography
  *
@@ -9883,7 +14997,7 @@ function mapMonster(location, monster) {
   if (!Cartography_have()) return false;
   if (property_get("_monstersMapped") >= 3) return false;
   if (!(0,external_kolmafia_namespaceObject.canAdventure)(location)) return false;
-  (0,external_kolmafia_namespaceObject.useSkill)(template_string_$skill(Cartography_templateObject3 || (Cartography_templateObject3 = Cartography_taggedTemplateLiteral(["Map the Monsters"]))));
+  (0,external_kolmafia_namespaceObject.useSkill)(template_string_$skill(Cartography_templateObject2 || (Cartography_templateObject2 = Cartography_taggedTemplateLiteral(["Map the Monsters"]))));
   if (!property_get("mappingMonsters")) return false;
   var turns = (0,external_kolmafia_namespaceObject.myTurncount)();
 
@@ -10487,18 +15601,17 @@ function extraChoice(extra) {
 
 
 function fightAll(equipment, effect, extra) {
-  _set("choiceAdventure1222", 1); // Entrance
-
-  _set("choiceAdventure1223", 1); // Fight LOV Enforcer
-
-  _set("choiceAdventure1224", equipmentChoice(equipment));
-  _set("choiceAdventure1225", 1); // Fight LOV Engineer
-
-  _set("choiceAdventure1226", effectChoice(effect));
-  _set("choiceAdventure1227", 1); // Fight LOV Equivocator
-
-  _set("choiceAdventure1228", extraChoice(extra));
-  (0,external_kolmafia_namespaceObject.adv1)($location(TunnelOfLove_templateObject2 || (TunnelOfLove_templateObject2 = TunnelOfLove_taggedTemplateLiteral(["The Tunnel of L.O.V.E."]))), 0, "");
+  withChoices({
+    1222: 1,
+    1223: 1,
+    1224: equipmentChoice(equipment),
+    1225: 1,
+    1226: effectChoice(effect),
+    1227: 1,
+    1228: extraChoice(extra)
+  }, () => {
+    (0,external_kolmafia_namespaceObject.adv1)($location(TunnelOfLove_templateObject2 || (TunnelOfLove_templateObject2 = TunnelOfLove_taggedTemplateLiteral(["The Tunnel of L.O.V.E."]))), 0, "");
+  });
 }
 ;// CONCATENATED MODULE: ./node_modules/libram/dist/resources/2016/Witchess.js
 var Witchess_templateObject;
@@ -10543,14 +15656,14 @@ function fightPiece(piece) {
     throw new Error("Failed to visit shrink ray.");
   }
 
-  if (!(0,external_kolmafia_namespaceObject.visitUrl)("choice.php?option=1&pwd=".concat((0,external_kolmafia_namespaceObject.myHash)(), "&whichchoice=1182&piece=").concat((0,external_kolmafia_namespaceObject.toInt)(piece)), false).includes(piece.name)) {
+  if (!(0,external_kolmafia_namespaceObject.visitUrl)("choice.php?option=1&pwd=".concat((0,external_kolmafia_namespaceObject.myHash)(), "&whichchoice=1182&piece=").concat(piece.id), false).includes(piece.name)) {
     throw new Error("Failed to start fight.");
   }
 
   return (0,external_kolmafia_namespaceObject.runCombat)();
 }
 ;// CONCATENATED MODULE: ./src/tasks/leveling.ts
-var leveling_templateObject, leveling_templateObject2, leveling_templateObject3, leveling_templateObject4, leveling_templateObject5, leveling_templateObject6, leveling_templateObject7, leveling_templateObject8, leveling_templateObject9, leveling_templateObject10, leveling_templateObject11, leveling_templateObject12, leveling_templateObject13, leveling_templateObject14, leveling_templateObject15, leveling_templateObject16, leveling_templateObject17, leveling_templateObject18, leveling_templateObject19, leveling_templateObject20, leveling_templateObject21, leveling_templateObject22, leveling_templateObject23, leveling_templateObject24, leveling_templateObject25, leveling_templateObject26, leveling_templateObject27, leveling_templateObject28, leveling_templateObject29, leveling_templateObject30, leveling_templateObject31, leveling_templateObject32, leveling_templateObject33, leveling_templateObject34, leveling_templateObject35, leveling_templateObject36, leveling_templateObject37, leveling_templateObject38, leveling_templateObject39, leveling_templateObject40, leveling_templateObject41, leveling_templateObject42, leveling_templateObject43, leveling_templateObject44, leveling_templateObject45, leveling_templateObject46, leveling_templateObject47, leveling_templateObject48, leveling_templateObject49, leveling_templateObject50, leveling_templateObject51, leveling_templateObject52, leveling_templateObject53, leveling_templateObject54, leveling_templateObject55, leveling_templateObject56, leveling_templateObject57, leveling_templateObject58, leveling_templateObject59, leveling_templateObject60, _templateObject61, _templateObject62, _templateObject63, _templateObject64, _templateObject65, _templateObject66, _templateObject67, _templateObject68, _templateObject69, _templateObject70, _templateObject71, _templateObject72, _templateObject73, _templateObject74, _templateObject75, _templateObject76, _templateObject77, _templateObject78, _templateObject79, _templateObject80, _templateObject81, _templateObject82, _templateObject83, _templateObject84, _templateObject85, _templateObject86, _templateObject87, _templateObject88, _templateObject89, _templateObject90, _templateObject91, _templateObject92, _templateObject93, _templateObject94, _templateObject95, _templateObject96, _templateObject97, _templateObject98, _templateObject99, _templateObject100, _templateObject101, _templateObject102, _templateObject103, _templateObject104, _templateObject105, _templateObject106, _templateObject107, _templateObject108, _templateObject109, _templateObject110, _templateObject111, _templateObject112, _templateObject113, _templateObject114, _templateObject115, _templateObject116, _templateObject117, _templateObject118, _templateObject119, _templateObject120, _templateObject121, _templateObject122, _templateObject123, _templateObject124, _templateObject125, _templateObject126, _templateObject127, _templateObject128, _templateObject129, _templateObject130, _templateObject131, _templateObject132, _templateObject133, _templateObject134, _templateObject135, _templateObject136, _templateObject137, _templateObject138, _templateObject139, _templateObject140, _templateObject141, _templateObject142, _templateObject143, _templateObject144, _templateObject145, _templateObject146, _templateObject147, _templateObject148, _templateObject149, _templateObject150, _templateObject151, _templateObject152, _templateObject153, _templateObject154, _templateObject155, _templateObject156, _templateObject157, _templateObject158, _templateObject159, _templateObject160, _templateObject161, _templateObject162, _templateObject163, _templateObject164, _templateObject165, _templateObject166, _templateObject167, _templateObject168, _templateObject169, _templateObject170, _templateObject171, _templateObject172, _templateObject173, _templateObject174, _templateObject175, _templateObject176, _templateObject177, _templateObject178, _templateObject179, _templateObject180, _templateObject181, _templateObject182, _templateObject183, _templateObject184, _templateObject185, _templateObject186, _templateObject187, _templateObject188, _templateObject189, _templateObject190, _templateObject191, _templateObject192, _templateObject193, _templateObject194, _templateObject195, _templateObject196, _templateObject197, _templateObject198;
+var leveling_templateObject, leveling_templateObject2, leveling_templateObject3, leveling_templateObject4, leveling_templateObject5, leveling_templateObject6, leveling_templateObject7, leveling_templateObject8, leveling_templateObject9, leveling_templateObject10, leveling_templateObject11, leveling_templateObject12, leveling_templateObject13, leveling_templateObject14, leveling_templateObject15, leveling_templateObject16, leveling_templateObject17, leveling_templateObject18, leveling_templateObject19, leveling_templateObject20, leveling_templateObject21, leveling_templateObject22, leveling_templateObject23, leveling_templateObject24, leveling_templateObject25, leveling_templateObject26, leveling_templateObject27, leveling_templateObject28, leveling_templateObject29, leveling_templateObject30, leveling_templateObject31, leveling_templateObject32, leveling_templateObject33, leveling_templateObject34, leveling_templateObject35, leveling_templateObject36, leveling_templateObject37, leveling_templateObject38, leveling_templateObject39, leveling_templateObject40, leveling_templateObject41, leveling_templateObject42, leveling_templateObject43, leveling_templateObject44, leveling_templateObject45, leveling_templateObject46, leveling_templateObject47, leveling_templateObject48, leveling_templateObject49, leveling_templateObject50, leveling_templateObject51, leveling_templateObject52, leveling_templateObject53, leveling_templateObject54, leveling_templateObject55, leveling_templateObject56, leveling_templateObject57, leveling_templateObject58, leveling_templateObject59, leveling_templateObject60, leveling_templateObject61, leveling_templateObject62, leveling_templateObject63, leveling_templateObject64, leveling_templateObject65, leveling_templateObject66, leveling_templateObject67, _templateObject68, _templateObject69, _templateObject70, _templateObject71, _templateObject72, _templateObject73, _templateObject74, _templateObject75, _templateObject76, _templateObject77, _templateObject78, _templateObject79, _templateObject80, _templateObject81, _templateObject82, _templateObject83, _templateObject84, _templateObject85, _templateObject86, _templateObject87, _templateObject88, _templateObject89, _templateObject90, _templateObject91, _templateObject92, _templateObject93, _templateObject94, _templateObject95, _templateObject96, _templateObject97, _templateObject98, _templateObject99, _templateObject100, _templateObject101, _templateObject102, _templateObject103, _templateObject104, _templateObject105, _templateObject106, _templateObject107, _templateObject108, _templateObject109, _templateObject110, _templateObject111, _templateObject112, _templateObject113, _templateObject114, _templateObject115, _templateObject116, _templateObject117, _templateObject118, _templateObject119, _templateObject120, _templateObject121, _templateObject122, _templateObject123, _templateObject124, _templateObject125, _templateObject126, _templateObject127, _templateObject128, _templateObject129, _templateObject130, _templateObject131, _templateObject132, _templateObject133, _templateObject134, _templateObject135, _templateObject136, _templateObject137, _templateObject138, _templateObject139, _templateObject140, _templateObject141, _templateObject142, _templateObject143, _templateObject144, _templateObject145, _templateObject146, _templateObject147, _templateObject148, _templateObject149, _templateObject150, _templateObject151, _templateObject152, _templateObject153, _templateObject154, _templateObject155, _templateObject156, _templateObject157, _templateObject158, _templateObject159, _templateObject160, _templateObject161, _templateObject162, _templateObject163, _templateObject164, _templateObject165, _templateObject166, _templateObject167, _templateObject168, _templateObject169, _templateObject170, _templateObject171, _templateObject172, _templateObject173, _templateObject174, _templateObject175, _templateObject176, _templateObject177, _templateObject178, _templateObject179, _templateObject180, _templateObject181, _templateObject182, _templateObject183, _templateObject184, _templateObject185, _templateObject186, _templateObject187, _templateObject188, _templateObject189, _templateObject190, _templateObject191, _templateObject192, _templateObject193, _templateObject194, _templateObject195, _templateObject196, _templateObject197, _templateObject198;
 
 function leveling_slicedToArray(arr, i) { return leveling_arrayWithHoles(arr) || leveling_iterableToArrayLimit(arr, i) || leveling_unsupportedIterableToArray(arr, i) || leveling_nonIterableRest(); }
 
@@ -10652,11 +15765,11 @@ var LevelingQuest = {
   }), // From juice bar
   leveling_objectSpread(leveling_objectSpread({}, potionTask(template_string_$item(leveling_templateObject59 || (leveling_templateObject59 = leveling_taggedTemplateLiteral(["natural magick candle"]))))), {}, {
     class: $classes(leveling_templateObject60 || (leveling_templateObject60 = leveling_taggedTemplateLiteral(["Seal Clubber, Pastamancer, Sauceror, Disco Bandit"])))
-  }), leveling_objectSpread(leveling_objectSpread({}, potionTask(template_string_$item(_templateObject61 || (_templateObject61 = leveling_taggedTemplateLiteral(["Napalm In The Morning\u2122 candle"]))))), {}, {
-    class: $classes(_templateObject62 || (_templateObject62 = leveling_taggedTemplateLiteral(["Seal Clubber, Turtle Tamer"])))
-  }), leveling_objectSpread(leveling_objectSpread({}, potionTask(template_string_$item(_templateObject63 || (_templateObject63 = leveling_taggedTemplateLiteral(["votive of confidence"]))))), {}, {
-    class: $classes(_templateObject64 || (_templateObject64 = leveling_taggedTemplateLiteral(["Turtle Tamer, Pastamancer, Accordion Thief"])))
-  }), potionTask(template_string_$item(_templateObject65 || (_templateObject65 = leveling_taggedTemplateLiteral(["MayDay\u2122 supply package"]))))].concat(leveling_toConsumableArray($effects(_templateObject66 || (_templateObject66 = leveling_taggedTemplateLiteral(["Lack of Body-Building, We're All Made of Starfish, Pomp & Circumsands, You Learned Something Maybe!"]))).map(beachTask)), [{
+  }), leveling_objectSpread(leveling_objectSpread({}, potionTask(template_string_$item(leveling_templateObject61 || (leveling_templateObject61 = leveling_taggedTemplateLiteral(["Napalm In The Morning\u2122 candle"]))))), {}, {
+    class: $classes(leveling_templateObject62 || (leveling_templateObject62 = leveling_taggedTemplateLiteral(["Seal Clubber, Turtle Tamer"])))
+  }), leveling_objectSpread(leveling_objectSpread({}, potionTask(template_string_$item(leveling_templateObject63 || (leveling_templateObject63 = leveling_taggedTemplateLiteral(["votive of confidence"]))))), {}, {
+    class: $classes(leveling_templateObject64 || (leveling_templateObject64 = leveling_taggedTemplateLiteral(["Turtle Tamer, Pastamancer, Accordion Thief"])))
+  }), potionTask(template_string_$item(leveling_templateObject65 || (leveling_templateObject65 = leveling_taggedTemplateLiteral(["MayDay\u2122 supply package"]))))].concat(leveling_toConsumableArray($effects(leveling_templateObject66 || (leveling_templateObject66 = leveling_taggedTemplateLiteral(["Lack of Body-Building, We're All Made of Starfish, Pomp & Circumsands, You Learned Something Maybe!"]))).map(beachTask)), [{
     name: "Vaccine",
     completed: () => property_get("_spacegateVaccine"),
     do: () => (0,external_kolmafia_namespaceObject.cliExecute)("spacegate vaccine 2"),
@@ -10694,7 +15807,7 @@ var LevelingQuest = {
   }, {
     // Minimize pants switching
     name: "Sewer Items",
-    completed: () => template_string_$items(_templateObject67 || (_templateObject67 = leveling_taggedTemplateLiteral(["turtle totem, saucepan, stolen accordion"]))).every(item => lib_have(item)),
+    completed: () => template_string_$items(leveling_templateObject67 || (leveling_templateObject67 = leveling_taggedTemplateLiteral(["turtle totem, saucepan, stolen accordion"]))).every(item => lib_have(item)),
     do: () => template_string_$items(_templateObject68 || (_templateObject68 = leveling_taggedTemplateLiteral(["turtle totem, saucepan, stolen accordion"]))).forEach(item => (0,external_kolmafia_namespaceObject.retrieveItem)(item)),
     outfit: {
       pants: template_string_$item(_templateObject69 || (_templateObject69 = leveling_taggedTemplateLiteral(["designer sweatpants"])))
@@ -11261,6 +16374,7 @@ function AutumnAton_taggedTemplateLiteral(strings, raw) { if (!raw) { raw = stri
 
 
 
+
 var AutumnAton_item = external_kolmafia_namespaceObject.Item.get("autumn-aton");
 /**
  * Is the autumn-aton currently in your inventory, available to deploy?
@@ -11268,7 +16382,7 @@ var AutumnAton_item = external_kolmafia_namespaceObject.Item.get("autumn-aton");
  * @returns The whether the autumn-aton is currently available for deployment
  */
 
-function available() {
+function AutumnAton_available() {
   return (0,external_kolmafia_namespaceObject.availableAmount)(AutumnAton_item) > 0;
 }
 /**
@@ -11278,7 +16392,7 @@ function available() {
  */
 
 function AutumnAton_have() {
-  return get("hasAutumnaton") || available();
+  return get("hasAutumnaton") || AutumnAton_available();
 }
 /**
  * Internal function used to parse the fallbot's choice adventure to determine which zones are currently available
@@ -11290,8 +16404,6 @@ function AutumnAton_have() {
 function checkLocations(html) {
   return (0,external_kolmafia_namespaceObject.xpath)(html, '//select[@name="heythereprogrammer"]//option[position()>1]/text()').map(name => (0,external_kolmafia_namespaceObject.toLocation)(name));
 }
-
-var use = () => (0,external_kolmafia_namespaceObject.visitUrl)("inv_use.php?pwd&whichitem=10954");
 /**
  * @returns The current location the autumn-aton is questing in; null if it is not on a quest.
  */
@@ -11310,14 +16422,14 @@ function currentlyIn() {
 
 function sendTo(target) {
   var upgrade = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
-  if (!available()) return null;
-  var pageHtml = use();
+  if (!AutumnAton_available()) return null;
+  var pageHtml = lib_directlyUse(AutumnAton_item);
   if (upgrade && (0,external_kolmafia_namespaceObject.availableChoiceOptions)()[1]) (0,external_kolmafia_namespaceObject.runChoice)(1);
   var locationsAvailable = checkLocations(pageHtml);
   var location = target instanceof external_kolmafia_namespaceObject.Location ? target : Array.isArray(target) ? target.find(l => locationsAvailable.includes(l)) : target(locationsAvailable);
   if (!location) return null;
   if (!locationsAvailable.includes(location)) return null;
-  if (!(0,external_kolmafia_namespaceObject.handlingChoice)()) use();
+  if (!(0,external_kolmafia_namespaceObject.handlingChoice)()) lib_directlyUse(AutumnAton_item);
   (0,external_kolmafia_namespaceObject.runChoice)(2, "heythereprogrammer=".concat(location.id));
   if ((0,external_kolmafia_namespaceObject.handlingChoice)()) (0,external_kolmafia_namespaceObject.visitUrl)("main.php");
   return location;
@@ -11329,7 +16441,7 @@ function sendTo(target) {
  */
 
 function upgrade() {
-  use();
+  directlyUse(AutumnAton_item);
   var canUpgrade = availableChoiceOptions()[1] !== undefined;
   if (canUpgrade) runChoice(1);
   visitUrl("main.php");
@@ -11340,8 +16452,8 @@ function upgrade() {
  */
 
 function availableLocations() {
-  if (!available()) return [];
-  var pageHtml = use();
+  if (!AutumnAton_available()) return [];
+  var pageHtml = directlyUse(AutumnAton_item);
   visitUrl("main.php");
   return checkLocations(pageHtml);
 }
@@ -11469,7 +16581,7 @@ function getUniques(location) {
   return null;
 }
 ;// CONCATENATED MODULE: ./src/tasks/prologue.ts
-var prologue_templateObject, prologue_templateObject2, prologue_templateObject3, prologue_templateObject4, prologue_templateObject5, prologue_templateObject6, prologue_templateObject7, prologue_templateObject8, prologue_templateObject9, prologue_templateObject10, prologue_templateObject11, prologue_templateObject12, prologue_templateObject13, prologue_templateObject14, prologue_templateObject15, prologue_templateObject16, prologue_templateObject17, prologue_templateObject18, prologue_templateObject19, prologue_templateObject20, prologue_templateObject21, prologue_templateObject22, prologue_templateObject23;
+var prologue_templateObject, prologue_templateObject2, prologue_templateObject3, prologue_templateObject4, prologue_templateObject5, prologue_templateObject6, prologue_templateObject7, prologue_templateObject8, prologue_templateObject9, prologue_templateObject10, prologue_templateObject11, prologue_templateObject12, prologue_templateObject13, prologue_templateObject14, prologue_templateObject15, prologue_templateObject16, prologue_templateObject17, prologue_templateObject18, prologue_templateObject19, prologue_templateObject20, prologue_templateObject21, prologue_templateObject22, prologue_templateObject23, prologue_templateObject24, prologue_templateObject25, prologue_templateObject26;
 
 function prologue_taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(0); } return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
 
@@ -11583,7 +16695,7 @@ var PrologueQuest = {
     limit: {
       tries: 1
     }
-  }, deckTask("Forest"), deckTask("Rope"), {
+  }, deckTask("Forest"), deckTask("Island"), deckTask("Rope"), {
     name: "Barrel Hoop Earring",
     completed: () => property_get("_barrelPrayer"),
     class: $classes(prologue_templateObject11 || (prologue_templateObject11 = prologue_taggedTemplateLiteral(["Seal Clubber, Disco Bandit"]))),
@@ -11691,8 +16803,16 @@ var PrologueQuest = {
     }
   }, {
     name: "Fallbot",
-    completed: () => !available() || property_get("_autumnatonQuests") > 0,
+    completed: () => !AutumnAton_available() || property_get("_autumnatonQuests") > 0,
     do: () => sendTo($location(prologue_templateObject23 || (prologue_templateObject23 = prologue_taggedTemplateLiteral(["The Sleazy Back Alley"]))))
+  }, {
+    name: "Learn About Bugs",
+    ready: () => lib_have(template_string_$item(prologue_templateObject24 || (prologue_templateObject24 = prologue_taggedTemplateLiteral(["S.I.T. Course Completion Certificate"])))),
+    completed: () => property_get("_sitCourseCompleted") || lib_have(template_string_$skill(prologue_templateObject25 || (prologue_templateObject25 = prologue_taggedTemplateLiteral(["Insectologist"])))),
+    do: () => (0,external_kolmafia_namespaceObject.use)(template_string_$item(prologue_templateObject26 || (prologue_templateObject26 = prologue_taggedTemplateLiteral(["S.I.T. Course Completion Certificate"])))),
+    choices: {
+      1494: 2
+    }
   }]
 };
 ;// CONCATENATED MODULE: ./src/tasks/spelldamage.ts
@@ -12037,7 +17157,7 @@ var WeaponDamageQuest = {
   }])
 };
 ;// CONCATENATED MODULE: ./src/tasks/diet.ts
-var diet_templateObject, diet_templateObject2, diet_templateObject3, diet_templateObject4, diet_templateObject5, diet_templateObject6;
+var diet_templateObject, diet_templateObject2, diet_templateObject3, diet_templateObject4, diet_templateObject5, diet_templateObject6, diet_templateObject7, diet_templateObject8, diet_templateObject9;
 
 function diet_taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(0); } return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
 
@@ -12046,34 +17166,30 @@ function diet_taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.sl
 var DietQuest = {
   name: "Diet",
   tasks: [{
-    name: "Numberology",
-    completed: () => property_get("_universeCalculated") >= Math.min(property_get("skillLevel144"), 3),
-    ready: () => Object.keys((0,external_kolmafia_namespaceObject.reverseNumberology)()).includes("69"),
-    //&& get("skillLevel144") <= 3,
-    do: () => (0,external_kolmafia_namespaceObject.cliExecute)("numberology 69"),
-    limit: {
-      tries: 3
-    }
+    name: "Ancestral Recall",
+    completed: () => template_string_$skill(diet_templateObject || (diet_templateObject = diet_taggedTemplateLiteral(["Ancestral Recall"]))).timescast > 0,
+    ready: () => lib_have(template_string_$item(diet_templateObject2 || (diet_templateObject2 = diet_taggedTemplateLiteral(["blue mana"])))),
+    do: () => (0,external_kolmafia_namespaceObject.useSkill)(template_string_$skill(diet_templateObject3 || (diet_templateObject3 = diet_taggedTemplateLiteral(["Ancestral Recall"]))))
   }, {
     name: "Borrowed Time",
     completed: () => property_get("_borrowedTimeUsed"),
-    do: () => (0,external_kolmafia_namespaceObject.use)(template_string_$item(diet_templateObject || (diet_templateObject = diet_taggedTemplateLiteral(["borrowed time"])))),
+    do: () => (0,external_kolmafia_namespaceObject.use)(template_string_$item(diet_templateObject4 || (diet_templateObject4 = diet_taggedTemplateLiteral(["borrowed time"])))),
     acquire: [{
-      item: template_string_$item(diet_templateObject2 || (diet_templateObject2 = diet_taggedTemplateLiteral(["borrowed time"])))
+      item: template_string_$item(diet_templateObject5 || (diet_templateObject5 = diet_taggedTemplateLiteral(["borrowed time"])))
     }],
     limit: {
       tries: 1
     }
   }, {
     name: "Open Six-Pack",
-    completed: () => !lib_have(template_string_$item(diet_templateObject3 || (diet_templateObject3 = diet_taggedTemplateLiteral(["astral six-pack"])))),
-    do: () => (0,external_kolmafia_namespaceObject.use)(template_string_$item(diet_templateObject4 || (diet_templateObject4 = diet_taggedTemplateLiteral(["astral six-pack"]))))
+    completed: () => !lib_have(template_string_$item(diet_templateObject6 || (diet_templateObject6 = diet_taggedTemplateLiteral(["astral six-pack"])))),
+    do: () => (0,external_kolmafia_namespaceObject.use)(template_string_$item(diet_templateObject7 || (diet_templateObject7 = diet_taggedTemplateLiteral(["astral six-pack"]))))
   }, {
     name: "Drink Pilsner",
     completed: () => (0,external_kolmafia_namespaceObject.myInebriety)() >= 4,
     ready: () => (0,external_kolmafia_namespaceObject.myLevel)() >= 11,
-    do: () => (0,external_kolmafia_namespaceObject.drink)(template_string_$item(diet_templateObject5 || (diet_templateObject5 = diet_taggedTemplateLiteral(["astral pilsner"])))),
-    effects: $effects(diet_templateObject6 || (diet_templateObject6 = diet_taggedTemplateLiteral(["Ode to Booze"])))
+    do: () => (0,external_kolmafia_namespaceObject.drink)(template_string_$item(diet_templateObject8 || (diet_templateObject8 = diet_taggedTemplateLiteral(["astral pilsner"])))),
+    effects: $effects(diet_templateObject9 || (diet_templateObject9 = diet_taggedTemplateLiteral(["Ode to Booze"])))
   }]
 };
 ;// CONCATENATED MODULE: ./src/main.ts
@@ -12222,6 +17338,8 @@ function listTasks(engine) {
     _iterator2.f();
   }
 }
+})();
+
 var __webpack_export_target__ = exports;
 for(var i in __webpack_exports__) __webpack_export_target__[i] = __webpack_exports__[i];
 if(__webpack_exports__.__esModule) Object.defineProperty(__webpack_export_target__, "__esModule", { value: true });
