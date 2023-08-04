@@ -13241,8 +13241,6 @@ function engine_engine_defineProperty(obj, key, value) { if (key in obj) { Objec
 
 
 
-var turtleNCs = ["Nantucket Snapper", "Blue Monday", "Capital!", "Training Day", "Boxed In", "Duel Nature", "Slow Food", "A Rolling Turtle Gathers No Moss", "The Horror...", "Slow Road to Hell", "C'mere, Little Fella", "The Real Victims", "Like That Time in Tortuga", "Cleansing your Palette", "Harem Scarum", "Turtle in peril", "No Man, No Hole", "Slow and Steady Wins the Brawl", "Stormy Weather", "Turtles of the Universe", "O Turtle Were Art Thou", "Allow 6-8 Weeks For Delivery", "Kick the Can", "Turtles All The Way Around", "More eXtreme Than Usual", "Jewel in the Rough", "The worst kind of drowning", "Even Tamer Than Usual", "Never Break the Chain", "Close, but Yes Cigar", "Armchair Quarterback", "This Turtle Rocks!", "Really Sticking Her Neck Out", "It Came from Beneath the Sewer? Great!", "Don't Be Alarmed, Now", "Puttin' it on Wax", "More Like... Hurtle", "Musk! Musk! Musk!", "Silent Strolling"];
-turtleNCs.forEach(nc => wanderingNCs.add(nc));
 var engine_Engine = /*#__PURE__*/function (_BaseEngine) {
   engine_inherits(Engine, _BaseEngine);
 
@@ -14762,7 +14760,10 @@ function libramTask() {
   return {
     name: "Burn Librams",
     completed: () => !canCastLibrams(),
-    do: burnLibrams
+    do: burnLibrams,
+    limit: {
+      tries: 1
+    }
   };
 }
 ;// CONCATENATED MODULE: ./src/tasks/boozedrop.ts
@@ -15319,7 +15320,10 @@ var FamiliarWeightQuest = {
       (0,external_kolmafia_namespaceObject.visitUrl)("clan_viplounge.php?action=lookingglass&whichfloor=2");
       (0,external_kolmafia_namespaceObject.use)(template_string_$item(familiarweight_templateObject7 || (familiarweight_templateObject7 = familiarweight_taggedTemplateLiteral(["\"DRINK ME\" potion"]))));
     },
-    do: () => (0,external_kolmafia_namespaceObject.cliExecute)("hatter sombrero-mounted sparkler")
+    do: () => (0,external_kolmafia_namespaceObject.cliExecute)("hatter sombrero-mounted sparkler"),
+    limit: {
+      tries: 1
+    }
   }, {
     name: "Homemade Robot Gear",
     completed: () => lib_have(template_string_$item(familiarweight_templateObject8 || (familiarweight_templateObject8 = familiarweight_taggedTemplateLiteral(["homemade robot gear"])))) || property_get("commaFamiliar") === template_string_$familiar(familiarweight_templateObject9 || (familiarweight_templateObject9 = familiarweight_taggedTemplateLiteral(["Homemade Robot"]))),
@@ -15342,6 +15346,9 @@ var FamiliarWeightQuest = {
     },
     outfit: {
       familiar: template_string_$familiar(familiarweight_templateObject15 || (familiarweight_templateObject15 = familiarweight_taggedTemplateLiteral(["Comma Chameleon"])))
+    },
+    limit: {
+      tries: 1
     }
   }, {
     name: "Icy Revenge",
@@ -15368,6 +15375,9 @@ var FamiliarWeightQuest = {
       if (!lib_have(desertAccessItem)) {
         (0,external_kolmafia_namespaceObject.cliExecute)("acquire ".concat(desertAccessItem.name));
       }
+    },
+    limit: {
+      tries: 1
     }
   }, {
     name: "Tune Moon",
@@ -15811,6 +15821,9 @@ var LevelingQuest = {
     do: () => template_string_$items(_templateObject68 || (_templateObject68 = leveling_taggedTemplateLiteral(["turtle totem, saucepan, stolen accordion"]))).forEach(item => (0,external_kolmafia_namespaceObject.retrieveItem)(item)),
     outfit: {
       pants: template_string_$item(_templateObject69 || (_templateObject69 = leveling_taggedTemplateLiteral(["designer sweatpants"])))
+    },
+    limit: {
+      tries: 1
     }
   }], leveling_toConsumableArray(leveling_buffs.stats.map(skillTask)), leveling_toConsumableArray(leveling_buffs.familiarWeight.map(skillTask)), leveling_toConsumableArray(leveling_buffs.damage.map(skillTask)), leveling_toConsumableArray(leveling_buffs.elementalDamage.map(skillTask)), leveling_toConsumableArray(leveling_buffs.survivability.map(skillTask)), [leveling_objectSpread(leveling_objectSpread({}, skillTask(byStat({
     Muscle: template_string_$effect(_templateObject70 || (_templateObject70 = leveling_taggedTemplateLiteral(["Quiet Determination"]))),
@@ -16804,7 +16817,10 @@ var PrologueQuest = {
   }, {
     name: "Fallbot",
     completed: () => !AutumnAton_available() || property_get("_autumnatonQuests") > 0,
-    do: () => sendTo($location(prologue_templateObject23 || (prologue_templateObject23 = prologue_taggedTemplateLiteral(["The Sleazy Back Alley"]))))
+    do: () => sendTo($location(prologue_templateObject23 || (prologue_templateObject23 = prologue_taggedTemplateLiteral(["The Sleazy Back Alley"])))),
+    limit: {
+      tries: 1
+    }
   }, {
     name: "Learn About Bugs",
     ready: () => lib_have(template_string_$item(prologue_templateObject24 || (prologue_templateObject24 = prologue_taggedTemplateLiteral(["S.I.T. Course Completion Certificate"])))),
@@ -16812,6 +16828,9 @@ var PrologueQuest = {
     do: () => (0,external_kolmafia_namespaceObject.use)(template_string_$item(prologue_templateObject26 || (prologue_templateObject26 = prologue_taggedTemplateLiteral(["S.I.T. Course Completion Certificate"])))),
     choices: {
       1494: 2
+    },
+    limit: {
+      tries: 1
     }
   }]
 };
@@ -16895,7 +16914,10 @@ var SpellDamageQuest = {
     name: "Barrel Prayer",
     class: $classes(spelldamage_templateObject17 || (spelldamage_templateObject17 = spelldamage_taggedTemplateLiteral(["Sauceror"]))),
     completed: () => property_get("_barrelPrayer"),
-    do: () => (0,external_kolmafia_namespaceObject.cliExecute)("barrelprayer buff")
+    do: () => (0,external_kolmafia_namespaceObject.cliExecute)("barrelprayer buff"),
+    limit: {
+      tries: 1
+    }
   }, {
     name: "Briefcase Enchantment",
     completed: () => (0,external_kolmafia_namespaceObject.numericModifier)(template_string_$item(spelldamage_templateObject18 || (spelldamage_templateObject18 = spelldamage_taggedTemplateLiteral(["Kremlin's Greatest Briefcase"]))), "Spell Damage Percent") > 0,
@@ -16906,7 +16928,10 @@ var SpellDamageQuest = {
   }, {
     name: "Cargopocket",
     completed: () => property_get("_cargoPocketEmptied"),
-    do: () => (0,external_kolmafia_namespaceObject.cliExecute)("cargo 177")
+    do: () => (0,external_kolmafia_namespaceObject.cliExecute)("cargo 177"),
+    limit: {
+      tries: 1
+    }
   }, potionTask(template_string_$item(spelldamage_templateObject19 || (spelldamage_templateObject19 = spelldamage_taggedTemplateLiteral(["Yeg's Motel hand soap"])))), {
     name: "Saucefingers",
     class: $classes(spelldamage_templateObject20 || (spelldamage_templateObject20 = spelldamage_taggedTemplateLiteral(["Pastamancer"]))),
@@ -16933,6 +16958,9 @@ var SpellDamageQuest = {
       }
 
       (0,external_kolmafia_namespaceObject.takeStorage)(chefstaff, 1);
+    },
+    limit: {
+      tries: 1
     }
   }, {
     name: "Test",
@@ -17114,7 +17142,10 @@ var WeaponDamageQuest = {
     // Sometimes LOV Elixir #3 does not drop
     name: "Play Pool",
     completed: () => lib_have(template_string_$effect(weapondamage_templateObject3 || (weapondamage_templateObject3 = weapondamage_taggedTemplateLiteral(["The Power of LOV"])))) || lib_have(template_string_$effect(weapondamage_templateObject4 || (weapondamage_templateObject4 = weapondamage_taggedTemplateLiteral(["Billiards Belligerence"])))),
-    do: () => (0,external_kolmafia_namespaceObject.cliExecute)("pool 1")
+    do: () => (0,external_kolmafia_namespaceObject.cliExecute)("pool 1"),
+    limit: {
+      tries: 1
+    }
   }, innerElfTask(), {
     name: "Meteor Ungulith",
     completed: () => monstersReminisced().includes($monster(weapondamage_templateObject5 || (weapondamage_templateObject5 = weapondamage_taggedTemplateLiteral(["ungulith"])))),
@@ -17133,7 +17164,10 @@ var WeaponDamageQuest = {
   }, potionTask(template_string_$item(weapondamage_templateObject10 || (weapondamage_templateObject10 = weapondamage_taggedTemplateLiteral(["corrupted marrow"])))), {
     name: "Bow-Legged Swagger",
     completed: () => property_get("_bowleggedSwaggerUsed"),
-    do: () => (0,external_kolmafia_namespaceObject.useSkill)(template_string_$skill(weapondamage_templateObject11 || (weapondamage_templateObject11 = weapondamage_taggedTemplateLiteral(["Bow-Legged Swagger"]))))
+    do: () => (0,external_kolmafia_namespaceObject.useSkill)(template_string_$skill(weapondamage_templateObject11 || (weapondamage_templateObject11 = weapondamage_taggedTemplateLiteral(["Bow-Legged Swagger"])))),
+    limit: {
+      tries: 1
+    }
   }, {
     name: "Test",
     completed: () => CommunityService.WeaponDamage.isDone(),
@@ -17157,7 +17191,7 @@ var WeaponDamageQuest = {
   }])
 };
 ;// CONCATENATED MODULE: ./src/tasks/diet.ts
-var diet_templateObject, diet_templateObject2, diet_templateObject3, diet_templateObject4, diet_templateObject5, diet_templateObject6, diet_templateObject7, diet_templateObject8, diet_templateObject9;
+var diet_templateObject, diet_templateObject2, diet_templateObject3, diet_templateObject4, diet_templateObject5, diet_templateObject6, diet_templateObject7, diet_templateObject8, diet_templateObject9, diet_templateObject10;
 
 function diet_taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(0); } return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
 
@@ -17169,7 +17203,10 @@ var DietQuest = {
     name: "Ancestral Recall",
     completed: () => template_string_$skill(diet_templateObject || (diet_templateObject = diet_taggedTemplateLiteral(["Ancestral Recall"]))).timescast > 0,
     ready: () => lib_have(template_string_$item(diet_templateObject2 || (diet_templateObject2 = diet_taggedTemplateLiteral(["blue mana"])))),
-    do: () => (0,external_kolmafia_namespaceObject.useSkill)(template_string_$skill(diet_templateObject3 || (diet_templateObject3 = diet_taggedTemplateLiteral(["Ancestral Recall"]))))
+    do: () => (0,external_kolmafia_namespaceObject.useSkill)(template_string_$skill(diet_templateObject3 || (diet_templateObject3 = diet_taggedTemplateLiteral(["Ancestral Recall"])))),
+    limit: {
+      tries: 1
+    }
   }, {
     name: "Borrowed Time",
     completed: () => property_get("_borrowedTimeUsed"),
@@ -17183,13 +17220,19 @@ var DietQuest = {
   }, {
     name: "Open Six-Pack",
     completed: () => !lib_have(template_string_$item(diet_templateObject6 || (diet_templateObject6 = diet_taggedTemplateLiteral(["astral six-pack"])))),
-    do: () => (0,external_kolmafia_namespaceObject.use)(template_string_$item(diet_templateObject7 || (diet_templateObject7 = diet_taggedTemplateLiteral(["astral six-pack"]))))
+    do: () => (0,external_kolmafia_namespaceObject.use)(template_string_$item(diet_templateObject7 || (diet_templateObject7 = diet_taggedTemplateLiteral(["astral six-pack"])))),
+    limit: {
+      tries: 1
+    }
   }, {
-    name: "Drink Pilsner",
+    name: "Drink Pilsners",
     completed: () => (0,external_kolmafia_namespaceObject.myInebriety)() >= 4,
     ready: () => (0,external_kolmafia_namespaceObject.myLevel)() >= 11,
-    do: () => (0,external_kolmafia_namespaceObject.drink)(template_string_$item(diet_templateObject8 || (diet_templateObject8 = diet_taggedTemplateLiteral(["astral pilsner"])))),
-    effects: $effects(diet_templateObject9 || (diet_templateObject9 = diet_taggedTemplateLiteral(["Ode to Booze"])))
+    do: () => (0,external_kolmafia_namespaceObject.drink)(template_string_$item(diet_templateObject8 || (diet_templateObject8 = diet_taggedTemplateLiteral(["astral pilsner"]))), utils_clamp((0,external_kolmafia_namespaceObject.itemAmount)(template_string_$item(diet_templateObject9 || (diet_templateObject9 = diet_taggedTemplateLiteral(["astral pilsner"])))), 0, 4 - (0,external_kolmafia_namespaceObject.myInebriety)())),
+    effects: $effects(diet_templateObject10 || (diet_templateObject10 = diet_taggedTemplateLiteral(["Ode to Booze"]))),
+    limit: {
+      tries: 1
+    }
   }]
 };
 ;// CONCATENATED MODULE: ./src/main.ts
