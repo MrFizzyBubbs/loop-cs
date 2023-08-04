@@ -9591,7 +9591,7 @@ function skillTask(x) {
     var needGlove = $skills(common_templateObject13 || (common_templateObject13 = common_taggedTemplateLiteral(["CHEAT CODE: Invisible Avatar, CHEAT CODE: Triple Size"]))).includes(skill);
     return {
       name: skill.name,
-      completed: () => effect !== template_string_$effect.none ? lib_have(effect) : skill.timescast > 0,
+      completed: () => effect !== template_string_$effect.none ? lib_have(effect) : skill.timescast > skill.dailylimit,
       prepare: () => {
         if ((0,external_kolmafia_namespaceObject.myMp)() < (0,external_kolmafia_namespaceObject.mpCost)(skill)) {
           if (!lib_have(template_string_$item(common_templateObject14 || (common_templateObject14 = common_taggedTemplateLiteral(["magical sausage"])))) && lib_have(template_string_$item(common_templateObject15 || (common_templateObject15 = common_taggedTemplateLiteral(["magical sausage casing"]))))) {
