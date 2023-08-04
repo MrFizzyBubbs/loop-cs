@@ -1,4 +1,3 @@
-import { CombatStrategy } from "grimoire-kolmafia";
 import {
   adv1,
   buy,
@@ -39,6 +38,7 @@ import Macro from "../combat";
 import { CSTask } from "../engine/task";
 import { args } from "../main";
 import { burnLibrams, canCastLibrams } from "../lib";
+import { CSCombatStrategy } from "../engine/combat";
 
 export function innerElfTask(): CSTask {
   return {
@@ -49,7 +49,7 @@ export function innerElfTask(): CSTask {
       Clan.with(args.slimeclan, () => {
         adv1($location`The Slime Tube`, -1, "");
       }),
-    combat: new CombatStrategy().macro(
+    combat: new CSCombatStrategy().macro(
       Macro.trySkill($skill`KGB tranquilizer dart`).skill($skill`Snokebomb`)
     ),
     choices: { 326: 1 },
@@ -65,7 +65,7 @@ export function meteorShowerTask(): CSTask {
     completed: () => have($effect`Meteor Showered`),
     ready: () => get("_meteorShowerUses") < 5 && get("_saberForceUses") < 5,
     do: $location`The Dire Warren`,
-    combat: new CombatStrategy().macro(
+    combat: new CSCombatStrategy().macro(
       Macro.skill($skill`Meteor Shower`).skill($skill`Use the Force`)
     ),
     choices: { 1387: 3 },

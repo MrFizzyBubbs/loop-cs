@@ -1,4 +1,3 @@
-import { CombatStrategy } from "grimoire-kolmafia";
 import {
   canEquip,
   cliExecute,
@@ -27,6 +26,7 @@ import Macro from "../combat";
 import { CSQuest } from "../engine/task";
 import { innerElfTask, meteorShowerTask, potionTask, skillTask } from "./common";
 import { byPrimaryClass } from "../lib";
+import { CSCombatStrategy } from "../engine/combat";
 
 const buffs = $effects`Arched Eyebrow of the Archmage, Carol of the Hells, Jackasses' Symphony of Destruction, Simmering, Song of Sauce, Spirit of Cayenne`;
 
@@ -102,7 +102,7 @@ export const SpellDamageQuest: CSQuest = {
       do: $location`The Dire Warren`,
       outfit: { acc3: $item`Lil' Doctor™ bag`, familiar: $familiar`Mini-Adventurer` },
       choices: { 768: 4 },
-      combat: new CombatStrategy().macro(Macro.skill($skill`Reflex Hammer`)),
+      combat: new CSCombatStrategy().macro(Macro.skill($skill`Reflex Hammer`)),
       limit: { tries: 2 },
     },
     innerElfTask(),

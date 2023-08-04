@@ -1,4 +1,3 @@
-import { CombatStrategy } from "grimoire-kolmafia";
 import {
   adv1,
   cliExecute,
@@ -35,6 +34,8 @@ import Macro from "../combat";
 import { CSQuest } from "../engine/task";
 import { burnLibrams, byPrimaryClass } from "../lib";
 import { beachTask, innerElfTask, potionTask, skillTask } from "./common";
+import { CSCombatStrategy } from "../engine/combat";
+import { freeKillSources } from "../engine/resources";
 
 export const generalStoreItem = byStat({
   Muscle: $item`Ben-Gal™ Balm`,
@@ -238,7 +239,7 @@ export const LevelingQuest: CSQuest = {
       name: "Holiday Runaway",
       completed: () => getTodaysHolidayWanderers().length === 0 || get("_banderRunaways") >= 2,
       do: $location`Noob Cave`,
-      combat: new CombatStrategy().macro(Macro.runaway()),
+      combat: new CSCombatStrategy().macro(Macro.runaway()),
       outfit: { familiar: $familiar`Pair of Stomping Boots` },
       limit: { tries: 1 },
     },
@@ -247,7 +248,7 @@ export const LevelingQuest: CSQuest = {
       completed: () => have($item`li'l ninja costume`) && have($effect`Giant Growth`),
       do: () => Cartography.mapMonster($location`The Haiku Dungeon`, $monster`amateur ninja`),
       post: () => visitUrl("questlog.php?which=1"), // Check quest log for protonic ghost location
-      combat: new CombatStrategy().macro(
+      combat: new CSCombatStrategy().macro(
         Macro.skill($skill`Giant Growth`).skill($skill`Chest X-Ray`)
       ),
       outfit: {
@@ -269,7 +270,7 @@ export const LevelingQuest: CSQuest = {
         ),
       ready: () => get("ghostLocation") !== $location`none` && get("_nanorhinoCharge") >= 100,
       do: () => adv1(get("ghostLocation", $location`none`), 0, ""),
-      combat: new CombatStrategy().macro(
+      combat: new CSCombatStrategy().macro(
         Macro.skill(
           byPrimaryClass({
             "Seal Clubber": $skill`Clobber`,
@@ -297,7 +298,7 @@ export const LevelingQuest: CSQuest = {
       name: "Do You Crush What I Crush?",
       completed: () => have($effect`Do You Crush What I Crush?`),
       do: $location`The Dire Warren`,
-      combat: new CombatStrategy().macro(Macro.skill($skill`Bowl a Curveball`)),
+      combat: new CSCombatStrategy().macro(Macro.skill($skill`Bowl a Curveball`)),
       outfit: { familiar: $familiar`Ghost of Crimbo Carols`, famequip: $item.none },
       limit: { tries: 1 },
     },
@@ -322,7 +323,7 @@ export const LevelingQuest: CSQuest = {
         const elixirs = $items`LOV Elixir #3, LOV Elixir #6`.filter((elixir) => !have(elixir));
         if (elixirs.length > 0) throw `${elixirs} did not drop`;
       },
-      combat: new CombatStrategy().macro(
+      combat: new CSCombatStrategy().macro(
         Macro.if_($monster`LOV Enforcer`, Macro.attack().repeat())
           .if_($monster`LOV Engineer`, Macro.skill($skill`Weapon of the Pastalord`).repeat())
           .if_($monster`LOV Equivocator`, Macro.default())
@@ -357,7 +358,7 @@ export const LevelingQuest: CSQuest = {
       name: "Snojo",
       completed: () => get("_snojoFreeFights") >= 10,
       do: $location`The X-32-F Combat Training Snowman`,
-      combat: new CombatStrategy().macro(Macro.trySkill($skill`Bowl Straight Up`).default()),
+      combat: new CSCombatStrategy().macro(Macro.trySkill($skill`Bowl Straight Up`).default()),
       limit: { tries: 10 },
     },
     {
@@ -376,7 +377,7 @@ export const LevelingQuest: CSQuest = {
       post: (): void => {
         if (have($effect`Beaten Up`)) cliExecute("hottub");
       },
-      combat: new CombatStrategy().macro(Macro.default()),
+      combat: new CSCombatStrategy().macro(Macro.default()),
       outfit: { shirt: $item`makeshift garbage shirt` },
       acquire: [{ item: $item`makeshift garbage shirt` }],
       limit: { tries: 1 },
@@ -385,7 +386,7 @@ export const LevelingQuest: CSQuest = {
       name: "God Lobster",
       completed: () => get("_godLobsterFights") >= 3,
       do: () => visitUrl("main.php?fightgodlobster=1"),
-      combat: new CombatStrategy().macro(Macro.default()),
+      combat: new CSCombatStrategy().macro(Macro.default()),
       choices: { 1310: () => (get("_godLobsterFights") === 2 ? 2 : 1) }, // Get -combat buff on last combat
       outfit: {
         shirt: $item`makeshift garbage shirt`,
@@ -404,7 +405,7 @@ export const LevelingQuest: CSQuest = {
           $location`An Unusually Quiet Barroom Brawl`,
           $monster`goblin flapper`
         ),
-      combat: new CombatStrategy().macro(
+      combat: new CSCombatStrategy().macro(
         Macro.skill($skill`Feel Envy`)
           .skill($skill`Portscan`)
           .sing()
@@ -417,7 +418,7 @@ export const LevelingQuest: CSQuest = {
       name: "Oliver's Place: Government Agent",
       completed: () => get("_speakeasyFreeFights") >= 3,
       do: $location`An Unusually Quiet Barroom Brawl`,
-      combat: new CombatStrategy().macro(() =>
+      combat: new CSCombatStrategy().macro(() =>
         Macro.externalIf(!have($item`government cheese`), Macro.skill($skill`Feel Envy`))
           .externalIf(get("_speakeasyFreeFights") < 2, Macro.skill($skill`Portscan`))
           .default()
@@ -435,7 +436,7 @@ export const LevelingQuest: CSQuest = {
       completed: () => have($item`battle broom`),
       ready: () => Witchess.fightsDone() < 5,
       do: () => Witchess.fightPiece($monster`Witchess Witch`),
-      combat: new CombatStrategy().macro(
+      combat: new CSCombatStrategy().macro(
         Macro.trySkill($skill`Curse of Weaksauce`)
           .trySkill($skill`Micrometeorite`)
           .trySkill($skill`Summon Love Stinkbug`)
@@ -460,7 +461,7 @@ export const LevelingQuest: CSQuest = {
       completed: () => have($item`dented scepter`),
       ready: () => Witchess.fightsDone() < 5,
       do: () => Witchess.fightPiece($monster`Witchess King`),
-      combat: new CombatStrategy().macro(Macro.delevel().attack().repeat()),
+      combat: new CSCombatStrategy().macro(Macro.delevel().attack().repeat()),
       outfit: {
         weapon: $item`Fourth of May Cosplay Saber`,
         offhand: $item`familiar scrapbook`,
@@ -474,7 +475,7 @@ export const LevelingQuest: CSQuest = {
       completed: () => have($item`very pointy crown`),
       ready: () => Witchess.fightsDone() < 5,
       do: () => Witchess.fightPiece($monster`Witchess Queen`),
-      combat: new CombatStrategy().macro(
+      combat: new CSCombatStrategy().macro(
         Macro.item($item`Time-Spinner`)
           .attack()
           .repeat()
@@ -493,7 +494,7 @@ export const LevelingQuest: CSQuest = {
       name: "Deep Machine Tunnels",
       completed: () => get("_machineTunnelsAdv") >= 5,
       do: $location`The Deep Machine Tunnels`,
-      combat: new CombatStrategy().macro(Macro.default()),
+      combat: new CSCombatStrategy().macro(Macro.default()),
       outfit: {
         shirt: $item`makeshift garbage shirt`,
         acc3: $item`backup camera`,
@@ -522,7 +523,7 @@ export const LevelingQuest: CSQuest = {
       ready: () => getKramcoWandererChance() >= 1 && have($item`cosmic bowling ball`),
       do: $location`The Neverending Party`,
       choices: { 1322: 1 },
-      combat: new CombatStrategy().macro(
+      combat: new CSCombatStrategy().macro(
         Macro.if_($monster`sausage goblin`, Macro.skill($skill`Bowl Sideways`).default()).abort()
       ),
       outfit: {
@@ -539,7 +540,7 @@ export const LevelingQuest: CSQuest = {
       completed: () => get("_neverendingPartyFreeTurns") >= 10 && have($effect`Spit Upon`),
       do: $location`The Neverending Party`,
       choices: { 1324: 5 },
-      combat: new CombatStrategy().macro(
+      combat: new CSCombatStrategy().macro(
         Macro.trySkill($skill`Feel Pride`)
           .trySkill($skill`%fn, spit on me!`)
           .default()
@@ -553,18 +554,18 @@ export const LevelingQuest: CSQuest = {
       limit: { tries: 10 },
     },
     {
-      name: "Gingerbread Mob Hit",
-      completed: () => get("_gingerbreadMobHitUsed"),
+      name: "Free Kills",
+      completed: () => freeKillSources.every((source) => !source.available()),
       do: $location`The Neverending Party`,
       choices: { 1324: 5 },
-      combat: new CombatStrategy().macro(Macro.skill($skill`Gingerbread Mob Hit`)),
+      combat: new CSCombatStrategy().killFree(),
       outfit: {
         shirt: $item`makeshift garbage shirt`,
         acc3: $item`backup camera`,
         modes: { backupcamera: "ml" },
       },
       acquire: [{ item: $item`makeshift garbage shirt` }],
-      limit: { tries: 1 },
+      limit: { tries: 8 },
     },
   ],
 };

@@ -1,7 +1,7 @@
 import { gametimeToInt, myAdventures, print, turnsPlayed } from "kolmafia";
 import { convertMilliseconds } from "./lib";
 import { get, set } from "libram";
-import { Engine } from "./engine/engine";
+import { CSEngine } from "./engine/engine";
 import { Args, getTasks } from "grimoire-kolmafia";
 import { BoozeDropQuest } from "./tasks/boozedrop";
 import { CoilWireQuest } from "./tasks/coilwire";
@@ -78,7 +78,7 @@ export function main(command?: string): void {
     };
   }
 
-  const engine = new Engine(tasks);
+  const engine = new CSEngine(tasks);
   try {
     if (args.list) {
       listTasks(engine);
@@ -120,7 +120,7 @@ function runComplete(): boolean {
   return get("kingLiberated");
 }
 
-function listTasks(engine: Engine): void {
+function listTasks(engine: CSEngine): void {
   for (const task of engine.tasks) {
     if (task.completed()) {
       print(`${task.name}: Done`, "blue");

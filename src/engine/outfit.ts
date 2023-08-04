@@ -1,4 +1,4 @@
-import { Outfit } from "grimoire-kolmafia";
+import { Outfit, OutfitSpec } from "grimoire-kolmafia";
 import { $familiar, $item, $items, $slot, byStat } from "libram";
 
 export function equipDefaults(outfit: Outfit): void {
@@ -39,3 +39,33 @@ export function equipDefaults(outfit: Outfit): void {
     parka: "kachungasaur",
   });
 }
+
+export const defaultOutfit: OutfitSpec = {
+  hat: byStat({
+    Muscle: $items`Iunion Crown`,
+    Mysticality: $items`astral chapeau, Iunion Crown`,
+    Moxie: $items`very pointy crown, Iunion Crown`,
+  }),
+  weapon: byStat({
+    Muscle: $items`dented scepter, Fourth of May Cosplay Saber`,
+    default: $items`Fourth of May Cosplay Saber`,
+  }),
+  offhand: $item`unbreakable umbrella`,
+  back: $items`LOV Epaulettes, unwrapped knock-off retro superhero cape`,
+  shirt: $items`LOV Eardigan, Jurassic Parka`,
+  pants: $item`Cargo Cultist Shorts`,
+  acc1: byStat({
+    Muscle: $items`Brutal brogues, Kremlin's Greatest Briefcase`,
+    Mysticality: $items`battle broom, Kremlin's Greatest Briefcase`,
+    Moxie: $items`LOV Earrings, Beach Comb`,
+  }),
+  acc2: $item`your cowboy boots`,
+  acc3: $item`Powerful Glove`,
+  familiar: $familiar`Melodramedary`,
+  famequip: $item`tiny stillsuit`,
+  modes: {
+    retrocape: [byStat({ Muscle: "vampire", Mysticality: "heck", Moxie: "robot" }), "thrill"],
+    umbrella: "broken",
+    parka: "kachungasaur",
+  },
+};

@@ -14,9 +14,9 @@ import {
   SourceTerminal,
 } from "libram";
 import { CSQuest } from "../engine/task";
-import { CombatStrategy } from "grimoire-kolmafia";
 import { useSkill, visitUrl } from "kolmafia";
 import { asdonTask, potionTask, skillTask } from "./common";
+import { CSCombatStrategy } from "../engine/combat";
 
 const buffs = $effects`Singer's Faithful Ocelot, Fat Leon's Phat Loot Lyric, The Spirit of Taking`;
 
@@ -48,7 +48,7 @@ export const BoozeDropQuest: CSQuest = {
       name: "Batform",
       completed: () => have($effect`Bat-Adjacent Form`),
       do: $location`The Dire Warren`,
-      combat: new CombatStrategy().macro(
+      combat: new CSCombatStrategy().macro(
         Macro.skill($skill`Become a Bat`)
           .skill($skill`Bowl Straight Up`)
           .skill($skill`Reflex Hammer`)

@@ -1,4 +1,3 @@
-import { CombatStrategy } from "grimoire-kolmafia";
 import {
   $effect,
   $effects,
@@ -13,6 +12,7 @@ import {
 import Macro from "../combat";
 import { CSQuest } from "../engine/task";
 import { beachTask, skillTask } from "./common";
+import { CSCombatStrategy } from "../engine/combat";
 
 const buffs = $effects`Feeling Peaceful, Astral Shell, Ghostly Shell, Empathy, Leash of Linguini, Blood Bond`;
 
@@ -27,7 +27,7 @@ export const HotResQuest: CSQuest = {
       completed: () => have($effect`Fireproof Foam Suit`),
       ready: () => get("_fireExtinguisherCharge") >= 10 && get("_saberForceUses") < 5,
       do: $location`The Dire Warren`,
-      combat: new CombatStrategy().macro(
+      combat: new CSCombatStrategy().macro(
         Macro.skill($skill`Fire Extinguisher: Foam Yourself`).skill($skill`Use the Force`)
       ),
       choices: { 1387: 3 },

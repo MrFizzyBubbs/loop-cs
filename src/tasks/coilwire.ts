@@ -1,4 +1,3 @@
-import { CombatStrategy } from "grimoire-kolmafia";
 import { adv1, cliExecute, myPrimestat } from "kolmafia";
 import {
   $classes,
@@ -20,6 +19,7 @@ import {
 import Macro from "../combat";
 import { CSQuest } from "../engine/task";
 import { burnLibrams } from "../lib";
+import { CSCombatStrategy } from "../engine/combat";
 
 export const CoilWireQuest: CSQuest = {
   name: "Coil Wire",
@@ -29,7 +29,7 @@ export const CoilWireQuest: CSQuest = {
       name: "Holiday Runaway",
       completed: () => getTodaysHolidayWanderers().length === 0 || get("_banderRunaways") >= 1,
       do: $location`Noob Cave`,
-      combat: new CombatStrategy().macro(Macro.runaway()),
+      combat: new CSCombatStrategy().macro(Macro.runaway()),
       outfit: { familiar: $familiar`Pair of Stomping Boots` },
       limit: { tries: 1 },
     },
@@ -42,7 +42,7 @@ export const CoilWireQuest: CSQuest = {
         if (get("_hotTubSoaks") < 1) cliExecute("hottub");
       },
       do: $location`The Skeleton Store`, // Shrub's spooky damage won't kill monsters here
-      combat: new CombatStrategy().macro(
+      combat: new CSCombatStrategy().macro(
         Macro.skill($skill`Open a Big Red Present`).skill($skill`Bowl a Curveball`)
       ),
       outfit: { familiar: $familiar`Crimbo Shrub` },
@@ -53,7 +53,7 @@ export const CoilWireQuest: CSQuest = {
       completed: () => get("_sausageFights") > 0,
       ready: () => getKramcoWandererChance() >= 1,
       do: $location`Noob Cave`,
-      combat: new CombatStrategy().macro(
+      combat: new CSCombatStrategy().macro(
         Macro.skill($skill`Micrometeorite`)
           .attack()
           .repeat()
@@ -69,7 +69,7 @@ export const CoilWireQuest: CSQuest = {
       completed: () => get("_bagOfCandy"),
       ready: () => get("ghostLocation") !== $location`none`,
       do: () => adv1(get("ghostLocation", $location`none`), 0, ""),
-      combat: new CombatStrategy().macro(
+      combat: new CSCombatStrategy().macro(
         Macro.delevel()
           .skill($skill`Shoot Ghost`)
           .skill($skill`Shoot Ghost`)
@@ -93,7 +93,7 @@ export const CoilWireQuest: CSQuest = {
         Cartography.mapMonster($location`The Skeleton Store`, $monster`novelty tropical skeleton`);
       },
       outfit: { shirt: $item`Jurassic Parka`, modes: { parka: "dilophosaur" } },
-      combat: new CombatStrategy().macro(Macro.skill($skill`Spit jurassic acid`)),
+      combat: new CSCombatStrategy().macro(Macro.skill($skill`Spit jurassic acid`)),
       limit: { tries: 1 },
     },
     {
@@ -103,7 +103,7 @@ export const CoilWireQuest: CSQuest = {
       ready: () => !have($effect`Everything Looks Yellow`),
       do: () => CombatLoversLocket.reminisce($monster`Evil Olive`),
       outfit: { shirt: $item`Jurassic Parka`, modes: { parka: "dilophosaur" } },
-      combat: new CombatStrategy().macro(Macro.skill($skill`Spit jurassic acid`)),
+      combat: new CSCombatStrategy().macro(Macro.skill($skill`Spit jurassic acid`)),
       limit: { tries: 1 },
     },
     {
