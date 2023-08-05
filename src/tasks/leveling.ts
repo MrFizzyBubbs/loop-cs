@@ -108,7 +108,8 @@ const LOVEquipment = byStat({
 export const LevelingQuest: CSQuest = {
   name: "Leveling",
   completed: () =>
-    get("csServicesPerformed").split(",").length > 1 || get("_gingerbreadMobHitUsed"),
+    get("csServicesPerformed").split(",").length > 1 ||
+    freeKillSources.every((source) => !source.available()),
   tasks: [
     innerElfTask(),
     potionTask(generalStoreItem, true),
