@@ -1,32 +1,16 @@
 import { CSTask } from "./task";
 import { CombatResources, Engine, Outfit } from "grimoire-kolmafia";
 import { $effect, $skill, have } from "libram";
-import { myClass, myHp, myMaxhp, userConfirm, useSkill } from "kolmafia";
+import { myClass, myHp, myMaxhp, useSkill } from "kolmafia";
 import { equipDefaults } from "./outfit";
-import { args } from "../main";
 import { freeKillSources } from "./resources";
 import { CombatActions, CSCombatStrategy } from "./combat";
 
 export class CSEngine extends Engine<CombatActions, CSTask> {
-  confirmed: Set<string>;
-
   constructor(tasks: CSTask[]) {
     // Remove tasks for other classes
     tasks = tasks.filter((task) => !task.class || task.class.includes(myClass()));
     super(tasks);
-    this.confirmed = new Set();
-  }
-
-  execute(task: CSTask): void {
-    if (
-      args.confirm &&
-      !this.confirmed.has(task.name) &&
-      !userConfirm(`Executing ${task.name}, continue?`)
-    ) {
-      throw `User rejected execution of task ${task.name}`;
-    }
-    this.confirmed.add(task.name);
-    super.execute(task);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

@@ -25,9 +25,8 @@ export const args = Args.create("loopcs", "A script to complete community servic
     help: "Name of clan that has Mother Slime ready in The Slime Tube.",
     default: "Hobopolis Vacation Home",
   }),
-  confirm: Args.flag({
-    help: "Whether the user must confirm execution of each unique task.",
-    default: false,
+  actions: Args.number({
+    help: "Maximum number of actions to perform, if given. Can be used to execute just a few steps at a time.",
   }),
   abort: Args.string({
     help: "If given, abort during the prepare() step for the task with matching name.",
@@ -85,7 +84,7 @@ export function main(command?: string): void {
       return;
     }
 
-    engine.run();
+    engine.run(args.actions);
 
     const remaining_tasks = tasks.filter((task) => !task.completed());
     if (!runComplete()) {
