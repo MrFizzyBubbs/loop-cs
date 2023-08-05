@@ -19,5 +19,5 @@ export const freeKillSources: FreeKillSource[] = [
     equip: $item`Lil' Doctor™ bag`,
   },
   { available: () => get("_shatteringPunchUsed") < 3, do: $skill`Shattering Punch` },
-  { available: () => get("_gingerbreadMobHitUsed"), do: $skill`Gingerbread Mob Hit` },
+  { available: () => !get("_gingerbreadMobHitUsed"), do: $skill`Gingerbread Mob Hit` },
 ];
