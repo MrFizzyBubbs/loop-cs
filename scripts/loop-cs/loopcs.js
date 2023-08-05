@@ -16908,7 +16908,9 @@ var PrologueQuest = {
   }, {
     name: "Fallbot",
     completed: () => !AutumnAton_available() || property_get("_autumnatonQuests") > 0,
-    do: () => sendTo($location(prologue_templateObject23 || (prologue_templateObject23 = prologue_taggedTemplateLiteral(["The Sleazy Back Alley"])))),
+    do: () => {
+      sendTo($location(prologue_templateObject23 || (prologue_templateObject23 = prologue_taggedTemplateLiteral(["The Sleazy Back Alley"]))));
+    },
     limit: {
       tries: 1
     }
