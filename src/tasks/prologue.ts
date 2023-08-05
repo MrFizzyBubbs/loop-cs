@@ -224,7 +224,9 @@ export const PrologueQuest: CSQuest = {
     {
       name: "Fallbot",
       completed: () => !AutumnAton.available() || get("_autumnatonQuests") > 0,
-      do: () => AutumnAton.sendTo($location`The Sleazy Back Alley`),
+      do: (): void => {
+        AutumnAton.sendTo($location`The Sleazy Back Alley`);
+      },
       limit: { tries: 1 },
     },
     {
