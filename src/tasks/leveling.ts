@@ -326,7 +326,7 @@ export const LevelingQuest: CSQuest = {
       },
       combat: new CSCombatStrategy().macro(
         Macro.if_($monster`LOV Enforcer`, Macro.attack().repeat())
-          .if_($monster`LOV Engineer`, Macro.skill($skill`Weapon of the Pastalord`).repeat())
+          .if_($monster`LOV Engineer`, Macro.skill($skill`Toynado`).repeat())
           .if_($monster`LOV Equivocator`, Macro.default())
       ),
       outfit: {
