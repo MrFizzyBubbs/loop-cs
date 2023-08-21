@@ -86,7 +86,7 @@ export function main(command?: string): void {
 
     engine.run(args.actions);
 
-    const remaining_tasks = tasks.filter((task) => !task.completed());
+    const remaining_tasks = engine.tasks.filter((task) => !task.completed());
     if (!runComplete()) {
       print("Remaining tasks:", "red");
       for (const task of remaining_tasks) {
