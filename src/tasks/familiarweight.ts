@@ -1,9 +1,21 @@
-import { cliExecute, knollAvailable, myAscensions, mySign, toInt, use, visitUrl } from "kolmafia";
+import {
+  cliExecute,
+  familiarWeight,
+  knollAvailable,
+  myAscensions,
+  myFamiliar,
+  mySign,
+  toInt,
+  use,
+  visitUrl,
+  weightAdjustment,
+} from "kolmafia";
 import {
   $classes,
   $effect,
   $familiar,
   $item,
+  $location,
   $skill,
   byClass,
   CommunityService,
@@ -12,11 +24,27 @@ import {
 } from "libram";
 import { CSQuest } from "../engine/task";
 import { beachTask, libramTask, meteorShowerTask, potionTask, skillTask } from "./common";
+import { OutfitSpec } from "grimoire-kolmafia";
+import { CSCombatStrategy } from "../engine/combat";
+import Macro from "../combat";
 
 const maxTurns = byClass({
   "Accordion Thief": 4,
   default: 6,
 });
+
+const outfit: OutfitSpec = {
+  hat: $item`Daylight Shavings Helmet`,
+  weapon: $item`Fourth of May Cosplay Saber`,
+  offhand: $item`rope`,
+  back: $item`Buddy Bjorn`,
+  pants: $item`Great Wolf's beastly trousers`,
+  acc1: $item`Brutal brogues`,
+  acc2: $item`Beach Comb`,
+  acc3: $item`hewn moon-rune spoon`,
+  familiar: $familiar`Comma Chameleon`,
+  riders: { "buddy-bjorn": $familiar`Misshapen Animal Skeleton` },
+};
 
 export const FamiliarWeightQuest: CSQuest = {
   name: "Familiar Weight",
@@ -109,25 +137,51 @@ export const FamiliarWeightQuest: CSQuest = {
       do: () => cliExecute("spoon platypus"),
       limit: { tries: 1 },
     },
-    meteorShowerTask(),
     potionTask($item`silver face paint`),
+    {
+      name: "Gingerbread Clock",
+      completed: () => get("_gingerbreadClockAdvanced"),
+      ready: () => get("_gingerbreadCityTurns") === 0,
+      do: $location`Gingerbread Civic Center`,
+      limit: { tries: 1 },
+    },
+    {
+      // Need 178 lbs for 50 sprinkles from 1 free kill
+      name: "Gingerbread Sprinkles",
+      completed: () =>
+        have($item`sprinkles`, 50) ||
+        get("_gingerbreadCityTurns") >= 4 ||
+        have($item`gingerbread spice latte`) ||
+        have($effect`Whole Latte Love`),
+      ready: () => get("_gingerbreadClockAdvanced"),
+      prepare: (): void => {
+        const weight = familiarWeight(myFamiliar()) + weightAdjustment();
+        if (weight < 158) throw `Familiar weight of ${weight} is less than the required 158`;
+      },
+      do: $location`Gingerbread Upscale Retail District`,
+      outfit: { ...outfit, familiar: $familiar`Chocolate Lab`, famequip: $item`tiny stillsuit` },
+      combat: new CSCombatStrategy().macro(
+        Macro.skill($skill`Meteor Shower`).skill($skill`Shattering Punch`)
+      ),
+      limit: { tries: 1 },
+    },
+    {
+      name: "Gingerbread Noon",
+      completed: () => get("_gingerbreadCityTurns") >= 5,
+      do: $location`Gingerbread Upscale Retail District`,
+      outfit: { ...outfit, familiar: $familiar`Pair of Stomping Boots` },
+      choices: { 1208: 3 },
+      combat: new CSCombatStrategy().macro(Macro.runaway()),
+      limit: { tries: 3 },
+    },
+    potionTask($item`gingerbread spice latte`),
+    meteorShowerTask(),
     libramTask(),
     {
       name: "Test",
       completed: () => CommunityService.FamiliarWeight.isDone(),
       do: () => CommunityService.FamiliarWeight.run(() => undefined, maxTurns),
-      outfit: {
-        hat: $item`Daylight Shavings Helmet`,
-        weapon: $item`Fourth of May Cosplay Saber`,
-        offhand: $item`rope`,
-        back: $item`Buddy Bjorn`,
-        pants: $item`Great Wolf's beastly trousers`,
-        acc1: $item`Brutal brogues`,
-        acc2: $item`Beach Comb`,
-        acc3: $item`hewn moon-rune spoon`,
-        familiar: $familiar`Comma Chameleon`,
-        riders: { "buddy-bjorn": $familiar`Misshapen Animal Skeleton` },
-      },
+      outfit,
       limit: { tries: 1 },
     },
   ],
