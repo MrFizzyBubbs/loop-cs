@@ -17460,7 +17460,7 @@ function main(command) {
     }
 
     engine.run(args.actions);
-    var remaining_tasks = tasks.filter(task => !task.completed());
+    var remaining_tasks = engine.tasks.filter(task => !task.completed());
 
     if (!runComplete()) {
       (0,external_kolmafia_namespaceObject.print)("Remaining tasks:", "red");
