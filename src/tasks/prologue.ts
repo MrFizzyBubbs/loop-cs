@@ -156,7 +156,6 @@ export const PrologueQuest: CSQuest = {
     {
       name: "Mummery",
       completed: () => get("_mummeryMods").includes(myPrimestat().toString()),
-      class: $classes`Pastamancer, Sauceror, Disco Bandit, Accordion Thief`, // Muscle costume's stagger can cause LOV Elixir #6 not to drop
       do: () => cliExecute(`mummery ${myPrimestat().toString().toLowerCase()}`),
       outfit: { familiar: $familiar`Melodramedary` },
       limit: { tries: 1 },

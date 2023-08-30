@@ -25,6 +25,7 @@ import {
   Cartography,
   get,
   getKramcoWandererChance,
+  getModifier,
   getTodaysHolidayWanderers,
   have,
   TunnelOfLove,
@@ -46,6 +47,7 @@ export const generalStoreItem = byStat({
 const buffs = {
   stats: $effects`Triple-Sized, Big, Song of Bravado, Stevedave's Shanty of Superiority, Rage of the Reindeer, Feeling Excited, Carol of the Thrills`,
   familiarWeight: $effects`Empathy, Leash of Linguini, Blood Bond`,
+  item: $effects`Singer's Faithful Ocelot, The Spirit of Taking`,
   damage: $effects`Carol of the Hells, Carol of the Bulls, Frenzied\, Bloody`,
   elementalDamage: $effects`Takin' It Greasy, Intimidating Mien, Rotten Memories, Pyromania, Frostbeard`,
   survivability: $effects`Blood Bubble, Ruthlessly Efficient, Feeling Peaceful, Astral Shell, Ghostly Shell, Elemental Saucesphere`,
@@ -174,6 +176,7 @@ export const LevelingQuest: CSQuest = {
     ...buffs.stats.map(skillTask),
     ...buffs.familiarWeight.map(skillTask),
     ...buffs.damage.map(skillTask),
+    ...buffs.item.map(skillTask),
     ...buffs.elementalDamage.map(skillTask),
     ...buffs.survivability.map(skillTask),
     {
@@ -306,9 +309,11 @@ export const LevelingQuest: CSQuest = {
     {
       name: "LOV Tunnel",
       completed: () => get("_loveTunnelUsed"),
-      prepare: burnLibrams,
-      do: (): void => {
-        cliExecute("debug on");
+      prepare: (): void => {
+        burnLibrams();
+        if (getModifier("Item Drop") < 100) throw "Unable to cap the LOV Elixir drops";
+      },
+      do: () =>
         TunnelOfLove.fightAll(
           byStat({
             Muscle: "LOV Eardigan",
@@ -317,9 +322,7 @@ export const LevelingQuest: CSQuest = {
           }),
           "Open Heart Surgery",
           "LOV Extraterrestrial Chocolate"
-        );
-        cliExecute("debug off");
-      },
+        ),
       post: (): void => {
         const elixirs = $items`LOV Elixir #3, LOV Elixir #6`.filter((elixir) => !have(elixir));
         if (elixirs.length > 0) throw `${elixirs} did not drop`;
