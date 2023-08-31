@@ -15961,7 +15961,7 @@ var LevelingQuest = {
     limit: {
       tries: 1
     }
-  }], leveling_toConsumableArray(leveling_buffs.stats.map(skillTask)), leveling_toConsumableArray(leveling_buffs.familiarWeight.map(skillTask)), leveling_toConsumableArray(leveling_buffs.damage.map(skillTask)), leveling_toConsumableArray(leveling_buffs.elementalDamage.map(skillTask)), leveling_toConsumableArray(leveling_buffs.survivability.map(skillTask)), [leveling_objectSpread(leveling_objectSpread({}, skillTask(byStat({
+  }], leveling_toConsumableArray(leveling_buffs.stats.map(skillTask)), leveling_toConsumableArray(leveling_buffs.familiarWeight.map(skillTask)), leveling_toConsumableArray(leveling_buffs.damage.map(skillTask)), leveling_toConsumableArray(leveling_buffs.item.map(skillTask)), leveling_toConsumableArray(leveling_buffs.elementalDamage.map(skillTask)), leveling_toConsumableArray(leveling_buffs.survivability.map(skillTask)), [leveling_objectSpread(leveling_objectSpread({}, skillTask(byStat({
     Muscle: template_string_$effect(_templateObject71 || (_templateObject71 = leveling_taggedTemplateLiteral(["Quiet Determination"]))),
     Mysticality: template_string_$effect(_templateObject72 || (_templateObject72 = leveling_taggedTemplateLiteral(["Inscrutable Gaze"]))),
     Moxie: template_string_$effect(_templateObject73 || (_templateObject73 = leveling_taggedTemplateLiteral(["Quiet Desperation"])))
@@ -16108,7 +16108,7 @@ var LevelingQuest = {
     completed: () => property_get("_loveTunnelUsed"),
     prepare: () => {
       burnLibrams();
-      (0,external_kolmafia_namespaceObject.logprint)("[loop-cs] Item Drop: ".concat(modifier_get("Item Drop")));
+      if (modifier_get("Item Drop") < 100) throw "Unable to cap the LOV Elixir drops";
     },
     do: () => fightAll(byStat({
       Muscle: "LOV Eardigan",
