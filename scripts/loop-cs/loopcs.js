@@ -15509,7 +15509,10 @@ var FamiliarWeightQuest = {
     ready: () => property_get("_gingerbreadClockAdvanced"),
     prepare: () => {
       var weight = (0,external_kolmafia_namespaceObject.familiarWeight)((0,external_kolmafia_namespaceObject.myFamiliar)()) + (0,external_kolmafia_namespaceObject.weightAdjustment)();
-      if (weight < 158) throw "Familiar weight of ".concat(weight, " is less than the required 158");
+
+      if (weight < 158) {
+        throw "Unable to guarantee 50 sprinkles, current familiar weight of ".concat(weight, " lbs is < 158 lbs");
+      }
     },
     do: $location(familiarweight_templateObject39 || (familiarweight_templateObject39 = familiarweight_taggedTemplateLiteral(["Gingerbread Upscale Retail District"]))),
     outfit: familiarweight_objectSpread(familiarweight_objectSpread({}, outfit), {}, {
@@ -16108,7 +16111,11 @@ var LevelingQuest = {
     completed: () => property_get("_loveTunnelUsed"),
     prepare: () => {
       burnLibrams();
-      if (modifier_get("Item Drop") < 100) throw "Unable to cap the LOV Elixir drops";
+      var itemDrop = modifier_get("Item Drop");
+
+      if (itemDrop < 100) {
+        throw "Unable to guarantee the LOV Elixir drops, current item drop of ".concat(itemDrop, "% is < 100%");
+      }
     },
     do: () => fightAll(byStat({
       Muscle: "LOV Eardigan",
