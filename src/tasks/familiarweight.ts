@@ -156,7 +156,9 @@ export const FamiliarWeightQuest: CSQuest = {
       ready: () => get("_gingerbreadClockAdvanced"),
       prepare: (): void => {
         const weight = familiarWeight(myFamiliar()) + weightAdjustment();
-        if (weight < 158) throw `Familiar weight of ${weight} is less than the required 158`;
+        if (weight < 158) {
+          throw `Unable to guarantee 50 sprinkles, current familiar weight of ${weight} lbs is < 158 lbs`;
+        }
       },
       do: $location`Gingerbread Upscale Retail District`,
       outfit: { ...outfit, familiar: $familiar`Chocolate Lab`, famequip: $item`tiny stillsuit` },

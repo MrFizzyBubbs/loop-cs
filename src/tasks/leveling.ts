@@ -311,7 +311,10 @@ export const LevelingQuest: CSQuest = {
       completed: () => get("_loveTunnelUsed"),
       prepare: (): void => {
         burnLibrams();
-        if (getModifier("Item Drop") < 100) throw "Unable to cap the LOV Elixir drops";
+        const itemDrop = getModifier("Item Drop");
+        if (itemDrop < 100) {
+          throw `Unable to guarantee the LOV Elixir drops, current item drop of ${itemDrop}% is < 100%`;
+        }
       },
       do: () =>
         TunnelOfLove.fightAll(
