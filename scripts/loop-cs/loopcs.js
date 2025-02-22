@@ -16092,8 +16092,9 @@ var LevelingQuest = {
       familiar: template_string_$familiar(_templateObject107 || (_templateObject107 = leveling_taggedTemplateLiteral(["Nanorhino"])))
     },
     limit: {
-      tries: 1
-    }
+      tries: 2
+    } // Intro NC
+
   }, {
     name: "Do You Crush What I Crush?",
     completed: () => lib_have(template_string_$effect(_templateObject108 || (_templateObject108 = leveling_taggedTemplateLiteral(["Do You Crush What I Crush?"])))),
