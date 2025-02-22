@@ -296,7 +296,7 @@ export const LevelingQuest: CSQuest = {
         offhand: $item`weeping willow wand`,
         familiar: $familiar`Nanorhino`,
       },
-      limit: { tries: 1 },
+      limit: { tries: 2 }, // Intro NC
     },
     {
       name: "Do You Crush What I Crush?",
