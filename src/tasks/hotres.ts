@@ -48,7 +48,7 @@ export const HotResQuest: CSQuest = {
         back: $item`unwrapped knock-off retro superhero cape`,
         shirt: $item`Jurassic Parka`,
         pants: $item`designer sweatpants`,
-        acc1: $item`Brutal brogues`,
+        acc1: $item`cursed monkey's paw`,
         acc2: $item`hewn moon-rune spoon`,
         acc3: $item`Beach Comb`,
         familiar: $familiar`Exotic Parrot`,

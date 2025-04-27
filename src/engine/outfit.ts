@@ -4,9 +4,9 @@ import { $familiar, $item, $items, $slot, byStat } from "libram";
 export function equipDefaults(outfit: Outfit): void {
   outfit.equip(
     byStat({
-      Muscle: $items`Iunion Crown`,
-      Mysticality: $items`astral chapeau, Iunion Crown`,
-      Moxie: $items`very pointy crown, Iunion Crown`,
+      Muscle: $items`Apriling band helmet`,
+      Mysticality: $items`astral chapeau, Apriling band helmet`,
+      Moxie: $items`very pointy crown, Apriling band helmet`,
     }),
     $slot`hat`
   );
