@@ -394,7 +394,7 @@ export const LevelingQuest: CSQuest = {
       completed: () => get("_godLobsterFights") >= 3,
       do: () => visitUrl("main.php?fightgodlobster=1"),
       combat: new CSCombatStrategy().macro(Macro.default()),
-      choices: { 1310: () => (get("_godLobsterFights") === 2 ? 2 : 1) }, // Get -combat buff on last combat
+      choices: { 1310: 1 },
       outfit: {
         shirt: $item`makeshift garbage shirt`,
         famequip: $items`God Lobster's Ring, God Lobster's Scepter, tiny stillsuit`,

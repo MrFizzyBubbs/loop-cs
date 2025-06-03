@@ -236,5 +236,12 @@ export const PrologueQuest: CSQuest = {
       choices: { 1494: 2 },
       limit: { tries: 1 },
     },
+    {
+      name: "McHugeLarge",
+      completed: () => have($item`McHugeLarge left ski`),
+      ready: () => have($item`McHugeLarge duffel bag`),
+      do: () => visitUrl("inventory.php?action=skiduffel&pwd", false),
+      limit: { tries: 1 },
+    },
   ],
 };
