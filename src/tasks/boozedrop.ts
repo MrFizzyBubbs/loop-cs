@@ -87,7 +87,6 @@ export const BoozeDropQuest: CSQuest = {
         offhand: $item`unbreakable umbrella`,
         back: $item`Buddy Bjorn`,
         acc1: $item`Guzzlr tablet`,
-        // eslint-disable-next-line libram/verify-constants
         acc2: $item`Cincho de Mayo`,
         acc3: $items`barrel hoop earring, gold detective badge`,
         famequip: $item`li'l ninja costume`,

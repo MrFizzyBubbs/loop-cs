@@ -49,8 +49,8 @@ export const PrologueQuest: CSQuest = {
   tasks: [
     {
       name: "Workshed",
-      completed: () => getWorkshed() === $item`Asdon Martin keyfob`,
-      do: () => use($item`Asdon Martin keyfob`),
+      completed: () => getWorkshed() === $item`Asdon Martin keyfob (on ring)`,
+      do: () => use($item`Asdon Martin keyfob (on ring)`),
       limit: { tries: 1 },
     },
     {
