@@ -9,7 +9,7 @@ export const NoncombatQuest: CSQuest = {
   name: "Noncombat",
   completed: () => CommunityService.Noncombat.isDone(),
   tasks: [
-    ...buffs.map(skillTask),
+    ...buffs.map((effect) => skillTask(effect)),
     {
       name: "Silent Running",
       completed: () => have($effect`Silent Running`),

@@ -22,7 +22,7 @@ export const WeaponDamageQuest: CSQuest = {
   name: "Weapon Damage",
   completed: () => CommunityService.WeaponDamage.isDone(),
   tasks: [
-    ...buffs.map(skillTask),
+    ...buffs.map((effect) => skillTask(effect)),
     skillTask($skill`Blessing of the War Snapper`),
     {
       // Sometimes LOV Elixir #3 does not drop

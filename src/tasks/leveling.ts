@@ -52,6 +52,7 @@ const buffs = {
   elementalDamage: $effects`Takin' It Greasy, Intimidating Mien, Rotten Memories, Pyromania, Frostbeard`,
   survivability: $effects`Blood Bubble, Ruthlessly Efficient, Feeling Peaceful, Astral Shell, Ghostly Shell, Elemental Saucesphere`,
   monsterLevel: $effects`Ur-Kel's Aria of Annoyance, Pride of the Puffin, Drescher's Annoying Noise`,
+  aprilShield: $effects`Thoughtful Empathy, Slippery as a Seal, Strength of the Tortoise, Tubes of Universal Meat, Lubricating Sauce, Disco over Matter, Mariachi Moisture`,
 };
 
 const { saucePotion, sauceFruit, sauceEffect } = byStat({
@@ -173,12 +174,13 @@ export const LevelingQuest: CSQuest = {
       outfit: { pants: $item`designer sweatpants` },
       limit: { tries: 1 },
     },
-    ...buffs.stats.map(skillTask),
-    ...buffs.familiarWeight.map(skillTask),
-    ...buffs.damage.map(skillTask),
-    ...buffs.item.map(skillTask),
-    ...buffs.elementalDamage.map(skillTask),
-    ...buffs.survivability.map(skillTask),
+    ...buffs.stats.map((effect) => skillTask(effect)),
+    ...buffs.familiarWeight.map((effect) => skillTask(effect)),
+    ...buffs.damage.map((effect) => skillTask(effect)),
+    ...buffs.item.map((effect) => skillTask(effect)),
+    ...buffs.elementalDamage.map((effect) => skillTask(effect)),
+    ...buffs.survivability.map((effect) => skillTask(effect)),
+    ...buffs.aprilShield.map((effect) => skillTask(effect, true)),
     {
       ...skillTask(
         byStat({
@@ -190,7 +192,7 @@ export const LevelingQuest: CSQuest = {
       name: "Facial Expression",
     },
     ...$skills`Advanced Saucecrafting, Prevent Scurvy and Sobriety, Summon Crimbo Candy`.map(
-      skillTask
+      (effect) => skillTask(effect)
     ),
     {
       name: "Get Range",
@@ -496,7 +498,7 @@ export const LevelingQuest: CSQuest = {
       acquire: [{ item: $item`makeshift garbage shirt` }],
       limit: { tries: 1 },
     },
-    ...buffs.monsterLevel.map(skillTask),
+    ...buffs.monsterLevel.map((effect) => skillTask(effect)),
     {
       name: "Deep Machine Tunnels",
       completed: () => get("_machineTunnelsAdv") >= 5,
