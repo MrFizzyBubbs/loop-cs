@@ -111,12 +111,12 @@ export const SpellDamageQuest: CSQuest = {
     {
       name: "Pull Staff",
       completed: () => have(chefstaff),
-      do: (): void => {
+      prepare: () => {
         if (!canEquip(chefstaff)) {
-          throw `Unable to equip chefstaff ${chefstaff}`;
+          throw `Will not be able to equip ${chefstaff.name}, consider a lesser chef staff`;
         }
-        takeStorage(chefstaff, 1);
       },
+      do: () => takeStorage(chefstaff, 1),
       limit: { tries: 1 },
     },
     {
