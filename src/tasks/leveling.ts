@@ -33,7 +33,7 @@ import {
 } from "libram";
 import Macro from "../combat";
 import { CSQuest } from "../engine/task";
-import { burnLibrams, byPrimaryClass } from "../lib";
+import { burnLibrams, byPrimaryClass, peridotChoice } from "../lib";
 import { beachTask, innerElfTask, potionTask, skillTask } from "./common";
 import { CSCombatStrategy } from "../engine/combat";
 import { freeKillSources } from "../engine/resources";
@@ -62,12 +62,12 @@ const { saucePotion, sauceFruit, sauceEffect } = byStat({
     sauceEffect: $effect`Phorcefullness`,
   },
   Mysticality: {
-    sauceFruit: $item`grapefruit`,
+    sauceFruit: $item`grapefruit`, // From Prevent Scurvy and Sobriety
     saucePotion: $item`ointment of the occult`,
     sauceEffect: $effect`Mystically Oiled`,
   },
   Moxie: {
-    sauceFruit: $item`olive`,
+    sauceFruit: $item`olive`, // From Evil Olive
     saucePotion: $item`serum of sarcasm`,
     sauceEffect: $effect`Superhuman Sarcasm`,
   },
@@ -252,14 +252,16 @@ export const LevelingQuest: CSQuest = {
     {
       name: "Ninja Costume",
       completed: () => have($item`li'l ninja costume`) && have($effect`Giant Growth`),
-      do: () => Cartography.mapMonster($location`The Haiku Dungeon`, $monster`amateur ninja`),
+      do: $location`The Haiku Dungeon`,
       post: () => visitUrl("questlog.php?which=1"), // Check quest log for protonic ghost location
+      choices: peridotChoice($monster`amateur ninja`),
       combat: new CSCombatStrategy().macro(
         Macro.skill($skill`Giant Growth`).skill($skill`Chest X-Ray`)
       ),
       outfit: {
         back: $item`protonic accelerator pack`,
         offhand: $item`weeping willow wand`,
+        acc2: $item`Peridot of Peril`,
         acc3: $item`Lil' Doctor™ bag`,
       },
       limit: { tries: 1 },
@@ -409,17 +411,15 @@ export const LevelingQuest: CSQuest = {
       name: "Oliver's Place: Goblin Flapper",
       completed: () => have($item`imported taffy`) || have($effect`Imported Strength`),
       ready: () => get("_speakeasyFreeFights") < 3,
-      do: () =>
-        Cartography.mapMonster(
-          $location`An Unusually Quiet Barroom Brawl`,
-          $monster`goblin flapper`
-        ),
+      do: $location`An Unusually Quiet Barroom Brawl`,
+      choices: peridotChoice($monster`goblin flapper`),
       combat: new CSCombatStrategy().macro(
         Macro.skill($skill`Feel Envy`)
           .skill($skill`Portscan`)
           .sing()
           .kill()
       ),
+      outfit: { acc3: $item`Peridot of Peril` },
       limit: { tries: 1 },
     },
     potionTask($item`imported taffy`),

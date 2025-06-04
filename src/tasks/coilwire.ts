@@ -18,7 +18,7 @@ import {
 } from "libram";
 import Macro from "../combat";
 import { CSQuest } from "../engine/task";
-import { burnLibrams } from "../lib";
+import { burnLibrams, peridotChoice } from "../lib";
 import { CSCombatStrategy } from "../engine/combat";
 
 export const CoilWireQuest: CSQuest = {
@@ -89,10 +89,13 @@ export const CoilWireQuest: CSQuest = {
       class: $classes`Seal Clubber, Turtle Tamer, Sauceror`,
       completed: () => have($item`cherry`),
       ready: () => !have($effect`Everything Looks Yellow`),
-      do: (): void => {
-        Cartography.mapMonster($location`The Skeleton Store`, $monster`novelty tropical skeleton`);
+      do: $location`The Skeleton Store`,
+      outfit: {
+        shirt: $item`Jurassic Parka`,
+        modes: { parka: "dilophosaur" },
+        acc3: $item`Peridot of Peril`,
       },
-      outfit: { shirt: $item`Jurassic Parka`, modes: { parka: "dilophosaur" } },
+      choices: peridotChoice($monster`novelty tropical skeleton`),
       combat: new CSCombatStrategy().macro(Macro.skill($skill`Spit jurassic acid`)),
       limit: { tries: 1 },
     },

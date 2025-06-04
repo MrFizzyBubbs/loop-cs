@@ -3,6 +3,7 @@ import {
   effectModifier,
   haveEffect,
   Item,
+  Monster,
   myClass,
   myMp,
   Skill,
@@ -109,3 +110,5 @@ export function burnLibrams(): void {
     } else if (!castPriciestLibram()) return;
   }
 }
+
+export const peridotChoice = (monster: Monster) => ({ 1557: `1&bandersnatch=${monster.id}` });

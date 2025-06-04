@@ -146,3 +146,4 @@ The table below lists the Mr. Store content required to run this script. Other r
 | 2024 | April      | [boxed Apriling band helmet](https://kol.coldfront.net/thekolwiki/index.php/Boxed_Apriling_band_helmet)                                       |
 | 2025 | January    | [McHugeLarge deluxe ski set](https://kol.coldfront.net/thekolwiki/index.php/McHugeLarge_deluxe_ski_set)                                       |
 | 2025 | April      | [Packaged April Shower Thoughts Calendar](https://kol.coldfront.net/thekolwiki/index.php/Packaged_April_Shower_Thoughts_Calendar)             |
+| 2025 | May        | [Unpeeled Period of Peril](https://kol.coldfront.net/thekolwiki/index.php/Unpeeled_Peridot_of_Peril)                                          |
