@@ -1,4 +1,13 @@
-import { availableAmount, haveEffect, Item, myClass, myMp, Skill, useSkill } from "kolmafia";
+import {
+  availableAmount,
+  effectModifier,
+  haveEffect,
+  Item,
+  myClass,
+  myMp,
+  Skill,
+  useSkill,
+} from "kolmafia";
 import {
   $item,
   $skill,
@@ -42,7 +51,7 @@ export function canCastLibrams(): boolean {
 }
 
 function totalDuration(item: Item): number {
-  const effect = getModifier("Effect", item);
+  const effect = effectModifier(item, "Effect");
   return haveEffect(effect) + getModifier("Effect Duration", item) * availableAmount(item);
 }
 

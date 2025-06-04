@@ -20,7 +20,7 @@ export const HotResQuest: CSQuest = {
   name: "Hot Res",
   completed: () => CommunityService.HotRes.isDone(),
   tasks: [
-    ...buffs.map(skillTask),
+    ...buffs.map((effect) => skillTask(effect)),
     beachTask($effect`Hot-Headed`),
     {
       name: "Foam Suit",

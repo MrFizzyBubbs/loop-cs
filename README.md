@@ -1,6 +1,6 @@
 # loop-cs
 
-`loop-cs` is a script for looping softcore Community Service runs designed to work if you are me, [Baden (#2460823)](https://api.aventuristo.net/av-snapshot?u=Baden). It is built using the task-based engine from [grimoire](https://github.com/Loathing-Associates-Scripting-Society/grimoire) and achieves a near cost-optimal run with 0/4/1 organ use for any class. This script is a greatly improved version of my previous Community Service script: [fizz-sccs](https://github.com/MrFizzyBubbs/fizz-sccs).
+`loop-cs` is a script for looping softcore Community Service runs designed to work if you are me, [MrFizzyBubbs (#2460823)](https://api.aventuristo.net/av-snapshot?u=MrFizzyBubbs). It is built using the task-based engine from [grimoire](https://github.com/Loathing-Associates-Scripting-Society/grimoire) and achieves a near cost-optimal run with 0/4/1 organ use for any class. This script is a greatly improved version of my previous Community Service script: [fizz-sccs](https://github.com/MrFizzyBubbs/fizz-sccs).
 
 ## Installation
 
@@ -143,3 +143,6 @@ The table below lists the Mr. Store content required to run this script. Other r
 | 2022 | November   | [deed to Oliver's Place](http://kol.coldfront.net/thekolwiki/index.php/deed%20to%20Oliver's%20Place)                                          |
 | 2023 | February   | [S.I.T. Course Voucher](https://kol.coldfront.net/thekolwiki/index.php/S.I.T._Course_Voucher)                                                 |
 | 2023 | May        | [shrink-wrapped Cincho de Mayo](https://kol.coldfront.net/thekolwiki/index.php/Shrink-wrapped_Cincho_de_Mayo)                                 |
+| 2024 | April      | [boxed Apriling band helmet](https://kol.coldfront.net/thekolwiki/index.php/Boxed_Apriling_band_helmet)                                       |
+| 2025 | January    | [McHugeLarge deluxe ski set](https://kol.coldfront.net/thekolwiki/index.php/McHugeLarge_deluxe_ski_set)                                       |
+| 2025 | April      | [Packaged April Shower Thoughts Calendar](https://kol.coldfront.net/thekolwiki/index.php/Packaged_April_Shower_Thoughts_Calendar)             |

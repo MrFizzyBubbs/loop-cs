@@ -9,7 +9,7 @@ export const NoncombatQuest: CSQuest = {
   name: "Noncombat",
   completed: () => CommunityService.Noncombat.isDone(),
   tasks: [
-    ...buffs.map(skillTask),
+    ...buffs.map((effect) => skillTask(effect)),
     {
       name: "Silent Running",
       completed: () => have($effect`Silent Running`),
@@ -36,7 +36,7 @@ export const NoncombatQuest: CSQuest = {
         pants: $item`Great Wolf's beastly trousers`,
         acc1: $item`Brutal brogues`,
         acc2: $item`Beach Comb`,
-        acc3: $item`hewn moon-rune spoon`,
+        acc3: $item`McHugeLarge left ski`,
         familiar: $familiar`Disgeist`,
         famequip: $item`tiny stillsuit`,
         modes: { umbrella: "cocoon", parka: "pterodactyl" },

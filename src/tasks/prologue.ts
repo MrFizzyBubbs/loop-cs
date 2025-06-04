@@ -49,8 +49,8 @@ export const PrologueQuest: CSQuest = {
   tasks: [
     {
       name: "Workshed",
-      completed: () => getWorkshed() === $item`Asdon Martin keyfob`,
-      do: () => use($item`Asdon Martin keyfob`),
+      completed: () => getWorkshed() === $item`Asdon Martin keyfob (on ring)`,
+      do: () => use($item`Asdon Martin keyfob (on ring)`),
       limit: { tries: 1 },
     },
     {
@@ -234,6 +234,13 @@ export const PrologueQuest: CSQuest = {
       completed: () => get("_sitCourseCompleted") || have($skill`Insectologist`),
       do: () => use($item`S.I.T. Course Completion Certificate`),
       choices: { 1494: 2 },
+      limit: { tries: 1 },
+    },
+    {
+      name: "McHugeLarge",
+      completed: () => have($item`McHugeLarge left ski`),
+      ready: () => have($item`McHugeLarge duffel bag`),
+      do: () => visitUrl("inventory.php?action=skiduffel&pwd", false),
       limit: { tries: 1 },
     },
   ],

@@ -20,7 +20,7 @@ const SKILL_BUFFS = {
 };
 
 function skillBuffTasks(key: keyof typeof SKILL_BUFFS): CSTask[] {
-  return SKILL_BUFFS[key].map(skillTask);
+  return SKILL_BUFFS[key].map((effect) => skillTask(effect));
 }
 
 function thrallTask(thrall: Thrall): CSTask {

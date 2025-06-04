@@ -46,7 +46,7 @@ export const SpellDamageQuest: CSQuest = {
   name: "Spell Damage",
   completed: () => CommunityService.SpellDamage.isDone(),
   tasks: [
-    ...buffs.map(skillTask),
+    ...buffs.map((effect) => skillTask(effect)),
     { ...skillTask($skill`Elron's Explosive Etude`), class: $classes`Accordion Thief` },
     {
       name: "Play Pool",
@@ -105,17 +105,18 @@ export const SpellDamageQuest: CSQuest = {
       combat: new CSCombatStrategy().macro(Macro.skill($skill`Reflex Hammer`)),
       limit: { tries: 2 },
     },
+    skillTask($skill`Simmer`, true),
     innerElfTask(),
     meteorShowerTask(),
     {
       name: "Pull Staff",
       completed: () => have(chefstaff),
-      do: (): void => {
+      prepare: () => {
         if (!canEquip(chefstaff)) {
-          throw `Unable to equip chefstaff ${chefstaff}`;
+          throw `Will not be able to equip ${chefstaff.name}, consider a lesser chef staff`;
         }
-        takeStorage(chefstaff, 1);
       },
+      do: () => takeStorage(chefstaff, 1),
       limit: { tries: 1 },
     },
     {

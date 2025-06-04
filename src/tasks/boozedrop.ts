@@ -24,7 +24,7 @@ export const BoozeDropQuest: CSQuest = {
   name: "Booze Drop",
   completed: () => CommunityService.BoozeDrop.isDone(),
   tasks: [
-    ...buffs.map(skillTask),
+    ...buffs.map((effect) => skillTask(effect)),
     {
       ...skillTask($effect`Spice Haze`),
       class: $classes`Seal Clubber, Turtle Tamer, Sauceror, Disco Bandit, Accordion Thief`,
@@ -68,6 +68,7 @@ export const BoozeDropQuest: CSQuest = {
       limit: { tries: 1 },
     },
     asdonTask("Observantly"),
+    skillTask({ skill: $skill`Sauce Contemplation`, effect: $effect`Lubricating Sauce` }, true),
     potionTask($item`bag of grain`),
     {
       name: "Steely-Eyed Squint",
@@ -86,7 +87,6 @@ export const BoozeDropQuest: CSQuest = {
         offhand: $item`unbreakable umbrella`,
         back: $item`Buddy Bjorn`,
         acc1: $item`Guzzlr tablet`,
-        // eslint-disable-next-line libram/verify-constants
         acc2: $item`Cincho de Mayo`,
         acc3: $items`barrel hoop earring, gold detective badge`,
         famequip: $item`li'l ninja costume`,

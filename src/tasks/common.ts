@@ -13,6 +13,7 @@ import {
   knollAvailable,
   mpCost,
   myLevel,
+  myMaxmp,
   myMp,
   Skill,
   toEffect,
@@ -24,6 +25,7 @@ import {
   $effect,
   $familiar,
   $item,
+  $items,
   $location,
   $skill,
   $skills,
@@ -103,10 +105,17 @@ export function potionTask(item: Item, acquire = false): CSTask {
   };
 }
 
-export function skillTask(x: Skill | Effect): CSTask {
+export function skillTask(
+  x: Skill | Effect | { skill: Skill; effect: Effect },
+  includeAprilShield = false
+): CSTask {
   {
-    const skill = x instanceof Skill ? x : toSkill(x);
-    const effect = x instanceof Effect ? x : toEffect(x);
+    const { skill, effect } =
+      x instanceof Skill
+        ? { skill: x, effect: toEffect(x) }
+        : x instanceof Effect
+        ? { skill: toSkill(x), effect: x }
+        : x;
     const needGlove = $skills`CHEAT CODE: Invisible Avatar, CHEAT CODE: Triple Size`.includes(
       skill
     );
@@ -115,19 +124,27 @@ export function skillTask(x: Skill | Effect): CSTask {
       completed: () =>
         effect !== $effect.none ? have(effect) : skill.timescast > skill.dailylimit,
       prepare: () => {
-        if (myMp() < mpCost(skill)) {
+        if (myMaxmp() < mpCost(skill)) throw `Max MP is too low to cast ${skill.name}`;
+        while (myMp() < mpCost(skill)) {
           if (!have($item`magical sausage`) && have($item`magical sausage casing`)) {
             create(1, $item`magical sausage`);
           }
           if (have($item`magical sausage`)) {
             eat(1, $item`magical sausage`);
-          } else {
+          } else if (have($item`psychokinetic energy blob`)) {
             use(1, $item`psychokinetic energy blob`);
+          } else {
+            throw "Ran out of preferred MP restorers, consider Doc Galaktik's Invigorating Tonic";
           }
         }
       },
       do: () => useSkill(skill),
-      outfit: { equip: needGlove ? [$item`Powerful Glove`] : [] },
+      outfit: {
+        ...(needGlove ? { equip: [$item`Powerful Glove`] } : {}),
+        ...(includeAprilShield
+          ? { offhand: $item`April Shower Thoughts shield` }
+          : { avoid: $items`April Shower Thoughts shield` }),
+      },
       limit: { tries: 1 },
     };
   }
