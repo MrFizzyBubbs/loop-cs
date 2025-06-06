@@ -22,7 +22,6 @@ import {
   $skill,
   $skills,
   byStat,
-  Cartography,
   get,
   getKramcoWandererChance,
   getModifier,
