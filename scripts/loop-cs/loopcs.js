@@ -11529,7 +11529,7 @@ var PrologueQuest = {
     name: "McHugeLarge",
     completed: () => lib_have(template_string_$item(prologue_templateObject24 || (prologue_templateObject24 = prologue_taggedTemplateLiteral(["McHugeLarge left ski"])))),
     ready: () => lib_have(template_string_$item(prologue_templateObject25 || (prologue_templateObject25 = prologue_taggedTemplateLiteral(["McHugeLarge duffel bag"])))),
-    do: () => (0,external_kolmafia_namespaceObject.visitUrl)("inventory.php?action=skiduffel&pwd", false),
+    do: () => (0,external_kolmafia_namespaceObject.visitUrl)("inventory.php?action=skiduffel&pwd=".concat((0,external_kolmafia_namespaceObject.myHash)()), false),
     limit: {
       tries: 1
     }
