@@ -33,7 +33,7 @@ import {
 import Macro from "../combat";
 import { CSQuest } from "../engine/task";
 import { burnLibrams, byPrimaryClass, peridotChoice } from "../lib";
-import { beachTask, innerElfTask, potionTask, skillTask } from "./common";
+import { beachTask, buskTask, innerElfTask, potionTask, skillTask } from "./common";
 import { CSCombatStrategy } from "../engine/combat";
 import { freeKillSources } from "../engine/resources";
 
@@ -114,6 +114,16 @@ export const LevelingQuest: CSQuest = {
     freeKillSources.every((source) => !source.available()),
   tasks: [
     innerElfTask(),
+    buskTask(1, {
+      hat: $item.none,
+      shirt: $item`Jurassic Parka`,
+      pants: $item`Great Wolf's beastly trousers`,
+    }),
+    buskTask(2, {
+      hat: $item.none,
+      shirt: $item`Jurassic Parka`,
+      pants: $item`Great Wolf's beastly trousers`,
+    }),
     potionTask(generalStoreItem, true),
     { ...potionTask($item`flask of baconstone juice`), class: $classes`Pastamancer, Turtle Tamer` }, // From juice bar
     { ...potionTask($item`potion of temporary gr8ness`), class: $classes`Disco Bandit` }, // From juice bar

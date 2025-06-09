@@ -1,6 +1,7 @@
 import {
   adv1,
   buy,
+  canEquip,
   cliExecute,
   create,
   eat,
@@ -41,6 +42,7 @@ import { CSTask } from "../engine/task";
 import { args } from "../main";
 import { burnLibrams, canCastLibrams } from "../lib";
 import { CSCombatStrategy } from "../engine/combat";
+import { OutfitSpec } from "grimoire-kolmafia";
 
 export function innerElfTask(): CSTask {
   return {
@@ -181,6 +183,28 @@ export function libramTask(): CSTask {
     name: "Burn Librams",
     completed: () => !canCastLibrams(),
     do: burnLibrams,
+    limit: { tries: 1 },
+  };
+}
+
+export function buskTask(cast: number, spec: Pick<OutfitSpec, "hat" | "shirt" | "pants">): CSTask {
+  const needHatrack = spec.hat !== $item`prismatic beret`;
+  return {
+    name: `Busk ${cast}`,
+    completed: () => get("_beretBuskingUses", 0) >= cast,
+    ready: () =>
+      Object.values(spec).every((itemOrItems) =>
+        Array.isArray(itemOrItems)
+          ? itemOrItems.some((item) => canEquip(item))
+          : canEquip(itemOrItems)
+      ),
+    do: () => useSkill($skill`Beret Busking`),
+    outfit: {
+      ...spec,
+      ...(needHatrack
+        ? { familiar: $familiar`Mad Hatrack`, famequip: $item`prismatic beret` }
+        : {}),
+    },
     limit: { tries: 1 },
   };
 }
