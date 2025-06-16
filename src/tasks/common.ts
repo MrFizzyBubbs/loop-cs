@@ -17,7 +17,6 @@ import {
   myLevel,
   myMaxmp,
   myMp,
-  print,
   Skill,
   toEffect,
   toSkill,

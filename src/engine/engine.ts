@@ -1,7 +1,7 @@
 import { CSTask } from "./task";
 import { CombatResources, Engine, Outfit } from "grimoire-kolmafia";
 import { $effect, $skill, have } from "libram";
-import { myClass, myHp, myMaxhp, print, userConfirm, useSkill } from "kolmafia";
+import { myClass, myHp, myMaxhp, userConfirm, useSkill } from "kolmafia";
 import { equipDefaults } from "./outfit";
 import { freeKillSources } from "./resources";
 import { CombatActions, CSCombatStrategy } from "./combat";
