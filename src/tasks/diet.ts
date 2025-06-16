@@ -1,5 +1,5 @@
-import { drink, itemAmount, myInebriety, myLevel, use, useSkill } from "kolmafia";
-import { $effects, $item, $skill, clamp, get, have } from "libram";
+import { drink, myInebriety, myLevel, use, useSkill } from "kolmafia";
+import { $effect, $effects, $item, $skill, get, have } from "libram";
 import { CSQuest } from "../engine/task";
 
 export const DietQuest: CSQuest = {
@@ -26,16 +26,12 @@ export const DietQuest: CSQuest = {
       limit: { tries: 1 },
     },
     {
-      name: "Drink Pilsners",
+      name: "Drink Pilsner",
       completed: () => myInebriety() >= 4,
-      ready: () => myLevel() >= 11,
-      do: () =>
-        drink(
-          $item`astral pilsner`,
-          clamp(itemAmount($item`astral pilsner`), 0, 4 - myInebriety())
-        ),
+      ready: () => myLevel() >= 11 && have($effect`Salty Mouth`),
+      do: () => drink($item`astral pilsner`, 1),
       effects: $effects`Ode to Booze`,
-      limit: { tries: 1 },
+      limit: { tries: 4 },
     },
   ],
 };

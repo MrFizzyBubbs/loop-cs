@@ -114,16 +114,43 @@ export const LevelingQuest: CSQuest = {
     freeKillSources.every((source) => !source.available()),
   tasks: [
     innerElfTask(),
+    {
+      name: "Busking Hats",
+      completed: () =>
+        $items`wooden salad bowl, yellow plastic hard hat, meatloaf helmet`.every((item) =>
+          have(item)
+        ),
+      do: () =>
+        $items`wooden salad bowl, yellow plastic hard hat, meatloaf helmet`.forEach((item) =>
+          retrieveItem(item, 1)
+        ),
+      limit: { tries: 1 },
+    },
+    // busk 1, 800 power
     buskTask(1, {
-      hat: $item.none,
-      shirt: $item`Jurassic Parka`,
+      hat: $item`Apriling band helmet`,
+      shirt: $item.none,
       pants: $item`Great Wolf's beastly trousers`,
     }),
+    // busk 2, 960 power
     buskTask(2, {
-      hat: $item.none,
-      shirt: $item`Jurassic Parka`,
+      hat: $item`wooden salad bowl`,
+      shirt: $item`Stephen's lab coat`,
       pants: $item`Great Wolf's beastly trousers`,
     }),
+    // busk 3, 780 power
+    buskTask(3, {
+      hat: $item`yellow plastic hard hat`,
+      shirt: $item.none,
+      pants: $item`Great Wolf's beastly trousers`,
+    }),
+    // busk 4, 710 power
+    buskTask(4, {
+      hat: $item`meatloaf helmet`,
+      shirt: $item.none,
+      pants: $item`Great Wolf's beastly trousers`,
+    }),
+
     potionTask(generalStoreItem, true),
     { ...potionTask($item`flask of baconstone juice`), class: $classes`Pastamancer, Turtle Tamer` }, // From juice bar
     { ...potionTask($item`potion of temporary gr8ness`), class: $classes`Disco Bandit` }, // From juice bar
@@ -224,19 +251,19 @@ export const LevelingQuest: CSQuest = {
       do: () => visitUrl("place.php?whichplace=campaway&action=campaway_sky"),
       limit: { tries: 1 },
     },
-    {
-      name: synthEffect.name,
-      completed: () => have(synthEffect),
-      do: (): void => {
-        for (const [candy1, candy2] of synthPairs) {
-          const enough = candy1 === candy2 ? have(candy1, 2) : have(candy1) && retrieveItem(candy2);
-          if (enough) {
-            if (sweetSynthesis(candy1, candy2)) return;
-          }
-        }
-      },
-      limit: { tries: 1 },
-    },
+    // {
+    //   name: synthEffect.name,
+    //   completed: () => have(synthEffect),
+    //   do: (): void => {
+    //     for (const [candy1, candy2] of synthPairs) {
+    //       const enough = candy1 === candy2 ? have(candy1, 2) : have(candy1) && retrieveItem(candy2);
+    //       if (enough) {
+    //         if (sweetSynthesis(candy1, candy2)) return;
+    //       }
+    //     }
+    //   },
+    //   limit: { tries: 1 },
+    // },
     {
       name: "April Shower",
       completed: () => get("_aprilShower"),
@@ -555,7 +582,7 @@ export const LevelingQuest: CSQuest = {
     },
     {
       name: "Neverending Party",
-      completed: () => get("_neverendingPartyFreeTurns") >= 10 && have($effect`Spit Upon`),
+      completed: () => get("_neverendingPartyFreeTurns") >= 10,
       do: $location`The Neverending Party`,
       choices: { 1324: 5 },
       combat: new CSCombatStrategy().macro(

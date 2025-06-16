@@ -35,6 +35,10 @@ export const args = Args.create("loopcs", "A script to complete community servic
     help: "Show the status of all tasks and exit.",
     setting: "",
   }),
+  confirm: Args.flag({
+    help: "Whether the user must confirm execution of each task.",
+    setting: "",
+  }),
 });
 
 export function main(command?: string): void {

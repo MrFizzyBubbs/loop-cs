@@ -7,6 +7,7 @@ import {
   eat,
   Effect,
   effectModifier,
+  equip,
   getFuel,
   getProperty,
   Item,
@@ -16,10 +17,12 @@ import {
   myLevel,
   myMaxmp,
   myMp,
+  print,
   Skill,
   toEffect,
   toSkill,
   use,
+  userConfirm,
   useSkill,
 } from "kolmafia";
 import {
@@ -30,6 +33,7 @@ import {
   $location,
   $skill,
   $skills,
+  $slot,
   AsdonMartin,
   BeachComb,
   Clan,
@@ -193,17 +197,26 @@ export function buskTask(cast: number, spec: Pick<OutfitSpec, "hat" | "shirt" | 
     name: `Busk ${cast}`,
     completed: () => get("_beretBuskingUses", 0) >= cast,
     ready: () =>
-      Object.values(spec).every((itemOrItems) =>
-        Array.isArray(itemOrItems)
-          ? itemOrItems.some((item) => canEquip(item))
-          : canEquip(itemOrItems)
-      ),
+      get("_beretBuskingUses", 0) === cast - 1 &&
+      !have($effect`Salty Mouth`) &&
+      Object.values(spec)
+        .filter((itemOrItems) => itemOrItems !== $item.none)
+        .every((itemOrItems) =>
+          Array.isArray(itemOrItems)
+            ? itemOrItems.some((item) => canEquip(item))
+            : canEquip(itemOrItems)
+        ),
+    prepare: () => {
+      // Grimoire does not currently support equipping hats in famequip
+      if (needHatrack) equip($item`prismatic beret`, $slot`familiar`);
+      if (!userConfirm("Proceed with busking?")) {
+        throw "User requested abort";
+      }
+    },
     do: () => useSkill($skill`Beret Busking`),
     outfit: {
       ...spec,
-      ...(needHatrack
-        ? { familiar: $familiar`Mad Hatrack`, famequip: $item`prismatic beret` }
-        : {}),
+      ...(needHatrack ? { familiar: $familiar`Mad Hatrack` } : {}),
     },
     limit: { tries: 1 },
   };
