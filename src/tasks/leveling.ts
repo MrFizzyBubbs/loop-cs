@@ -114,18 +114,6 @@ export const LevelingQuest: CSQuest = {
     freeKillSources.every((source) => !source.available()),
   tasks: [
     innerElfTask(),
-    {
-      name: "Busking Hats",
-      completed: () =>
-        $items`wooden salad bowl, yellow plastic hard hat, meatloaf helmet`.every((item) =>
-          have(item)
-        ),
-      do: () =>
-        $items`wooden salad bowl, yellow plastic hard hat, meatloaf helmet`.forEach((item) =>
-          retrieveItem(item, 1)
-        ),
-      limit: { tries: 1 },
-    },
     // busk 1, 800 power
     buskTask(1, {
       hat: $item`Apriling band helmet`,
@@ -133,23 +121,32 @@ export const LevelingQuest: CSQuest = {
       pants: $item`Great Wolf's beastly trousers`,
     }),
     // busk 2, 960 power
-    buskTask(2, {
-      hat: $item`wooden salad bowl`,
-      shirt: $item`Stephen's lab coat`,
-      pants: $item`Great Wolf's beastly trousers`,
-    }),
+    {
+      ...buskTask(2, {
+        hat: $item`wooden salad bowl`,
+        shirt: $item`Stephen's lab coat`,
+        pants: $item`Great Wolf's beastly trousers`,
+      }),
+      acquire: [{ item: $item`wooden salad bowl` }],
+    },
     // busk 3, 780 power
-    buskTask(3, {
-      hat: $item`yellow plastic hard hat`,
-      shirt: $item.none,
-      pants: $item`Great Wolf's beastly trousers`,
-    }),
+    {
+      ...buskTask(3, {
+        hat: $item`yellow plastic hard hat`,
+        shirt: $item.none,
+        pants: $item`Great Wolf's beastly trousers`,
+      }),
+      acquire: [{ item: $item`yellow plastic hard hat` }],
+    },
     // busk 4, 710 power
-    buskTask(4, {
-      hat: $item`meatloaf helmet`,
-      shirt: $item.none,
-      pants: $item`Great Wolf's beastly trousers`,
-    }),
+    {
+      ...buskTask(4, {
+        hat: $item`meatloaf helmet`,
+        shirt: $item.none,
+        pants: $item`Great Wolf's beastly trousers`,
+      }),
+      acquire: [{ item: $item`meatloaf helmet` }],
+    },
 
     potionTask(generalStoreItem, true),
     { ...potionTask($item`flask of baconstone juice`), class: $classes`Pastamancer, Turtle Tamer` }, // From juice bar
