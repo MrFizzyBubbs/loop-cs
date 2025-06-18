@@ -16,7 +16,6 @@ import {
   $item,
   $items,
   $location,
-  $monster,
   $skill,
   byStat,
   CommunityService,
@@ -25,8 +24,8 @@ import {
 } from "libram";
 import Macro from "../combat";
 import { CSQuest } from "../engine/task";
-import { asdonTask, buskTask, innerElfTask, potionTask, skillTask } from "./common";
-import { byPrimaryClass, peridotChoice } from "../lib";
+import { innerElfTask, meteorShowerTask, potionTask, skillTask } from "./common";
+import { byPrimaryClass } from "../lib";
 import { CSCombatStrategy } from "../engine/combat";
 
 const buffs = $effects`Arched Eyebrow of the Archmage, Carol of the Hells, Jackasses' Symphony of Destruction, Song of Sauce, Spirit of Cayenne`;
@@ -108,29 +107,7 @@ export const SpellDamageQuest: CSQuest = {
     },
     skillTask($skill`Simmer`, true),
     innerElfTask(),
-    // meteorShowerTask(),
-    asdonTask("Waterproofly"),
-    {
-      name: "Meteor Wild Girl",
-      completed: () => have($effect`Meteor Showered`),
-      ready: () => get("_meteorShowerUses") < 5 && get("_saberForceUses") < 5,
-      do: $location`The Sunken Party Yacht`,
-      combat: new CSCombatStrategy().macro(
-        Macro.skill($skill`Meteor Shower`).skill($skill`Use the Force`)
-      ),
-      choices: { ...peridotChoice($monster`wild girl`), 1387: 3 },
-      outfit: {
-        weapon: $item`Fourth of May Cosplay Saber`,
-        familiar: $familiar.none,
-      },
-      limit: { tries: 2 }, // Intro NC
-    },
-    // busk 5, 980 power
-    buskTask(5, {
-      hat: $item`yellow plastic hard hat`,
-      shirt: $item`extremely wet T-shirt`,
-      pants: $item`Great Wolf's beastly trousers`,
-    }),
+    meteorShowerTask(),
     {
       name: "Pull Staff",
       completed: () => have(chefstaff),

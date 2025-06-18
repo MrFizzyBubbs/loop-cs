@@ -248,19 +248,19 @@ export const LevelingQuest: CSQuest = {
       do: () => visitUrl("place.php?whichplace=campaway&action=campaway_sky"),
       limit: { tries: 1 },
     },
-    // {
-    //   name: synthEffect.name,
-    //   completed: () => have(synthEffect),
-    //   do: (): void => {
-    //     for (const [candy1, candy2] of synthPairs) {
-    //       const enough = candy1 === candy2 ? have(candy1, 2) : have(candy1) && retrieveItem(candy2);
-    //       if (enough) {
-    //         if (sweetSynthesis(candy1, candy2)) return;
-    //       }
-    //     }
-    //   },
-    //   limit: { tries: 1 },
-    // },
+    {
+      name: synthEffect.name,
+      completed: () => have(synthEffect),
+      do: (): void => {
+        for (const [candy1, candy2] of synthPairs) {
+          const enough = candy1 === candy2 ? have(candy1, 2) : have(candy1) && retrieveItem(candy2);
+          if (enough) {
+            if (sweetSynthesis(candy1, candy2)) return;
+          }
+        }
+      },
+      limit: { tries: 1 },
+    },
     {
       name: "April Shower",
       completed: () => get("_aprilShower"),
@@ -582,11 +582,7 @@ export const LevelingQuest: CSQuest = {
       completed: () => get("_neverendingPartyFreeTurns") >= 10,
       do: $location`The Neverending Party`,
       choices: { 1324: 5 },
-      combat: new CSCombatStrategy().macro(
-        Macro.trySkill($skill`Feel Pride`)
-          .trySkill($skill`%fn, spit on me!`)
-          .default()
-      ),
+      combat: new CSCombatStrategy().macro(Macro.trySkill($skill`Feel Pride`).default()),
       outfit: {
         shirt: $item`makeshift garbage shirt`,
         acc3: $item`backup camera`,
