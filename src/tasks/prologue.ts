@@ -33,7 +33,9 @@ import { deckTask } from "./common";
 const PULLS = [
   $item`Great Wolf's beastly trousers`,
   $item`Stick-Knife of Loathing`,
-  $item`Buddy Bjorn`,
+  $item`Stephen's lab coat`,
+  $item`extremely wet T-shirt`,
+  // chef staff, pulled before spell damage test
 ];
 
 const BEST_INITIATIVE = byPrimaryClass({

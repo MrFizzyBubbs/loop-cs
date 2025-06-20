@@ -114,33 +114,29 @@ export const LevelingQuest: CSQuest = {
     freeKillSources.every((source) => !source.available()),
   tasks: [
     innerElfTask(),
-    // busk 1, 800 power
-    buskTask(1, {
+    buskTask(1, 800, {
       hat: $item`Apriling band helmet`,
       shirt: $item.none,
       pants: $item`Great Wolf's beastly trousers`,
     }),
-    // busk 2, 960 power
     {
-      ...buskTask(2, {
+      ...buskTask(2, 960, {
         hat: $item`wooden salad bowl`,
         shirt: $item`Stephen's lab coat`,
         pants: $item`Great Wolf's beastly trousers`,
       }),
       acquire: [{ item: $item`wooden salad bowl` }],
     },
-    // busk 3, 780 power
     {
-      ...buskTask(3, {
+      ...buskTask(3, 780, {
         hat: $item`yellow plastic hard hat`,
         shirt: $item.none,
         pants: $item`Great Wolf's beastly trousers`,
       }),
       acquire: [{ item: $item`yellow plastic hard hat` }],
     },
-    // busk 4, 710 power
     {
-      ...buskTask(4, {
+      ...buskTask(4, 710, {
         hat: $item`meatloaf helmet`,
         shirt: $item.none,
         pants: $item`Great Wolf's beastly trousers`,

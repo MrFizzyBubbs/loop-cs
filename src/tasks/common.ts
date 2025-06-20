@@ -8,7 +8,9 @@ import {
   Effect,
   effectModifier,
   equip,
+  equippedItem,
   getFuel,
+  getPower,
   getProperty,
   Item,
   itemAmount,
@@ -21,7 +23,6 @@ import {
   toEffect,
   toSkill,
   use,
-  userConfirm,
   useSkill,
 } from "kolmafia";
 import {
@@ -190,7 +191,21 @@ export function libramTask(): CSTask {
   };
 }
 
-export function buskTask(cast: number, spec: Pick<OutfitSpec, "hat" | "shirt" | "pants">): CSTask {
+function currentBuskPower(): number {
+  const tao = have($skill`Tao of the Terrapin`) ? 1 : 0;
+  const hammertime = have($effect`Hammertime`) ? 3 : 0;
+  return (
+    getPower(equippedItem($slot`hat`)) * (1 + tao) +
+    getPower(equippedItem($slot`shirt`)) +
+    getPower(equippedItem($slot`pants`)) * (1 + tao + hammertime)
+  );
+}
+
+export function buskTask(
+  cast: number,
+  power: number,
+  spec: Pick<OutfitSpec, "hat" | "shirt" | "pants">
+): CSTask {
   const needHatrack = spec.hat !== $item`prismatic beret`;
   return {
     name: `Busk ${cast}`,
@@ -206,10 +221,10 @@ export function buskTask(cast: number, spec: Pick<OutfitSpec, "hat" | "shirt" | 
             : canEquip(itemOrItems)
         ),
     prepare: () => {
-      // Grimoire does not currently support equipping hats in famequip
+      // Grimoire does not currently support equipping hats in familiar slot
       if (needHatrack) equip($item`prismatic beret`, $slot`familiar`);
-      if (!userConfirm("Proceed with busking?")) {
-        throw "User requested abort";
+      if (currentBuskPower() !== power) {
+        throw `Current busk power (${currentBuskPower()}) does not match target (${power})`;
       }
     },
     do: () => useSkill($skill`Beret Busking`),
