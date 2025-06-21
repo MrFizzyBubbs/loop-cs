@@ -24,22 +24,14 @@ import {
 } from "libram";
 import Macro from "../combat";
 import { CSQuest } from "../engine/task";
-import { innerElfTask, meteorShowerTask, potionTask, skillTask } from "./common";
-import { byPrimaryClass } from "../lib";
+import { buskTask, innerElfTask, meteorShowerTask, potionTask, skillTask } from "./common";
 import { CSCombatStrategy } from "../engine/combat";
 
-const buffs = $effects`Arched Eyebrow of the Archmage, Carol of the Hells, Jackasses' Symphony of Destruction, Simmering, Song of Sauce, Spirit of Cayenne`;
+const buffs = $effects`Arched Eyebrow of the Archmage, Carol of the Hells, Jackasses' Symphony of Destruction, Song of Sauce, Spirit of Cayenne`;
 
 const chefstaff = byStat({
   Mysticality: $item`Staff of the Roaring Hearth`,
   default: $item`Staff of Simmering Hatred`,
-});
-
-const maxTurns = byPrimaryClass({
-  Pastamancer: 10,
-  Sauceror: 8,
-  "Accordion Thief": 11,
-  default: 12,
 });
 
 export const SpellDamageQuest: CSQuest = {
@@ -94,6 +86,11 @@ export const SpellDamageQuest: CSQuest = {
       limit: { tries: 1 },
     },
     potionTask($item`Yeg's Motel hand soap`),
+    buskTask(5, 980, {
+      hat: $item`yellow plastic hard hat`,
+      shirt: $item`extremely wet T-shirt`,
+      pants: $item`Great Wolf's beastly trousers`,
+    }),
     {
       name: "Saucefingers",
       class: $classes`Pastamancer`,
@@ -122,18 +119,16 @@ export const SpellDamageQuest: CSQuest = {
     {
       name: "Test",
       completed: () => CommunityService.SpellDamage.isDone(),
-      do: () => CommunityService.SpellDamage.run(() => undefined, maxTurns),
+      do: () => CommunityService.SpellDamage.run(() => undefined, 1),
       outfit: {
         hat: $items`astral chapeau, Hollandaise helmet, none`,
         weapon: chefstaff,
         offhand: $items`Abracandalabra, weeping willow wand`,
-        back: $item`Buddy Bjorn`,
         acc1: $item`battle broom`,
         acc2: $item`Powerful Glove`,
         acc3: $item`Kremlin's Greatest Briefcase`,
         familiar: $familiar`Disembodied Hand`,
         famequip: $item`Stick-Knife of Loathing`,
-        riders: { "buddy-bjorn": $familiar`Mechanical Songbird` },
       },
       limit: { tries: 1 },
     },

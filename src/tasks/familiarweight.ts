@@ -17,7 +17,6 @@ import {
   $item,
   $location,
   $skill,
-  byClass,
   CommunityService,
   get,
   have,
@@ -28,22 +27,16 @@ import { OutfitSpec } from "grimoire-kolmafia";
 import { CSCombatStrategy } from "../engine/combat";
 import Macro from "../combat";
 
-const maxTurns = byClass({
-  "Accordion Thief": 4,
-  default: 6,
-});
-
 const outfit: OutfitSpec = {
   hat: $item`Daylight Shavings Helmet`,
   weapon: $item`Fourth of May Cosplay Saber`,
   offhand: $item`rope`,
-  back: $item`Buddy Bjorn`,
+  shirt: $item`Stephen's lab coat`,
   pants: $item`Great Wolf's beastly trousers`,
   acc1: $item`Brutal brogues`,
   acc2: $item`Beach Comb`,
   acc3: $item`hewn moon-rune spoon`,
   familiar: $familiar`Comma Chameleon`,
-  riders: { "buddy-bjorn": $familiar`Misshapen Animal Skeleton` },
 };
 
 export const FamiliarWeightQuest: CSQuest = {
@@ -51,6 +44,7 @@ export const FamiliarWeightQuest: CSQuest = {
   completed: () => CommunityService.FamiliarWeight.isDone(),
   tasks: [
     { ...skillTask($skill`Chorale of Companionship`), class: $classes`Accordion Thief` },
+    skillTask($effect`Thoughtful Empathy`, true),
     potionTask($item`green candy heart`),
     beachTask($effect`Do I Know You From Somewhere?`),
     {
@@ -182,7 +176,7 @@ export const FamiliarWeightQuest: CSQuest = {
     {
       name: "Test",
       completed: () => CommunityService.FamiliarWeight.isDone(),
-      do: () => CommunityService.FamiliarWeight.run(() => undefined, maxTurns),
+      do: () => CommunityService.FamiliarWeight.run(() => undefined, 1),
       outfit,
       limit: { tries: 1 },
     },

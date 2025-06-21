@@ -1,10 +1,11 @@
 import { CSTask } from "./task";
 import { CombatResources, Engine, Outfit } from "grimoire-kolmafia";
 import { $effect, $skill, have } from "libram";
-import { myClass, myHp, myMaxhp, useSkill } from "kolmafia";
+import { myClass, myHp, myMaxhp, userConfirm, useSkill } from "kolmafia";
 import { equipDefaults } from "./outfit";
 import { freeKillSources } from "./resources";
 import { CombatActions, CSCombatStrategy } from "./combat";
+import { args } from "../main";
 
 export class CSEngine extends Engine<CombatActions, CSTask> {
   constructor(tasks: CSTask[]) {
@@ -13,9 +14,11 @@ export class CSEngine extends Engine<CombatActions, CSTask> {
     super(tasks);
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  createOutfit(task: CSTask): Outfit {
-    return new Outfit();
+  execute(task: CSTask): void {
+    if (args.confirm && !userConfirm(`Executing ${task.name}, continue?`)) {
+      throw `User rejected execution of task ${task.name}`;
+    }
+    super.execute(task);
   }
 
   customize(
@@ -33,13 +36,7 @@ export class CSEngine extends Engine<CombatActions, CSTask> {
       resources.provide("killFree", freeKillSource);
     }
 
-    // Equip as much of the task's outfit as possible
-    outfit.equip(super.createOutfit(task).spec());
-  }
-
-  dress(task: CSTask, outfit: Outfit): void {
     if (task.combat !== undefined && !outfit.skipDefaults) equipDefaults(outfit);
-    super.dress(task, outfit);
   }
 
   prepare(task: CSTask): void {

@@ -1,12 +1,16 @@
 import {
   adv1,
   buy,
+  canEquip,
   cliExecute,
   create,
   eat,
   Effect,
   effectModifier,
+  equip,
+  equippedItem,
   getFuel,
+  getPower,
   getProperty,
   Item,
   itemAmount,
@@ -29,6 +33,7 @@ import {
   $location,
   $skill,
   $skills,
+  $slot,
   AsdonMartin,
   BeachComb,
   Clan,
@@ -41,6 +46,7 @@ import { CSTask } from "../engine/task";
 import { args } from "../main";
 import { burnLibrams, canCastLibrams } from "../lib";
 import { CSCombatStrategy } from "../engine/combat";
+import { OutfitSpec } from "grimoire-kolmafia";
 
 export function innerElfTask(): CSTask {
   return {
@@ -181,6 +187,51 @@ export function libramTask(): CSTask {
     name: "Burn Librams",
     completed: () => !canCastLibrams(),
     do: burnLibrams,
+    limit: { tries: 1 },
+  };
+}
+
+function currentBuskPower(): number {
+  const tao = have($skill`Tao of the Terrapin`) ? 1 : 0;
+  const hammertime = have($effect`Hammertime`) ? 3 : 0;
+  return (
+    getPower(equippedItem($slot`hat`)) * (1 + tao) +
+    getPower(equippedItem($slot`shirt`)) +
+    getPower(equippedItem($slot`pants`)) * (1 + tao + hammertime)
+  );
+}
+
+export function buskTask(
+  cast: number,
+  power: number,
+  spec: Pick<OutfitSpec, "hat" | "shirt" | "pants">
+): CSTask {
+  const needHatrack = spec.hat !== $item`prismatic beret`;
+  return {
+    name: `Busk ${cast}`,
+    completed: () => get("_beretBuskingUses", 0) >= cast,
+    ready: () =>
+      get("_beretBuskingUses", 0) === cast - 1 &&
+      !have($effect`Salty Mouth`) &&
+      Object.values(spec)
+        .filter((itemOrItems) => itemOrItems !== $item.none)
+        .every((itemOrItems) =>
+          Array.isArray(itemOrItems)
+            ? itemOrItems.some((item) => canEquip(item))
+            : canEquip(itemOrItems)
+        ),
+    prepare: () => {
+      // Grimoire does not currently support equipping hats in familiar slot
+      if (needHatrack) equip($item`prismatic beret`, $slot`familiar`);
+      if (currentBuskPower() !== power) {
+        throw `Current busk power (${currentBuskPower()}) does not match target (${power})`;
+      }
+    },
+    do: () => useSkill($skill`Beret Busking`),
+    outfit: {
+      ...spec,
+      ...(needHatrack ? { familiar: $familiar`Mad Hatrack` } : {}),
+    },
     limit: { tries: 1 },
   };
 }

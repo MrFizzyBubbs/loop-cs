@@ -33,7 +33,7 @@ import {
 import Macro from "../combat";
 import { CSQuest } from "../engine/task";
 import { burnLibrams, byPrimaryClass, peridotChoice } from "../lib";
-import { beachTask, innerElfTask, potionTask, skillTask } from "./common";
+import { beachTask, buskTask, innerElfTask, potionTask, skillTask } from "./common";
 import { CSCombatStrategy } from "../engine/combat";
 import { freeKillSources } from "../engine/resources";
 
@@ -114,6 +114,36 @@ export const LevelingQuest: CSQuest = {
     freeKillSources.every((source) => !source.available()),
   tasks: [
     innerElfTask(),
+    buskTask(1, 800, {
+      hat: $item`Apriling band helmet`,
+      shirt: $item.none,
+      pants: $item`Great Wolf's beastly trousers`,
+    }),
+    {
+      ...buskTask(2, 960, {
+        hat: $item`wooden salad bowl`,
+        shirt: $item`Stephen's lab coat`,
+        pants: $item`Great Wolf's beastly trousers`,
+      }),
+      acquire: [{ item: $item`wooden salad bowl` }],
+    },
+    {
+      ...buskTask(3, 780, {
+        hat: $item`yellow plastic hard hat`,
+        shirt: $item.none,
+        pants: $item`Great Wolf's beastly trousers`,
+      }),
+      acquire: [{ item: $item`yellow plastic hard hat` }],
+    },
+    {
+      ...buskTask(4, 710, {
+        hat: $item`meatloaf helmet`,
+        shirt: $item.none,
+        pants: $item`Great Wolf's beastly trousers`,
+      }),
+      acquire: [{ item: $item`meatloaf helmet` }],
+    },
+
     potionTask(generalStoreItem, true),
     { ...potionTask($item`flask of baconstone juice`), class: $classes`Pastamancer, Turtle Tamer` }, // From juice bar
     { ...potionTask($item`potion of temporary gr8ness`), class: $classes`Disco Bandit` }, // From juice bar
@@ -545,14 +575,10 @@ export const LevelingQuest: CSQuest = {
     },
     {
       name: "Neverending Party",
-      completed: () => get("_neverendingPartyFreeTurns") >= 10 && have($effect`Spit Upon`),
+      completed: () => get("_neverendingPartyFreeTurns") >= 10,
       do: $location`The Neverending Party`,
       choices: { 1324: 5 },
-      combat: new CSCombatStrategy().macro(
-        Macro.trySkill($skill`Feel Pride`)
-          .trySkill($skill`%fn, spit on me!`)
-          .default()
-      ),
+      combat: new CSCombatStrategy().macro(Macro.trySkill($skill`Feel Pride`).default()),
       outfit: {
         shirt: $item`makeshift garbage shirt`,
         acc3: $item`backup camera`,
