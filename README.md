@@ -144,6 +144,7 @@ The table below lists the Mr. Store content required to run this script. Other r
 | 2023 | February   | [S.I.T. Course Voucher](https://kol.coldfront.net/thekolwiki/index.php/S.I.T._Course_Voucher)                                                 |
 | 2023 | May        | [shrink-wrapped Cincho de Mayo](https://kol.coldfront.net/thekolwiki/index.php/Shrink-wrapped_Cincho_de_Mayo)                                 |
 | 2024 | April      | [boxed Apriling band helmet](https://kol.coldfront.net/thekolwiki/index.php/Boxed_Apriling_band_helmet)                                       |
+| 2024 | September  | [boxed Sept-Ember Censer](https://kol.coldfront.net/thekolwiki/index.php/Boxed_Sept-Ember_Censer)                                             |
 | 2025 | January    | [McHugeLarge deluxe ski set](https://kol.coldfront.net/thekolwiki/index.php/McHugeLarge_deluxe_ski_set)                                       |
 | 2025 | April      | [Packaged April Shower Thoughts Calendar](https://kol.coldfront.net/thekolwiki/index.php/Packaged_April_Shower_Thoughts_Calendar)             |
 | 2025 | May        | [Unpeeled Period of Peril](https://kol.coldfront.net/thekolwiki/index.php/Unpeeled_Peridot_of_Peril)                                          |

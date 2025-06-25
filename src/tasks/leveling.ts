@@ -4,7 +4,6 @@ import {
   myPrimestat,
   retrieveItem,
   runChoice,
-  sweetSynthesis,
   toUrl,
   use,
   useSkill,
@@ -70,35 +69,6 @@ const { saucePotion, sauceFruit, sauceEffect } = byStat({
     saucePotion: $item`serum of sarcasm`,
     sauceEffect: $effect`Superhuman Sarcasm`,
   },
-});
-
-const synthEffect = byStat({
-  Muscle: $effect`Synthesis: Movement`,
-  Mysticality: $effect`Synthesis: Learning`,
-  Moxie: $effect`Synthesis: Style`,
-});
-
-const synthPairs = byStat({
-  Muscle: [
-    [$item`Crimbo fudge`, $item`Crimbo peppermint bark`],
-    [$item`bag of many confections`, $item`Crimbo peppermint bark`],
-    [$item`Crimbo candied pecan`, $item`peppermint patty`],
-    [$item`peppermint sprout`, $item`peppermint patty`],
-  ],
-  Mysticality: [
-    [$item`Crimbo fudge`, $item`Crimbo fudge`],
-    [$item`Crimbo fudge`, $item`bag of many confections`],
-    [$item`Crimbo peppermint bark`, $item`Crimbo candied pecan`],
-    [$item`Crimbo peppermint bark`, $item`peppermint sprout`],
-    [$item`Crimbo candied pecan`, $item`peppermint crook`],
-  ],
-  Moxie: [
-    [$item`Crimbo fudge`, $item`Crimbo candied pecan`],
-    [$item`Crimbo fudge`, $item`peppermint sprout`],
-    [$item`bag of many confections`, $item`Crimbo candied pecan`],
-    [$item`bag of many confections`, $item`peppermint sprout`],
-    [$item`Crimbo peppermint bark`, $item`peppermint twist`],
-  ],
 });
 
 const LOVEquipment = byStat({
@@ -245,19 +215,6 @@ export const LevelingQuest: CSQuest = {
       limit: { tries: 1 },
     },
     {
-      name: synthEffect.name,
-      completed: () => have(synthEffect),
-      do: (): void => {
-        for (const [candy1, candy2] of synthPairs) {
-          const enough = candy1 === candy2 ? have(candy1, 2) : have(candy1) && retrieveItem(candy2);
-          if (enough) {
-            if (sweetSynthesis(candy1, candy2)) return;
-          }
-        }
-      },
-      limit: { tries: 1 },
-    },
-    {
       name: "April Shower",
       completed: () => get("_aprilShower"),
       do: () => cliExecute(`shower ${myPrimestat()}`),
@@ -384,6 +341,42 @@ export const LevelingQuest: CSQuest = {
       do: () => use($item`a ten-percent bonus`),
       outfit: { offhand: $item`familiar scrapbook`, equip: [LOVEquipment] },
       limit: { tries: 1 },
+    },
+    {
+      name: "Entauntauned",
+      completed: () => get("_entauntaunedToday"),
+      do: (): void => {
+        visitUrl("main.php?action=camel");
+        runChoice(1);
+        visitUrl("main.php");
+      },
+      outfit: {
+        weapon: $item`Fourth of May Cosplay Saber`,
+        familiar: $familiar`Melodramedary`,
+      },
+      limit: { tries: 1 },
+    },
+    skillTask($effect`Scarysauce`),
+    beachTask($effect`Cold as Nice`),
+    {
+      name: "Mouthwash",
+      completed: () => get("availableSeptEmbers") === 0,
+      do: () => use($item`Mmm-brr! brand mouthwash`),
+      outfit: {
+        weapon: $item`McHugeLarge right pole`,
+        offhand: $item`McHugeLarge left pole`,
+        back: $item`McHugeLarge duffel bag`,
+        shirt: $item`Jurassic Parka`,
+        pants: $item`tearaway pants`,
+        acc1: $item`bembershoot`,
+        acc2: $item`McHugeLarge left ski`,
+        acc3: $item`McHugeLarge right ski`,
+        familiar: $familiar`Disembodied Hand`,
+        famequip: $item`Stick-Knife of Loathing`,
+        modes: { parka: "kachungasaur" },
+      },
+      acquire: [{ item: $item`bembershoot` }, { item: $item`Mmm-brr! brand mouthwash` }],
+      limit: { tries: 3 },
     },
     {
       name: "Set Snojo",
