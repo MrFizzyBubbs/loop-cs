@@ -56,7 +56,7 @@ export const BoozeDropQuest: CSQuest = {
       outfit: {
         back: $item`vampyric cloake`,
         acc3: $item`Lil' Doctor™ bag`,
-        familiar: $familiar`none`,
+        canAttack: false,
       },
       limit: { tries: 1 },
     },

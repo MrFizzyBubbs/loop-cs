@@ -1,4 +1,4 @@
-import { adv1, cliExecute, myPrimestat } from "kolmafia";
+import { abort, cliExecute, myPrimestat } from "kolmafia";
 import {
   $classes,
   $effect,
@@ -64,10 +64,10 @@ export const CoilWireQuest: CSQuest = {
       limit: { tries: 1 },
     },
     {
-      name: "Mimic",
-      completed: () => get("_bagOfCandy"),
+      name: "Proton Ghost",
+      completed: () => get("questPAGhost") === "unstarted",
       ready: () => get("ghostLocation") !== $location`none`,
-      do: () => adv1(get("ghostLocation", $location`none`), 0, ""),
+      do: () => get("ghostLocation") ?? abort("Failed to identify ghost location"),
       combat: new CSCombatStrategy().macro(
         Macro.delevel()
           .skill($skill`Shoot Ghost`)
@@ -78,8 +78,6 @@ export const CoilWireQuest: CSQuest = {
       outfit: {
         back: $item`protonic accelerator pack`,
         offhand: $item`weeping willow wand`,
-        familiar: $familiar`Stocking Mimic`,
-        famequip: $item.none,
       },
       limit: { tries: 1 },
     },
@@ -91,8 +89,9 @@ export const CoilWireQuest: CSQuest = {
       do: $location`The Skeleton Store`,
       outfit: {
         shirt: $item`Jurassic Parka`,
-        modes: { parka: "dilophosaur" },
         acc3: $item`Peridot of Peril`,
+        modes: { parka: "dilophosaur" },
+        canAttack: false,
       },
       choices: peridotChoice($monster`novelty tropical skeleton`),
       combat: new CSCombatStrategy().macro(Macro.skill($skill`Spit jurassic acid`)),
@@ -104,7 +103,7 @@ export const CoilWireQuest: CSQuest = {
       completed: () => have($item`jumbo olive`),
       ready: () => !have($effect`Everything Looks Yellow`),
       do: () => CombatLoversLocket.reminisce($monster`Evil Olive`),
-      outfit: { shirt: $item`Jurassic Parka`, modes: { parka: "dilophosaur" } },
+      outfit: { shirt: $item`Jurassic Parka`, modes: { parka: "dilophosaur" }, canAttack: false },
       combat: new CSCombatStrategy().macro(Macro.skill($skill`Spit jurassic acid`)),
       limit: { tries: 1 },
     },

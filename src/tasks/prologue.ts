@@ -1,9 +1,9 @@
 import {
+  autosell,
   cliExecute,
   getCampground,
   getClanName,
   getWorkshed,
-  myPrimestat,
   retrieveItem,
   runChoice,
   takeStorage,
@@ -13,7 +13,6 @@ import {
 } from "kolmafia";
 import {
   $classes,
-  $familiar,
   $item,
   $location,
   $skill,
@@ -129,7 +128,13 @@ export const PrologueQuest: CSQuest = {
     },
     deckTask("Forest"),
     deckTask("Island"),
-    deckTask("Rope"),
+    deckTask("1952 Mickey Mantle"),
+    {
+      name: "Sell Mickey Mantle",
+      completed: () => !have($item`1952 Mickey Mantle card`),
+      do: () => autosell(1, $item`1952 Mickey Mantle card`),
+      limit: { tries: 1 },
+    },
     {
       name: "Barrel Hoop Earring",
       completed: () => get("_barrelPrayer"),
@@ -153,13 +158,6 @@ export const PrologueQuest: CSQuest = {
       name: "Detective Badge",
       completed: () => have($item`gold detective badge`),
       do: () => visitUrl("place.php?whichplace=town_wrong&action=townwrong_precinct"),
-      limit: { tries: 1 },
-    },
-    {
-      name: "Mummery",
-      completed: () => get("_mummeryMods").includes(myPrimestat().toString()),
-      do: () => cliExecute(`mummery ${myPrimestat().toString().toLowerCase()}`),
-      outfit: { familiar: $familiar`Melodramedary` },
       limit: { tries: 1 },
     },
     {

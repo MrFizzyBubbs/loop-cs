@@ -1,5 +1,5 @@
 import {
-  adv1,
+  abort,
   cliExecute,
   myPrimestat,
   retrieveItem,
@@ -249,6 +249,7 @@ export const LevelingQuest: CSQuest = {
         offhand: $item`weeping willow wand`,
         acc2: $item`Peridot of Peril`,
         acc3: $item`Lil' Doctor™ bag`,
+        canAttack: false,
       },
       limit: { tries: 1 },
     },
@@ -263,7 +264,7 @@ export const LevelingQuest: CSQuest = {
           })
         ),
       ready: () => get("ghostLocation") !== $location`none` && get("_nanorhinoCharge") >= 100,
-      do: () => adv1(get("ghostLocation", $location`none`), 0, ""),
+      do: () => get("ghostLocation") ?? abort("Failed to identify ghost location"),
       combat: new CSCombatStrategy().macro(
         Macro.skill(
           byPrimaryClass({
@@ -328,7 +329,7 @@ export const LevelingQuest: CSQuest = {
       outfit: {
         offhand: $item`June cleaver`,
         shirt: $item`makeshift garbage shirt`,
-        famequip: $item.none,
+        canAttack: false,
       },
       acquire: [{ item: $item`makeshift garbage shirt` }],
       limit: { tries: 1 },
@@ -483,6 +484,8 @@ export const LevelingQuest: CSQuest = {
         weapon: $item`Fourth of May Cosplay Saber`,
         offhand: $item`familiar scrapbook`,
         shirt: $item`makeshift garbage shirt`,
+        familiar: $familiar`Shorter-Order Cook`,
+        famequip: $item`tiny stillsuit`,
       },
       acquire: [{ item: $item`makeshift garbage shirt` }],
       limit: { tries: 1 },
@@ -497,6 +500,8 @@ export const LevelingQuest: CSQuest = {
         weapon: $item`Fourth of May Cosplay Saber`,
         offhand: $item`familiar scrapbook`,
         shirt: $item`makeshift garbage shirt`,
+        familiar: $familiar`Shorter-Order Cook`,
+        famequip: $item`tiny stillsuit`,
       },
       acquire: [{ item: $item`makeshift garbage shirt` }],
       limit: { tries: 1 },
@@ -516,6 +521,7 @@ export const LevelingQuest: CSQuest = {
         offhand: $item`familiar scrapbook`,
         shirt: $item`makeshift garbage shirt`,
         familiar: $familiar`Shorter-Order Cook`,
+        famequip: $item`tiny stillsuit`,
       },
       acquire: [{ item: $item`makeshift garbage shirt` }],
       limit: { tries: 1 },

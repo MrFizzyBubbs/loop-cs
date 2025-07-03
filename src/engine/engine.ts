@@ -36,7 +36,9 @@ export class CSEngine extends Engine<CombatActions, CSTask> {
       resources.provide("killFree", freeKillSource);
     }
 
-    if (task.combat !== undefined && !outfit.skipDefaults) equipDefaults(outfit);
+    if (task.combat !== undefined && !outfit.skipDefaults) {
+      equipDefaults(outfit, task.outfit?.canAttack ?? false);
+    }
   }
 
   prepare(task: CSTask): void {

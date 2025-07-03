@@ -1,5 +1,6 @@
 import {
   cliExecute,
+  create,
   familiarWeight,
   knollAvailable,
   myAscensions,
@@ -30,7 +31,7 @@ import Macro from "../combat";
 const outfit: OutfitSpec = {
   hat: $item`Daylight Shavings Helmet`,
   weapon: $item`Fourth of May Cosplay Saber`,
-  offhand: $item`rope`,
+  offhand: $item`burning paper crane`,
   shirt: $item`Stephen's lab coat`,
   pants: $item`Great Wolf's beastly trousers`,
   acc1: $item`Brutal brogues`,
@@ -95,6 +96,13 @@ export const FamiliarWeightQuest: CSQuest = {
         visitUrl("charpane.php");
       },
       outfit: { familiar: $familiar`Comma Chameleon` },
+      limit: { tries: 1 },
+    },
+    {
+      name: "Paper Crane",
+      completed: () => have($item`burning paper crane`),
+      do: () => create($item`burning paper crane`),
+      ready: () => have($item`burning newspaper`),
       limit: { tries: 1 },
     },
     {

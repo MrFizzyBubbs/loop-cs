@@ -42,7 +42,7 @@ export const WeaponDamageQuest: CSQuest = {
       choices: { 1387: 3 },
       outfit: {
         weapon: $item`Fourth of May Cosplay Saber`,
-        familiar: $familiar.none,
+        canAttack: false,
       },
       limit: { tries: 1 },
     },
