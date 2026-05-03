@@ -26,7 +26,8 @@ export const BoozeDropQuest: CSQuest = {
   tasks: [
     ...buffs.map((effect) => skillTask(effect)),
     {
-      ...skillTask($effect`Spice Haze`),
+      // eslint-disable-next-line libram/verify-constants
+      ...skillTask($effect`Legendary Spice Haze`),
       class: $classes`Seal Clubber, Turtle Tamer, Sauceror, Disco Bandit, Accordion Thief`,
     },
     {
