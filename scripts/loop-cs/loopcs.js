@@ -9674,7 +9674,7 @@ var buffs = $effects(boozedrop_templateObject || (boozedrop_templateObject = boo
 var BoozeDropQuest = {
   name: "Booze Drop",
   completed: () => CommunityService.BoozeDrop.isDone(),
-  tasks: [].concat(boozedrop_toConsumableArray(buffs.map(effect => skillTask(effect))), [boozedrop_objectSpread(boozedrop_objectSpread({}, skillTask(template_string_$effect(boozedrop_templateObject2 || (boozedrop_templateObject2 = boozedrop_taggedTemplateLiteral(["Spice Haze"]))))), {}, {
+  tasks: [].concat(boozedrop_toConsumableArray(buffs.map(effect => skillTask(effect))), [boozedrop_objectSpread(boozedrop_objectSpread({}, skillTask(template_string_$effect(boozedrop_templateObject2 || (boozedrop_templateObject2 = boozedrop_taggedTemplateLiteral(["Legendary Spice Haze"]))))), {}, {
     class: $classes(boozedrop_templateObject3 || (boozedrop_templateObject3 = boozedrop_taggedTemplateLiteral(["Seal Clubber, Turtle Tamer, Sauceror, Disco Bandit, Accordion Thief"])))
   }), {
     name: "Anticheese",
