@@ -10670,7 +10670,7 @@ var LevelingQuest = {
     completed: () => lib_have(template_string_$effect(leveling_templateObject57 || (leveling_templateObject57 = leveling_taggedTemplateLiteral(["That's Just Cloud-Talk, Man"])))),
     do: () => (0,external_kolmafia_namespaceObject.visitUrl)("place.php?whichplace=campaway&action=campaway_sky"),
     limit: {
-      tries: 1
+      skip: 3
     }
   }, {
     name: "April Shower",
@@ -10817,7 +10817,7 @@ var LevelingQuest = {
     }
   }, skillTask(template_string_$effect(_templateObject107 || (_templateObject107 = leveling_taggedTemplateLiteral(["Scarysauce"])))), beachTask(template_string_$effect(_templateObject108 || (_templateObject108 = leveling_taggedTemplateLiteral(["Cold as Nice"])))), {
     name: "Mouthwash",
-    completed: () => property_get("availableSeptEmbers") === 0,
+    completed: () => property_get("availableSeptEmbers") < 2,
     do: () => (0,external_kolmafia_namespaceObject.use)(template_string_$item(_templateObject109 || (_templateObject109 = leveling_taggedTemplateLiteral(["Mmm-brr! brand mouthwash"])))),
     outfit: {
       weapon: template_string_$item(_templateObject110 || (_templateObject110 = leveling_taggedTemplateLiteral(["McHugeLarge right pole"]))),
@@ -11403,7 +11403,7 @@ function getUniques(location) {
   return null;
 }
 ;// ./src/tasks/prologue.ts
-var prologue_templateObject, prologue_templateObject2, prologue_templateObject3, prologue_templateObject4, prologue_templateObject5, prologue_templateObject6, prologue_templateObject7, prologue_templateObject8, prologue_templateObject9, prologue_templateObject0, prologue_templateObject1, prologue_templateObject10, prologue_templateObject11, prologue_templateObject12, prologue_templateObject13, prologue_templateObject14, prologue_templateObject15, prologue_templateObject16, prologue_templateObject17, prologue_templateObject18, prologue_templateObject19, prologue_templateObject20, prologue_templateObject21, prologue_templateObject22, prologue_templateObject23, prologue_templateObject24, prologue_templateObject25, prologue_templateObject26, prologue_templateObject27;
+var prologue_templateObject, prologue_templateObject2, prologue_templateObject3, prologue_templateObject4, prologue_templateObject5, prologue_templateObject6, prologue_templateObject7, prologue_templateObject8, prologue_templateObject9, prologue_templateObject0, prologue_templateObject1, prologue_templateObject10, prologue_templateObject11, prologue_templateObject12, prologue_templateObject13, prologue_templateObject14, prologue_templateObject15, prologue_templateObject16, prologue_templateObject17, prologue_templateObject18, prologue_templateObject19, prologue_templateObject20, prologue_templateObject21, prologue_templateObject22, prologue_templateObject23, prologue_templateObject24, prologue_templateObject25, prologue_templateObject26, prologue_templateObject27, prologue_templateObject28;
 function prologue_taggedTemplateLiteral(e, t) { return t || (t = e.slice(0)), Object.freeze(Object.defineProperties(e, { raw: { value: Object.freeze(t) } })); }
 
 
@@ -11524,29 +11524,29 @@ var PrologueQuest = {
     }
   }, {
     name: "Barrel Hoop Earring",
-    completed: () => property_get("_barrelPrayer"),
-    class: $classes(prologue_templateObject12 || (prologue_templateObject12 = prologue_taggedTemplateLiteral(["Seal Clubber, Disco Bandit"]))),
+    completed: () => property_get("_barrelPrayer") || lib_have(template_string_$item(prologue_templateObject12 || (prologue_templateObject12 = prologue_taggedTemplateLiteral(["barrel hoop earring"])))),
+    class: $classes(prologue_templateObject13 || (prologue_templateObject13 = prologue_taggedTemplateLiteral(["Seal Clubber, Disco Bandit"]))),
     do: () => (0,external_kolmafia_namespaceObject.cliExecute)("barrelprayer glamour"),
     limit: {
       tries: 1
     }
   }, {
     name: "Cowboy Boots",
-    completed: () => lib_have(template_string_$item(prologue_templateObject13 || (prologue_templateObject13 = prologue_taggedTemplateLiteral(["your cowboy boots"])))),
+    completed: () => lib_have(template_string_$item(prologue_templateObject14 || (prologue_templateObject14 = prologue_taggedTemplateLiteral(["your cowboy boots"])))),
     do: () => (0,external_kolmafia_namespaceObject.visitUrl)("place.php?whichplace=town_right&action=townright_ltt"),
     limit: {
       tries: 1
     }
   }, {
     name: "Terminal Skill",
-    completed: () => getSkills().includes(template_string_$skill(prologue_templateObject14 || (prologue_templateObject14 = prologue_taggedTemplateLiteral(["Portscan"])))),
-    do: () => educate(template_string_$skill(prologue_templateObject15 || (prologue_templateObject15 = prologue_taggedTemplateLiteral(["Portscan"])))),
+    completed: () => getSkills().includes(template_string_$skill(prologue_templateObject15 || (prologue_templateObject15 = prologue_taggedTemplateLiteral(["Portscan"])))),
+    do: () => educate(template_string_$skill(prologue_templateObject16 || (prologue_templateObject16 = prologue_taggedTemplateLiteral(["Portscan"])))),
     limit: {
       tries: 1
     }
   }, {
     name: "Detective Badge",
-    completed: () => lib_have(template_string_$item(prologue_templateObject16 || (prologue_templateObject16 = prologue_taggedTemplateLiteral(["gold detective badge"])))),
+    completed: () => lib_have(template_string_$item(prologue_templateObject17 || (prologue_templateObject17 = prologue_taggedTemplateLiteral(["gold detective badge"])))),
     do: () => (0,external_kolmafia_namespaceObject.visitUrl)("place.php?whichplace=town_wrong&action=townwrong_precinct"),
     limit: {
       tries: 1
@@ -11567,7 +11567,7 @@ var PrologueQuest = {
     }
   }, {
     name: "Vote!",
-    completed: () => lib_have(template_string_$item(prologue_templateObject17 || (prologue_templateObject17 = prologue_taggedTemplateLiteral(["\"I Voted!\" sticker"])))),
+    completed: () => lib_have(template_string_$item(prologue_templateObject18 || (prologue_templateObject18 = prologue_taggedTemplateLiteral(["\"I Voted!\" sticker"])))),
     do: () => {
       (0,external_kolmafia_namespaceObject.visitUrl)("place.php?whichplace=town_right&action=townright_vote");
       (0,external_kolmafia_namespaceObject.visitUrl)("choice.php?option=1&whichchoice=1331&g=2&local%5B%5D=".concat(BEST_INITIATIVE, "&local%5B%5D=").concat(BEST_INITIATIVE));
@@ -11596,16 +11596,16 @@ var PrologueQuest = {
     }
   }, {
     name: "Unlock Bird",
-    completed: () => lib_have(template_string_$skill(prologue_templateObject18 || (prologue_templateObject18 = prologue_taggedTemplateLiteral(["Seek out a Bird"])))),
-    do: () => (0,external_kolmafia_namespaceObject.use)(template_string_$item(prologue_templateObject19 || (prologue_templateObject19 = prologue_taggedTemplateLiteral(["Bird-a-Day calendar"])))),
+    completed: () => lib_have(template_string_$skill(prologue_templateObject19 || (prologue_templateObject19 = prologue_taggedTemplateLiteral(["Seek out a Bird"])))),
+    do: () => (0,external_kolmafia_namespaceObject.use)(template_string_$item(prologue_templateObject20 || (prologue_templateObject20 = prologue_taggedTemplateLiteral(["Bird-a-Day calendar"])))),
     limit: {
       tries: 1
     }
   }, {
     name: "Lathe",
     prepare: () => (0,external_kolmafia_namespaceObject.visitUrl)("shop.php?whichshop=lathe"),
-    completed: () => lib_have(template_string_$item(prologue_templateObject20 || (prologue_templateObject20 = prologue_taggedTemplateLiteral(["weeping willow wand"])))),
-    do: () => (0,external_kolmafia_namespaceObject.retrieveItem)(template_string_$item(prologue_templateObject21 || (prologue_templateObject21 = prologue_taggedTemplateLiteral(["weeping willow wand"])))),
+    completed: () => lib_have(template_string_$item(prologue_templateObject21 || (prologue_templateObject21 = prologue_taggedTemplateLiteral(["weeping willow wand"])))),
+    do: () => (0,external_kolmafia_namespaceObject.retrieveItem)(template_string_$item(prologue_templateObject22 || (prologue_templateObject22 = prologue_taggedTemplateLiteral(["weeping willow wand"])))),
     limit: {
       tries: 1
     }
@@ -11620,16 +11620,16 @@ var PrologueQuest = {
     name: "Fallbot",
     completed: () => !AutumnAton_available() || property_get("_autumnatonQuests") > 0,
     do: () => {
-      sendTo($location(prologue_templateObject22 || (prologue_templateObject22 = prologue_taggedTemplateLiteral(["The Sleazy Back Alley"]))));
+      sendTo($location(prologue_templateObject23 || (prologue_templateObject23 = prologue_taggedTemplateLiteral(["The Sleazy Back Alley"]))));
     },
     limit: {
       tries: 1
     }
   }, {
     name: "Learn About Bugs",
-    ready: () => lib_have(template_string_$item(prologue_templateObject23 || (prologue_templateObject23 = prologue_taggedTemplateLiteral(["S.I.T. Course Completion Certificate"])))),
-    completed: () => property_get("_sitCourseCompleted") || lib_have(template_string_$skill(prologue_templateObject24 || (prologue_templateObject24 = prologue_taggedTemplateLiteral(["Insectologist"])))),
-    do: () => (0,external_kolmafia_namespaceObject.use)(template_string_$item(prologue_templateObject25 || (prologue_templateObject25 = prologue_taggedTemplateLiteral(["S.I.T. Course Completion Certificate"])))),
+    ready: () => lib_have(template_string_$item(prologue_templateObject24 || (prologue_templateObject24 = prologue_taggedTemplateLiteral(["S.I.T. Course Completion Certificate"])))),
+    completed: () => property_get("_sitCourseCompleted") || lib_have(template_string_$skill(prologue_templateObject25 || (prologue_templateObject25 = prologue_taggedTemplateLiteral(["Insectologist"])))),
+    do: () => (0,external_kolmafia_namespaceObject.use)(template_string_$item(prologue_templateObject26 || (prologue_templateObject26 = prologue_taggedTemplateLiteral(["S.I.T. Course Completion Certificate"])))),
     choices: {
       1494: 2
     },
@@ -11645,8 +11645,8 @@ var PrologueQuest = {
     }
   }, {
     name: "McHugeLarge",
-    completed: () => lib_have(template_string_$item(prologue_templateObject26 || (prologue_templateObject26 = prologue_taggedTemplateLiteral(["McHugeLarge left ski"])))),
-    ready: () => lib_have(template_string_$item(prologue_templateObject27 || (prologue_templateObject27 = prologue_taggedTemplateLiteral(["McHugeLarge duffel bag"])))),
+    completed: () => lib_have(template_string_$item(prologue_templateObject27 || (prologue_templateObject27 = prologue_taggedTemplateLiteral(["McHugeLarge left ski"])))),
+    ready: () => lib_have(template_string_$item(prologue_templateObject28 || (prologue_templateObject28 = prologue_taggedTemplateLiteral(["McHugeLarge duffel bag"])))),
     do: () => (0,external_kolmafia_namespaceObject.cliExecute)("inventory.php?action=skiduffel&pwd"),
     limit: {
       tries: 1
