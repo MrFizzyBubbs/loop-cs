@@ -212,7 +212,7 @@ export const LevelingQuest: CSQuest = {
       name: "Cloud-Talk",
       completed: () => have($effect`That's Just Cloud-Talk, Man`),
       do: () => visitUrl("place.php?whichplace=campaway&action=campaway_sky"),
-      limit: { tries: 1 },
+      limit: { skip: 3 },
     },
     {
       name: "April Shower",
@@ -361,7 +361,7 @@ export const LevelingQuest: CSQuest = {
     beachTask($effect`Cold as Nice`),
     {
       name: "Mouthwash",
-      completed: () => get("availableSeptEmbers") === 0,
+      completed: () => get("availableSeptEmbers") < 2,
       do: () => use($item`Mmm-brr! brand mouthwash`),
       outfit: {
         weapon: $item`McHugeLarge right pole`,

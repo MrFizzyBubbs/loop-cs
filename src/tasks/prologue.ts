@@ -137,7 +137,7 @@ export const PrologueQuest: CSQuest = {
     },
     {
       name: "Barrel Hoop Earring",
-      completed: () => get("_barrelPrayer"),
+      completed: () => get("_barrelPrayer") || have($item`barrel hoop earring`),
       class: $classes`Seal Clubber, Disco Bandit`,
       do: () => cliExecute("barrelprayer glamour"),
       limit: { tries: 1 },
