@@ -10053,7 +10053,7 @@ var CoilWireQuest = {
     prepare: burnLibrams,
     do: () => CommunityService.CoilWire.run(() => undefined),
     outfit: {
-      modifier: "mp, mp regen 15min"
+      modifier: "mp, 15 mp regen min"
     },
     limit: {
       tries: 1
