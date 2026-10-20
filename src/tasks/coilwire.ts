@@ -112,7 +112,7 @@ export const CoilWireQuest: CSQuest = {
       completed: () => CommunityService.CoilWire.isDone(),
       prepare: burnLibrams,
       do: () => CommunityService.CoilWire.run(() => undefined),
-      outfit: { modifier: "mp, mp regen 15min" },
+      outfit: { modifier: "mp, 15 mp regen min" },
       limit: { tries: 1 },
     },
   ],
