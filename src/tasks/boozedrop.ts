@@ -12,6 +12,7 @@ import {
   have,
   Macro,
   SourceTerminal,
+  uneffect,
 } from "libram";
 import { CSQuest } from "../engine/task";
 import { useSkill, visitUrl } from "kolmafia";
@@ -24,6 +25,12 @@ export const BoozeDropQuest: CSQuest = {
   name: "Booze Drop",
   completed: () => CommunityService.BoozeDrop.isDone(),
   tasks: [
+    {
+      name: "Shrug Song",
+      completed: () => !have($effect`Ur-Kel's Aria of Annoyance`),
+      do: () => uneffect($effect`Ur-Kel's Aria of Annoyance`),
+      limit: { tries: 1 },
+    },
     ...buffs.map((effect) => skillTask(effect)),
     {
       // eslint-disable-next-line libram/verify-constants

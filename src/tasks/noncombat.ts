@@ -1,5 +1,5 @@
 import { cliExecute } from "kolmafia";
-import { $effect, $effects, $familiar, $item, CommunityService, get, have } from "libram";
+import { $effect, $effects, $familiar, $item, CommunityService, get, have, uneffect } from "libram";
 import { CSQuest } from "../engine/task";
 import { potionTask, skillTask } from "./common";
 
@@ -9,6 +9,12 @@ export const NoncombatQuest: CSQuest = {
   name: "Noncombat",
   completed: () => CommunityService.Noncombat.isDone(),
   tasks: [
+    {
+      name: "Shrug Song",
+      completed: () => !have($effect`Ode to Booze`),
+      do: () => uneffect($effect`Ode to Booze`),
+      limit: { tries: 1 },
+    },
     ...buffs.map((effect) => skillTask(effect)),
     {
       name: "Silent Running",
