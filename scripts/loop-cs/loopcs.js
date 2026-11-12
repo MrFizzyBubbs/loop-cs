@@ -9653,7 +9653,7 @@ function buskTask(cast, power, spec) {
 }
 ;// ./src/tasks/boozedrop.ts
 function boozedrop_typeof(o) { "@babel/helpers - typeof"; return boozedrop_typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, boozedrop_typeof(o); }
-var boozedrop_templateObject, boozedrop_templateObject2, boozedrop_templateObject3, boozedrop_templateObject4, boozedrop_templateObject5, boozedrop_templateObject6, boozedrop_templateObject7, boozedrop_templateObject8, boozedrop_templateObject9, boozedrop_templateObject0, boozedrop_templateObject1, boozedrop_templateObject10, boozedrop_templateObject11, boozedrop_templateObject12, boozedrop_templateObject13, boozedrop_templateObject14, boozedrop_templateObject15, boozedrop_templateObject16, boozedrop_templateObject17, boozedrop_templateObject18, boozedrop_templateObject19, boozedrop_templateObject20, boozedrop_templateObject21, boozedrop_templateObject22, boozedrop_templateObject23, boozedrop_templateObject24, boozedrop_templateObject25, boozedrop_templateObject26, boozedrop_templateObject27, boozedrop_templateObject28, boozedrop_templateObject29, boozedrop_templateObject30, boozedrop_templateObject31;
+var boozedrop_templateObject, boozedrop_templateObject2, boozedrop_templateObject3, boozedrop_templateObject4, boozedrop_templateObject5, boozedrop_templateObject6, boozedrop_templateObject7, boozedrop_templateObject8, boozedrop_templateObject9, boozedrop_templateObject0, boozedrop_templateObject1, boozedrop_templateObject10, boozedrop_templateObject11, boozedrop_templateObject12, boozedrop_templateObject13, boozedrop_templateObject14, boozedrop_templateObject15, boozedrop_templateObject16, boozedrop_templateObject17, boozedrop_templateObject18, boozedrop_templateObject19, boozedrop_templateObject20, boozedrop_templateObject21, boozedrop_templateObject22, boozedrop_templateObject23, boozedrop_templateObject24, boozedrop_templateObject25, boozedrop_templateObject26, boozedrop_templateObject27, boozedrop_templateObject28, boozedrop_templateObject29, boozedrop_templateObject30, boozedrop_templateObject31, boozedrop_templateObject32, boozedrop_templateObject33;
 function boozedrop_ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
 function boozedrop_objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? boozedrop_ownKeys(Object(t), !0).forEach(function (r) { boozedrop_defineProperty(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : boozedrop_ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
 function boozedrop_defineProperty(e, r, t) { return (r = boozedrop_toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
@@ -9674,8 +9674,15 @@ var buffs = $effects(boozedrop_templateObject || (boozedrop_templateObject = boo
 var BoozeDropQuest = {
   name: "Booze Drop",
   completed: () => CommunityService.BoozeDrop.isDone(),
-  tasks: [].concat(boozedrop_toConsumableArray(buffs.map(effect => skillTask(effect))), [boozedrop_objectSpread(boozedrop_objectSpread({}, skillTask(template_string_$effect(boozedrop_templateObject2 || (boozedrop_templateObject2 = boozedrop_taggedTemplateLiteral(["Legendary Spice Haze"]))))), {}, {
-    class: $classes(boozedrop_templateObject3 || (boozedrop_templateObject3 = boozedrop_taggedTemplateLiteral(["Seal Clubber, Turtle Tamer, Sauceror, Disco Bandit, Accordion Thief"])))
+  tasks: [{
+    name: "Shrug Song",
+    completed: () => !lib_have(template_string_$effect(boozedrop_templateObject2 || (boozedrop_templateObject2 = boozedrop_taggedTemplateLiteral(["Ur-Kel's Aria of Annoyance"])))),
+    do: () => uneffect(template_string_$effect(boozedrop_templateObject3 || (boozedrop_templateObject3 = boozedrop_taggedTemplateLiteral(["Ur-Kel's Aria of Annoyance"])))),
+    limit: {
+      tries: 1
+    }
+  }].concat(boozedrop_toConsumableArray(buffs.map(effect => skillTask(effect))), [boozedrop_objectSpread(boozedrop_objectSpread({}, skillTask(template_string_$effect(boozedrop_templateObject4 || (boozedrop_templateObject4 = boozedrop_taggedTemplateLiteral(["Legendary Spice Haze"]))))), {}, {
+    class: $classes(boozedrop_templateObject5 || (boozedrop_templateObject5 = boozedrop_taggedTemplateLiteral(["Seal Clubber, Turtle Tamer, Sauceror, Disco Bandit, Accordion Thief"])))
   }), {
     name: "Anticheese",
     completed: () => property_get("lastAnticheeseDay") > 0,
@@ -9683,9 +9690,9 @@ var BoozeDropQuest = {
     limit: {
       tries: 1
     }
-  }, potionTask(template_string_$item(boozedrop_templateObject4 || (boozedrop_templateObject4 = boozedrop_taggedTemplateLiteral(["government"]))), true), potionTask(template_string_$item(boozedrop_templateObject5 || (boozedrop_templateObject5 = boozedrop_taggedTemplateLiteral(["autumn leaf"])))), {
+  }, potionTask(template_string_$item(boozedrop_templateObject6 || (boozedrop_templateObject6 = boozedrop_taggedTemplateLiteral(["government"]))), true), potionTask(template_string_$item(boozedrop_templateObject7 || (boozedrop_templateObject7 = boozedrop_taggedTemplateLiteral(["autumn leaf"])))), {
     name: "Oversized Sparkler",
-    completed: () => lib_have(template_string_$item(boozedrop_templateObject6 || (boozedrop_templateObject6 = boozedrop_taggedTemplateLiteral(["oversized sparkler"])))),
+    completed: () => lib_have(template_string_$item(boozedrop_templateObject8 || (boozedrop_templateObject8 = boozedrop_taggedTemplateLiteral(["oversized sparkler"])))),
     prepare: () => (0,external_kolmafia_namespaceObject.visitUrl)("clan_viplounge.php?action=fwshop&whichfloor=2", false),
     do: () => (0,external_kolmafia_namespaceObject.visitUrl)("shop.php?whichshop=fwshop&action=buyitem&quantity=1&whichrow=1257&pwd"),
     limit: {
@@ -9693,56 +9700,56 @@ var BoozeDropQuest = {
     }
   }, {
     name: "Batform",
-    completed: () => lib_have(template_string_$effect(boozedrop_templateObject7 || (boozedrop_templateObject7 = boozedrop_taggedTemplateLiteral(["Bat-Adjacent Form"])))),
-    do: $location(boozedrop_templateObject8 || (boozedrop_templateObject8 = boozedrop_taggedTemplateLiteral(["The Dire Warren"]))),
-    combat: new CSCombatStrategy().macro(Macro.skill(template_string_$skill(boozedrop_templateObject9 || (boozedrop_templateObject9 = boozedrop_taggedTemplateLiteral(["Become a Bat"])))).skill(template_string_$skill(boozedrop_templateObject0 || (boozedrop_templateObject0 = boozedrop_taggedTemplateLiteral(["Bowl Straight Up"])))).skill(template_string_$skill(boozedrop_templateObject1 || (boozedrop_templateObject1 = boozedrop_taggedTemplateLiteral(["Reflex Hammer"]))))),
+    completed: () => lib_have(template_string_$effect(boozedrop_templateObject9 || (boozedrop_templateObject9 = boozedrop_taggedTemplateLiteral(["Bat-Adjacent Form"])))),
+    do: $location(boozedrop_templateObject0 || (boozedrop_templateObject0 = boozedrop_taggedTemplateLiteral(["The Dire Warren"]))),
+    combat: new CSCombatStrategy().macro(Macro.skill(template_string_$skill(boozedrop_templateObject1 || (boozedrop_templateObject1 = boozedrop_taggedTemplateLiteral(["Become a Bat"])))).skill(template_string_$skill(boozedrop_templateObject10 || (boozedrop_templateObject10 = boozedrop_taggedTemplateLiteral(["Bowl Straight Up"])))).skill(template_string_$skill(boozedrop_templateObject11 || (boozedrop_templateObject11 = boozedrop_taggedTemplateLiteral(["Reflex Hammer"]))))),
     outfit: {
-      back: template_string_$item(boozedrop_templateObject10 || (boozedrop_templateObject10 = boozedrop_taggedTemplateLiteral(["vampyric cloake"]))),
-      acc3: template_string_$item(boozedrop_templateObject11 || (boozedrop_templateObject11 = boozedrop_taggedTemplateLiteral(["Lil' Doctor\u2122 bag"]))),
+      back: template_string_$item(boozedrop_templateObject12 || (boozedrop_templateObject12 = boozedrop_taggedTemplateLiteral(["vampyric cloake"]))),
+      acc3: template_string_$item(boozedrop_templateObject13 || (boozedrop_templateObject13 = boozedrop_taggedTemplateLiteral(["Lil' Doctor\u2122 bag"]))),
       canAttack: false
     },
     limit: {
       tries: 1
     }
-  }, boozedrop_objectSpread(boozedrop_objectSpread({}, potionTask(template_string_$item(boozedrop_templateObject12 || (boozedrop_templateObject12 = boozedrop_taggedTemplateLiteral(["Salsa Caliente\u2122 candle"]))))), {}, {
-    class: $classes(boozedrop_templateObject13 || (boozedrop_templateObject13 = boozedrop_taggedTemplateLiteral(["Sauceror"])))
+  }, boozedrop_objectSpread(boozedrop_objectSpread({}, potionTask(template_string_$item(boozedrop_templateObject14 || (boozedrop_templateObject14 = boozedrop_taggedTemplateLiteral(["Salsa Caliente\u2122 candle"]))))), {}, {
+    class: $classes(boozedrop_templateObject15 || (boozedrop_templateObject15 = boozedrop_taggedTemplateLiteral(["Sauceror"])))
   }), {
     name: "Items.enh",
-    completed: () => lib_have(template_string_$effect(boozedrop_templateObject14 || (boozedrop_templateObject14 = boozedrop_taggedTemplateLiteral(["items.enh"])))),
-    do: () => enhance(template_string_$effect(boozedrop_templateObject15 || (boozedrop_templateObject15 = boozedrop_taggedTemplateLiteral(["items.enh"])))),
+    completed: () => lib_have(template_string_$effect(boozedrop_templateObject16 || (boozedrop_templateObject16 = boozedrop_taggedTemplateLiteral(["items.enh"])))),
+    do: () => enhance(template_string_$effect(boozedrop_templateObject17 || (boozedrop_templateObject17 = boozedrop_taggedTemplateLiteral(["items.enh"])))),
     limit: {
       tries: 1
     }
   }, asdonTask("Observantly"), skillTask({
-    skill: template_string_$skill(boozedrop_templateObject16 || (boozedrop_templateObject16 = boozedrop_taggedTemplateLiteral(["Sauce Contemplation"]))),
-    effect: template_string_$effect(boozedrop_templateObject17 || (boozedrop_templateObject17 = boozedrop_taggedTemplateLiteral(["Lubricating Sauce"])))
-  }, true), potionTask(template_string_$item(boozedrop_templateObject18 || (boozedrop_templateObject18 = boozedrop_taggedTemplateLiteral(["bag of grain"])))), {
+    skill: template_string_$skill(boozedrop_templateObject18 || (boozedrop_templateObject18 = boozedrop_taggedTemplateLiteral(["Sauce Contemplation"]))),
+    effect: template_string_$effect(boozedrop_templateObject19 || (boozedrop_templateObject19 = boozedrop_taggedTemplateLiteral(["Lubricating Sauce"])))
+  }, true), potionTask(template_string_$item(boozedrop_templateObject20 || (boozedrop_templateObject20 = boozedrop_taggedTemplateLiteral(["bag of grain"])))), {
     name: "Steely-Eyed Squint",
-    completed: () => lib_have(template_string_$effect(boozedrop_templateObject19 || (boozedrop_templateObject19 = boozedrop_taggedTemplateLiteral(["Steely-Eyed Squint"])))),
-    do: () => (0,external_kolmafia_namespaceObject.useSkill)(template_string_$skill(boozedrop_templateObject20 || (boozedrop_templateObject20 = boozedrop_taggedTemplateLiteral(["Steely-Eyed Squint"])))),
+    completed: () => lib_have(template_string_$effect(boozedrop_templateObject21 || (boozedrop_templateObject21 = boozedrop_taggedTemplateLiteral(["Steely-Eyed Squint"])))),
+    do: () => (0,external_kolmafia_namespaceObject.useSkill)(template_string_$skill(boozedrop_templateObject22 || (boozedrop_templateObject22 = boozedrop_taggedTemplateLiteral(["Steely-Eyed Squint"])))),
     limit: {
       tries: 1
     }
-  }, skillTask(template_string_$effect(boozedrop_templateObject21 || (boozedrop_templateObject21 = boozedrop_taggedTemplateLiteral(["Feeling Lost"])))), {
+  }, skillTask(template_string_$effect(boozedrop_templateObject23 || (boozedrop_templateObject23 = boozedrop_taggedTemplateLiteral(["Feeling Lost"])))), {
     name: "Test",
     completed: () => CommunityService.BoozeDrop.isDone(),
     do: () => CommunityService.BoozeDrop.run(() => undefined, 1),
     outfit: {
-      hat: template_string_$item(boozedrop_templateObject22 || (boozedrop_templateObject22 = boozedrop_taggedTemplateLiteral(["wad of used tape"]))),
-      weapon: template_string_$item(boozedrop_templateObject23 || (boozedrop_templateObject23 = boozedrop_taggedTemplateLiteral(["oversized sparkler"]))),
-      offhand: template_string_$item(boozedrop_templateObject24 || (boozedrop_templateObject24 = boozedrop_taggedTemplateLiteral(["unbreakable umbrella"]))),
-      back: template_string_$item(boozedrop_templateObject25 || (boozedrop_templateObject25 = boozedrop_taggedTemplateLiteral(["protonic accelerator pack"]))),
-      acc1: template_string_$item(boozedrop_templateObject26 || (boozedrop_templateObject26 = boozedrop_taggedTemplateLiteral(["Guzzlr tablet"]))),
-      acc2: template_string_$item(boozedrop_templateObject27 || (boozedrop_templateObject27 = boozedrop_taggedTemplateLiteral(["Cincho de Mayo"]))),
-      acc3: template_string_$items(boozedrop_templateObject28 || (boozedrop_templateObject28 = boozedrop_taggedTemplateLiteral(["barrel hoop earring, gold detective badge"]))),
-      famequip: template_string_$item(boozedrop_templateObject29 || (boozedrop_templateObject29 = boozedrop_taggedTemplateLiteral(["li'l ninja costume"]))),
-      familiar: template_string_$familiar(boozedrop_templateObject30 || (boozedrop_templateObject30 = boozedrop_taggedTemplateLiteral(["Trick-or-Treating Tot"]))),
+      hat: template_string_$item(boozedrop_templateObject24 || (boozedrop_templateObject24 = boozedrop_taggedTemplateLiteral(["wad of used tape"]))),
+      weapon: template_string_$item(boozedrop_templateObject25 || (boozedrop_templateObject25 = boozedrop_taggedTemplateLiteral(["oversized sparkler"]))),
+      offhand: template_string_$item(boozedrop_templateObject26 || (boozedrop_templateObject26 = boozedrop_taggedTemplateLiteral(["unbreakable umbrella"]))),
+      back: template_string_$item(boozedrop_templateObject27 || (boozedrop_templateObject27 = boozedrop_taggedTemplateLiteral(["protonic accelerator pack"]))),
+      acc1: template_string_$item(boozedrop_templateObject28 || (boozedrop_templateObject28 = boozedrop_taggedTemplateLiteral(["Guzzlr tablet"]))),
+      acc2: template_string_$item(boozedrop_templateObject29 || (boozedrop_templateObject29 = boozedrop_taggedTemplateLiteral(["Cincho de Mayo"]))),
+      acc3: template_string_$items(boozedrop_templateObject30 || (boozedrop_templateObject30 = boozedrop_taggedTemplateLiteral(["barrel hoop earring, gold detective badge"]))),
+      famequip: template_string_$item(boozedrop_templateObject31 || (boozedrop_templateObject31 = boozedrop_taggedTemplateLiteral(["li'l ninja costume"]))),
+      familiar: template_string_$familiar(boozedrop_templateObject32 || (boozedrop_templateObject32 = boozedrop_taggedTemplateLiteral(["Trick-or-Treating Tot"]))),
       modes: {
         umbrella: "bucket style"
       }
     },
     acquire: [{
-      item: template_string_$item(boozedrop_templateObject31 || (boozedrop_templateObject31 = boozedrop_taggedTemplateLiteral(["wad of used tape"])))
+      item: template_string_$item(boozedrop_templateObject33 || (boozedrop_templateObject33 = boozedrop_taggedTemplateLiteral(["wad of used tape"])))
     }],
     limit: {
       tries: 1
@@ -11095,7 +11102,7 @@ var LevelingQuest = {
   }])
 };
 ;// ./src/tasks/noncombat.ts
-var noncombat_templateObject, noncombat_templateObject2, noncombat_templateObject3, noncombat_templateObject4, noncombat_templateObject5, noncombat_templateObject6, noncombat_templateObject7, noncombat_templateObject8, noncombat_templateObject9, noncombat_templateObject0, noncombat_templateObject1, noncombat_templateObject10, noncombat_templateObject11, noncombat_templateObject12;
+var noncombat_templateObject, noncombat_templateObject2, noncombat_templateObject3, noncombat_templateObject4, noncombat_templateObject5, noncombat_templateObject6, noncombat_templateObject7, noncombat_templateObject8, noncombat_templateObject9, noncombat_templateObject0, noncombat_templateObject1, noncombat_templateObject10, noncombat_templateObject11, noncombat_templateObject12, noncombat_templateObject13, noncombat_templateObject14;
 function noncombat_toConsumableArray(r) { return noncombat_arrayWithoutHoles(r) || noncombat_iterableToArray(r) || noncombat_unsupportedIterableToArray(r) || noncombat_nonIterableSpread(); }
 function noncombat_nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function noncombat_unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return noncombat_arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? noncombat_arrayLikeToArray(r, a) : void 0; } }
@@ -11110,9 +11117,16 @@ var noncombat_buffs = $effects(noncombat_templateObject || (noncombat_templateOb
 var NoncombatQuest = {
   name: "Noncombat",
   completed: () => CommunityService.Noncombat.isDone(),
-  tasks: [].concat(noncombat_toConsumableArray(noncombat_buffs.map(effect => skillTask(effect))), [{
+  tasks: [{
+    name: "Shrug Song",
+    completed: () => !lib_have(template_string_$effect(noncombat_templateObject2 || (noncombat_templateObject2 = noncombat_taggedTemplateLiteral(["Ode to Booze"])))),
+    do: () => uneffect(template_string_$effect(noncombat_templateObject3 || (noncombat_templateObject3 = noncombat_taggedTemplateLiteral(["Ode to Booze"])))),
+    limit: {
+      tries: 1
+    }
+  }].concat(noncombat_toConsumableArray(noncombat_buffs.map(effect => skillTask(effect))), [{
     name: "Silent Running",
-    completed: () => lib_have(template_string_$effect(noncombat_templateObject2 || (noncombat_templateObject2 = noncombat_taggedTemplateLiteral(["Silent Running"])))),
+    completed: () => lib_have(template_string_$effect(noncombat_templateObject4 || (noncombat_templateObject4 = noncombat_taggedTemplateLiteral(["Silent Running"])))),
     do: () => (0,external_kolmafia_namespaceObject.cliExecute)("swim sprints"),
     limit: {
       tries: 1
@@ -11124,21 +11138,21 @@ var NoncombatQuest = {
     limit: {
       tries: 1
     }
-  }, potionTask(template_string_$item(noncombat_templateObject3 || (noncombat_templateObject3 = noncombat_taggedTemplateLiteral(["shoe gum"]))), true), potionTask(template_string_$item(noncombat_templateObject4 || (noncombat_templateObject4 = noncombat_taggedTemplateLiteral(["shady shades"])))), {
+  }, potionTask(template_string_$item(noncombat_templateObject5 || (noncombat_templateObject5 = noncombat_taggedTemplateLiteral(["shoe gum"]))), true), potionTask(template_string_$item(noncombat_templateObject6 || (noncombat_templateObject6 = noncombat_taggedTemplateLiteral(["shady shades"])))), {
     name: "Test",
     completed: () => CommunityService.Noncombat.isDone(),
     do: () => CommunityService.Noncombat.run(() => undefined, 1),
     outfit: {
-      hat: template_string_$item(noncombat_templateObject5 || (noncombat_templateObject5 = noncombat_taggedTemplateLiteral(["very pointy crown"]))),
-      offhand: template_string_$item(noncombat_templateObject6 || (noncombat_templateObject6 = noncombat_taggedTemplateLiteral(["unbreakable umbrella"]))),
-      back: template_string_$item(noncombat_templateObject7 || (noncombat_templateObject7 = noncombat_taggedTemplateLiteral(["protonic accelerator pack"]))),
-      shirt: template_string_$item(noncombat_templateObject8 || (noncombat_templateObject8 = noncombat_taggedTemplateLiteral(["Jurassic Parka"]))),
-      pants: template_string_$item(noncombat_templateObject9 || (noncombat_templateObject9 = noncombat_taggedTemplateLiteral(["Great Wolf's beastly trousers"]))),
-      acc1: template_string_$item(noncombat_templateObject0 || (noncombat_templateObject0 = noncombat_taggedTemplateLiteral(["Brutal brogues"]))),
-      acc2: template_string_$item(noncombat_templateObject1 || (noncombat_templateObject1 = noncombat_taggedTemplateLiteral(["Beach Comb"]))),
-      acc3: template_string_$item(noncombat_templateObject10 || (noncombat_templateObject10 = noncombat_taggedTemplateLiteral(["McHugeLarge left ski"]))),
-      familiar: template_string_$familiar(noncombat_templateObject11 || (noncombat_templateObject11 = noncombat_taggedTemplateLiteral(["Disgeist"]))),
-      famequip: template_string_$item(noncombat_templateObject12 || (noncombat_templateObject12 = noncombat_taggedTemplateLiteral(["tiny stillsuit"]))),
+      hat: template_string_$item(noncombat_templateObject7 || (noncombat_templateObject7 = noncombat_taggedTemplateLiteral(["very pointy crown"]))),
+      offhand: template_string_$item(noncombat_templateObject8 || (noncombat_templateObject8 = noncombat_taggedTemplateLiteral(["unbreakable umbrella"]))),
+      back: template_string_$item(noncombat_templateObject9 || (noncombat_templateObject9 = noncombat_taggedTemplateLiteral(["protonic accelerator pack"]))),
+      shirt: template_string_$item(noncombat_templateObject0 || (noncombat_templateObject0 = noncombat_taggedTemplateLiteral(["Jurassic Parka"]))),
+      pants: template_string_$item(noncombat_templateObject1 || (noncombat_templateObject1 = noncombat_taggedTemplateLiteral(["Great Wolf's beastly trousers"]))),
+      acc1: template_string_$item(noncombat_templateObject10 || (noncombat_templateObject10 = noncombat_taggedTemplateLiteral(["Brutal brogues"]))),
+      acc2: template_string_$item(noncombat_templateObject11 || (noncombat_templateObject11 = noncombat_taggedTemplateLiteral(["Beach Comb"]))),
+      acc3: template_string_$item(noncombat_templateObject12 || (noncombat_templateObject12 = noncombat_taggedTemplateLiteral(["McHugeLarge left ski"]))),
+      familiar: template_string_$familiar(noncombat_templateObject13 || (noncombat_templateObject13 = noncombat_taggedTemplateLiteral(["Disgeist"]))),
+      famequip: template_string_$item(noncombat_templateObject14 || (noncombat_templateObject14 = noncombat_taggedTemplateLiteral(["tiny stillsuit"]))),
       modes: {
         umbrella: "cocoon",
         parka: "pterodactyl"
