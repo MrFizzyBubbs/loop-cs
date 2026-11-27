@@ -7,13 +7,10 @@ module.exports = function (api) {
       [
         "@babel/preset-env",
         {
-          targets: { rhino: "1.7.13" },
+          // KoLmafia r29403 bundles Rhino 1.8+
+          targets: { rhino: "1.8.0" },
         },
       ],
-    ],
-    plugins: [
-      "@babel/plugin-proposal-class-properties",
-      "@babel/plugin-proposal-object-rest-spread",
     ],
   };
 };

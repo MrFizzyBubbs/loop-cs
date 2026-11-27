@@ -26,9 +26,9 @@ export default class Macro extends StrictMacro {
       myClass().primestat === $stat`Muscle`,
       Macro.while_(
         `!mpbelow ${mpCost($skill`Lunging Thrust-Smack`)}`,
-        Macro.skill($skill`Lunging Thrust-Smack`)
+        Macro.skill($skill`Lunging Thrust-Smack`),
       ),
-      Macro.while_(`!mpbelow ${mpCost($skill`Saucestorm`)}`, Macro.skill($skill`Saucestorm`))
+      Macro.while_(`!mpbelow ${mpCost($skill`Saucestorm`)}`, Macro.skill($skill`Saucestorm`)),
     )
       .attack()
       .repeat();

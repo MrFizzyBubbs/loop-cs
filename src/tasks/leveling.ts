@@ -132,7 +132,7 @@ export const LevelingQuest: CSQuest = {
     },
     potionTask($item`MayDay™ supply package`),
     ...$effects`Lack of Body-Building, We're All Made of Starfish, Pomp & Circumsands, You Learned Something Maybe!`.map(
-      beachTask
+      beachTask,
     ),
     {
       name: "Vaccine",
@@ -186,12 +186,12 @@ export const LevelingQuest: CSQuest = {
           Muscle: $effect`Quiet Determination`,
           Mysticality: $effect`Inscrutable Gaze`,
           Moxie: $effect`Quiet Desperation`,
-        })
+        }),
       ),
       name: "Facial Expression",
     },
     ...$skills`Advanced Saucecrafting, Prevent Scurvy and Sobriety, Summon Crimbo Candy`.map(
-      (effect) => skillTask(effect)
+      (effect) => skillTask(effect),
     ),
     {
       name: "Get Range",
@@ -242,7 +242,7 @@ export const LevelingQuest: CSQuest = {
       post: () => visitUrl("questlog.php?which=1"), // Check quest log for protonic ghost location
       choices: peridotChoice($monster`amateur ninja`),
       combat: new CSCombatStrategy().macro(
-        Macro.skill($skill`Giant Growth`).skill($skill`Chest X-Ray`)
+        Macro.skill($skill`Giant Growth`).skill($skill`Chest X-Ray`),
       ),
       outfit: {
         back: $item`protonic accelerator pack`,
@@ -261,7 +261,7 @@ export const LevelingQuest: CSQuest = {
             Muscle: $effect`Nanobrawny`,
             Mysticality: $effect`Nanobrainy`,
             Moxie: $effect`Nanoballsy`,
-          })
+          }),
         ),
       ready: () => get("ghostLocation") !== $location`none` && get("_nanorhinoCharge") >= 100,
       do: () => get("ghostLocation") ?? abort("Failed to identify ghost location"),
@@ -274,13 +274,13 @@ export const LevelingQuest: CSQuest = {
             Sauceror: $skill`Salsaball`,
             "Disco Bandit": $skill`Suckerpunch`,
             "Accordion Thief": $skill`Sing`,
-          })
+          }),
         )
           .delevel()
           .skill($skill`Shoot Ghost`)
           .skill($skill`Shoot Ghost`)
           .skill($skill`Shoot Ghost`)
-          .skill($skill`Trap Ghost`)
+          .skill($skill`Trap Ghost`),
       ),
       outfit: {
         back: $item`protonic accelerator pack`,
@@ -315,7 +315,7 @@ export const LevelingQuest: CSQuest = {
             Moxie: "LOV Earring",
           }),
           "Open Heart Surgery",
-          "LOV Extraterrestrial Chocolate"
+          "LOV Extraterrestrial Chocolate",
         ),
       post: (): void => {
         const elixirs = $items`LOV Elixir #3, LOV Elixir #6`.filter((elixir) => !have(elixir));
@@ -324,7 +324,7 @@ export const LevelingQuest: CSQuest = {
       combat: new CSCombatStrategy().macro(
         Macro.if_($monster`LOV Enforcer`, Macro.attack().repeat())
           .if_($monster`LOV Engineer`, Macro.skill($skill`Toynado`).repeat())
-          .if_($monster`LOV Equivocator`, Macro.default())
+          .if_($monster`LOV Equivocator`, Macro.default()),
       ),
       outfit: {
         offhand: $item`June cleaver`,
@@ -399,7 +399,7 @@ export const LevelingQuest: CSQuest = {
       name: "Post-Snojo Hottub",
       completed: () =>
         $effects`Snowballed, Half-Blooded, Half-Drained, Bruised, Relaxed Muscles, Hypnotized, Bad Haircut`.every(
-          (effect) => !have(effect)
+          (effect) => !have(effect),
         ),
       do: () => cliExecute("hottub"),
       limit: { tries: 1 },
@@ -440,7 +440,7 @@ export const LevelingQuest: CSQuest = {
         Macro.skill($skill`Feel Envy`)
           .skill($skill`Portscan`)
           .sing()
-          .kill()
+          .kill(),
       ),
       outfit: { acc3: $item`Peridot of Peril` },
       limit: { tries: 1 },
@@ -453,7 +453,7 @@ export const LevelingQuest: CSQuest = {
       combat: new CSCombatStrategy().macro(() =>
         Macro.externalIf(!have($item`government cheese`), Macro.skill($skill`Feel Envy`))
           .externalIf(get("_speakeasyFreeFights") < 2, Macro.skill($skill`Portscan`))
-          .default()
+          .default(),
       ),
       outfit: {
         shirt: $item`makeshift garbage shirt`,
@@ -476,9 +476,9 @@ export const LevelingQuest: CSQuest = {
             byStat({
               Mysticality: Macro.attack(),
               default: Macro.skill($skill`Lunging Thrust-Smack`),
-            })
+            }),
           )
-          .repeat()
+          .repeat(),
       ),
       outfit: {
         weapon: $item`Fourth of May Cosplay Saber`,
@@ -514,7 +514,7 @@ export const LevelingQuest: CSQuest = {
       combat: new CSCombatStrategy().macro(
         Macro.item($item`Time-Spinner`)
           .attack()
-          .repeat()
+          .repeat(),
       ),
       outfit: {
         weapon: $item`Fourth of May Cosplay Saber`,
@@ -561,7 +561,7 @@ export const LevelingQuest: CSQuest = {
       do: $location`The Neverending Party`,
       choices: { 1322: 1 },
       combat: new CSCombatStrategy().macro(
-        Macro.if_($monster`sausage goblin`, Macro.skill($skill`Bowl Sideways`).default()).abort()
+        Macro.if_($monster`sausage goblin`, Macro.skill($skill`Bowl Sideways`).default()).abort(),
       ),
       outfit: {
         offhand: $item`Kramco Sausage-o-Matic™`,

@@ -37,7 +37,7 @@ export const WeaponDamageQuest: CSQuest = {
       completed: () => CombatLoversLocket.monstersReminisced().includes($monster`ungulith`),
       do: () => CombatLoversLocket.reminisce($monster`ungulith`),
       combat: new CSCombatStrategy().macro(
-        Macro.skill($skill`Meteor Shower`).skill($skill`Use the Force`)
+        Macro.skill($skill`Meteor Shower`).skill($skill`Use the Force`),
       ),
       choices: { 1387: 3 },
       outfit: {

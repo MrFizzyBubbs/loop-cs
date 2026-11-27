@@ -41,7 +41,7 @@ function equalizeTask(): CSTask {
         Mysticality: $item`oil of expertise`,
         Moxie: $item`oil of slipperiness`,
       }),
-      true
+      true,
     ),
     class: $classes`Seal Clubber, Turtle Tamer, Disco Bandit, Accordion Thief, Sauceror`,
     limit: { tries: 1 },

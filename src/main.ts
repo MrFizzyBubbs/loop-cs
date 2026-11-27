@@ -108,14 +108,14 @@ export function main(command?: string): void {
   if (setTimeNow)
     print(
       `Time: ${convertMilliseconds(gametimeToInt() - get(timeProperty, gametimeToInt()))}`,
-      "purple"
+      "purple",
     );
   else
     print(
       `Time: ${convertMilliseconds(
-        gametimeToInt() - get(timeProperty, gametimeToInt())
+        gametimeToInt() - get(timeProperty, gametimeToInt()),
       )} since first run today started`,
-      "purple"
+      "purple",
     );
 }
 

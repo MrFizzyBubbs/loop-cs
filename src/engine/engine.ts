@@ -25,12 +25,13 @@ export class CSEngine extends Engine<CombatActions, CSTask> {
     task: CSTask,
     outfit: Outfit,
     combat: CSCombatStrategy,
-    resources: CombatResources<CombatActions>
+    resources: CombatResources<CombatActions>,
   ): void {
     // Set up a free kill if needed
     if (combat.can("killFree")) {
       const freeKillSource = freeKillSources.find(
-        (source) => source.available() && (source.equip === undefined || outfit.equip(source.equip))
+        (source) =>
+          source.available() && (source.equip === undefined || outfit.equip(source.equip)),
       );
       if (freeKillSource === undefined) throw "Unable to provide a free kill source";
       resources.provide("killFree", freeKillSource);

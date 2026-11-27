@@ -36,12 +36,7 @@ export function convertMilliseconds(milliseconds: number): string {
 }
 
 type PrimaryClassType =
-  | "Seal Clubber"
-  | "Turtle Tamer"
-  | "Pastamancer"
-  | "Sauceror"
-  | "Disco Bandit"
-  | "Accordion Thief";
+  "Seal Clubber" | "Turtle Tamer" | "Pastamancer" | "Sauceror" | "Disco Bandit" | "Accordion Thief";
 
 export const byPrimaryClass = makeByXFunction(() => myClass().toString() as PrimaryClassType);
 
@@ -87,16 +82,16 @@ export function burnLibrams(): void {
         const currentWeightValue = clamp(
           Math.ceil(totalDuration($item`love song of icy revenge`) / 2),
           0,
-          10
+          10,
         );
         const newWeightValue = clamp(
           Math.ceil((totalDuration($item`love song of icy revenge`) + 5) / 2),
           0,
-          10
+          10,
         );
         decisionMap.set(
           $skill`Summon Love Song`,
-          probability * (newWeightValue - currentWeightValue)
+          probability * (newWeightValue - currentWeightValue),
         );
       }
 

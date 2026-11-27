@@ -42,7 +42,7 @@ export const CoilWireQuest: CSQuest = {
       },
       do: $location`The Skeleton Store`, // Shrub's spooky damage won't kill monsters here
       combat: new CSCombatStrategy().macro(
-        Macro.skill($skill`Open a Big Red Present`).skill($skill`Bowl a Curveball`)
+        Macro.skill($skill`Open a Big Red Present`).skill($skill`Bowl a Curveball`),
       ),
       outfit: { familiar: $familiar`Crimbo Shrub` },
       limit: { tries: 2 }, // Skeletons in Store opening NC
@@ -55,7 +55,7 @@ export const CoilWireQuest: CSQuest = {
       combat: new CSCombatStrategy().macro(
         Macro.skill($skill`Micrometeorite`)
           .attack()
-          .repeat()
+          .repeat(),
       ),
       outfit: {
         back: $item`protonic accelerator pack`,
@@ -73,7 +73,7 @@ export const CoilWireQuest: CSQuest = {
           .skill($skill`Shoot Ghost`)
           .skill($skill`Shoot Ghost`)
           .skill($skill`Shoot Ghost`)
-          .skill($skill`Trap Ghost`)
+          .skill($skill`Trap Ghost`),
       ),
       outfit: {
         back: $item`protonic accelerator pack`,

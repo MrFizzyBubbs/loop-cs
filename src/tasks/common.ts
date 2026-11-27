@@ -58,7 +58,7 @@ export function innerElfTask(): CSTask {
         adv1($location`The Slime Tube`, -1, "");
       }),
     combat: new CSCombatStrategy().macro(
-      Macro.trySkill($skill`KGB tranquilizer dart`).skill($skill`Snokebomb`)
+      Macro.trySkill($skill`KGB tranquilizer dart`).skill($skill`Snokebomb`),
     ),
     choices: { 326: 1 },
     effects: [$effect`Blood Bubble`],
@@ -74,7 +74,7 @@ export function meteorShowerTask(): CSTask {
     ready: () => get("_meteorShowerUses") < 5 && get("_saberForceUses") < 5,
     do: $location`The Dire Warren`,
     combat: new CSCombatStrategy().macro(
-      Macro.skill($skill`Meteor Shower`).skill($skill`Use the Force`)
+      Macro.skill($skill`Meteor Shower`).skill($skill`Use the Force`),
     ),
     choices: { 1387: 3 },
     outfit: {
@@ -113,17 +113,17 @@ export function potionTask(item: Item, acquire = false): CSTask {
 
 export function skillTask(
   x: Skill | Effect | { skill: Skill; effect: Effect },
-  includeAprilShield = false
+  includeAprilShield = false,
 ): CSTask {
   {
     const { skill, effect } =
       x instanceof Skill
         ? { skill: x, effect: toEffect(x) }
         : x instanceof Effect
-        ? { skill: toSkill(x), effect: x }
-        : x;
+          ? { skill: toSkill(x), effect: x }
+          : x;
     const needGlove = $skills`CHEAT CODE: Invisible Avatar, CHEAT CODE: Triple Size`.includes(
-      skill
+      skill,
     );
     return {
       name: skill.name,
@@ -204,7 +204,7 @@ function currentBuskPower(): number {
 export function buskTask(
   cast: number,
   power: number,
-  spec: Pick<OutfitSpec, "hat" | "shirt" | "pants">
+  spec: Pick<OutfitSpec, "hat" | "shirt" | "pants">,
 ): CSTask {
   const needHatrack = spec.hat !== $item`prismatic beret`;
   return {
@@ -218,7 +218,7 @@ export function buskTask(
         .every((itemOrItems) =>
           Array.isArray(itemOrItems)
             ? itemOrItems.some((item) => canEquip(item))
-            : canEquip(itemOrItems)
+            : canEquip(itemOrItems),
         ),
     prepare: () => {
       // Grimoire does not currently support equipping hats in familiar slot

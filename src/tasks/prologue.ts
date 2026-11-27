@@ -178,7 +178,7 @@ export const PrologueQuest: CSQuest = {
       do: (): void => {
         visitUrl("place.php?whichplace=town_right&action=townright_vote");
         visitUrl(
-          `choice.php?option=1&whichchoice=1331&g=2&local%5B%5D=${BEST_INITIATIVE}&local%5B%5D=${BEST_INITIATIVE}`
+          `choice.php?option=1&whichchoice=1331&g=2&local%5B%5D=${BEST_INITIATIVE}&local%5B%5D=${BEST_INITIATIVE}`,
         );
         visitUrl("place.php?whichplace=town_right&action=townright_vote");
       },

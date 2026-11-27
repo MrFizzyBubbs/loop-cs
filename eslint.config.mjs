@@ -18,15 +18,14 @@ const compat = new FlatCompat({
 export default defineConfig([
   globalIgnores(["KoLmafia/scripts/", "node_modules/"]),
   {
-    extends: compat.extends(
-      "eslint:recommended",
-      "plugin:@typescript-eslint/recommended",
-      "prettier"
-    ),
+    extends: [
+      ...compat.extends("eslint:recommended", "plugin:@typescript-eslint/recommended"),
+      ...libram.configs.recommended,
+      ...compat.extends("prettier"),
+    ],
 
     plugins: {
       "@typescript-eslint": typescriptEslint,
-      libram,
     },
 
     languageOptions: {
@@ -55,7 +54,6 @@ export default defineConfig([
 
       "no-unused-vars": "off",
       "@typescript-eslint/no-unused-vars": "error",
-      "libram/verify-constants": "error",
     },
   },
 ]);

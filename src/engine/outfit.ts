@@ -21,14 +21,14 @@ export function equipDefaults(outfit: Outfit, canAttack: boolean): void {
       Mysticality: $items`astral chapeau, Apriling band helmet`,
       Moxie: $items`very pointy crown, Apriling band helmet`,
     }),
-    $slot`hat`
+    $slot`hat`,
   );
   outfit.equip(
     byStat({
       Muscle: $items`dented scepter, Fourth of May Cosplay Saber`,
       default: $items`Fourth of May Cosplay Saber`,
     }),
-    $slot`weapon`
+    $slot`weapon`,
   );
   outfit.equip($item`unbreakable umbrella`, $slot`off-hand`);
   outfit.equip($items`LOV Epaulettes, unwrapped knock-off retro superhero cape`, $slot`back`);
@@ -40,7 +40,7 @@ export function equipDefaults(outfit: Outfit, canAttack: boolean): void {
       Mysticality: $items`battle broom, Kremlin's Greatest Briefcase`,
       Moxie: $items`LOV Earrings, Beach Comb`,
     }),
-    $slot`acc1`
+    $slot`acc1`,
   );
   outfit.equip($item`your cowboy boots`, $slot`acc2`);
   outfit.equip($item`Powerful Glove`, $slot`acc3`);
@@ -81,7 +81,7 @@ export function chooseFamiliar(canAttack: boolean): Pick<OutfitSpec, "familiar" 
     ({ condition, familiar }) =>
       condition() &&
       have(familiar) &&
-      (canAttack || !(familiar.elementalDamage || familiar.physicalDamage))
+      (canAttack || !(familiar.elementalDamage || familiar.physicalDamage)),
   );
   if (pick) {
     return {

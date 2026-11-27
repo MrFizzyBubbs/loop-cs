@@ -91,7 +91,7 @@ export const FamiliarWeightQuest: CSQuest = {
       completed: () => get("commaFamiliar") === $familiar`Homemade Robot`,
       do: (): void => {
         visitUrl(
-          `inv_equip.php?which=2&action=equip&whichitem=${toInt($item`homemade robot gear`)}&pwd`
+          `inv_equip.php?which=2&action=equip&whichitem=${toInt($item`homemade robot gear`)}&pwd`,
         );
         visitUrl("charpane.php");
       },
@@ -165,7 +165,7 @@ export const FamiliarWeightQuest: CSQuest = {
       do: $location`Gingerbread Upscale Retail District`,
       outfit: { ...outfit, familiar: $familiar`Chocolate Lab`, famequip: $item`tiny stillsuit` },
       combat: new CSCombatStrategy().macro(
-        Macro.skill($skill`Meteor Shower`).skill($skill`Shattering Punch`)
+        Macro.skill($skill`Meteor Shower`).skill($skill`Shattering Punch`),
       ),
       limit: { tries: 1 },
     },

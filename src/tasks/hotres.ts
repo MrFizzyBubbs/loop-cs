@@ -28,7 +28,7 @@ export const HotResQuest: CSQuest = {
       ready: () => get("_fireExtinguisherCharge") >= 10 && get("_saberForceUses") < 5,
       do: $location`The Dire Warren`,
       combat: new CSCombatStrategy().macro(
-        Macro.skill($skill`Fire Extinguisher: Foam Yourself`).skill($skill`Use the Force`)
+        Macro.skill($skill`Fire Extinguisher: Foam Yourself`).skill($skill`Use the Force`),
       ),
       choices: { 1387: 3 },
       outfit: {

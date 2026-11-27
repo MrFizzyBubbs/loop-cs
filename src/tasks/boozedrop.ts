@@ -33,7 +33,6 @@ export const BoozeDropQuest: CSQuest = {
     },
     ...buffs.map((effect) => skillTask(effect)),
     {
-      // eslint-disable-next-line libram/verify-constants
       ...skillTask($effect`Legendary Spice Haze`),
       class: $classes`Seal Clubber, Turtle Tamer, Sauceror, Disco Bandit, Accordion Thief`,
     },
@@ -59,7 +58,7 @@ export const BoozeDropQuest: CSQuest = {
       combat: new CSCombatStrategy().macro(
         Macro.skill($skill`Become a Bat`)
           .skill($skill`Bowl Straight Up`)
-          .skill($skill`Reflex Hammer`)
+          .skill($skill`Reflex Hammer`),
       ),
       outfit: {
         back: $item`vampyric cloake`,
